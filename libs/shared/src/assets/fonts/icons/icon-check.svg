@@ -1,0 +1,16 @@
+<svg id="check" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #11cf5a;
+      }
+
+      .cls-2 {
+        fill: #fff;
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <circle class="cls-1" cx="8.5" cy="8.5" r="8.5"/>
+  <path class="cls-2" d="M277.016,537.587l1.444-1.427,3.312,3.271-1.445,1.427Zm9-2.1-1.523-1.5L278.9,539.51l1.524,1.5Z" transform="translate(-273 -529)"/>
+</svg>

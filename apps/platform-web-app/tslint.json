@@ -1,0 +1,7 @@
+{
+  "extends": "../../tslint.json",
+  "rules": {
+    "directive-selector": [true, "attribute", "pnklFrontend", "camelCase"],
+    "component-selector": [true, "element", ["pnkl-frontend", ""], "kebab-case"]
+  }
+}

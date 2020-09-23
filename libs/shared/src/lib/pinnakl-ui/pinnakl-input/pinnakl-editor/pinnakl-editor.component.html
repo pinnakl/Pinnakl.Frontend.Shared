@@ -1,0 +1,11 @@
+<div>
+  <editor
+    apiKey="jla9yxxlur1v30svavxt0q4h97emlc2rab2f0ys7yq7hv6eu"
+    [init]="setInitParamsTextEditor()"
+    toolbar="insert | undo redo | formatselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat"
+    plugins="image lists link powerpaste"
+    [(ngModel)]="value"
+    (ngModelChange)="valueChanged($event)"
+    [disabled]="disableEditor"
+  ></editor>
+</div>

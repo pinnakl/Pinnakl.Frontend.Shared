@@ -1,0 +1,17 @@
+<svg id="icon_opened" data-name="icon opened" xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #ffb504;
+      }
+
+      .cls-2 {
+        fill: #fff;
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <circle class="cls-1" cx="30" cy="30" r="30"/>
+  <path class="cls-2" d="M1279,788h-16a2.006,2.006,0,0,1-2-2V776l10,6,9.99-6,0.01,10A2.006,2.006,0,0,1,1279,788Zm1.99-13c0-1.1.01,1.781,0.01-1v2l-0.01,0v-1ZM1261,774l10-6,10,6-10,6Zm13,7h7v7h-7v-7Z" transform="translate(-1241 -748)"/>
+  <path class="cls-2" d="M1283,788.6l-1.4,1.4-2.1-2.1-2.1,2.1-1.4-1.4,2.1-2.1-2.1-2.1,1.4-1.4,2.1,2.1,2.1-2.1,1.4,1.4-2.1,2.1Z" transform="translate(-1241 -748)"/>
+</svg>

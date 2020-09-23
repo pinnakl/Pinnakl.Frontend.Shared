@@ -1,0 +1,35 @@
+.pnkl-card {
+  background-color: $white;
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.15);
+}
+
+.module-documentation {
+  font-size: 14px;
+  max-height: 80vh;
+  overflow-y: auto;
+  background-color: $white;
+  border: none;
+
+  h1 {
+    font-size: 20px;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    font-weight: bold;
+    line-height: 1.2;
+  }
+
+  h2 {
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 1.5;
+  }
+
+  a {
+    position: relative;
+    color: blue  
+  }
+
+}
+.top0 {
+  top: 0 !important;
+}

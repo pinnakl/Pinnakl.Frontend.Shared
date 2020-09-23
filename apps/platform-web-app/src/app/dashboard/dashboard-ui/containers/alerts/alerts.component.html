@@ -1,0 +1,40 @@
+<div class="row mt-4">
+  <div class="p-4 background-color-white col-md-12 rounded">
+    <div class="pb-4 font-weight-bold font-size-12px">ALERTS</div>
+    <div pnklCustomScroll class="row alert-container-row ">
+      <div class="col-md-12">
+        <div
+          *ngFor="let alert of alerts"
+          class="row py-3 no-gutters font-size-14px alerts-container"
+        >
+          <div class="col-md-8">
+            <span class="mr-2"
+              ><i
+                [ngClass]="{
+                  'p-0 icon-pinnakl-trade-request-done alert-success-icon-color rounded-circle':
+                    alert.notificationType === 1,
+                  'p-1 icon-pinnakl-close alert-error-icon-color rounded-circle':
+                    alert.notificationType === -1,
+                  'icon-pinnakl-attention alert-warning-icon-color':
+                    alert.notificationType === 0
+                }"
+              ></i
+            ></span>
+            <span>{{ alert.notification }}</span>
+          </div>
+          <div class="col-md-3">
+            <div class="alert-date text-align-right">
+              {{ alert.date | date: 'MMM dd,yyyy hh:mm a' }}
+            </div>
+          </div>
+          <div class="col-md-1 text-align-right">
+            <i
+              (click)="removeAlert.emit(alert.id)"
+              class="icon-pinnakl-close alert-date  alert-close-icon"
+            ></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,66 @@
+<div class="row MT15">
+  <div class="col-md-default-width flex-pull-right">
+    <button class="btn-sm btn-primary" (click)="downloadExcel()">
+      Download Excel
+    </button>
+  </div>
+</div>
+
+<kendo-chart>
+  <kendo-chart-legend
+    position="top"
+    orientation="horizontal"
+  ></kendo-chart-legend>
+  <kendo-chart-value-axis>
+    <kendo-chart-tooltip format="{0:N2}"></kendo-chart-tooltip>
+
+    <kendo-chart-value-axis-item [title]="{ text: 'Portfolio Analysis' }">
+      <kendo-chart-value-axis-item-labels [content]="getNumberWithCommas">
+      </kendo-chart-value-axis-item-labels>
+    </kendo-chart-value-axis-item>
+    <kendo-chart-value-axis-item
+      [title]="{ text: 'Position Analysis' }"
+      name="rightAxis"
+    >
+      <kendo-chart-value-axis-item-labels [content]="formatPrices">
+      </kendo-chart-value-axis-item-labels>
+    </kendo-chart-value-axis-item>
+  </kendo-chart-value-axis>
+
+  <kendo-chart-category-axis>
+    <kendo-chart-category-axis-item
+      name="cat1"
+      [axisCrossingValue]="[0, 1000]"
+      [categories]="positionPriceDates"
+    >
+      <kendo-chart-category-axis-item-labels [step]="positionPriceStep">
+      </kendo-chart-category-axis-item-labels>
+    </kendo-chart-category-axis-item>
+    <kendo-chart-category-axis-item name="cat2" [axisCrossingValue]="[0, 1000]">
+    </kendo-chart-category-axis-item>
+  </kendo-chart-category-axis>
+
+  <kendo-chart-series>
+    <kendo-chart-series-item
+      type="line"
+      [markers]="false"
+      axis="rightAxis"
+      style="smooth"
+      [data]="priceData"
+      [name]="'Price(right axis)'"
+      [zIndex]="99"
+      field="y"
+      categoryAxis="cat1"
+    >
+    </kendo-chart-series-item>
+
+    <kendo-chart-series-item
+      type="bar"
+      [data]="positionData"
+      [name]="'Position(left axis)'"
+      field="y"
+      categoryAxis="cat2"
+    >
+    </kendo-chart-series-item>
+  </kendo-chart-series>
+</kendo-chart>

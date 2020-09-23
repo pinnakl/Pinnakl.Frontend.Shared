@@ -1,0 +1,151 @@
+/* CHECKBOX AND RADIO */
+$check-color: $slate-gray;
+
+.check-holder {
+  input {
+    display: none;
+  }
+
+  input + label {
+    font-weight: normal;
+    cursor: pointer;
+    padding-left: 40px;
+    position: relative;
+    margin-bottom: 0;
+
+    &:before {
+      width: 15px;
+      height: 15px;
+      font-size: 20px;
+      color: $check-color;
+      font-family: 'fontello';
+      display: block;
+      position: absolute;
+      left: 0;
+      top: 0;
+      @extend .icon-pinnakl-check-empty;
+      line-height: 100%;
+    }
+  }
+
+  input:checked + label {
+    &:before {
+      @extend .icon-pinnakl-check;
+    }
+  }
+
+  &.check-holder-empty {
+    input + label {
+      padding-left: 0;
+      width: 15px;
+      height: 15px;
+    }
+  }
+}
+
+.input-check-switch input[type='checkbox'] {
+  display: inline !important;
+}
+
+.switch-label {
+  position: relative;
+  bottom: 13px;
+  margin-right: 5px;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 45px;
+  height: 19px;
+}
+
+.switch input {
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: '';
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #00b5e9;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #00b5e9;
+}
+
+.indeterminate-input {
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgb(184, 43, 43);
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: '';
+    height: 16px;
+    width: 16px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+  }
+
+  input:indeterminate + .slider {
+    background-color: #b3b3b3;
+  }
+
+  input:checked + .slider {
+    background-color: #2db304;
+  }
+
+  input:indeterminate + .slider:before {
+    -webkit-transform: translateX(12.5px);
+    -ms-transform: translateX(12.5px);
+    transform: translateX(12.5px);
+  }
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(25px);
+  -ms-transform: translateX(25px);
+  transform: translateX(25px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}

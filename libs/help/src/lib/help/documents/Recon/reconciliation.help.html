@@ -1,0 +1,182 @@
+<module-documentation #parent>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-12"><h1>Reconciliation</h1></div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          This screen is used to view and reconcile positions of a trade day.
+          Main functions of the screen are -
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <ol>
+            <li>Select date and the entity(PB or Admin) for reconciliation</li>
+            <li>
+              View all the positions for the selected criteria – Unmatched,
+              Matched and Matched with differences in quantities
+            </li>
+            <li>Enter and update comments for any position</li>
+            <li>Map unmatched positions</li>
+            <li>Unmap matched positions</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-12"><h2>Select Reconciliation criteria</h2></div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <ol>
+            <li>
+              Positions will already be displayed according to a default
+              criteria but it can be changed by clicking the filter icon
+            </li>
+            <li>
+              Select the date and the entity along with the account for
+              reconciliation
+            </li>
+            <li>Click apply</li>
+            <li>
+              The selected criteria will be displayed at the top of the page and
+              the respective positions will be displayed in grids. The filter
+              panel will close.
+            </li>
+          </ol>
+          <button
+            class="btn btn-success waves-effect"
+            (click)="
+              parent.showDemo(
+                'https://portalvhdsmhsd8nkfxlwl2.blob.core.windows.net/platformhelpcontent/SelectReconciliationCriteria.mp4'
+              )
+            "
+            href=""
+          >
+            View demo
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-12"><h2>Enter position comments</h2></div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <ol>
+            <li>Click on the Comments column for any position</li>
+            <li>Enter comments text in the input field</li>
+            <li>Press enter, tab or click out of the column</li>
+            <li>The entered comment will be saved</li>
+          </ol>
+          <button
+            class="btn btn-success waves-effect"
+            (click)="
+              parent.showDemo(
+                'https://portalvhdsmhsd8nkfxlwl2.blob.core.windows.net/platformhelpcontent/PositionComments.mp4'
+              )
+            "
+            href=""
+          >
+            View demo
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-12"><h2>Map positions</h2></div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <ol>
+            <li>
+              For any position In the Unmatched grid, click on any column apart
+              from the Comments column
+            </li>
+            <li>
+              The mapping panel will open up showing the references for the
+              selected positions that can be mapped
+            </li>
+            <li>Select a reference by clicking on its radio button</li>
+            <li>
+              Select a security from the dropdown to map this position to that
+              security
+            </li>
+            <li>
+              Optionally, click on one of the suggestions to select that
+              security for mapping
+            </li>
+            <li>Click Map</li>
+            <li>
+              The selected position will be mapped to the selected security and
+              will now show up in the Matched grid
+            </li>
+          </ol>
+          <button
+            class="btn btn-success waves-effect"
+            (click)="
+              parent.showDemo(
+                'https://portalvhdsmhsd8nkfxlwl2.blob.core.windows.net/platformhelpcontent/MapPositions.mp4'
+              )
+            "
+            href=""
+          >
+            View demo
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-12"><h2>Unmap positions</h2></div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <ol>
+            <li>
+              For any position In the Differences or Matched grid, click on any
+              column apart from the Comments column
+            </li>
+            <li>
+              The unmapping panel will open up showing the security and its
+              reference to which the selected position is matched
+            </li>
+            <li>Click on Unmap</li>
+            <li>
+              The selected position will be unmatched and will now show up in
+              the Unmatched grid
+            </li>
+          </ol>
+          <button
+            class="btn btn-success waves-effect"
+            (click)="
+              parent.showDemo(
+                'https://portalvhdsmhsd8nkfxlwl2.blob.core.windows.net/platformhelpcontent/UnmapPositions.mp4'
+              )
+            "
+            href=""
+          >
+            View demo
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</module-documentation>

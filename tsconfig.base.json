@@ -1,0 +1,36 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2017", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "resolveJsonModule": true,
+    "paths": {
+      "@pnkl-frontend/shared": ["libs/shared/src/index.ts"],
+      "@pnkl-frontend/pnkl-charts": ["libs/pnkl-charts/src/index.ts"],
+      "@pnkl-frontend/core": ["libs/core/src/index.ts"],
+      "@pnkl-frontend/app-state": ["libs/app-state/src/index.ts"],
+      "@pnkl-frontend/authentication": ["libs/authentication/src/index.ts"],
+      "@pnkl-frontend/help": ["libs/help/src/index.ts"],
+      "@pnkl-frontend/pinnakl-modal": ["libs/pinnakl-modal/src/index.ts"],
+      "@pnkl-frontend/reporting": ["libs/reporting/src/index.ts"],
+      "@pnkl-frontend/crm": ["libs/crm/src/index.ts"],
+      "@pnkl-frontend/push-notifications-config": [
+        "libs/push-notifications-config/src/index.ts"
+      ],
+      "@pnkl-frontend/pnkl-ui-elements": ["libs/pnkl-ui-elements/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

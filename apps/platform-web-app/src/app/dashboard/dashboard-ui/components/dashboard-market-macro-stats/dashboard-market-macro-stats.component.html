@@ -1,0 +1,7 @@
+<div class="stats-container">
+  <dashboard-market-macro-stats-by-type
+    *ngFor="let statByType of statsByType; trackBy: getType"
+    [stats]="statByType"
+  >
+  </dashboard-market-macro-stats-by-type>
+</div>

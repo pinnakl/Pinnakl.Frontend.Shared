@@ -1,0 +1,42 @@
+.stat-change {
+  color: #35bd64;
+  &.negative {
+    color: #f74053;
+  }
+}
+
+.stat-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  padding: 0.5rem 1.5rem;
+  margin-bottom: 1.5rem;
+  &:last-child {
+    margin-bottom: 0;
+  }
+  &.macro {
+    background-color: transparent;
+    border: solid 1px #bcc4cb;
+    border-radius: 5px;
+  }
+}
+
+.stat-name {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.stat-value {
+  font-size: 16px;
+  color: #7e8c9e;
+}
+
+.stats-type {
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.stats-item-container {
+  height: 290px;
+}

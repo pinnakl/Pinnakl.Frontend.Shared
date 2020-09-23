@@ -1,0 +1,36 @@
+.alert-date {
+  color: #7e8c9e;
+}
+
+.alerts-container {
+  border-bottom: solid 1px #e1e2e7;
+}
+
+.alert-container-row {
+  height: 340px;
+}
+
+.alert-warning-icon-color {
+  color: #ff8816 !important;
+  font-size: 13px;
+}
+.alert-error-icon-color {
+  background-color: #ec2e2e;
+  font-size: 6px;
+  color: white;
+  text-align: center;
+  vertical-align: middle;
+}
+.alert-success-icon-color {
+  background-color: #08d32f;
+  font-size: 11px;
+  text-align: center;
+  border-radius: 50%;
+  color: white;
+}
+.alert-close-icon {
+  font-size: 10px;
+}
+.alert-close-icon:hover {
+  cursor: pointer;
+}

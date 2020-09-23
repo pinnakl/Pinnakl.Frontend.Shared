@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	width="31px" height="64px" viewBox="0 0 31 64">
+<style type="text/css"><![CDATA[
+.style0 {
+  font-size: 12px;
+  font-family: "Source Sans Pro";
+  font-weight: 400;
+  fill: rgb(88,99,112);
+  text-transform: uppercase;
+}
+]]></style>
+<g><g><path fillRule="evenodd" d="M 15 64C 15 64 15-0 15-0" fill="rgb(227,233,239)"/><path fillRule="evenodd" d="M 16 64C 16 64 15 64 15 64 15 64 15-0 15-0 15-0 16-0 16-0 16-0 16 64 16 64" fill="rgb(183,197,219)"/></g><g><rect x="0" y="23" width="31" height="18" fill="rgb(255,255,255)"/><path fillRule="evenodd" d="M 30 40C 30 40 30 24 30 24 30 24 1 24 1 24 1 24 1 40 1 40 1 40 30 40 30 40M 31 41C 31 41-0 41-0 41-0 41-0 23-0 23-0 23 31 23 31 23 31 23 31 41 31 41 31 41 31 41 31 41Z" fill="rgb(183,197,219)"/></g><text transform="translate(15.50,35.75)" class="style0"><tspan x="-8.01 1.10" fill="rgb(88,98,112)">or</tspan></text></g></svg>

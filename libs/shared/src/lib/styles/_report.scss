@@ -1,0 +1,84 @@
+/*Report*/
+
+footer.fixed {
+  position: fixed;
+}
+
+.k-grid {
+  font-family: 'DejaVu Sans', 'Arial', sans-serif;
+}
+
+.dropdown_left_section {
+  border-right: 1px solid #eeeeee;
+}
+
+.dropdown_left_section,
+.dropdown_right_section {
+  padding: 50px 24px 10px;
+  background-position-x: center;
+  background-position-y: 30%;
+  background-repeat: no-repeat;
+}
+
+.dropdown-content {
+  z-index: 99999999;
+  right: 10px;
+  top: 47px;
+  position: absolute;
+  display: flex;
+  background-color: #f9f9f9;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+.report-card {
+  border-radius: 4px;
+  min-height: 184px;
+  background-color: #ffffff;
+  margin: 8px;
+  padding: 10px;
+}
+
+.report-card-ul {
+  list-style: none;
+}
+
+.report-card-ul li a {
+  color: #000000 !important;
+}
+
+.modal-header .no-border {
+  border-bottom: 0px;
+}
+
+.color-white {
+  color: $white;
+}
+
+.delete-report-confirmation {
+  margin-top: 10% !important;
+  margin-left: 0;
+}
+
+.left-minus-10 {
+  left: -10rem !important;
+}
+
+.vertical-align-basline-middle {
+  vertical-align: -webkit-baseline-middle;
+}
+
+.config-column-remove-confirmation {
+  background-color: $white;
+  border-radius: 1rem;
+  margin-top: -100%;
+  padding: 1rem;
+}
+
+.positions-config-column-remove-confirmation {
+  background-color: $white;
+  border-radius: 1rem;
+  margin-top: -60%;
+  padding: 1rem;
+  z-index: 99;
+  position: relative;
+}

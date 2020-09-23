@@ -1,0 +1,30 @@
+.slider-transition-absolute {
+  transition: right 2s;
+}
+
+.hide-slider {
+  padding: 0;
+  overflow: hidden;
+}
+
+.slider-absolute {
+  position: absolute;
+  right: 0;
+  padding: 0;
+}
+
+.row-container-slider-nowrap {
+  overflow-x: auto;
+}
+
+.row-container-slider-absolute {
+  position: relative;
+}
+
+.page-col-alider-as-col {
+  transition: max-width 0.8s, width 0.8s, height 0.8s, flex-basis 0.8s;
+}
+
+.transition-slider-nowrap {
+  transition: flex-basis 500ms ease-in-out;
+}

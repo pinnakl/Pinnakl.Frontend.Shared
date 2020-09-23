@@ -1,0 +1,38 @@
+<form
+  class="row"
+  [formGroup]="form"
+  (ngSubmit)="onSubmit()"
+  [class.ng-submitted]="submitted"
+>
+  <pinnakl-input
+    class="col-md-3"
+    controlName="startDate"
+    [form]="form"
+    label="Start Date"
+    type="date"
+  ></pinnakl-input>
+  <pinnakl-input
+    class="col-md-3"
+    controlName="endDate"
+    [form]="form"
+    label="End Date"
+    type="date"
+  ></pinnakl-input>
+  <pinnakl-input
+    class="col-md-3"
+    controlName="value"
+    [form]="form"
+    label="Value"
+    [required]="true"
+    type="numeric"
+  ></pinnakl-input>
+  <div class="col-md-3">
+    <button
+      class="btn btn-success mt-4"
+      [disabled]="!form.dirty"
+      type="submit"
+    >
+      SAVE
+    </button>
+  </div>
+</form>

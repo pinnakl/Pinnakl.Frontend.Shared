@@ -1,0 +1,19 @@
+<highcharts-chart
+  [Highcharts]="highcharts"
+  [options]="chartOptions"
+  [update]="updateFlag"
+  [constructorType]="chartConstructor"
+  style="width: 100%; height: 520px; display: block;"
+></highcharts-chart>
+
+<div class="color-axis-container">
+  <div class="mr-3">{{ minAxisLabel }}</div>
+  <div class="color-axis-bar" style="background:#C80A0A;"></div>
+  <div class="color-axis-bar" style="background:#FF3A2F;"></div>
+  <div class="color-axis-bar" style="background:#FF7B50;"></div>
+  <div class="color-axis-bar" style="background:#454D55;"></div>
+  <div class="color-axis-bar" style="background:#64EC58;"></div>
+  <div class="color-axis-bar" style="background:#0AD427;"></div>
+  <div class="color-axis-bar" style="background:#00A235;"></div>
+  <div class="ml-3">{{ maxAxisLabel }}</div>
+</div>

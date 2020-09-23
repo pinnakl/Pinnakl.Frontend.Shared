@@ -1,0 +1,42 @@
+<div>
+  <label class="mb-0">
+    {{ label }} <span class="color-red pl-0-25" *ngIf="required">*</span>
+  </label>
+</div>
+
+<kendo-combobox
+  [data]="options"
+  [value]="selectedOption"
+  (valueChange)="onValueChanged($event)"
+  [clearButton]="false"
+  [allowCustom]="allowCustom"
+  *ngIf="!viewProperty && !modelProperty"
+>
+</kendo-combobox>
+
+<kendo-combobox
+  [data]="options"
+  [value]="selectedOption"
+  (valueChange)="onValueChanged($event)"
+  [clearButton]="false"
+  [textField]="viewProperty"
+  [valueField]="'value'"
+  [allowCustom]="allowCustom"
+  [valueNormalizer]="modelNormalizer"
+  *ngIf="viewProperty && !modelProperty"
+>
+</kendo-combobox>
+
+<kendo-combobox
+  [data]="options"
+  [value]="selectedOption"
+  (valueChange)="onValueChanged($event)"
+  [clearButton]="false"
+  [textField]="viewProperty"
+  [valueField]="modelProperty"
+  [valuePrimitive]="true"
+  [allowCustom]="allowCustom"
+  [valueNormalizer]="modelNormalizer"
+  *ngIf="viewProperty && modelProperty"
+>
+</kendo-combobox>

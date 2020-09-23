@@ -1,0 +1,31 @@
+<table class="table table-bordered">
+  <thead>
+    <th>START DATE</th>
+    <th>END DATE</th>
+    <th>VALUE</th>
+    <th></th>
+  </thead>
+  <tbody>
+    <tr
+      *ngFor="
+        let valueHistoryItem of (valueHistoryItems | sortValueHistoryItems)
+      "
+    >
+      <td>{{ valueHistoryItem.startDate | date: 'MM/dd/yyyy' }}</td>
+      <td>{{ valueHistoryItem.endDate | date: 'MM/dd/yyyy' }}</td>
+      <td>
+        {{ valueHistoryItem.value | number }}
+      </td>
+      <td>
+        <i
+          class="icon-pinnakl-trash-empty color-red cursor-pointer"
+          (click)="onDelete.emit(valueHistoryItem)"
+        ></i>
+        <i
+          class="icon-pinnakl-edit-securities cursor-pointer"
+          (click)="onEdit.emit(valueHistoryItem)"
+        ></i>
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -1,0 +1,100 @@
+<div class="security">
+  <section class="section-full-height relative">
+    <div class="container-fluid security-holder row-flex row-flex-center">
+      <div class="security-card width35 card card-block text-center">
+        <span class="card-img-top security-icons add-security"></span>
+        <h3>Add New {{ name }}</h3>
+        <a
+          href="javascript:;"
+          (click)="onAddNew.emit()"
+          class="btn btn-lg btn-success text-uppercase"
+          >Add New</a
+        >
+      </div>
+      <div class="security-card width35 card card-block text-center">
+        <span class="card-img-top security-icons edit-security"></span>
+        <h3>Edit {{ name }}</h3>
+        <a
+          href="javascript:;"
+          class="btn btn-lg btn-success text-uppercase"
+          (click)="toggleModal()"
+          >Edit</a
+        >
+      </div>
+    </div>
+  </section>
+</div>
+
+<pinnakl-modal [hideDialog]="hideEditModal" (closeModal)="toggleModal()">
+  <div>
+    <div class="modal-body">
+      <form
+        class="container-fluid"
+        [formGroup]="form"
+        (ngSubmit)="onFormSubmit()"
+        [class.ng-submitted]="submitted"
+        name="myForm"
+      >
+        <div class="row form-group">
+          <div class="col-md-12">
+            <h2>Edit {{ name }}</h2>
+            <pinnakl-input
+              *ngIf="name === 'Broker'"
+              controlName="selectedBrokerId"
+              [dropdownSource]="dataList"
+              [dropdownOptions]="{
+                modelProperty: 'id',
+                viewProperty: 'brokerName'
+              }"
+              [form]="form"
+              [label]="name"
+              [required]="true"
+              type="dropdown"
+            >
+            </pinnakl-input>
+            <pinnakl-input
+              *ngIf="name === 'Folder'"
+              controlName="selectedFolderId"
+              [dropdownSource]="dataList"
+              [dropdownOptions]="{
+                modelProperty: 'id',
+                viewProperty: 'col1'
+              }"
+              [form]="form"
+              [label]="name"
+              [required]="true"
+              type="dropdown"
+            >
+            </pinnakl-input>
+            <!--
+                  <div class="input-field text-uppercase">
+                                <oi-select oi-options="customValue.col1 for customValue in editDataList1"
+                                    ng-model="editSelectedValue1"
+                                    id="customValueAttribFolder"
+                                    class="editFolderModalOi"
+                                    name="selectedAssetType"
+                                    required>
+                                </oi-select>
+                                <label for="customValueAttribFolder">Folder</label>
+                            </div>
+                -->
+          </div>
+          <div class="col-md-12">
+            <button
+              type="submit"
+              class="next-btn btn btn-lg btn-success text-uppercase"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</pinnakl-modal>
+
+<style>
+  .editFolderModalOi {
+    margin-top: 2px;
+  }
+</style>

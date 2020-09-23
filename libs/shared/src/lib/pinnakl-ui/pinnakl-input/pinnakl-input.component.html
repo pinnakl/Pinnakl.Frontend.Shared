@@ -1,0 +1,178 @@
+﻿<div [formGroup]="form" [ngSwitch]="type.toLowerCase()">
+  <label
+    class="mb-0"
+    [ngClass]="labelClass"
+    *ngIf="
+      !(type === 'boolean') &&
+      !hideLabel &&
+      !(inputOptions && inputOptions.floatingLabel)
+    "
+  >
+    {{ label }} <span class="color-red pl-0-25" *ngIf="required">*</span>
+  </label>
+  <div *ngSwitchCase="'date'">
+    <pinnakl-date-input
+      [disableInput]="disabled"
+      [formControlName]="controlName"
+      [inputClass]="inputClass"
+      [dateOptions]="dateOptions"
+    >
+    </pinnakl-date-input>
+  </div>
+  <div *ngSwitchCase="'file'">
+    <file-input [formControlName]="controlName"> </file-input>
+  </div>
+  <div *ngSwitchCase="'time'">
+    <pinnakl-time-input
+      [disableInput]="disabled ? true : undefined"
+      [formControlName]="controlName"
+      [inputClass]="inputClass"
+      [format]="format"
+    >
+    </pinnakl-time-input>
+  </div>
+  <div *ngSwitchCase="'multiselect'" [ngClass]="inputClass">
+    <pnkl-multiselect-dropdown
+      [formControlName]="controlName"
+      [dropdownSource]="dropdownSource"
+      [dropdownOptions]="dropdownOptions"
+      (dropdownFetchData)="dropdownFetchDataEmit()"
+      [disabled]="disabled"
+    ></pnkl-multiselect-dropdown>
+  </div>
+  <div *ngSwitchCase="'dropdown'" [ngClass]="inputClass">
+    <pinnakl-dropdown
+      [dropdownSource]="dropdownSource"
+      [dropdownOptions]="dropdownOptions"
+      [form]="form"
+      [controlName]="controlName"
+      [disabled]="disabled"
+      (dropdownFetchData)="dropdownFetchDataEmit()"
+      (onDropdownValueChange)="dropdownValueChanged()"
+    >
+    </pinnakl-dropdown>
+  </div>
+  <div *ngSwitchCase="'numeric'">
+    <input
+      [attr.disabled]="disabled ? true : undefined"
+      class="pnkl-input"
+      pnklNumFormat
+      [decimals]="decimals"
+      [textalign]="textalign"
+      [formControlName]="controlName"
+      [ngClass]="inputClass"
+    />
+  </div>
+  <div *ngSwitchCase="'place'">
+    <pinnakl-place-autocomplete
+      [formControlName]="controlName"
+      [placeType]="placeOptions ? placeOptions.placeType : undefined"
+      [sendPlaceDetails]="placeOptions ? placeOptions.sendPlaceDetails : false"
+      [suggestionType]="placeOptions ? placeOptions.suggestionType : undefined"
+      (placeDetailsReceived)="
+        placeOptions?.sendPlaceDetails
+          ? placeDetailsReceived.emit($event)
+          : null
+      "
+    >
+    </pinnakl-place-autocomplete>
+  </div>
+  <div *ngSwitchCase="'richtextarea'">
+    <pinnakl-editor
+      [disableEditor]="disabled"
+      [textEditorHeight]="textEditorHeight"
+      [formControlName]="controlName"
+    ></pinnakl-editor>
+  </div>
+  <div *ngSwitchCase="'search'">
+    <pinnakl-search-input
+      [disableInput]="disabled ? true : undefined"
+      [formControlName]="controlName"
+      [inputClass]="inputClass"
+    >
+    </pinnakl-search-input>
+  </div>
+  <div *ngSwitchCase="'text'">
+    <pinnakl-input-floating-label
+      type="text"
+      class="pnkl-input"
+      [disabledInput]="disabled ? true : undefined"
+      [inputClass]="inputClass"
+      [label]="label"
+      [inputOptions]="inputOptions"
+      [formControlName]="controlName"
+    >
+    </pinnakl-input-floating-label>
+  </div>
+  <div *ngSwitchCase="'textarea'">
+    <pinnakl-text-area
+      class="pnkl-input"
+      [disableInput]="disabled ? true : undefined"
+      [formControlName]="controlName"
+      [inputClass]="inputClass"
+    ></pinnakl-text-area>
+  </div>
+  <div *ngSwitchCase="'boolean'">
+    <span [attr.class]="setCheckboxStyle()">
+      <span
+        class="switch-label"
+        [ngClass]="labelClass"
+        *ngIf="checkBoxStyle === 'toggle'"
+        >{{ label }}</span
+      >
+      <label
+        [attr.class]="toggleStyle.switch"
+        *ngIf="checkBoxStyle === 'toggle'"
+      >
+        <input
+          type="checkbox"
+          [attr.checked]="value"
+          [formControlName]="controlName"
+        />
+        <div [attr.class]="toggleStyle.holder"></div>
+      </label>
+      <input
+        type="checkbox"
+        [attr.checked]="value"
+        [formControlName]="controlName"
+        *ngIf="checkBoxStyle === 'input-check'"
+      />
+      <label *ngIf="checkBoxStyle === 'input-check'">{{ label }}</label>
+    </span>
+  </div>
+  <div *ngSwitchCase="'password'">
+    <pinnakl-input-floating-label
+      type="password"
+      [disabledInput]="disabled ? true : undefined"
+      [inputClass]="inputClass"
+      [label]="label"
+      [inputOptions]="inputOptions"
+      [formControlName]="controlName"
+    >
+    </pinnakl-input-floating-label>
+  </div>
+  <div *ngSwitchCase="'email'">
+    <pinnakl-input-floating-label
+      type="email"
+      [disabledInput]="disabled ? true : undefined"
+      [inputClass]="inputClass"
+      [label]="label"
+      [inputOptions]="inputOptions"
+      [formControlName]="controlName"
+    >
+    </pinnakl-input-floating-label>
+  </div>
+  <div *ngSwitchCase="'number'">
+    <pinnakl-input-floating-label
+      type="number"
+      [disabledInput]="disabled ? true : undefined"
+      [inputClass]="inputClass"
+      [label]="label"
+      [inputOptions]="inputOptions"
+      [required]="required"
+      [formControlName]="controlName"
+    >
+    </pinnakl-input-floating-label>
+  </div>
+  <pnkl-validation [form]="form" [controlName]="controlName" *ngIf="showValidation"></pnkl-validation>
+</div>

@@ -1,0 +1,19 @@
+{
+  "fileServerFolder": ".",
+  "env": {
+    "username": "vova@corrib",
+    "password": "password"
+  },
+  "fixturesFolder": "./src/fixtures",
+  "integrationFolder": "./src/integration",
+  "supportFile": "./src/support",
+  "pluginsFile": "./src/plugins/index.js",
+  "video": true,
+  "videoCompression": 10,
+  "trashAssetsBeforeRuns": false,
+  "videosFolder": "../../dist/cypress/platform-web-app-e2e/videos",
+  "screenshotsFolder": "../../dist/cypress/platform-web-app-e2e/screenshots",
+  "chromeWebSecurity": false,
+  "baseUrl": "http://localhost:4200",
+  "projectId": "5rb3ds"
+}

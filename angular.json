@@ -1,0 +1,810 @@
+{
+  "version": 1,
+  "projects": {
+    "platform-web-app": {
+      "projectType": "application",
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "apps/platform-web-app",
+      "sourceRoot": "apps/platform-web-app/src",
+      "prefix": "pnkl-frontend",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/platform-web-app",
+            "index": "apps/platform-web-app/src/index.html",
+            "main": "apps/platform-web-app/src/main.ts",
+            "polyfills": "apps/platform-web-app/src/polyfills.ts",
+            "tsConfig": "apps/platform-web-app/tsconfig.app.json",
+            "aot": false,
+            "assets": [
+              "apps/platform-web-app/src/favicon.ico",
+              "apps/platform-web-app/src/assets",
+              "apps/platform-web-app/src/firebase-messaging-sw-custom.js",
+              "apps/platform-web-app/src/manifest.json",
+              "apps/platform-web-app/src/web.config",
+              {
+                "glob": "**/*",
+                "input": "./libs/core/src/assets",
+                "output": "./assets/core-lib"
+              },
+              {
+                "glob": "**/*",
+                "input": "./libs/reporting/src/assets",
+                "output": "./assets/reporting-lib"
+              },
+              {
+                "glob": "**/*",
+                "input": "./libs/shared/src/assets",
+                "output": "assets/"
+              }
+            ],
+            "styles": [
+              "node_modules/ag-grid-community/dist/styles/ag-grid.css",
+              "node_modules/ag-grid-community/dist/styles/ag-theme-fresh.css",
+              "apps/platform-web-app/src/styles.scss"
+            ],
+            "scripts": [
+              "node_modules/tether/dist/js/tether.min.js",
+              "node_modules/diff/dist/diff.min.js"
+            ],
+            "allowedCommonJsDependencies": [
+              "ag-grid-enterprise",
+              "deep-diff",
+              "firebase",
+              "@firebase/component",
+              "@firebase/app",
+              "@firebase/util",
+              "hammerjs",
+              "highcharts",
+              "lodash",
+              "optiscroll",
+              "util",
+              "xlsx"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/platform-web-app/src/environments/environment.ts",
+                  "with": "apps/platform-web-app/src/environments/environment.prod.ts"
+                },
+                {
+                  "replace": "apps/platform-web-app/src/firebase-messaging-sw-custom.js",
+                  "with": "apps/platform-web-app/src/firebase-messaging-sw-custom.prod.js"
+                }
+              ],
+              "outputHashing": "all",
+              "aot": true,
+              "optimization": true,
+              "buildOptimizer": true,
+              "sourceMap": false,
+              "namedChunks": true,
+              "vendorChunk": true,
+              "extractCss": false,
+              "extractLicenses": false,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "5mb",
+                  "maximumError": "9mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "platform-web-app:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "platform-web-app:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "platform-web-app:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/platform-web-app/tsconfig.app.json",
+              "apps/platform-web-app/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/platform-web-app/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "apps/platform-web-app/src/test.ts",
+            "tsConfig": "apps/platform-web-app/tsconfig.spec.json",
+            "karmaConfig": "apps/platform-web-app/karma.conf.js",
+            "polyfills": "apps/platform-web-app/src/polyfills.ts",
+            "assets": [
+              "apps/platform-web-app/src/favicon.ico",
+              "apps/platform-web-app/src/assets",
+              "apps/platform-web-app/src/manifest.json",
+              {
+                "glob": "**/*",
+                "input": "./libs/core/src/assets",
+                "output": "./assets/core-lib"
+              },
+              {
+                "glob": "**/*",
+                "input": "./libs/reporting/src/assets",
+                "output": "./assets/reporting-lib"
+              }
+            ],
+            "styles": [
+              "node_modules/ag-grid-community/dist/styles/ag-grid.css",
+              "node_modules/ag-grid-community/dist/styles/ag-theme-fresh.css",
+              "apps/platform-web-app/src/styles.scss"
+            ],
+            "scripts": [
+              "node_modules/tether/dist/js/tether.min.js",
+              "node_modules/diff/dist/diff.min.js"
+            ]
+          }
+        }
+      }
+    },
+    "platform-web-app-e2e": {
+      "root": "apps/platform-web-app-e2e",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/platform-web-app-e2e/cypress.json",
+            "tsConfig": "apps/platform-web-app-e2e/tsconfig.e2e.json",
+            "devServerTarget": "platform-web-app:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "platform-web-app:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "apps/platform-web-app-e2e/tsconfig.e2e.json",
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/platform-web-app-e2e/**"
+            ]
+          }
+        }
+      }
+    },
+    "shared": {
+      "root": "libs/shared",
+      "sourceRoot": "libs/shared/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/shared/tsconfig.lib.json",
+              "libs/shared/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/shared/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/shared/jest.config.js",
+            "tsConfig": "libs/shared/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "pnkl-charts": {
+      "root": "libs/pnkl-charts",
+      "sourceRoot": "libs/pnkl-charts/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/pnkl-charts/tsconfig.lib.json",
+              "libs/pnkl-charts/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/pnkl-charts/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/pnkl-charts/jest.config.js",
+            "tsConfig": "libs/pnkl-charts/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "core": {
+      "root": "libs/core",
+      "sourceRoot": "libs/core/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/core/tsconfig.lib.json",
+              "libs/core/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/core/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/core/jest.config.js",
+            "tsConfig": "libs/core/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "app-state": {
+      "root": "libs/app-state",
+      "sourceRoot": "libs/app-state/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/app-state/tsconfig.lib.json",
+              "libs/app-state/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/app-state/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/app-state/jest.config.js",
+            "tsConfig": "libs/app-state/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "authentication": {
+      "root": "libs/authentication",
+      "sourceRoot": "libs/authentication/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/authentication/tsconfig.lib.json",
+              "libs/authentication/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/authentication/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/authentication/jest.config.js",
+            "tsConfig": "libs/authentication/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "pinnakl-modal": {
+      "root": "libs/pinnakl-modal",
+      "sourceRoot": "libs/pinnakl-modal/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/pinnakl-modal/tsconfig.lib.json",
+              "libs/pinnakl-modal/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/pinnakl-modal/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/pinnakl-modal/jest.config.js",
+            "tsConfig": "libs/pinnakl-modal/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "reporting": {
+      "root": "libs/reporting",
+      "sourceRoot": "libs/reporting/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/reporting/tsconfig.lib.json",
+              "libs/reporting/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/reporting/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/reporting/jest.config.js",
+            "tsConfig": "libs/reporting/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "help": {
+      "root": "libs/help",
+      "sourceRoot": "libs/help/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/help/tsconfig.lib.json",
+              "libs/help/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/help/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/help/jest.config.js",
+            "tsConfig": "libs/help/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "crm-app": {
+      "projectType": "application",
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "apps/crm-app",
+      "sourceRoot": "apps/crm-app/src",
+      "prefix": "pnkl-frontend",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/crm-app",
+            "index": "apps/crm-app/src/index.html",
+            "main": "apps/crm-app/src/main.ts",
+            "polyfills": "apps/crm-app/src/polyfills.ts",
+            "tsConfig": "apps/crm-app/tsconfig.app.json",
+            "aot": false,
+            "assets": [
+              "apps/crm-app/src/favicon.ico",
+              "apps/crm-app/src/assets",
+              "apps/crm-app/src/manifest.json",
+              "apps/crm-app/src/firebase-messaging-sw-custom.js",
+              "apps/crm-app/src/web.config",
+              {
+                "glob": "**/*",
+                "input": "./libs/core/src/assets",
+                "output": "./assets/core-lib"
+              },
+              {
+                "glob": "**/*",
+                "input": "./libs/shared/src/assets",
+                "output": "assets/"
+              }
+            ],
+            "styles": [
+              "node_modules/ag-grid-community/dist/styles/ag-grid.css",
+              "node_modules/ag-grid-community/dist/styles/ag-theme-fresh.css",
+              "apps/crm-app/src/styles.scss"
+            ],
+            "scripts": [
+              "node_modules/tether/dist/js/tether.min.js",
+              "node_modules/diff/dist/diff.min.js"
+            ],
+            "allowedCommonJsDependencies": [
+              "ag-grid-enterprise",
+              "deep-diff",
+              "firebase",
+              "@firebase/component",
+              "@firebase/app",
+              "@firebase/util",
+              "hammerjs",
+              "highcharts",
+              "lodash",
+              "optiscroll",
+              "util",
+              "xlsx"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/crm-app/src/environments/environment.ts",
+                  "with": "apps/crm-app/src/environments/environment.prod.ts"
+                },
+                {
+                  "replace": "apps/crm-app/src/firebase-messaging-sw-custom.js",
+                  "with": "apps/crm-app/src/firebase-messaging-sw-custom.prod.js"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "5mb",
+                  "maximumError": "10mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "crm-app:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "crm-app:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "crm-app:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/crm-app/tsconfig.app.json",
+              "apps/crm-app/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/crm-app/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "apps/crm-app/src/test.ts",
+            "tsConfig": "apps/crm-app/tsconfig.spec.json",
+            "karmaConfig": "apps/crm-app/karma.conf.js",
+            "polyfills": "apps/crm-app/src/polyfills.ts",
+            "styles": [],
+            "scripts": [],
+            "assets": []
+          }
+        }
+      }
+    },
+    "crm-app-e2e": {
+      "root": "apps/crm-app-e2e",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/crm-app-e2e/cypress.json",
+            "tsConfig": "apps/crm-app-e2e/tsconfig.e2e.json",
+            "devServerTarget": "crm-app:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "crm-app:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "apps/crm-app-e2e/tsconfig.e2e.json",
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/crm-app-e2e/**"
+            ]
+          }
+        }
+      }
+    },
+    "push-notifications-config": {
+      "root": "libs/push-notifications-config",
+      "sourceRoot": "libs/push-notifications-config/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/push-notifications-config/tsconfig.lib.json",
+              "libs/push-notifications-config/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/push-notifications-config/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/push-notifications-config/jest.config.js",
+            "tsConfig": "libs/push-notifications-config/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "pnkl-ui-elements": {
+      "root": "libs/pnkl-ui-elements",
+      "sourceRoot": "libs/pnkl-ui-elements/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/pnkl-ui-elements/tsconfig.lib.json",
+              "libs/pnkl-ui-elements/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/pnkl-ui-elements/**"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/pnkl-ui-elements/jest.config.js",
+            "tsConfig": "libs/pnkl-ui-elements/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "crm-documents": {
+      "projectType": "application",
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "apps/crm-documents",
+      "sourceRoot": "apps/crm-documents/src",
+      "prefix": "pnkl-frontend",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/crm-documents",
+            "index": "apps/crm-documents/src/index.html",
+            "main": "apps/crm-documents/src/main.ts",
+            "polyfills": "apps/crm-documents/src/polyfills.ts",
+            "tsConfig": "apps/crm-documents/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "apps/crm-documents/src/favicon.ico",
+              "apps/crm-documents/src/assets",
+              "apps/crm-documents/src/web.config"
+            ],
+            "styles": [
+              "apps/crm-documents/src/styles.scss"
+            ],
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "ng2-pdf-viewer",
+              "pdfjs-dist/web/pdf_viewer",
+              "pdfjs-dist/build/pdf"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/crm-documents/src/environments/environment.ts",
+                  "with": "apps/crm-documents/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "crm-documents:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "crm-documents:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "crm-documents:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/crm-documents/tsconfig.app.json",
+              "apps/crm-documents/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/crm-documents/**/*"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "apps/crm-documents/src/test.ts",
+            "tsConfig": "apps/crm-documents/tsconfig.spec.json",
+            "karmaConfig": "apps/crm-documents/karma.conf.js",
+            "polyfills": "apps/crm-documents/src/polyfills.ts",
+            "styles": [],
+            "scripts": [],
+            "assets": []
+          }
+        }
+      }
+    },
+    "crm-documents-e2e": {
+      "root": "apps/crm-documents-e2e",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "apps/crm-documents-e2e/protractor.conf.js",
+            "devServerTarget": "crm-documents:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "crm-documents:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "apps/crm-documents-e2e/tsconfig.e2e.json",
+            "exclude": [
+              "**/node_modules/**",
+              "!apps/crm-documents-e2e/**"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "defaultCollection": "@nrwl/angular",
+    "analytics": false
+  },
+  "schematics": {
+    "@nrwl/angular:application": {
+      "unitTestRunner": "karma",
+      "e2eTestRunner": "protractor"
+    },
+    "@nrwl/angular:library": {
+      "unitTestRunner": "karma"
+    },
+    "@ngrx/schematics:component": {
+      "prefix": "",
+      "styleext": "scss"
+    },
+    "@ngrx/schematics:directive": {
+      "prefix": ""
+    }
+  },
+  "defaultProject": "platform-web-app"
+}

@@ -1,0 +1,39 @@
+<svg id="icon" xmlns="http://www.w3.org/2000/svg" width="107" height="108" viewBox="0 0 107 108">
+  <defs>
+    <style>
+      .cls-1, .cls-2 {
+        fill: #fff;
+        stroke: #b8c6db;
+        stroke-width: 4px;
+      }
+
+      .cls-1, .cls-4 {
+        fill-rule: evenodd;
+      }
+
+      .cls-3 {
+        fill: #e5ffe5;
+      }
+
+      .cls-3, .cls-4 {
+        stroke: #35bd64;
+        stroke-width: 2px;
+      }
+
+      .cls-4 {
+        fill: none;
+      }
+    </style>
+  </defs>
+  <g id="icon-2" data-name="icon">
+    <path id="Rounded_Rectangle_30_copy_3" data-name="Rounded Rectangle 30 copy 3" class="cls-1" d="M436,410c0-25.13,13.871-46,39-46h13c25.129,0,39,20.87,39,46" transform="translate(-434 -304)"/>
+    <circle id="Ellipse_23_copy_2" data-name="Ellipse 23 copy 2" class="cls-2" cx="48" cy="28" r="26"/>
+    <path class="cls-1" d="M475,374h13l4,27-10.5,9L471,401Z" transform="translate(-434 -304)"/>
+    <path class="cls-1" d="M470,365h23l-5,13H475Z" transform="translate(-434 -304)"/>
+  </g>
+  <g id="_" data-name="+">
+    <circle class="cls-3" cx="90" cy="90" r="16"/>
+    <path class="cls-4" d="M525,388v12" transform="translate(-434 -304)"/>
+    <path id="Rectangle_54_copy" data-name="Rectangle 54 copy" class="cls-4" d="M518,393h12" transform="translate(-434 -304)"/>
+  </g>
+</svg>

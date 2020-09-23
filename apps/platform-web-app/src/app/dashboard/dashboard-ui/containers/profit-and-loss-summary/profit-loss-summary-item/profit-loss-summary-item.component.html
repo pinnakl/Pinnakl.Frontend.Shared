@@ -1,0 +1,20 @@
+<div class="row align-items-center">
+  <div class="col-md-3">
+    <img class="pnl-image" src="assets/images/dashboard/pnl-percent.png" />
+  </div>
+  <div class="col-md-5 px-0">
+    <div class="row">
+      <div class="col-auto pnl-text-font">{{ pnlText }} P&L</div>
+    </div>
+    <div class="row">
+      <div class="col-auto summary-text-font">
+        {{ pnlValue | number: '1.0-2' }} %
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4" [ngSwitch]="pnlText">
+    <img *ngSwitchCase="'Daily'" src="assets/images/dashboard/graph.png" />
+    <img *ngSwitchCase="'MTD'" src="assets/images/dashboard/graph-2.png" />
+    <img *ngSwitchCase="'YTD'" src="assets/images/dashboard/graph-3.png" />
+  </div>
+</div>

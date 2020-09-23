@@ -1,0 +1,25 @@
+<div>
+  <div
+    [ngClass]="{ active: showOptions }"
+    class="action-button-group oms-grid-action-btn z-index-10"
+  >
+    <a title="Delete" class="action-button cursor-pointer">
+      <span
+        class="action-icon action-icon-delete"
+        (click)="deleteClicked()"
+      ></span>
+    </a>
+    <a title="History" class="action-button cursor-pointer">
+      <span class="action-icon action-icon-history"></span>
+    </a>
+    <a title="Clone" class="action-button cursor-pointer">
+      <span class="action-icon action-icon-add" (click)="cloneClicked()"></span>
+    </a>
+    <a title="Edit" class="action-button cursor-pointer">
+      <span class="action-icon action-icon-edit" (click)="editClicked()"></span>
+    </a>
+  </div>
+  <a class="action-group-button cursor-pointer">
+    <span class="action-icon action-icon-dots" (click)="toggleOptions()"></span>
+  </a>
+</div>

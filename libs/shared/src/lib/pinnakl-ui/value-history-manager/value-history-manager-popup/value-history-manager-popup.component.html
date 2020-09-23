@@ -1,0 +1,15 @@
+<kendo-window
+  [draggable]="false"
+  [height]="500"
+  [width]="700"
+  [resizable]="false"
+  [top]="0"
+  (close)="onClose.emit()"
+>
+  <value-history-manager
+    [fetchHistoryItems]="fetchHistoryItems"
+    [saveAllHistoryItems]="saveAllHistoryItems"
+    [title]="title"
+    (onLatestValueChange)="onLatestValueChange.emit($event)"
+  ></value-history-manager>
+</kendo-window>

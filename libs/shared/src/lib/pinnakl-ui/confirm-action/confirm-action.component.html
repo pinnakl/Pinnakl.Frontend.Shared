@@ -1,0 +1,26 @@
+<kendo-popup
+  [anchor]="anchor"
+  [anchorAlign]="anchorAlign"
+  [popupAlign]="popupAlign"
+  *ngIf="showConfirmation"
+  [animate]="false"
+  class="row"
+>
+  <div class="row" [ngClass]="containerClass">
+    <div [ngClass]="messageClass ? messageClass : 'col-md-9'">
+      {{ confirmationMessage }}
+    </div>
+    <div class="col-md-default-width">
+      <i
+        class="icon-pinnakl-ok color-green cursor-pointer"
+        (click)="actionConfirmed()"
+      ></i>
+    </div>
+    <div class="col-md-default-width">
+      <i
+        class="icon-pinnakl-cancel color-red cursor-pointer"
+        (click)="cancelAction()"
+      ></i>
+    </div>
+  </div>
+</kendo-popup>

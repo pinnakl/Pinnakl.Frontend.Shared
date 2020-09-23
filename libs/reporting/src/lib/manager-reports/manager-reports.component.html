@@ -1,0 +1,64 @@
+<div class="container-fluid">
+  <div class="row pnkl-page-header">
+    <h2 class="col-md-12 px-0 text-secondary">Manager Reports</h2>
+  </div>
+  <div class="row p-3">
+    <div class="col-md-12 pnkl-card">
+      <form
+        class="row mt-3"
+        (ngSubmit)="generateReport()"
+        novalidate
+        [formGroup]="form"
+        [class.ng-submitted]="submitted"
+      >
+        <pinnakl-input
+          class="col-md-2"
+          controlName="date"
+          [dateOptions]="{ format: 'MMMM yyyy' }"
+          [form]="form"
+          label="MONTH"
+          [required]="true"
+          type="date"
+        >
+        </pinnakl-input>
+        <div class="col-md-1">
+          <button class="btn btn-success mt-3" type="submit">GENERATE</button>
+        </div>
+      </form>
+      <div class="row">
+        <div
+          *ngFor="let generatedReportDate of generatedReportDates"
+          class="col-md-2 mb-3"
+        >
+          <div class="row">
+            <h4 class="col-md-12 color-primary">
+              {{ generatedReportDate | date: 'MMMM yyyy' }}
+            </h4>
+          </div>
+          <div *ngFor="let report of reports" class="row download-report">
+            <span class="col-md-8">{{ report }}</span>
+            <img
+              class="export-icon"
+              (click)="exportReport(generatedReportDate, true, report)"
+              src="../../assets/reporting-lib/fonts/icons/export-xls.svg"
+              title="Excel"
+            />
+            <img
+              class="export-icon"
+              (click)="exportReport(generatedReportDate, false, report)"
+              src="../../assets/reporting-lib/fonts/icons/export-pdf.svg"
+              title="PDF"
+            />
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-12">
+              <label class="color-green cursor-pointer add-attachment-label">
+                <i class="icon-pinnakl-add"></i>ADD FILE
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

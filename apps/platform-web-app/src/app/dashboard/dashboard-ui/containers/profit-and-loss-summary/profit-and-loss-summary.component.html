@@ -1,0 +1,17 @@
+<div class="row summary-container">
+  <profit-and-loss-summary-item
+    class="col summary-container-col rounded mb-4 mr-2"
+    [pnlText]="'Daily'"
+    [pnlValue]="pnlSummary.daily"
+  ></profit-and-loss-summary-item>
+  <profit-and-loss-summary-item
+    class="col summary-container-col rounded mb-4 mx-2"
+    [pnlText]="'MTD'"
+    [pnlValue]="pnlSummary.MTD"
+  ></profit-and-loss-summary-item>
+  <profit-and-loss-summary-item
+    class="col summary-container-col rounded mb-4 ml-2"
+    [pnlText]="'YTD'"
+    [pnlValue]="pnlSummary.YTD"
+  ></profit-and-loss-summary-item>
+</div>

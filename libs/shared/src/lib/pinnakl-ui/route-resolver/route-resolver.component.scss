@@ -1,0 +1,12 @@
+.pnkl-spinner {
+  background-repeat: no-repeat;
+  background-position: 45vw 45vh;
+  background-image: url('../../../assets/images/spinner.gif');
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  &.overlay {
+    background-color: rgba(255, 255, 255, 0.5);
+    z-index: 11000;
+  }
+}

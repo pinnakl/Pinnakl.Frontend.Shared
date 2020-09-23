@@ -1,0 +1,71 @@
+/* VARIABLES */
+
+/*************************
+	Fonts variable
+*************************/
+
+$font-main: 'Source Sans Pro', sans-serif;
+$font-extra-light: 200;
+$font-light: 300;
+$font-regular: 400;
+$font-semi-bold: 600;
+$font-bold: 700;
+$font-small: 12px;
+$font-regular: 14px;
+
+/*************************
+	Body variable
+*************************/
+
+$main-text-color: $limed-spruce;
+$body-main-font: $font-main;
+$body-font-size: 13px;
+$body-bg: $catskill-white;
+
+/*************************
+	Links color variable
+*************************/
+
+$link-color: $color-success;
+
+/*************************
+	Title color variable
+*************************/
+
+/*************************
+	Sections variable
+*************************/
+
+/* Nav variables */
+$nav-bg: $bunker;
+$nav-height: 58px;
+$nav-color: $slate-gray;
+
+/* Footer variables */
+$footer-bg: $bunker;
+
+/* Header variables */
+$section-header-height: 105px;
+
+/* Fonts PATHS */
+$font-fontello: '../fonts/fontello/';
+
+
+
+/* Breakpoints */
+$xsmall-screen: 421px !default;
+$small-screen: 600px !default;
+$medium-screen: 992px !default;
+$large-screen: 1024px !default;
+$larger-screen: 1400px !default;
+$xlarge-screen: 1600px !default;
+$xxlarge-screen: 1920px !default;
+
+
+$xsmall-and-down: 'only screen and (max-width : #{$xsmall-screen})' !default; /* 360px and less */
+$small-and-down: 'only screen and (max-width : #{$small-screen})' !default; /* 600px and less */
+$medium-and-down: 'only screen and (max-width : #{$medium-screen})' !default; /* 992px and less */
+$large-and-down: 'only screen and (max-width : #{$large-screen})' !default; /* 1024px and less */
+$larger-and-down: 'only screen and (max-width : #{$larger-screen})' !default; /* 1400px and less */
+$xlarge-and-down: 'only screen and (max-width : #{$xlarge-screen})' !default; /* 1600px and less */
+$xxlarge-and-down: 'only screen and (max-width : #{$xxlarge-screen})' !default; /* 1920px and less */

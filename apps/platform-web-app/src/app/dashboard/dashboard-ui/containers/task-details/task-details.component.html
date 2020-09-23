@@ -1,0 +1,62 @@
+<div
+  [@tasksVisibleChanged]="tasksVisible"
+  class="h-100 slider-left-border background-color-white"
+>
+  <section class="section-padding section-white">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="pb-3 col-md-default-width flex-pull-right">
+          <a
+            class="icon-pinnakl-cancel btn-task-history-close btn-close-icon cursor-pointer"
+            (click)="closeTaskSlider()"
+          ></a>
+        </div>
+      </div>
+      <div class="holder">
+        <div class="row">
+          <div class="col-12 col-md-8 col-sm-7 mobile-mb">
+            <h2>Tasks</h2>
+          </div>
+          <div class="col-12 col-md-4 col-sm-5">
+            <div class="form-group form-group-has-btn form-group-btn-left">
+              <input type="search" class="form-control" placeholder="Search" />
+              <button class="btn-submit">
+                <i class="icon-pinnakl-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ul class="nav nav-tabs negative-margin">
+        <li
+          *ngFor="let category of categories"
+          [class.active]="selectedCategory === category"
+        >
+          <a (click)="selectedCategory = category" class="cursor-pointer">{{
+            category.name
+          }}</a>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane active">
+          <div class="accordion-holder negative-margin">
+            <div class="cursor-pointer" *ngFor="let task of getCategoryTasks()">
+              <task-header
+                (operationSelected)="operationSelected(task, $event)"
+                [task]="task"
+              >
+              </task-header>
+              <task-manager
+                [entities]="entities"
+                [operation]="selectedOperation"
+                [task]="task"
+                (taskRunCompleted)="operationSelected(task, 'summary')"
+                [visible]="selectedTask === task && showTaskManager"
+              ></task-manager>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

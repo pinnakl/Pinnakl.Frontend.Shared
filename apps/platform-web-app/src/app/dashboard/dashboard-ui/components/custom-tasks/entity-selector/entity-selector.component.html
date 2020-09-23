@@ -1,0 +1,34 @@
+<form novalidate [formGroup]="form">
+  <div class="row">
+    <div class="col-md-5" *ngIf="showEntityTypeSelector">
+      <pinnakl-input
+        controlName="entityType"
+        [dropdownSource]="entityTypes"
+        [dropdownOptions]="{
+          modelProperty: 'description',
+          viewProperty: 'description'
+        }"
+        [form]="form"
+        label="ENTITY TYPE"
+        [required]="true"
+        type="dropdown"
+      >
+      </pinnakl-input>
+    </div>
+    <div class="col-md-7" [class.col-md-12]="!showEntityTypeSelector">
+      <pinnakl-input
+        controlName="entityId"
+        [dropdownSource]="dropdownEntities"
+        [dropdownOptions]="{
+          modelProperty: 'id',
+          viewProperty: 'entity'
+        }"
+        [form]="form"
+        label="ENTITY"
+        [required]="true"
+        type="dropdown"
+      >
+      </pinnakl-input>
+    </div>
+  </div>
+</form>

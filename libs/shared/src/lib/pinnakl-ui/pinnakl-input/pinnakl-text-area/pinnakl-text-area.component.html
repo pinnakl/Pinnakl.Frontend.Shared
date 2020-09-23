@@ -1,0 +1,7 @@
+<textarea
+  class="pnkl-input"
+  [disabled]="disableInput ? true : undefined"
+  [ngClass]="inputClass"
+  [(ngModel)]="value"
+  (ngModelChange)="valueChanged($event)"
+></textarea>

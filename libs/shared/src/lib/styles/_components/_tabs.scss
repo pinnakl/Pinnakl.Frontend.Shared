@@ -1,0 +1,39 @@
+/* TABS */
+
+$tabs-border-color: $catskill-white;
+$tabs-border-active-color: $color-primary;
+$tabs-color: $regent-gray;
+$tabs-active-color: $limed-spruce;
+
+.nav-tabs {
+  @include clearfix();
+  border-bottom: 3px solid $tabs-border-color;
+  padding: 0 15px;
+  > li {
+    float: left;
+    margin-right: 40px;
+    &:last-child {
+      margin-right: 0;
+    }
+    &.active {
+      > a {
+        color: $tabs-active-color;
+        border-bottom: 3px solid $color-primary;
+        //border-bottom-color: $tabs-border-active-color;
+      }
+    }
+    > a {
+      padding: 10px 0px;
+      display: block;
+      font-size: $font-regular;
+      text-transform: uppercase;
+      font-weight: $font-bold;
+      color: $tabs-color;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -3px;
+      &:hover {
+        color: $tabs-active-color;
+      }
+    }
+  }
+}

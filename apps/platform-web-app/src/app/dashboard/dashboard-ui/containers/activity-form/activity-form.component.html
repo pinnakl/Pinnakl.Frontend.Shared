@@ -1,0 +1,21 @@
+<form class="row" [formGroup]="form" (ngSubmit)="fetchActivitySummaryData()">
+  <div class="col">
+    <pinnakl-input
+      controlName="startDate"
+      [form]="form"
+      type="date"
+    ></pinnakl-input>
+  </div>
+  <div class="col">
+    <pinnakl-input
+      controlName="endDate"
+      [form]="form"
+      type="date"
+    ></pinnakl-input>
+  </div>
+  <div class="col-auto">
+    <button class="btn btn-success mt-4" type="submit">
+      VIEW
+    </button>
+  </div>
+</form>

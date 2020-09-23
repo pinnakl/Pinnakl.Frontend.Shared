@@ -1,0 +1,123 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="row pnkl-page-header height-8">
+        <div class="col-md-12 full-width-padding-fix">
+          <user-report-actions
+            class="row"
+            [reportName]="reportName"
+            [savedColumns]="savedColumns"
+            [userReportId]="userReportId"
+            (reportRenamed)="setReportName($event)"
+          >
+          </user-report-actions>
+          <div class="row mt-4">
+            <div class="col-md-5">
+              <h6 class="text-secondary">FILTER- {{ filterString }}</h6>
+            </div>
+            <div class="col-md-3">
+              <pinnakl-search-input
+                [darkMode]="true"
+                [(ngModel)]="gridSearchText"
+              ></pinnakl-search-input>
+            </div>
+            <div class="col-md-4">
+              <div class="filter-list">
+                <user-report-save-manager
+                  class="filter-list-item dropdown show"
+                  [clientReportId]="clientReportId"
+                  [customAttributes]="customAttributes"
+                  [filterColumns]="filterColumns"
+                  [gridOptions]="gridOptions"
+                  [idcColumns]="idcColumns?.list"
+                  [reportColumns]="reportColumns"
+                  [reportId]="reportId"
+                  [reportName]="reportName"
+                  [savedColumns]="savedColumns"
+                  [userReportId]="userReportId"
+                >
+                </user-report-save-manager>
+                <div class="filter-list-item" [class.active]="filterVisible">
+                  <a (click)="togglePanel(true)" class="sidebar-filter-trigger">
+                    <i class="icon-pinnakl-filter"></i>
+                  </a>
+                </div>
+                <div class="filter-list-item" [class.active]="configVisible">
+                  <a
+                    (click)="togglePanel(false)"
+                    class="sidebar-configuration-trigger"
+                  >
+                    <i class="icon-pinnakl-cog"></i>
+                  </a>
+                </div>
+                <reporting-export-manager
+                  class="filter-list-item report_dropdown"
+                  [class.active]="exportMenuVisible"
+                  [clientReportId]="clientReportId"
+                  [exportMenuVisible]="exportMenuVisible"
+                  [filterColumns]="filterColumns"
+                  [gridOptions]="gridOptions"
+                  [reportId]="reportId"
+                  [reportName]="reportName"
+                  [reportParameters]="reportParameters"
+                >
+                </reporting-export-manager>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row flex-no-wrap">
+        <div class="col-md-12 max-height-80vh">
+          <i
+            [hidden]="!toolPanelVisible"
+            class="icon-pinnakl-remove reporting-cross-icon-position"
+            (click)="hideToolPanel()"
+          ></i>
+          <pinnakl-grid
+            [columnDefs]="colDefs"
+            [gridHeight]="gridHeight"
+            [gridOptions]="gridOptions"
+            [groupMultiAutoColumn]="true"
+            [pinnedBottomRowData]="aggregation"
+            [rowData]="reportData"
+            [searchText]="gridSearchText"
+            rowGroupPanelShow="always"
+            styleClass="full-width"
+          >
+          </pinnakl-grid>
+        </div>
+        <div class="col-md-3">
+          <grid-filter
+            [columns]="filterColumns"
+            [filterVisible]="filterVisible"
+            (onApply)="applyFilter()"
+            [parameters]="reportParameters"
+            [reportId]="reportId"
+            typeName="report"
+          >
+          </grid-filter>
+        </div>
+        <div class="col-md-5">
+          <reporting-config
+            [clientReportColumns]="clientReportColumns"
+            (columnsSelected)="onColumnsSelected($event)"
+            [configVisible]="configVisible"
+            (currencySelected)="onCurrencySelected($event)"
+            [currencies]="currencies"
+            [customAttributes]="customAttributes"
+            [idcColumns]="idcColumns?.tree"
+            [isUserReport]="!!userReportId"
+            [reportColumns]="reportColumns"
+            [savedColumns]="savedColumns"
+            [userReportCustomAttributes]="userReportCustomAttributes"
+            [userReportColumns]="userReportColumns"
+            [userReportIdcColumns]="userReportIdcColumns"
+          >
+          </reporting-config>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

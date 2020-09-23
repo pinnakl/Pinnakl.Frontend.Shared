@@ -1,0 +1,28 @@
+<kendo-dropdownbutton
+  class="menu-button"
+  [data]="options"
+  (focus)="onFocus()"
+  (blur)="onBlur()"
+  (close)="onClose()"
+  (open)="onOpen()"
+  (itemClick)="onItemClick($event)"
+  [textField]="textField"
+  look="flat"
+  [ngClass]="{
+    'highlight-button': highlight
+  }"
+>
+  {{ menutext }}
+
+  <ng-template kendoDropDownButtonItemTemplate let-dataItem>
+    <div
+      class="menu-item"
+      [ngClass]="{
+        'highlight-option':
+          selectedItem && selectedItem[textField] === dataItem[textField]
+      }"
+    >
+      {{ dataItem[textField] }}
+    </div>
+  </ng-template>
+</kendo-dropdownbutton>

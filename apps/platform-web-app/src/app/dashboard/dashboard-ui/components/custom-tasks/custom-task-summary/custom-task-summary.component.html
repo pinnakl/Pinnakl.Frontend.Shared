@@ -1,0 +1,7 @@
+<p
+  class="accordion-stats  col-md-default-width"
+  *ngFor="let obj of (propertiesData | keys)"
+  [@listOfPropsChanged]
+>
+  <small>{{ obj.value.toUpperCase() }}</small> {{ obj.key }}
+</p>

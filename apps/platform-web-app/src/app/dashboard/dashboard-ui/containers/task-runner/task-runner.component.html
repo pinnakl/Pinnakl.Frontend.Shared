@@ -1,0 +1,22 @@
+<form
+  class="task-runner"
+  [class.ng-submitted]="submitted"
+  [formGroup]="form"
+  (ngSubmit)="onSubmit(form)"
+>
+  <div class="row center-aligned-row mt-3">
+    <div class="col-md-2" *ngFor="let parameter of task.params">
+      <pinnakl-input
+        [controlName]="parameter.name"
+        [dropdownSource]="parameter.options"
+        [form]="form"
+        [label]="parameter.caption"
+        [type]="parameter.type === 'list' ? 'dropdown' : parameter.type"
+      >
+      </pinnakl-input>
+    </div>
+    <div class="col-md-1 pt-4">
+      <button class="btn btn-success" type="submit">RUN</button>
+    </div>
+  </div>
+</form>

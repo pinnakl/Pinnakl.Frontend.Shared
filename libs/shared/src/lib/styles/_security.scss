@@ -1,0 +1,240 @@
+.excu-icon {
+  background-image: url('../../assets/images/sprites.png');
+  background-repeat: no-repeat;
+  background-position: -110px -444px;
+  display: block;
+  float: left;
+  width: 30px;
+  height: 30px;
+}
+
+.security {
+  .security-holder {
+    min-height: 80vh;
+    height: 100%;
+    width: 100%;
+    .security-card {
+      @include border-radius(5px);
+      width: 20%;
+      margin: 1em;
+      padding: 7em 3em;
+      .card-text {
+        font-size: 16px;
+      }
+    }
+  }
+  .security-icons {
+    min-height: 10rem;
+    min-width: 12rem;
+    display: block;
+    margin: 0 auto 1.5em;
+    &.add-security {
+      background: transparent url('../../assets/fonts/icons/add-security.svg')
+        no-repeat center / contain;
+    }
+    &.edit-security {
+      background: transparent url('../../assets/fonts/icons/edit-security.svg')
+        no-repeat center / contain;
+    }
+    &.security-add-manually {
+      background: transparent
+        url('../../assets/fonts/icons/security-add-manually.svg') no-repeat
+        center / 50%;
+    }
+    &.security-add-automatically {
+      background: transparent
+        url('../../assets/fonts/icons/security-add-automatically.svg') no-repeat
+        center / 50%;
+    }
+    &.security-or {
+      background: transparent url('../../assets/fonts/icons/or.svg') no-repeat
+        center / 25%;
+    }
+  }
+  .security-modal {
+    .modal-dialog {
+      margin-top: 17em;
+      .modal-content {
+        padding: 3em 5em;
+      }
+    }
+  }
+}
+
+.modal-manual {
+  h6 {
+    margin-top: 1em;
+    margin-bottom: 0;
+    color: $slate-gray;
+  }
+  .input-field,
+  span.input-check {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+  .modal-dialog {
+    margin-top: 19em;
+    .modal-content {
+      padding: 1.5em;
+    }
+  }
+  .next-btn {
+    margin-top: 2em;
+  }
+  .back-btn {
+    background-color: $slate-gray;
+    color: $white;
+  }
+}
+
+.edit-security-modal-content {
+  padding: 1.5rem !important;
+}
+
+.search-security {
+  padding: 20px 30px;
+}
+
+.input-field .search-security-label {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  top: 0;
+}
+
+.input-field .search-security-input {
+  background: transparent url('../../assets/images/search-icon-light.png')
+    no-repeat scroll 0 8px;
+  padding-left: 22px;
+  padding-bottom: 4px;
+  font-size: 14px;
+}
+
+.security-information-header {
+  font-size: 16px;
+  line-height: 20px;
+  padding: 1rem;
+}
+
+.section-border {
+  background-color: #b8c6db;
+  height: 1px;
+}
+
+.identifier-save-button {
+  padding-top: 18px;
+}
+
+.btn-security {
+  border-radius: 3px;
+  width: 120px;
+  height: 39px;
+  color: $white;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+  line-height: 30px;
+  text-align: center;
+}
+
+.btn-cancel {
+  background-color: $dark-blue6;
+  &:not(:disabled) {
+    color: $white;
+  }
+}
+
+.btn-oulined {
+  border: 1px solid $border-color;
+  background-color: $white;
+  &:hover {
+    background-color: $mystic;
+  }
+  &:not(:disabled) {
+    color: $status-text-color;
+  }
+}
+
+.btn-save {
+  background-color: $emerald;
+}
+
+.security-information-action-panel {
+  padding-top: 0.9375rem;
+  padding-bottom: 0.9375rem;
+}
+
+.kendo-mod-dtp .k-picker-wrap .k-input {
+  color: $limed-spruce;
+}
+
+.kendo-mod-dtp .k-select:before {
+  color: $limed-spruce;
+}
+
+.input-field .hidden-input {
+  display: none;
+}
+
+.color-red {
+  color: $radical-red;
+}
+
+.cursor-pointer:hover {
+  cursor: pointer;
+}
+
+.col-md-1_1 {
+  flex-basis: 9%;
+  width: 9%;
+}
+
+.col-md-1_2 {
+  flex-basis: 10%;
+  width: 10%;
+}
+
+.col-md-1_3 {
+  flex-basis: 11%;
+  width: 11%;
+}
+
+.col-md-1_6 {
+  flex-basis: 13%;
+  width: 13%;
+}
+
+.pl-0-25 {
+  padding-left: 0.25rem !important;
+}
+
+.input-field-hidden:before {
+  height: 0;
+}
+
+.input-field-hidden label.control-label.has-error {
+  top: 25px !important;
+}
+
+.flex-no-wrap {
+  flex-wrap: nowrap;
+}
+
+.width-inherit {
+  width: inherit;
+}
+
+security-selector input {
+  text-transform: capitalize;
+}
+
+.custom-attribute-list-options .col-md-default-width {
+  margin-top: 1rem;
+}
+
+.ag-theme-material .ag-header-cell {
+  font-weight: bold;
+}
+
+.ag-theme-material .ag-menu-list {
+  background-color: grey;
+}

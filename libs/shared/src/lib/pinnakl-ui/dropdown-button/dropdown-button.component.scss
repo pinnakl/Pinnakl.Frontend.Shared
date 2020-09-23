@@ -1,0 +1,21 @@
+@import '../../styles/_components/_colors.scss';
+.highlight-option {
+  font-weight: bold;
+}
+
+.highlight-button {
+  border-bottom: 3px solid $blue;
+  color: $blue;
+  font-weight: bold;
+}
+
+.menu-button {
+  padding-bottom: 5px;
+  padding-left: 25px;
+  padding-right: 25px;
+}
+
+.menu-item {
+  padding: 10px;
+  letter-spacing: 1px;
+}

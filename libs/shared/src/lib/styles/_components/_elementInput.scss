@@ -1,0 +1,97 @@
+span.input-check {
+  margin-right: 15px;
+  margin-top: 22px;
+  &.inline-checkbox {
+    margin-right: 0;
+    margin-top: 0;
+  }
+
+  display: inline-block;
+  input[type='checkbox']:checked {
+    background-position: 0px -159px;
+  }
+  input[type='checkbox'] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: transparent url('../../../assets/images/chq-box.png') no-repeat scroll
+      0px -96px;
+    width: 24px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+
+    -webkit-transition: all 0s ease-in-out;
+    -moz-transition: all 0s ease-in-out;
+    -ms-transition: all 0s ease-in-out;
+    -o-transition: all 0s ease-in-out;
+    transition: all 0s ease-in-out;
+  }
+
+  input[type='radio']:checked {
+    background-position: -13px -496px;
+  }
+  input[type='radio']:disabled {
+    opacity: 0.4;
+  }
+  input[type='radio'] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+
+    background: transparent url('../../../assets/images/sprites.png') no-repeat scroll -13px -548px;
+    width: 24px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+
+    -webkit-transition: all 0s ease-in-out;
+    -moz-transition: all 0s ease-in-out;
+    -ms-transition: all 0s ease-in-out;
+    -o-transition: all 0s ease-in-out;
+    transition: all 0s ease-in-out;
+  }
+
+  label {
+    font-size: 14px;
+    color: #36404c;
+  }
+}
+
+oi-select .select-search-list {
+  margin: 0;
+  padding: 0;
+}
+
+oi-select .select-search-list-item {
+  margin: 0px 4px 1px 0;
+}
+
+oi-select .select-search-list-item_input {
+  margin: 0;
+  padding: 0;
+}
+oi-select .select-search {
+  border: none;
+  background-color: transparent;
+}
+oi-select[disabled='disabled'] .select-search {
+  border: none;
+  background-color: transparent;
+}
+oi-select.open .select-search {
+  border-bottom: 0;
+}
+
+oi-select.focused .select-search {
+  box-shadow: none;
+}
+
+oi-select:not(.multiple) .select-search-list-item_selection {
+  font-weight: normal;
+  padding-left: 0;
+}
+
+form.ng-submitted oi-select.ng-invalid {
+  border-bottom: 1px solid red;
+}

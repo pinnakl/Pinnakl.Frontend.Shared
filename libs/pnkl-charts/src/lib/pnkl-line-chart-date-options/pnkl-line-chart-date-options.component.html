@@ -1,0 +1,30 @@
+<form
+  class="d-flex align-items-end justify-content-between chart-date-options"
+  [formGroup]="formGroup"
+>
+  <div class="width-50-percent">
+    <ng-container *ngIf="hideSelected">
+      <label>
+        Selected
+      </label>
+      <kendo-multiselect
+        [data]="selectionItems"
+        formControlName="selectedItems"
+      >
+      </kendo-multiselect>
+    </ng-container>
+  </div>
+
+  <div class="pr-3 d-flex align-items-center">
+    <div class="toggle-radio-btn" *ngFor="let option of frequencyOptions">
+      <input
+        type="radio"
+        name="frequency"
+        formControlName="frequency"
+        [id]="'frequency-' + option"
+        [value]="option"
+      />
+      <label [for]="'frequency-' + option">{{ option }}</label>
+    </div>
+  </div>
+</form>

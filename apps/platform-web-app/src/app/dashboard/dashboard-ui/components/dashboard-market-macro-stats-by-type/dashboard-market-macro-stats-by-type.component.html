@@ -1,0 +1,29 @@
+<div class="mt-3">
+  <div class="stats-type">{{ statType }}</div>
+  <div class="stats-item-container" pnklCustomScroll>
+    <div
+      *ngFor="let stat of stats; trackBy: getName"
+      class="stat-container rounded"
+      [class.macro]="!isIndex"
+    >
+      <div class="d-flex align-items-center">
+        <name-avatar [nameString]="stat.name.slice(0, 1)"></name-avatar>
+        <div class="ml-4 stat-name">{{ stat.name }}</div>
+      </div>
+      <div>
+        <div class="stat-value">{{ stat.value | number: '1.0-2' }}</div>
+        <div
+          *ngIf="stat.change !== null"
+          class="stat-change"
+          [class.negative]="stat.change < 0"
+        >
+          <i
+            class="icon-pinnakl-up-dir"
+            [class.icon-pinnakl-down-dir]="stat.change < 0"
+          ></i>
+          {{ stat.change | number: '1.0-2' }}%
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

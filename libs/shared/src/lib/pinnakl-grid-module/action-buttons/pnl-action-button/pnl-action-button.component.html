@@ -1,0 +1,19 @@
+<div (focusout)="toggleOff()">
+  <div *ngIf="this.widget" class=" action-button-group oms-grid-action-btn">
+    <a class="action-button">
+      <span
+        (click)="discardSecId()"
+        class="action-icon action-icon-delete"
+      ></span>
+    </a>
+    <a class="action-button">
+      <span (click)="enableSecId()" class="action-icon action-icon-edit"></span>
+    </a>
+  </div>
+  <a class="action-group-button" href="javascript:;">
+    <span
+      (click)="this.widget = !this.widget"
+      class="action-icon action-icon-dots"
+    ></span>
+  </a>
+</div>

@@ -1,0 +1,147 @@
+.shrink-screen {
+  min-width: 75% !important;
+  width: 75% !important;
+  flex-grow: 0 !important;
+}
+
+.pricing_section_kendo {
+  @include transition(500ms);
+  margin: 0;
+  .pricing_kendo_header {
+    background-color: $mirage;
+    height: 56px;
+    color: #cfd7e6;
+  }
+  .pricing_kendo_sub_header {
+    margin: 30px 20px;
+    background-color: $white;
+    .sub_header1,
+    .sub_header2 {
+      margin: 25px;
+      .label_sub_header {
+        color: $regent-gray;
+      }
+    }
+    .sub_header1 {
+      border-right: 2px solid $regent-gray;
+    }
+  }
+}
+
+.pricing_header_filter_btn {
+  padding: 13px 16px;
+}
+
+.pricing_header_text {
+  padding: 16px;
+}
+
+.kendo_div {
+  padding: 0;
+}
+
+.pricing_section_detail {
+  border-left: 1px solid #121921;
+  width: 25% !important;
+  background-color: $white;
+}
+
+.pricing_filter {
+  padding: 0;
+  right: -60px;
+  top: 43px;
+  width: 370px;
+  border: 1px solid #121921;
+  .pricing_filter_header {
+    padding: 20px;
+    background-color: $mirage;
+    border-bottom: 1px solid #121921;
+  }
+  .pricing_filter_body {
+    padding: 20px;
+    .pricing_date_picker {
+      margin-bottom: 30px;
+      margin-top: 20px;
+      input,
+      span {
+        color: $casper;
+      }
+    }
+    .pricing_asset_type {
+      color: $light-blue;
+    }
+    .pricing_filter_select {
+      margin-bottom: 40px;
+      padding-top: 0;
+      padding-bottom: 5px;
+      padding-left: 3px;
+      font-size: 16px;
+    }
+    .pricing_filter_load_btn {
+      margin-top: 10px;
+      background-color: $emerald;
+      border: 1px solid $emerald;
+    }
+  }
+}
+
+.price_detail_header {
+  background-color: $mirage;
+  height: 56px;
+  color: #cfd7e6;
+  margin-bottom: 10px;
+  .price_detail_header_text {
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+  .price_detail_header_close {
+    padding: 16px 0;
+    a {
+      color: $color-danger;
+    }
+  }
+}
+
+.price_detail_body {
+  .broker_detail {
+    .add_source {
+      .add_source_col3 {
+        input {
+          color: $black;
+          font-size: 15px;
+        }
+      }
+    }
+  }
+  .comment {
+    margin: 10px 0;
+    input#cmnt {
+      color: $limed-spruce;
+      font-size: 15px;
+    }
+  }
+  .save_btn {
+    margin: 10px 0;
+    button {
+      background-color: $emerald;
+      border: 1px solid $emerald;
+    }
+  }
+}
+
+.input-hidden {
+  display: none !important;
+}
+
+.pricing-grid {
+  .k-grid-content {
+    max-height: 65vh;
+  }
+}
+
+.kendoDiv {
+  kendo-datepicker {
+    width: 100%;
+  }
+  margin-bottom: 15px;
+}

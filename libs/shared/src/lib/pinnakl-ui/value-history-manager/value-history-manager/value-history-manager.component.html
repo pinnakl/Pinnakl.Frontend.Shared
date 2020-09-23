@@ -1,0 +1,15 @@
+<div class="p-3">
+  <h4>{{ title }}</h4>
+  <value-history-item-form
+    [value]="valueHistoryManagerService.valueHistoryItemToEdit$ | async"
+    (onSave)="onSave($event)"
+  ></value-history-item-form>
+  <br />
+  <value-history-table
+    [valueHistoryItems]="valueHistoryManagerService.currentValueHistoryItems"
+    (onDelete)="onDelete($event)"
+    (onEdit)="onEdit($event)"
+  ></value-history-table>
+  <br />
+  <button class="btn btn-success" (click)="saveAll()">SAVE ALL</button>
+</div>

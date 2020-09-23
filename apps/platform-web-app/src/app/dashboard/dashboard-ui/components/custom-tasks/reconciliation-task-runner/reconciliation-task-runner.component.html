@@ -1,0 +1,36 @@
+<form
+  class="task-runner"
+  [class.ng-submitted]="submitted"
+  [formGroup]="form"
+  (ngSubmit)="onSubmit(form)"
+>
+  <div class="row center-aligned-row mt-3">
+    <div class="col-md-3" *ngFor="let parameter of task.params">
+      <pinnakl-input
+        *ngIf="parameter.name.toLowerCase() !== 'entityid'"
+        [controlName]="parameter.name"
+        [dropdownSource]="parameter.options"
+        [form]="form"
+        [label]="parameter.caption"
+        [type]="parameter.type === 'list' ? 'dropdown' : parameter.type"
+      >
+      </pinnakl-input>
+      <div *ngIf="parameter.name.toLowerCase() === 'entityid'">
+        <entity-selector
+          [entities]="entities"
+          [filter]="{ reconIndicator: true }"
+          [formControlName]="parameter.name"
+          [showEntityTypeSelector]="true"
+        >
+        </entity-selector>
+        <pnkl-validation
+          [form]="form"
+          [controlName]="parameter.name"
+        ></pnkl-validation>
+      </div>
+    </div>
+    <div class="col-md-1 pt-4">
+      <button class="btn btn-success" type="submit">RUN</button>
+    </div>
+  </div>
+</form>

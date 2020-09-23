@@ -1,0 +1,9 @@
+<input
+  type="text"
+  class="pnkl-input search-input"
+  [class.text-white]="darkMode"
+  [disabled]="disableInput ? true : undefined"
+  [ngClass]="inputClass"
+  [(ngModel)]="value"
+  (ngModelChange)="valueChanged($event)"
+/>

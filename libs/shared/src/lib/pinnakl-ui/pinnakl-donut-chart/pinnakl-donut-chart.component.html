@@ -1,0 +1,23 @@
+<kendo-chart
+  class="pinnkal-donut-chart"
+  [seriesColors]="colorArray"
+  [transitions]="transitions"
+  (render)="onRender($event)"
+>
+  <kendo-chart-series>
+    <ng-template kendoChartDonutCenterTemplate>
+      <h3 *ngIf="donutChartData" class="chart-percents">{{ percentCount | number:'1.0-0' }}%</h3>
+      <h3 *ngIf="!donutChartData" class="chart-percents">0%</h3>
+      <h4 class="chart-text">{{displayText}}</h4>
+    </ng-template>
+    <kendo-chart-series-item
+      type="donut"
+      [data]="donutChartData"
+      [field]="fieldName"
+      categoryField="kind"
+      [size]="10"
+      [holeSize]="55"
+    >
+    </kendo-chart-series-item>
+  </kendo-chart-series>
+</kendo-chart>

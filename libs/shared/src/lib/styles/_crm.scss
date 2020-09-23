@@ -1,0 +1,375 @@
+@import './_components/colors';
+@import './_components/variables';
+@import './_components/mixins';
+
+.pnkl-page-header {
+  background-color: $mirage;
+  border-left: 1px solid $bunker;
+  border-bottom: 1px solid $bunker;
+  padding: 1rem;
+}
+
+.full-width-padding-fix {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.header-action-text {
+  font-size: $regular-font;
+  font-weight: $semi-bold;
+  color: $casper;
+  padding-left: 0.25rem;
+  &.no-hover:hover{
+    color: $casper;
+  }
+}
+
+.header-action-text:hover {
+  color: $emerald;
+}
+
+.color-primary {
+  color: $color-primary;
+}
+
+.investor-details-header-height {
+  height: 6rem;
+}
+
+.action-items-body {
+  background-color: $white;
+  height: calc(90vh - 58px - 6rem);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 2vh;
+}
+
+.communication-history-body {
+  background-color: $white;
+  height: calc(100vh - 118px - 6rem);
+  border-left: 1px solid $pigeon-post;
+  overflow-y: auto;
+  overflow-x: hidden;
+  @include respond-to(laptops) {
+    margin-left: 0;
+  }
+}
+
+.fade-animate {
+  transition: opacity 500ms;
+  opacity: 1;
+
+  &.ng-hide {
+    opacity: 0;
+  }
+}
+
+.investor-details-body {
+  padding: 1em;
+  height: calc(100vh - 118px - 6rem);
+  border-left: 1px solid $bunker;
+  overflow-y: auto;
+}
+
+.investor-component-card {
+  background-color: $white;
+  padding: 2rem 0.5rem;
+}
+
+.subject-person {
+  color: $blue;
+  font-size: $regular-font;
+}
+
+.input-field.is-ready {
+  label.textarea-character-limit {
+    position: relative;
+    float: right;
+  }
+}
+
+oi-select[multiple] {
+  margin-top: 0.5rem;
+  padding-bottom: 0.5rem;
+
+  .select-search-list-item_selection {
+    background: $geyser;
+    color: $bright-gray;
+    letter-spacing: 0.05em;
+    font-weight: normal;
+    padding: 5px 11px;
+  }
+
+  .select-search-list-item_selection-remove {
+    padding-left: 0.5rem;
+    color: $bali-hai;
+    opacity: 1;
+    text-shadow: none;
+  }
+}
+
+.flex-pull-right {
+  margin-left: auto !important;
+}
+
+.investor-summary-viewer-header {
+  font-size: $medium-font;
+  font-weight: $semi-bold;
+  line-height: 20px;
+}
+
+.color-regent-grey {
+  color: $regent-gray;
+}
+
+.investor-edit-icon:hover {
+  color: $color-primary;
+}
+
+.investor-delete-icon:hover {
+  color: $color-danger;
+}
+
+.investor-summary-body {
+  letter-spacing: 0.05em;
+}
+
+.investor-summary-body label {
+  color: $regent-gray;
+}
+
+.investor-summary-editor-row {
+  margin-top: 2rem;
+}
+
+.col-md-default-width {
+  padding: 0 0.9375rem;
+}
+
+.animate-repeat.ng-enter,
+.animate-repeat.ng-leave,
+.animate-repeat.ng-move {
+  transition: all linear 0.2s;
+}
+
+.animate-repeat.ng-enter,
+.animate-repeat.ng-leave.ng-leave-active,
+.animate-repeat.ng-move {
+  /*opacity: 0;*/
+  margin-left: 100%;
+}
+
+.animate-repeat.ng-enter.ng-enter-active,
+.animate-repeat.ng-leave,
+.animate-repeat.ng-move.ng-move-active {
+  /*opacity: 1;*/
+  margin-left: 0;
+}
+
+.input-field textarea {
+  width: 100%;
+  border: none;
+  resize: none;
+  margin-top: 1rem;
+  margin-bottom: -0.25rem;
+  height: 10rem;
+}
+
+.address-editor-card
+  oi-select:not(.multiple)
+  .select-search-list-item_selection {
+  border: none;
+}
+
+.investor-summary-body .input-field-hidden label.control-label.has-error {
+  top: 0 !important;
+  left: 2rem;
+}
+
+.confirm-delete {
+  z-index: 10;
+  background-color: $mirage;
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  text-align: left;
+}
+
+.confirm-communication-delete {
+  @extend .confirm-delete;
+  position: absolute;
+  margin-top: 90%;
+  margin-left: 1rem;
+
+
+  &.confirm-communication-delete-viewer {
+    margin-top: 15%;
+    right: 3em;
+  }
+}
+
+.prospecting-address-selector {
+  position: fixed;
+  right: 25%;
+  margin-top: 5rem;
+  background-color: white;
+  padding: 1rem 1.5rem;
+  z-index: 1;
+  transition: all linear 0.5s;
+}
+
+.prospecting-address-selector.ng-hide {
+  opacity: 0;
+}
+
+.prospecting-header-height {
+  height: 4rem;
+}
+
+.crm-prospecting-filter {
+  transition: margin-left 500ms;
+  margin-left: -25%;
+
+  &.ng-hide {
+    margin-left: 0;
+  }
+}
+
+.crm-prospecting-filter-body {
+  background: $ebony-clay;
+  color: $slate-gray;
+
+  oi-select:not(.multiple) .select-search-list-item_selection {
+    color: $white;
+    border: none;
+  }
+
+  input[type='text'] {
+    color: $white;
+  }
+}
+
+.crm-prospecting-filter-list {
+  z-index: 1;
+}
+
+.angular-google-map-container {
+  height: calc(100vh - 4rem - 58px);
+}
+
+.font-weight-bold {
+  font-weight: $semi-bold;
+}
+
+.contacts-count {
+  font-size: $heading4;
+  line-height: 20px;
+}
+
+.add-attachment-label {
+  font-size: $regular-font;
+  font-weight: $semi-bold;
+}
+
+// Distribution List
+
+.colorW {
+  color: $white;
+}
+
+.FS16 {
+  font-size: 16px !important;
+}
+
+oi-select.search-security-input {
+  .select-dropdown {
+    max-height: 35rem;
+  }
+}
+
+.investor-search-results {
+  height: 18rem;
+  overflow-y: auto;
+  background-color: $white;
+  border: none;
+  margin-top: 0;
+}
+
+.crm-search-panel span.input-check {
+  margin: 0;
+}
+
+.communication-item-body .icon-pinnakl-table-action::before {
+  font-size: 30px;
+  margin-left: -3px;
+  transform: rotate(90deg);
+}
+
+.background-color-white {
+  background-color: $white;
+}
+
+.is-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+// CRM Dahsboard css
+.name-avatar {
+  border-radius: 50%;
+  text-align: center;
+  vertical-align: middle;
+  font-weight: bold;
+  color: $white;
+  font-size: 1rem;
+  height: 30px;
+  width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.horizontal-align-end {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.border-radius-4px {
+  border-radius: 4px;
+}
+
+.highlight-top-item .name-avatar {
+  color: #1577ff !important;
+  background-color: $white !important;
+}
+
+.ellipsesclampOneLine {
+  overflow: hidden;
+  display: -webkit-box;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 1;
+
+  /* autoprefixer: ignore next */
+  -webkit-box-orient: vertical;
+}
+
+// CRM Dahsboard css ends
+
+.crm-tab-div .k-button {
+  font-size: 16px;
+  font-weight: 400;
+  color: #777;
+  text-transform: uppercase;
+  padding-bottom: 0px;
+}
+
+camapign-spikes-chart pnkl-line-chart-date-options {
+  display: none;
+}
+
+camapign-spikes-chart .k-chart {
+  height: 325px;
+}
+
+.investor-visited-date {
+  vertical-align: middle !important;
+}

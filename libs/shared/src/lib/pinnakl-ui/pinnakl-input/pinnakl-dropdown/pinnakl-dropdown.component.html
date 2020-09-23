@@ -1,0 +1,35 @@
+<div [formGroup]="form">
+  <kendo-combobox
+    [allowCustom]="dropdownOptions?.allowCustom ? true : false"
+    (blur)="dropdownBlurred(kendoComboBoxInstance)"
+    [clearButton]="true"
+    [data]="dropdownCollection"
+    [attr.disabled]="disabled ? true : undefined"
+    [filterable]="true"
+    (valueChange)="dropdownValueChanged($event)"
+    (filterChange)="filterDropdown($event)"
+    (click)="dropdownFocused(kendoComboBoxInstance)"
+    [formControlName]="controlName"
+    [loading]="dropdownLoading"
+    (open)="dropdownOpen($event, kendoComboBoxInstance)"
+    [textField]="
+      dropdownOptions?.viewProperty ? dropdownOptions.viewProperty : undefined
+    "
+    [valueField]="
+      dropdownOptions?.viewProperty
+        ? dropdownOptions.modelProperty
+          ? dropdownOptions.modelProperty
+          : 'id'
+        : undefined
+    "
+    [valuePrimitive]="dropdownOptions ? !dropdownOptions.objectModel : true"
+    [valueNormalizer]="
+      dropdownOptions?.modelNormalizer
+        ? dropdownOptions.modelNormalizer
+        : defaultModelNormalizer
+    "
+    [disabled]="disabled"
+    #kendoComboBoxInstance="kendoComboBox"
+  >
+  </kendo-combobox>
+</div>

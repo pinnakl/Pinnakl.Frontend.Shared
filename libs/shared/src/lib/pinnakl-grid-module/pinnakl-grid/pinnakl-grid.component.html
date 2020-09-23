@@ -1,0 +1,34 @@
+<ag-grid-angular
+  animateRows="true"
+  [autoGroupColumnDef]="autoGroupColumnDef"
+  (bodyScroll)="bodyScrollHandler()"
+  class="ag-theme-fresh"
+  [columnDefs]="columnDefs"
+  (columnRowGroupChanged)="sortGroupsAndSetVisibility($event)"
+  [defaultColDef]="{
+    filter: true,
+    resizable: true,
+    sortable: true
+  }"
+  (dragStopped)="columnMovedHandler($event)"
+  [gridOptions]="gridOptions"
+  (gridReady)="onGridReady()"
+  [groupIncludeFooter]="groupIncludeFooter"
+  [groupMultiAutoColumn]="groupMultiAutoColumn"
+  [headerHeight]="headerHeight"
+  (modelUpdated)="modelUpdateHandler($event)"
+  [ngClass]="styleClass"
+  [pinnedBottomRowData]="pinnedBottomRowData"
+  [quickFilterText]="searchText"
+  [rowData]="rowData"
+  (rowDataChanged)="onRowDataChange()"
+  [rowGroupPanelShow]="rowGroupPanelShow"
+  [rowHeight]="rowHeight"
+  [rowSelection]="rowSelection"
+  (rowClicked)="onRowClicked($event)"
+  (sortChanged)="sortHandler($event)"
+  [style.height]="gridHeight"
+  (viewportChanged)="viewPortChangedHandler()"
+  (selectionChanged)="selectionChanged()"
+>
+</ag-grid-angular>

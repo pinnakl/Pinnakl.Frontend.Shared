@@ -1,0 +1,52 @@
+.login-form {
+  border: 1px solid $pigeon-post;
+  @include border-radius(3px);
+  overflow: hidden;
+  margin: 100px auto 0;
+  background: $white;
+  width: 360px;
+  padding: 52px 30px 48px;
+
+  .big-logo {
+    text-align: center;
+    margin-bottom: 63px;
+
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  .btn-full {
+    width: 100%;
+    text-align: center;
+  }
+
+  .btn-success {
+    font-size: 14px;
+    text-transform: uppercase;
+    line-height: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  div.login {
+    margin-bottom: 10px;
+  }
+
+  a {
+    color: #0b6eca;
+
+    &:active,
+    &:focus,
+    text-transform:underline &:hover {
+      color: #0b6eca;
+    }
+  }
+}
+
+.versionNo {
+  margin-top: 10px;
+  font-size: 12px;
+  color: $regent-gray;
+}

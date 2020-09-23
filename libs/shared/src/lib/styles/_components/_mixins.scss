@@ -1,0 +1,326 @@
+/* MIXINS */
+
+/*Transitions*/
+@mixin transition($transition) {
+  -webkit-transition: $transition;
+  -moz-transition: $transition;
+  -ms-transition: $transition;
+  -o-transition: $transition;
+  transition: $transition;
+}
+
+/*Text nowrap*/
+@mixin text-overflow() {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin translate($x, $y) {
+  -webkit-transform: translate($x, $y);
+  -ms-transform: translate($x, $y); // IE9 only
+  -o-transform: translate($x, $y);
+  transform: translate($x, $y);
+}
+
+@mixin flex-center() {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  display: flex;
+}
+
+/* Different devices resolutions */
+@mixin respond-to($media) {
+  @if $media==old-phones {
+    @media #{$xsmall-and-down} {
+      @content;
+    }
+  } @else if $media==phones {
+    @media #{$small-and-down} {
+      @content;
+    }
+  } @else if $media==tablets-portrait {
+    @media #{$medium-and-down} {
+      @content;
+    }
+  } @else if $media==tablets-landscape {
+    @media #{$large-and-down} {
+      @content;
+    }
+  } @else if $media==laptops {
+    @media #{$larger-and-down} {
+      @content;
+    }
+  } @else if $media==desktops {
+    @media #{$xlarge-and-down} {
+      @content;
+    }
+  } @else if $media==desktops-large {
+    @media #{$xxlarge-and-down} {
+      @content;
+    }
+  }
+}
+
+@mixin scrollable-section() {
+  height: calc(100vh - #{$section-header-height + $nav-height});
+  overflow-y: auto;
+}
+
+@mixin contact-initials($color) {
+  background-color: transparentize($color, 0.8);
+  > div {
+    color: $color;
+  }
+}
+
+// Placeholder text
+@mixin custom-placeholder(
+  $color: $input-color-placeholder,
+  $font-size: $input-font-size-placeholder
+) {
+  &:-moz-placeholder {
+    color: $color;
+    font-size: $font-size;
+    opacity: 1;
+  }
+  &::-moz-placeholder {
+    color: $color;
+    font-size: $font-size;
+    opacity: 1;
+  }
+  &:-ms-input-placeholder {
+    color: $color;
+    font-size: $font-size;
+    opacity: 1;
+  }
+  &::-webkit-input-placeholder {
+    color: $color;
+    font-size: $font-size;
+    opacity: 1;
+  }
+}
+
+//Placeholder opacity
+@mixin custom-placeholder-opacity($opacity: $placeholder-opacity) {
+  &:-moz-placeholder {
+    opacity: $opacity;
+  }
+  &::-moz-placeholder {
+    opacity: $opacity;
+  }
+  &:-ms-input-placeholder {
+    opacity: $opacity;
+  }
+  &::-webkit-input-placeholder {
+    opacity: $opacity;
+  }
+}
+
+@mixin switch-field($margin: 20px) {
+  .switch-field {
+    position: relative;
+    height: 30px;
+    width: 150px;
+    margin: $margin auto;
+    background: $white;
+    border-radius: 44px;
+    border: 1px solid $border-color;
+    overflow: hidden;
+    box-sizing: content-box;
+
+    input {
+      display: none;
+
+      &:checked + label {
+        font-weight: bold;
+        color: $white;
+      }
+
+      &:checked + label:last-of-type ~ .switch-mask {
+        left: 75px;
+      }
+    }
+
+    label {
+      position: relative;
+      z-index: 2;
+      float: left;
+      width: 75px;
+      line-height: 28px;
+      font-size: 14px;
+      color: $status-text-color;
+      text-align: center;
+      border-radius: 44px;
+      cursor: pointer;
+      user-select: none;
+      text-transform: uppercase;
+      &:active {
+        font-weight: bold;
+      }
+    }
+
+    .switch-mask {
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      display: block;
+      width: 75px;
+      height: 30px;
+      border-radius: 44px;
+      transition: left 0.15s ease-out;
+      background-color: $active-status-text-color;
+    }
+  }
+}
+
+@mixin toggle-radios($btn-width: 72px, $padding: 0, $line-height: 1.9) {
+  .toggle-radio-btn {
+    display: inline-block;
+
+    & + .toggle-radio-btn {
+      margin-left: 10px;
+      @include respond-to(desktops) {
+        margin-left: 5px;
+      }
+    }
+
+    label {
+      position: relative;
+      z-index: 2;
+      float: left;
+      font-size: 14px;
+      line-height: $line-height;
+      color: $status-text-color;
+      text-align: center;
+      border-radius: 44px;
+      cursor: pointer;
+      user-select: none;
+      background-color: transparent;
+      font-weight: 600;
+      width: $btn-width;
+      height: 30px;
+      border: 1px solid $border-color;
+      padding: $padding;
+      margin-bottom: 0;
+    }
+
+    input[type='radio'] {
+      display: none;
+      &:disabled + label {
+        opacity: 0.4;
+      }
+      &:checked + label {
+        background-color: $active-status-text-color;
+        color: $white;
+        border: 1px solid $active-status-text-color;
+      }
+    }
+  }
+}
+
+@mixin ems-buttons() {
+  .btn {
+    font-size: 14px;
+    font-weight: 600;
+
+    & + .btn:not(:last-child) {
+      margin-right: 1rem;
+    }
+
+    &.cancel-btn {
+      color: $white;
+      background-color: $rejected-status-text-color;
+      border-color: $rejected-status-text-color;
+    }
+
+    &.action-btn {
+      background-color: $active-status-text-color;
+      border-color: $active-status-text-color;
+      color: $white;
+    }
+
+    &.plain-btn {
+      padding-left: 7px;
+      padding-right: 7px;
+      color: $active-status-text-color;
+    }
+
+    &.delete-btn {
+      color: $rejected-status-text-color;
+      padding: 0 7px;
+      img {
+        width: 16px;
+        display: inline-block;
+        margin-right: 7px;
+        vertical-align: sub;
+      }
+
+      i {
+        color: $rejected-status-text-color;
+
+        &:before {
+          margin: 4px 7px;
+        }
+      }
+    }
+
+    &.reset-btn {
+      border: solid 1px $border-color;
+      background-color: #ffffff;
+    }
+  }
+}
+
+@mixin styled-table() {
+  margin-top: 12px;
+  padding-left: 0;
+
+  thead tr th {
+    border-top-color: transparent;
+    border-bottom-color: $border-color;
+    border-bottom-width: 1px;
+  }
+
+  tr {
+    th {
+      padding: 6px 10px 6px 0;
+    }
+
+    td {
+      padding: 6px 10px 3px 0;
+      border-top: none;
+    }
+
+    .ack-dots {
+      color: #617083;
+    }
+
+    .ack-cancel {
+      color: $rejected-status-text-color;
+    }
+
+    .ack-ok {
+      color: $partial-fill-status-text-color;
+    }
+
+    .exec-icon {
+      color: $partial-fill-status-text-color;
+
+      &:before {
+        transform: rotate(-90deg);
+      }
+    }
+
+    .plc-icon {
+      color: $active-status-text-color;
+
+      &:before {
+        transform: rotate(90deg);
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+<div class="row">
+  <div class="col-md-12 p-4 background-color-white rounded">
+    <div class="row pb-3">
+      <div class="col-md-1"><i class="icon-pinnakl-ai-icon"></i></div>
+      <div class="col-md-11 pt-3">
+        <div class="font-size-12px font-weight-bold">RECOMMENDED ACTIONS</div>
+        <div class="action-text font-size-12px">
+          All these actions are suggested by our AI system based on your regular
+          activity
+        </div>
+      </div>
+    </div>
+    <div pnklCustomScroll class="px-3 action-container-row">
+      <div class="container-fluid">
+        <div class="row">
+          <div class=" col-md-12">
+            <recommended-action
+              *ngFor="let action of actions"
+              class="layout-align-center row mt-2 action-container rounded"
+              [ngClass]="{
+                'pending-action-border-red': action.actionType === 'PENDING'
+              }"
+              [action]="action"
+              (onActionClicked)="onActionClick($event)"
+              (onActionSupress)="onActionSupressed($event)"
+            ></recommended-action>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

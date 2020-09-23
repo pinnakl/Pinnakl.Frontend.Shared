@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	width="29px" height="29px" viewBox="0 0 29 29">
+<filter filterUnits="objectBoundingBox" x="-12.00" y="-12.00" width="124.00" height="128.00" id="filter0">
+<feGaussianBlur in="SourceAlpha" stdDeviation="1.50" result="dsBlurOut1"/>
+<feFlood flood-color="rgb(0,0,0)" flood-opacity="0.25" result="dsFloodOut1"/>
+<feComposite in="dsFloodOut1" in2="dsBlurOut1" operator="in" result="dsShadow1"/>
+<feOffset in="dsShadow1" dx="-0.00" dy="2.00" result="dsOffset1"/>
+<feComposite in="dsOffset1" in2="SourceAlpha" operator="out" result="dropShadow1"/>
+<feBlend in="dropShadow1" in2="SourceGraphic" mode="normal" result="sourceGraphic"/>
+</filter>
+<g><circle cx="14.50" cy="12.50" r="12.50" fill="rgb(53,189,99)" filter="url(#filter0)"/><g><path fillRule="evenodd" d="M 15 16C 15 16 14 16 14 16 14 16 14 11 14 11 14 11 15 11 15 11 15 11 15 16 15 16" fill="rgb(255,255,255)"/><path fillRule="evenodd" d="M 12 14C 12 14 12 13 12 13 12 13 17 13 17 13 17 13 17 14 17 14 17 14 12 14 12 14" fill="rgb(255,255,255)"/><path fillRule="evenodd" d="M 18 18C 18.34 18 19 17.34 19 17 19 17 19 10.41 19 10.41 19 10.41 15.59 7 15.59 7 15.59 7 11 7 11 7 10.66 7 10 7.66 10 8 10 8 10 17 10 17 10 17.34 10.66 18 11 18 11 18 18 18 18 18M 18 19C 18 19 11 19 11 19 10.12 19 9 17.9 9 17 9 17 9 8 9 8 9 7.1 10.12 6 11 6 11 6 16 6 16 6 16 6 20 10 20 10 20 10 20 17 20 17 20 17.9 18.88 19 18 19 18 19 18 19 18 19Z" fill="rgb(255,255,255)"/><path fillRule="evenodd" d="M 20 10C 20 10 20 11 20 11 20 11 17 11 17 11 16.12 11 15 9.9 15 9 15 9 15 6 15 6 15 6 16 6 16 6 16 6 16 9 16 9 16 9.34 16.66 10 17 10 17 10 20 10 20 10" fill="rgb(255,255,255)"/></g></g></svg>

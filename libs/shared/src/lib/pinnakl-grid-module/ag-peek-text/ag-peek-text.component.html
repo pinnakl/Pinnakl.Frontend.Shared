@@ -1,0 +1,17 @@
+<div>
+  <div *ngIf="text.length <= peekLength || showAllText">
+    <span [ngClass]="textClass">{{ text }}</span>
+    <span
+      *ngIf="showAllText"
+      class="cursor-pointer subject-person"
+      (click)="onHideClicked()"
+      >Hide</span
+    >
+  </div>
+  <div *ngIf="text.length > peekLength && !showAllText">
+    <span [ngClass]="textClass">{{ sliceText() }}</span>
+    <span class="cursor-pointer subject-person" (click)="onMoreClicked()"
+      >...More</span
+    >
+  </div>
+</div>

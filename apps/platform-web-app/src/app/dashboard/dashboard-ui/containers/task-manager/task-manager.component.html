@@ -1,0 +1,75 @@
+<div
+  [@panelVisible]="visible"
+  [ngSwitch]="operation"
+  [class.accordion-border]="visible"
+>
+  <div *ngSwitchCase="'detail'" class="col-md-12">
+    <h4 class="mt-3">{{ task.name }}</h4>
+    <p class="mb-3">{{ task.description }}</p>
+  </div>
+  <div *ngSwitchCase="'run'">
+    <div [ngSwitch]="task.name">
+      <reconciliation-task-runner
+        *ngSwitchCase="'LoadExternalPositions'"
+        [entities]="entities"
+        [task]="task"
+        (taskRunCompleted)="taskRunCompleted.emit()"
+      >
+      </reconciliation-task-runner>
+      <trade-files-task-runner
+        *ngSwitchCase="'TradeFileGenerate'"
+        [entities]="entities"
+        [task]="task"
+        (taskRunCompleted)="taskRunCompleted.emit()"
+      >
+      </trade-files-task-runner>
+      <trade-files-task-runner
+        *ngSwitchCase="'TradeFileFTPUpload'"
+        [entities]="entities"
+        [task]="task"
+        (taskRunCompleted)="taskRunCompleted.emit()"
+      >
+      </trade-files-task-runner>
+      <task-runner
+        *ngSwitchDefault
+        [task]="task"
+        (taskRunCompleted)="taskRunCompleted.emit()"
+      >
+      </task-runner>
+    </div>
+  </div>
+  <div *ngSwitchDefault>
+    <div class="accordion-centered-holder" [ngSwitch]="task.name">
+      <custom-task-summary
+        *ngSwitchCase="'LoadExternalPositions'"
+        class="row my-3"
+        [entities]="entities"
+        [properties]="task.lastRunDetails?.listOfProps"
+      >
+      </custom-task-summary>
+      <custom-task-summary
+        *ngSwitchCase="'TradeFileFTPUpload'"
+        class="row my-3"
+        [entities]="entities"
+        [properties]="task.lastRunDetails?.listOfProps"
+      >
+      </custom-task-summary>
+      <custom-task-summary
+        *ngSwitchCase="'TradeFileGenerate'"
+        class="row my-3"
+        [entities]="entities"
+        [properties]="task.lastRunDetails?.listOfProps"
+      >
+      </custom-task-summary>
+      <div *ngSwitchDefault class="row my-3">
+        <p
+          *ngFor="let obj of task.lastRunDetails?.listOfProps | keys"
+          class="accordion-stats col-md-default-width"
+          [@listOfPropsChanged]
+        >
+          <small>{{ obj.value.toUpperCase() }}</small> {{ obj.key }}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

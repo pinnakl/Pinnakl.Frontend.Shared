@@ -1,0 +1,61 @@
+<div
+  class="col-md-5"
+  (mouseenter)="userReportId && setActionsVisibility(true)"
+  (mouseleave)="userReportId && setActionsVisibility(false)"
+>
+  <div class="row">
+    <span class="col-md-6">
+      <h2 class="text-secondary">{{ reportName }}</h2>
+    </span>
+    <span
+      class="col-md-4 fade-animate color-regent-grey"
+      *ngIf="userReportId && actionsVisible"
+    >
+      <span class="col-md-1">
+        <i
+          class="icon-pinnakl-edit-securities cursor-pointer investor-edit-icon"
+          (click)="toggleRenameModal()"
+        ></i>
+      </span>
+      <span class="col-md-1">
+        <i
+          class="icon-pinnakl-trash-empty cursor-pointer investor-delete-icon"
+          (click)="showDeleteConfirmation()"
+        ></i>
+      </span>
+    </span>
+  </div>
+</div>
+
+<!-- Modal -->
+
+<pinnakl-modal [hideDialog]="hideRenameModal" [showCloseButton]="false">
+  <div>
+    <div class="row modal-header">
+      <div class="col-md-8">
+        <h4 class="modal-title" id="myModalLabel">Save As</h4>
+      </div>
+      <div class="col-md-4 text-align-right">
+        <button type="button" (click)="toggleRenameModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <report-name-editor
+        (nameUpdated)="renameReport($event)"
+        [reportName]="reportName"
+      ></report-name-editor>
+    </div>
+  </div>
+</pinnakl-modal>
+
+<confirm-action
+  confirmationMessage="Are you sure you want to delete this report?"
+  containerClass="confirm-communication-delete delete-report-confirmation"
+  messageClass="col-md-8"
+  (onCancelled)="confirmationVisible = false"
+  (onConfirmed)="confirmationVisible = false; deleteReport()"
+  [showConfirmation]="confirmationVisible"
+>
+</confirm-action>

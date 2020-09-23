@@ -1,0 +1,17 @@
+<a (click)="exportMenuVisible = !exportMenuVisible">
+  <i class="icon-pinnakl-upload"></i>
+</a>
+<div class="dropdown-content slide" *ngIf="exportMenuVisible">
+  <div
+    (click)="exportReport(true)"
+    class="dropdown_left_section custom-icon-export-excel"
+  >
+    XLS
+  </div>
+  <div
+    (click)="exportReport(false)"
+    class="dropdown_right_section custom-icon-export-pdf"
+  >
+    PDF
+  </div>
+</div>

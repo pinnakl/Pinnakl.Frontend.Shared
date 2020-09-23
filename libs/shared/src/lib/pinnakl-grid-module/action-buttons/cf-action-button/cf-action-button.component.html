@@ -1,0 +1,22 @@
+<div>
+  <div
+    *ngIf="this.widget"
+    class=" action-button-group oms-grid-action-btn active z-index-10"
+  >
+    <a class="action-button">
+      <span
+        (click)="deleteClicked()"
+        class="action-icon action-icon-delete"
+      ></span>
+    </a>
+    <a class="action-button">
+      <span (click)="editClicked()" class="action-icon action-icon-edit"></span>
+    </a>
+  </div>
+  <a class="action-group-button">
+    <span
+      (click)="this.widget = !this.widget"
+      class="action-icon action-icon-dots"
+    ></span>
+  </a>
+</div>

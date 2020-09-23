@@ -1,0 +1,38 @@
+<div class="row font-size-14px">
+  <div class="pt-4 pb-4 px-4 section-container col-md-12 rounded">
+    <div>
+      <div class="row font-weight-bold pb-3">
+        <div class="col-md-4">{{ category }}</div>
+        <div class="col-md-4 text-align-right">Exposure</div>
+      </div>
+    </div>
+    <div class="row pnl-container-row" pnklCustomScroll>
+      <div class="col-md-12">
+        <div *ngFor="let pnl of pnlData" class="row">
+          <div class="col-md-12">
+            <div class="row no-gutters list-border-top pnl-list-item-container">
+              <div class="col-md-4 text-transform-uppercase">
+                {{ pnl.type }}
+              </div>
+              <div class="col-md-4 text-align-right">
+                {{ pnl.exposure | number: '1.1-1' }} %
+              </div>
+              <div class="col-md-4 text-align-right">
+                <span>
+                  <i
+                    [ngClass]="{
+                      'icon-pinnakl-arrow-up': pnl.change > 0,
+                      'icon-pinnakl-arrow-down': pnl.change < 0,
+                      'icon-pinnakl-circle-empty': pnl.change == 0
+                    }"
+                  ></i>
+                </span>
+                {{ absoluteValue(pnl.change) | number: '1.1-1' }} %
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

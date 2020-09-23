@@ -1,0 +1,34 @@
+<form
+  class="container-fluid"
+  [class.ng-submitted]="submitted"
+  novalidate
+  [formGroup]="form"
+  (ngSubmit)="submit()"
+>
+  <div class="row">
+    <div class="col-md-12">
+      <pinnakl-input
+        controlName="reportName"
+        [form]="form"
+        label="REPORT NAME"
+        [required]="true"
+        type="text"
+      >
+      </pinnakl-input>
+    </div>
+  </div>
+  <div class="row flex-end mt-3">
+    <div class="col-md-default-width">
+      <button
+        type="button"
+        class="btn btn-cancel color-white"
+        (click)="resetForm()"
+      >
+        RESET
+      </button>
+    </div>
+    <div class="col-md-default-width">
+      <button type="submit" class=" btn btn-success">SAVE</button>
+    </div>
+  </div>
+</form>

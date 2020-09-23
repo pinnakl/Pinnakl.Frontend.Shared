@@ -1,0 +1,111 @@
+/* COLORS */
+
+/* For color names was used site - http://chir.ag/projects/name-that-color */
+
+/*************************
+	Font Size
+*************************/
+
+$source: Source Sans Pro;
+$normal-font: 12px;
+$regular-font: 14px;
+$heading4: 16px;
+$medium-font: 18px;
+$light: 300;
+$regular: 400;
+$semi-bold: 600;
+/*************************
+	Main colors start
+*************************/
+
+/* White group */
+$white: #ffffff;
+
+/* Black group */
+$black: #000000;
+$bunker: #0b1017; //Nav and footer bg
+
+/* Blue group */
+$botticelli: #cfd7e5;
+$casper: #b2bed1;
+$pigeon-post: #b8c6db;
+$cerulean: #00aae8; //Primary color
+$ebony-clay: #293542; //Filder sidebar bg
+$mirage: #1c2530; //Aside bg
+$zircon: #f0f5ff;
+$dodger-blue: #4996ff;
+$selago: #e1e9fa;
+$cornflower-blue: #6891e8;
+
+/* Green group */
+$green-haze: #00b23e; //Success color
+$emerald: #35bd64; //Succes border color
+$mountain-meadow: #18d06b; // partial fill status color
+
+/* Gray group */
+$dark-gray: #757575;
+$color-fiord: #445466; //Btn default
+$catswill-white-lighen: #f5f7fa;
+$catskill-white: #e4eaf2; //Body bg
+$regent-gray: #7e8c9e;
+$slate-gray: #6e7c8f; //Nav color
+$limed-spruce: #36444c; //Main text color
+$trout: #4f5966; //Dropdown color
+$bali-hai: #8498b0;
+$athens-gray: #fafbfc;
+$geyser: #dce2e8;
+$bright-gray: #38404d;
+$mystic: #e1e6ed;
+$porcelain: #eceeef;
+$dark-gray7: #959eab;
+$lynch: #74869d;
+$shark: #23282d;
+$iron: #d9dde1;
+$ghost: #c3c7cd;
+$rolling-stone: #7c7e83;
+$submarine: #b5bcc4;
+
+/* Red group */
+$radical-red: #f74053;
+$sunset-orange: #ff4949;
+
+/* Blue group */
+$dark-blue: #3c4c5e;
+$dark-blue5: #36404c;
+$dark-blue10: #36404d;
+$blue: #0b6eca;
+$blue4: #0c64cf;
+$light-blue: #7a8699;
+$dark-blue6: #738599;
+$denim: #168eff;
+
+/* Yellow/Orange group */
+$selective-yellow: #ffb400;
+
+$west-side: #ff8816;
+
+/*************************
+	Main colors end
+*************************/
+
+$color-success: $green-haze;
+$color-primary: $cerulean;
+$color-secondary: $botticelli;
+$color-danger: $radical-red;
+$color-btn-default: $color-fiord;
+/*************************
+	Local colors start
+*************************/
+$status-text-color: $shark;
+$status-bg-color: $iron;
+$partial-fill-status-text-color: $mountain-meadow;
+$rejected-status-text-color: $sunset-orange;
+$pending-status-text-color: $west-side;
+$inactive-status-text-color: $submarine;
+$active-status-text-color: $denim;
+$border-color: $ghost;
+$sub-heading-color: $regent-gray;
+
+/*************************
+	Local colors end
+*************************/

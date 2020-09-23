@@ -1,0 +1,38 @@
+<svg id="icon" xmlns="http://www.w3.org/2000/svg" width="107" height="108" viewBox="0 0 107 108">
+  <defs>
+    <style>
+      .cls-1, .cls-2 {
+        fill: #fff;
+        stroke: #b8c6db;
+        stroke-width: 4px;
+      }
+
+      .cls-1, .cls-4 {
+        fill-rule: evenodd;
+      }
+
+      .cls-3 {
+        fill: #e6f9ff;
+      }
+
+      .cls-3, .cls-4 {
+        stroke: #00b5e9;
+        stroke-width: 2px;
+      }
+
+      .cls-4 {
+        fill: none;
+      }
+    </style>
+  </defs>
+  <g id="icon-2" data-name="icon">
+    <path id="Rounded_Rectangle_30_copy_3" data-name="Rounded Rectangle 30 copy 3" class="cls-1" d="M826,410c0-25.13,13.871-46,39-46h13c25.129,0,39,20.87,39,46" transform="translate(-824 -304)"/>
+    <circle id="Ellipse_23_copy_2" data-name="Ellipse 23 copy 2" class="cls-2" cx="48" cy="28" r="26"/>
+    <path class="cls-1" d="M865,374h13l4,27-10.5,9L861,401Z" transform="translate(-824 -304)"/>
+    <path class="cls-1" d="M860,365h23l-5,13H865Z" transform="translate(-824 -304)"/>
+  </g>
+  <g id="edit">
+    <circle class="cls-3" cx="90" cy="90" r="16"/>
+    <path id="icon-3" data-name="icon" class="cls-4" d="M907,396.333L907,401h4.672L921,391.666,916.333,387Z" transform="translate(-824 -304)"/>
+  </g>
+</svg>

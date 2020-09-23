@@ -1,0 +1,24 @@
+<i
+  *ngIf="!show"
+  class="icon-pinnakl-table-action cursor-pointer"
+  (click)="actionsVisible = !actionsVisible"
+></i>
+<div
+  *ngIf="show || actionsVisible"
+  [@visibleChanged]
+  class="actions"
+  [ngClass]="actionsClass"
+>
+  <div>
+    <i
+      class="icon-pinnakl-edit-securities cursor-pointer investor-edit-icon"
+      (click)="edit.emit()"
+    ></i>
+  </div>
+  <div class="delete-icon">
+    <i
+      class="icon-pinnakl-trash-empty cursor-pointer investor-delete-icon"
+      (click)="delete.emit()"
+    ></i>
+  </div>
+</div>

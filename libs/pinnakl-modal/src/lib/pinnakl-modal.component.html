@@ -1,0 +1,20 @@
+<kendo-dialog
+  [ngClass]="className"
+  *ngIf="!hideDialog"
+  [minWidth]="minWidth"
+  [title]="title"
+  [width]="width"
+  [height]="height"
+>
+  <div *ngIf="showCloseButton" class="pb-4 text-align-right">
+    <button
+      type="button"
+      class="close"
+      (click)="closeModalEmit()"
+      aria-label="Close"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <ng-content></ng-content>
+</kendo-dialog>

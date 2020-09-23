@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.5 (67469) - http://www.bohemiancoding.com/sketch -->
+    <title>dismiss</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard" transform="translate(-1827.000000, -191.000000)" fill-rule="nonzero">
+            <g id="recommended-actions" transform="translate(1279.000000, 99.000000)">
+                <g id="1" transform="translate(21.000000, 78.000000)">
+                    <g id="dismiss" transform="translate(527.000000, 14.000000)">
+                        <circle id="Oval" stroke="#BEC2CA" stroke-width="2" fill="#FFFFFF" transform="translate(12.000000, 12.000000) scale(-1, 1) translate(-12.000000, -12.000000) " cx="12" cy="12" r="11"></circle>
+                        <path d="M13.502211,12 L17,15.497789 L15.497789,17 L12,13.502211 L8.50221105,17 L7,15.497789 L10.497789,12 L7,8.50221105 L8.50221105,7 L12,10.497789 L15.497789,7 L17,8.50221105 L13.502211,12 Z" id="Combined-Shape" fill="#BEC2CA"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

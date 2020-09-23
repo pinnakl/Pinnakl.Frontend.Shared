@@ -1,0 +1,43 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-12">
+          <form [formGroup]="form" (ngSubmit)="onSubmit()" class="row">
+            <div class="col-md-auto">
+              <div>
+                <pinnakl-input type="text" [form]="form" controlName="listItem">
+                </pinnakl-input>
+              </div>
+            </div>
+            <div class="col-md-auto d-flex align-items-center">
+              <button type="submit" class="btn btn-success">
+                ADD
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="row">
+            <div
+              class="col-md-auto chip mr-2 mb-2"
+              *ngFor="let item of value; let index = index"
+            >
+              <div>
+                {{ fieldName ? item[fieldName] : item }}
+                <span>
+                  <i
+                    class="icon-pinnakl-cancel"
+                    (click)="deleteItem(index)"
+                  ></i>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,185 @@
+<module-documentation #parent>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-12"><h1>Securities</h1></div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          This screen is used to setup securities in the Pinnakl system. Only
+          once a security is available in the Pinnakl system, can the end user
+          book a trade for it in OMS. Main functions of this screen are -
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <ol>
+            <li>Add new securities</li>
+            <li>Modify existing securities</li>
+            <li>Add new organizations</li>
+            <li>Modify existing organizations</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-12"><h2>Add new Security</h2></div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <ol>
+            <li>Select “Add New”</li>
+            <li>
+              Select “Add automatically” if it’s a listed security. Else select
+              Add Manually.
+            </li>
+            <li>Select Identifier Type</li>
+            <li>Enter Identifier</li>
+            <li>Click Add.</li>
+            <li>
+              Pinnakl will setup the security via IDC and the user will be
+              directed to the security screen that shows the details. At that
+              point, user can change the details or move out of the screen
+            </li>
+          </ol>
+          <button
+            class="btn btn-success waves-effect"
+            (click)="
+              parent.showDemo(
+                'https://portalvhdsmhsd8nkfxlwl2.blob.core.windows.net/platformhelpcontent/AddSecurityManually.mp4'
+              )
+            "
+            href=""
+          >
+            View demo(Add Manually)
+          </button>
+          <p></p>
+          <button
+            class="btn btn-success waves-effect"
+            (click)="
+              parent.showDemo(
+                'https://portalvhdsmhsd8nkfxlwl2.blob.core.windows.net/platformhelpcontent/AddSecurityAutomatically.mp4'
+              )
+            "
+            href=""
+          >
+            View demo(Add Automatically)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-12"><h2>Modify existing security</h2></div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          This screen is used to modify the setup in case a security attribute
+          changes including accruing status, coupon etc.
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <ol>
+            <li>Select “Edit Security”</li>
+            <li>Select security</li>
+            <li>Make changes</li>
+            <li>Hit Save.</li>
+          </ol>
+          <button
+            class="btn btn-success waves-effect"
+            (click)="
+              parent.showDemo(
+                'https://portalvhdsmhsd8nkfxlwl2.blob.core.windows.net/platformhelpcontent/EditSecurity.mp4'
+              )
+            "
+            href=""
+          >
+            View demo
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-12"><h2>Add Organization</h2></div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          This screen is used to add the organizations associated with
+          securities
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <ol>
+            <li>
+              Go to the securities screen and under the Manage Organization
+              icon, click the Add/Edit button
+            </li>
+            <li>Enter Organization details</li>
+            <li>Click Save</li>
+          </ol>
+          <button
+            class="btn btn-success waves-effect"
+            (click)="
+              parent.showDemo(
+                'https://portalvhdsmhsd8nkfxlwl2.blob.core.windows.net/platformhelpcontent/AddOrganization.mp4'
+              )
+            "
+            href=""
+          >
+            View demo
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-12"><h2>Edit Organization</h2></div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          This screen is used to modify the details of an existing organization
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <ol>
+            <li>Go to the Manage Organizations screen</li>
+            <li>
+              Select an organization to edit using the search box at the top of
+              the screen
+            </li>
+            <li>Modify organization details using the input fields</li>
+            <li>Click Save</li>
+          </ol>
+          <button
+            class="btn btn-success waves-effect"
+            (click)="
+              parent.showDemo(
+                'https://portalvhdsmhsd8nkfxlwl2.blob.core.windows.net/platformhelpcontent/EditOrganization.mp4'
+              )
+            "
+            href=""
+          >
+            View demo
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</module-documentation>

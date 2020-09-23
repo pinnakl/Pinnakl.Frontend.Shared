@@ -1,0 +1,277 @@
+<nav class="navbar navbar-fixed-top">
+  <div class="navbar-inner-holder">
+    <a class="navbar-brand">
+      <img src="assets/images/elements/site-logo.svg" alt="" />
+    </a>
+  </div>
+
+  <div id="main-nav">
+    <nav class="nav pnkl-navbar-nav navbar-right">
+      <li class="dropdown">
+        <a routerLink="/help">
+          <div class="navbar-notification-holder">
+            <i class="custom-icon-help"></i>
+          </div>
+        </a>
+      </li>
+      <li class="dropdown">
+        <a (click)="toggleNotifications()">
+          <div class="navbar-notification-holder">
+            <i class="icon-pinnakl-bell-alt navbar-icon"></i>
+            <span
+              class="navbar-notification navbar-notification-success"
+            ></span>
+          </div>
+        </a>
+        <ul
+          *ngIf="showNotifications"
+          class="notification-dropdown-align dropdown-menu dropdown-notification"
+        >
+          <li class="dropdown-header">
+            Notifications <span class="badge badge-succes">2</span>
+          </li>
+          <!-- <li><b>Kurt</b> entered a Buy of 1000 shares of IBM.</li>
+          <li><b>Kurt</b> deleted the IBM trade.</li>
+          <li><b>Kurt</b> entered a Buy of 1000 shares of IBM.</li>
+          <li><b>Kurt</b> deleted the IBM trade.</li> -->
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a (click)="togglePasswordChangeDropdown()">
+          <div class="navbar-notification-holder">
+            <i class="icon-pinnakl-cog navbar-icon"></i>
+          </div>
+        </a>
+        <ul
+          *ngIf="showPasswordChangeDropdown"
+          class="password-change-dropdown-align dropdown-menu dropdown-notification"
+        >
+          <li class="dropdown-header">Settings</li>
+          <li>
+            <a routerLink="/change-password"> <b>Change Password</b> </a>
+          </li>
+          <li>
+            <a routerLink="/push-notification"> <b>Push Notifications</b> </a>
+          </li>
+          <li class="version-label">
+            <div>Version No: {{ version }}</div>
+          </li>
+        </ul>
+      </li>
+      <li class="navbar-profile cursor-pointer">
+        <a (click)="showUserActionsDropdown = !showUserActionsDropdown">
+          {{ userService.getUser()?.fullName }}
+          <img
+            src="assets/images/elements/user-profile.png"
+            class="profile-pic"
+            alt=""
+          />
+        </a>
+        <ul
+          *ngIf="showUserActionsDropdown"
+          class="password-change-dropdown-align dropdown-menu dropdown-notification"
+          (click)="showUserActionsDropdown = false; logout()"
+        >
+          <li>
+            <b class="cursor-pointer">Logout</b>
+          </li>
+        </ul>
+      </li>
+    </nav>
+  </div>
+</nav>
+<aside
+  [ngClass]="{ 'aside-opened': menuOpen }"
+  class="aside-menu-holder"
+  id="main-aside"
+>
+  <a (click)="toggleMenu()" class="aside-menu-holder-trigger aside-item">
+    <i class="icon-pinnakl-menu"></i>
+  </a>
+  <ul class="aside-menu-list" id="aside-ul">
+    <li routerLinkActive="active">
+      <a routerLink="/dashboard" class="tooltip" title="">
+        <i title="Dashboard" class="icon-pinnakl-side-dashboard-active"></i>
+        <span>Dashboard</span>
+      </a>
+    </li>
+    <li routerLinkActive="active">
+      <a routerLink="/oms" class="tooltip" title="">
+        <i title="OMS" class="icon-pinnakl-side-oms"></i> <span>OMS</span>
+      </a>
+    </li>
+    <li routerLinkActive="active">
+      <a routerLink="/ems" class="tooltip" title="">
+        <i title="EMS" class="icon-pinnakl-globe"></i> <span>EMS</span>
+      </a>
+    </li>
+    <li routerLinkActive="active">
+      <a routerLink="/pms" class="tooltip" title="">
+        <i title="PMS" class="icon-pinnakl-side-positions-active"></i>
+        <span>PMS</span>
+      </a>
+    </li>
+    <li routerLinkActive="active">
+      <a routerLink="/pricing" class="tooltip" title="">
+        <i title="Pricing" class="icon-pinnakl-side-pricing-active"></i>
+        <span>Pricing</span>
+      </a>
+    </li>
+    <li routerLinkActive="active" *ngIf="showIncompleteScreens()">
+      <a routerLink="/risk/risk-home" class="tooltip" title="">
+        <i title="Risk" class="icon-pinnakl-side-risk-active"></i>
+        <span>Risk</span>
+      </a>
+    </li>
+    <li routerLinkActive="active">
+      <a routerLink="/reconciliation" class="tooltip" title="">
+        <i
+          title="Recon"
+          class="icon-pinnakl-side-reconciliation-active-svg"
+        ></i>
+        <span>Reconciliation</span>
+      </a>
+    </li>
+    <li routerLinkActive="active">
+      <a routerLink="/pnl/pnl-home" class="tooltip" title="">
+        <i title="P&L" class="icon-pinnakl-side-pl-active"></i> <span>P&L</span>
+      </a>
+    </li>
+    <li routerLinkActive="active">
+      <a routerLink="/reporting/all-reports" class="tooltip" title="">
+        <i title="Reports" class="icon-pinnakl-side-reports-active"></i>
+        <span>Reports</span>
+      </a>
+    </li>
+    <li routerLinkActive="active" *ngIf="showIncompleteScreens()">
+      <a routerLink="/shadow-nav/shadow-nav-home" class="tooltip" title="">
+        <i title="Shadow NAV" class="icon-pinnakl-shadow-nav-active"></i>
+        <span>Shadow NAV</span>
+      </a>
+    </li>
+    <li routerLinkActive="active">
+      <a routerLink="/securities/securities-home" class="tooltip" title="">
+        <i title="Securities" class="icon-pinnakl-side-securities-active"></i>
+        <span>Securities</span>
+      </a>
+    </li>
+
+    <li *ngIf="includeTesting" routerLinkActive="active">
+      <a routerLink="/testing" class="tooltip" title="">
+        <i title="Testing" class="icon-pinnakl-side-securities-active"></i>
+        <span>Testing</span>
+      </a>
+    </li>
+
+    <li routerLinkActive="active">
+      <a routerLink="/rebalancing/rebalancing-home" class="tooltip" title="">
+        <i title="Rebalancing" class="icon-pinnakl-rebalance"></i>
+        <span>Rebalancing</span>
+      </a>
+    </li>
+
+    <li routerLinkActive="active">
+      <a routerLink="/cash-flow" class="tooltip" title="">
+        <i title="Cash Flow" class="custom-icon-cashflow position-icon"></i>
+        <span>Cash Flow</span>
+      </a>
+    </li>
+    <li routerLinkActive="active">
+      <a routerLink="/stock-loan" class="tooltip" title="">
+        <i title="Stock Loan" class="custom-icon-stock-loan position-icon"></i>
+        <span>Stock Loan</span>
+      </a>
+    </li>
+    <li routerLinkActive="active">
+      <a routerLink="/corporate-actions" class="tooltip" title="">
+        <i
+          title="Corporate Actions"
+          class="custom-icon-corporate-action position-icon"
+        ></i>
+        <span>Corporate Actions</span>
+      </a>
+    </li>
+    <li routerLinkActive="active" *ngIf="showIncompleteScreens()">
+      <a routerLink="/reporting/manager-reports" class="tooltip" title="">
+        <i
+          title="Manager Reports"
+          class="icon-pinnakl-security-add-manually"
+        ></i>
+        <span>Manager Reports</span>
+      </a>
+    </li>
+    <li *ngIf="isDev" routerLinkActive="active">
+      <a routerLink="/api-playground" class="tooltip" title="">
+        <i class="icon-pinnakl-fire"></i>
+        <span>API Playground</span>
+      </a>
+    </li>
+  </ul>
+</aside>
+
+<main class="main-holder" [ngClass]="{ 'aside-opened': menuOpen }">
+  <pnkl-spinner></pnkl-spinner>
+  <reconnect-window></reconnect-window>
+  <confirm-action></confirm-action>
+
+  <div class="riskSubCategories">
+    <div class="riskSubCategoriesRow">
+      <div class="riskSubCategorySubRow">
+        <a
+          routerLink="/risk/risk-dashboard"
+          routerLinkActive="active"
+          class="riskSubCategoriesOptions riskSubCategoriesOptionsLeft"
+        >
+          <div><i class="custom-icon-arrow-pinnakl arrow-pinnakl-crm"></i></div>
+          <div>Risk Dashboard</div>
+        </a>
+        <a
+          routerLink="/risk/risk-limit"
+          routerLinkActive="active"
+          class="riskSubCategoriesOptions riskSubCategoriesOptionsRight"
+        >
+          <div><i class="custom-icon-arrow-pinnakl arrow-pinnakl-crm"></i></div>
+          <div>Risk Limits</div>
+        </a>
+        <div class="clear-both"></div>
+      </div>
+      <div class="clear-both"></div>
+    </div>
+  </div>
+
+  <div class="pnlSubCategories">
+    <div class="pnlSubCategoriesRow">
+      <div class="pnlSubCategorySubRow">
+        <a
+          routerLink="/pnl/pnl-home"
+          routerLinkActive="active"
+          class="pnlSubCategoriesOptions pnlSubCategoriesOptionsLeft"
+        >
+          <div><i class="custom-icon-arrow-pinnakl arrow-pinnakl-crm"></i></div>
+          <div>MTD & YTD P&L</div>
+        </a>
+        <a
+          routerLink="/pnl/pnl-yearly"
+          routerLinkActive="active"
+          class="pnlSubCategoriesOptions pnlSubCategoriesOptionsRight"
+        >
+          <div><i class="custom-icon-arrow-pinnakl arrow-pinnakl-crm"></i></div>
+          <div>Yearly P&L</div>
+        </a>
+        <a
+          routerLink="/pnl/pnl-calculated"
+          routerLinkActive="active"
+          class="pnlSubCategoriesOptions pnlSubCategoriesOptionsLeft"
+        >
+          <div><i class="custom-icon-arrow-pinnakl arrow-pinnakl-crm"></i></div>
+          <div>Calculated P&L</div>
+        </a>
+        <div class="clear-both"></div>
+      </div>
+      <div class="clear-both"></div>
+    </div>
+  </div>
+
+  <router-outlet></router-outlet>
+  <!-- <div *ngIf="enableBot"><pnkl-bot></pnkl-bot></div> -->
+</main>

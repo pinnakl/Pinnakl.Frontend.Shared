@@ -1,0 +1,158 @@
+<div [@visibleChanged]="configVisible">
+  <div class="row pnkl-page-header prospecting-header-height">
+    <div class="col-md-12 full-width-padding-fix">
+      <div class="row">
+        <div class="col-md-7">
+          <h3 class="text-secondary">Configuration</h3>
+        </div>
+
+        <div *ngIf="isCrcyDropDownVisible" class="col-md-2">
+          <span class="vertical-align-basline-middle color-white ml-5"
+            >Currency</span
+          >
+        </div>
+        <div class="col-md-3" *ngIf="isCrcyDropDownVisible">
+          <form [formGroup]="currencySelectionForm" novalidate>
+            <pinnakl-input
+              controlName="currency"
+              [dropdownSource]="currencies"
+              [dropdownOptions]="{
+                objectModel: true,
+                viewProperty: 'currency'
+              }"
+              [form]="currencySelectionForm"
+              hideLabel="True"
+              inputClass="pnkl-select-dark"
+              type="dropdown"
+            >
+            </pinnakl-input>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row crm-prospecting-filter-body reporting-filter-height">
+    <div class="col-md-12">
+      <div class="configuration-lists-holder">
+        <div class="configuration-lists-item">
+          <ul
+            pnklCustomScroll
+            darkMode="true"
+            class="configuration-lists scrollbar-holder"
+          >
+            <p class="text-uppercase">Available Items</p>
+            <div class="input-field is-ready text-uppercase mb-3 m-t-minus-2">
+              <input
+                type="text"
+                [(ngModel)]="pinnaklColumnsSearchText"
+                class="search-security-input"
+              />
+            </div>
+            <a
+              (click)="moveAllColumns(true)"
+              class="text-uppercase icon-pinnakl-plus cursor-pointer"
+              >Add ALL</a
+            >
+            <li
+              [class.color-blue]="isImportantColumn(column)"
+              *ngFor="let column of filteredSelectableColumns"
+            >
+              {{ column.caption }}
+              <a
+                class="icon-pinnakl-plus cursor-pointer"
+                (click)="moveColumn(column, true)"
+              ></a>
+            </li>
+          </ul>
+        </div>
+        <div class="configuration-lists-item">
+          <ul
+            pnklCustomScroll
+            darkMode="true"
+            class="configuration-lists scrollbar-holder"
+          >
+            <p class="text-uppercase">Current Set</p>
+            <a
+              (click)="moveAllColumns(false)"
+              class="text-uppercase icon-pinnakl-cancel cursor-pointer"
+              >Remove ALL</a
+            >
+            <li
+              [class.color-blue]="isImportantColumn(column)"
+              *ngFor="let column of selectedColumns"
+            >
+              {{ column.caption }}
+              <a
+                (click)="moveColumnAndShowConfirmAction(column, false)"
+                class="icon-pinnakl-cancel cancel-btn cursor-pointer"
+              ></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="configuration-lists-holder" *ngIf="idcColumns">
+        <div class="configuration-lists-item">
+          <div
+            pnklCustomScroll
+            darkMode="true"
+            class="configuration-lists scrollbar-holder"
+          >
+            <p class="text-uppercase">Available IDC Items</p>
+            <div class="input-field is-ready text-uppercase mb-3 m-t-minus-2">
+              <input
+                type="text"
+                [(ngModel)]="idcColumnsSearchText"
+                (ngModelChange)="searchIdcColumns($event, tree.treeModel)"
+                class="search-security-input"
+              />
+            </div>
+            <tree-root
+              class="color-casper"
+              [nodes]="idcColumns"
+              (activate)="selectIdcColumn($event)"
+              #tree
+            ></tree-root>
+          </div>
+        </div>
+        <div class="configuration-lists-item">
+          <ul
+            pnklCustomScroll
+            darkMode="true"
+            class="configuration-lists scrollbar-holder"
+          >
+            <p class="text-uppercase">Current Set</p>
+            <a
+              (click)="removeAllIdcColumns()"
+              class="text-uppercase icon-pinnakl-cancel cursor-pointer"
+              >Remove ALL</a
+            >
+            <li
+              [class.color-blue]="isImportantColumn(column)"
+              *ngFor="let column of selectedIdcColumns"
+            >
+              {{ column.caption }}
+              <a
+                (click)="removeIdcColumn(column)"
+                class="icon-pinnakl-cancel cancel-btn cursor-pointer"
+              ></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row center-aligned-row">
+    <confirm-action
+      class="col-md-7"
+      confirmationMessage="Are you sure you want to remove this field? Removing it will disable action detail pop up."
+      containerClass="config-column-remove-confirmation"
+      messageClass="col-md-8"
+      (onCancelled)="confirmationVisible = false"
+      (onConfirmed)="
+        confirmationVisible = false; moveColumn(columnToMove, false)
+      "
+      [showConfirmation]="confirmationVisible"
+    >
+    </confirm-action>
+  </div>
+</div>

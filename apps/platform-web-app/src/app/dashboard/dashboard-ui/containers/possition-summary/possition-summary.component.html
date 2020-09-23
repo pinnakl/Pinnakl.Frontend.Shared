@@ -1,0 +1,32 @@
+<div class="row font-size-14px">
+  <div class="p-4 section-container col-md-12 rounded">
+    <div>
+      <div class="row font-weight-bold pb-3">
+        <div class="col-md-12">
+          {{ type }}
+        </div>
+      </div>
+    </div>
+    <div pnklCustomScroll class="row position-summary-container-row">
+      <div class="col-md-12">
+        <div *ngFor="let position of positions" class="row">
+          <div class="col-md-12">
+            <div
+              class="row layout-align-center  no-gutters list-border-top list-item-container"
+            >
+              <div class="col-md-2">
+                <span class="direction-tag font-size-12px">{{
+                  position.direction
+                }}</span>
+              </div>
+              <div class="col-md-5">{{ position.ticker }}</div>
+              <div class="text-align-left col-md-5">
+                {{ position.description }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

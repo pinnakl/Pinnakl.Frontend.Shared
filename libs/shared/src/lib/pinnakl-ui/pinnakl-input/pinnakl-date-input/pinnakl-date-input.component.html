@@ -1,0 +1,8 @@
+<kendo-datepicker
+  [disabled]="disableInput ? true : undefined"
+  [format]="dateOptions ? dateOptions.format : undefined"
+  [ngClass]="inputClass"
+  (valueChange)="valueChanged($event)"
+  [(value)]="value"
+>
+</kendo-datepicker>

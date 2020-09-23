@@ -1,0 +1,61 @@
+{
+  "npmScope": "pnkl-frontend",
+  "implicitDependencies": {
+    "angular.json": "*",
+    "package.json": "*",
+    "tsconfig.json": "*",
+    "tslint.json": "*",
+    "nx.json": "*"
+  },
+  "projects": {
+    "platform-web-app": {
+      "tags": []
+    },
+    "platform-web-app-e2e": {
+      "tags": []
+    },
+    "shared": {
+      "tags": []
+    },
+    "pnkl-charts": {
+      "tags": []
+    },
+    "core": {
+      "tags": []
+    },
+    "app-state": {
+      "tags": []
+    },
+    "authentication": {
+      "tags": []
+    },
+    "pinnakl-modal": {
+      "tags": []
+    },
+    "help": {
+      "tags": []
+    },
+    "reporting": {
+      "tags": []
+    },
+    "crm-app": {
+      "tags": []
+    },
+    "crm-app-e2e": {
+      "tags": []
+    },
+    "push-notifications-config": {
+      "tags": []
+    },
+    "pnkl-ui-elements": {
+      "tags": []
+    },
+    "crm-documents": {
+      "tags": []
+    },
+    "crm-documents-e2e": {
+      "tags": [],
+      "implicitDependencies": ["crm-documents"]
+    }
+  }
+}

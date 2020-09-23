@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../out-tsc/e2e",
+    "module": "commonjs",
+    "types": [
+      "cypress",
+      "cypress-wait-until",
+      "node"
+    ]
+  },
+  "include": [
+    "**/*.ts"
+  ]
+}

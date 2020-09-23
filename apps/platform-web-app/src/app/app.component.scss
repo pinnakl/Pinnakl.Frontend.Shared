@@ -1,0 +1,136 @@
+@import '../../../../libs/shared/src/lib/styles/_components/_colors.scss';
+@import '../../../../libs/shared/src/lib/styles/_components/_variables.scss';
+
+.aside-menu-holder-trigger {
+  display: inline-block;
+  font-size: 18px;
+}
+
+.aside-item {
+  margin-bottom: 0;
+  padding: 10px 15px;
+}
+
+.arrow-pinnakl-crm {
+  width: 14px;
+  height: 12px;
+}
+
+.riskSubCategories {
+  display: none;
+  background-color: $bunker;
+  position: absolute;
+  top: 265px;
+  width: 15%;
+  z-index: 99;
+  left: 50px;
+}
+
+.pnlSubCategories {
+  display: none;
+  background-color: $bunker;
+  position: absolute;
+  top: 350px;
+  width: 15%;
+  z-index: 99;
+  left: 50px;
+}
+
+.riskSubCategoriesRow,
+.pnlSubCategoriesRow {
+  margin: 7px;
+}
+
+.riskSubCategorySubRow,
+.pnlSubCategorySubRow {
+  width: 100%;
+}
+
+.riskSubCategoriesOptions {
+  text-align: center;
+  width: 48%;
+  background-color: $mirage;
+  color: $white !important;
+  font-size: 14px !important;
+  height: 80px;
+}
+
+.pnlSubCategoriesOptions {
+  text-align: center;
+  width: 48%;
+  background-color: $mirage;
+  color: $white !important;
+  font-size: 14px !important;
+  height: 80px;
+}
+
+.riskSubCategoriesOptionsLeft,
+.pnlSubCategoriesOptionsLeft {
+  float: left;
+}
+
+.riskSubCategoriesOptionsRight,
+.pnlSubCategoriesOptionsRight {
+  float: right;
+}
+
+.position-icon {
+  vertical-align: middle;
+  width: 20px;
+  height: 20px;
+}
+
+.badge {
+  display: inline-block;
+  width: 19px;
+  height: 19px;
+  line-height: 19px;
+  margin: 0 5px;
+  color: $white;
+  font-size: $font-regular;
+  font-weight: $font-bold;
+  text-align: center;
+  border-radius: 50%;
+  &.badge-succes {
+    background: $color-success;
+  }
+  &.badge-outline {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 4px;
+    background: transparent;
+    border: 1px solid transparent;
+  }
+  &.badge-outline-succes {
+    color: $color-success;
+    border-color: $color-success;
+  }
+}
+
+.navbar-notification-holder {
+  position: relative;
+  display: inline-block;
+  vertical-align: sub;
+}
+.navbar-notification {
+  display: block;
+  height: 4px;
+  position: absolute;
+  right: 1px;
+  top: 2px;
+  width: 4px;
+  border-radius: 50%;
+  &.navbar-notification-success {
+    background: $color-success;
+  }
+}
+
+.navbar-icon {
+  font-size: 18px;
+}
+
+.version-label {
+  background: $white;
+  font-size: 12px;
+}

@@ -1,0 +1,21 @@
+<div class="container-fluid row">
+  <div class="col-md-12">
+    <div class="row pnkl-page-header prospecting-header-height">
+      <div class="col-md-12 full-width-padding-fix">
+        <div class="row">
+          <div class="col-md-9">
+            <h2 class="text-secondary">Push Notifications</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row p-3 center-aligned-row">
+      <div class="col-md-3 bgColorWhite">
+        <push-notification-topic-manager
+          [pushNotificationTopics]="userNotificationTopics"
+          (onSave)="onSave($event)"
+        ></push-notification-topic-manager>
+      </div>
+    </div>
+  </div>
+</div>

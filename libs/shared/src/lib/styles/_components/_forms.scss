@@ -1,0 +1,177 @@
+/* FORMS */
+/* Form variables */
+$input-color-placeholder: $casper;
+$input-font-size-placeholder: 12px;
+$placeholder-opacity: 0;
+$label-color: $regent-gray;
+$label-font-size: $font-small;
+$color-ready: #7e8c9e;
+
+$color-green: #35bd64;
+$color-grey-lighter: #b8c6db;
+$color-red: #ff0000;
+
+.form-control {
+  &:focus {
+    @include custom-placeholder-opacity($opacity: $placeholder-opacity);
+  }
+  &.field-transparent {
+    font-size: $font-small;
+    color: $casper;
+    border: none;
+    border-bottom: 1px solid $slate-gray;
+    background: transparent;
+    border-radius: 0;
+    @include custom-placeholder(
+      $color: $input-color-placeholder,
+      $font-size: $input-font-size-placeholder
+    );
+    &:focus {
+      @include custom-placeholder-opacity($opacity: $placeholder-opacity);
+    }
+  }
+}
+
+select.form-control:not([multiple]) {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-position: right 50%;
+  background-repeat: no-repeat;
+  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAFCAYAAAB8ZH1oAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoTWFjaW50b3NoKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo2QjBGNUUzMDA2NDUxMUU2QTYzRTk0RUFDNjUzQkRBMCIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo2QjBGNUUzMTA2NDUxMUU2QTYzRTk0RUFDNjUzQkRBMCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjc3N0FERjdGMDYxNTExRTZBNjNFOTRFQUM2NTNCREEwIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjc3N0FERjgwMDYxNTExRTZBNjNFOTRFQUM2NTNCREEwIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+LUi7QgAAAGtJREFUeNpibOxd0LB//+76ly+fM2AD4uKSDI6Oro3MDOzcB4AMxtdvXjl8/fIFq6IDB/Y0MHPyizIAFR1wdEBVDFO0/8DuhpcvnjMwi0orMoAkkRXzcPOiKAIBRk1TJ3SrGkBsZEUgABBgADZpP0aXi0PzAAAAAElFTkSuQmCC);
+  padding: 0.65em;
+  padding-right: 1.5em;
+}
+
+label {
+  color: $label-color;
+  font-size: $label-font-size;
+}
+
+.form-group {
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+.input-field {
+  position: relative;
+  padding-top: 15px;
+  &:before,
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: block;
+    @include transition(550ms);
+    height: 1px;
+  }
+  &:before {
+    width: 100%;
+    background: $slate-gray;
+  }
+  &:after {
+    width: 0;
+    background: $color-green;
+  }
+  // Fix Chrome autofill issue with input labels
+  input:-webkit-autofill {
+    & + label {
+      top: 0;
+      font-size: 12px;
+      color: $color-green;
+    }
+  }
+  &.is-ready {
+    label {
+      top: 0;
+      font-size: 12px;
+      color: $color-ready;
+    }
+  }
+  &.is-completed {
+    label {
+      top: 0;
+      font-size: 12px;
+    }
+  }
+  &.is-active {
+    &:after {
+      width: 100%;
+      height: 2px;
+    }
+    label {
+      top: 0;
+      font-size: 12px;
+      color: $color-green;
+    }
+  }
+
+  input {
+    border: none;
+    background: transparent;
+    display: block;
+    width: 100%;
+    padding: 0px;
+    height: 34px;
+  }
+  label {
+    position: absolute;
+    left: 0;
+    top: 18px;
+    font-size: 12px;
+    margin: 0;
+    @include transition(300ms);
+  }
+}
+
+.form-group-has-btn {
+  position: relative;
+  > .form-control {
+    padding: 6px 30px 6px 12px;
+    color: $casper;
+  }
+  .btn-submit {
+    position: absolute;
+    right: 5px;
+    height: 100%;
+    top: 0;
+    background: transparent;
+    color: $casper;
+  }
+  &.form-group-btn-left {
+    > .form-control {
+      padding: 6px 12px 6px 30px;
+    }
+    .btn-submit {
+      right: auto;
+      left: 2px;
+    }
+  }
+}
+
+.input-field.color-lighter {
+  &:before {
+    background: $color-grey-lighter;
+  }
+}
+
+.input-field.has-error {
+  &:before {
+    background: $color-red;
+  }
+}
+
+.input-field label.control-label.has-error {
+  top: 50px !important;
+  color: $color-red !important;
+}
+
+.input-field input[type='file'] {
+  padding-top: 10px;
+}
+.input-field-file:before {
+  height: 0;
+}
+.input-field-file.is-active:after {
+  height: 0;
+}

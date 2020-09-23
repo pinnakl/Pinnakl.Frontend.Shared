@@ -1,0 +1,11 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="row" *ngFor="let contactError of contactListErrors">
+        <div class="col-md-12" *ngIf="contactError.message">
+          {{ contactError.field }}: {{ contactError.message }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,40 @@
+<form [formGroup]="form" novalidate>
+  <label class="mb-0">
+    SECURITY <span class="color-red pl-0-25" *ngIf="required">*</span>
+  </label>
+  <kendo-combobox
+    formControlName="security"
+    [textField]="'searchString'"
+    [valueField]="'id'"
+    [valuePrimitive]="!objectModel"
+    [filterable]="true"
+    [clearButton]="true"
+    [data]="dropdownCollection"
+    [disabled]="disabled"
+    (filterChange)="filterDropdown($event)"
+    (click)="dropdownFocused(kendoComboBoxInstance)"
+    (blur)="dropdownBlurred(kendoComboBoxInstance)"
+    (valueChange)="dropdownValueChanged($event)"
+    #kendoComboBoxInstance="kendoComboBox"
+  >
+    <ng-template kendoComboBoxItemTemplate let-dataItem>
+      <div class="row">
+        <div class="col-md-default-width text-uppercase">
+          <kbd>{{ dataItem.assetType }}</kbd>
+        </div>
+        <div
+          *ngIf="dataItem.ticker"
+          class="col-md-default-width text-uppercase"
+        >
+          <kbd>{{ dataItem.ticker }}</kbd>
+        </div>
+        <div *ngIf="dataItem.cusip" class="col-md-default-width text-uppercase">
+          <kbd>{{ dataItem.cusip }}</kbd>
+        </div>
+        <div class="col-md-default-width text-uppercase">
+          {{ dataItem.description }}
+        </div>
+      </div>
+    </ng-template>
+  </kendo-combobox>
+</form>

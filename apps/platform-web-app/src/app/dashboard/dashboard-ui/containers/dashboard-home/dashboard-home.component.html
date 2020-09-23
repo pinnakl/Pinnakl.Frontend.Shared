@@ -1,0 +1,77 @@
+<div class="container-fluid dashboard-rounded">
+  <div class="row pt-4 pl-4 pr-4 padding-top-2rem flex-no-wrap">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="pl-0 col-md-2">
+          <div class="background-color-white rounded p-1">
+            <dashboard-graph></dashboard-graph>
+          </div>
+          <div>
+            <dashboard-market-macro-stats
+              [stats]="macroStats$ | async"
+            ></dashboard-market-macro-stats>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div>
+            <profit-and-loss-summary
+              [pnlSummary]="pnlSummary$ | async"
+            ></profit-and-loss-summary>
+          </div>
+          <div>
+            <activity-summary
+              (loadActivitySummary)="loadActivitySummary($event)"
+              [activitySummary]="activitySummary$ | async"
+            ></activity-summary>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="row">
+            <div
+              class="col-md-12 background-color-white pt-3 pb-3 mb-3 rounded"
+            >
+              <button
+                (click)="openTasks()"
+                class="task-manager-open-button font-weight-bold w-100 font-size-14px"
+              >
+                <span class="accordion-list-item cursor-pointer mr-3">
+                  <i class="icon-pinnakl-play"></i>
+                </span>
+                Open Task Manager
+              </button>
+            </div>
+          </div>
+          <div>
+            <recommended-actions [actions]="recommendedActions$ | async">
+            </recommended-actions>
+          </div>
+          <div>
+            <alerts
+              [alerts]="alerts$ | async"
+              (removeAlert)="removeAlert($event)"
+            >
+            </alerts>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 slider-z-index">
+      <task-details
+        [entities]="entities"
+        [tasks]="tasks"
+        [tasksVisible]="tasksVisible"
+        (loadTaskHistory)="loadTaskHistory()"
+        (closeTasks)="openTasks()"
+        (setSelectedTask)="setSelectedTask($event)"
+      ></task-details>
+    </div>
+    <div class="col-md-4 slider-z-index">
+      <task-history
+        [taskId]="selectedTask && selectedTask.id ? selectedTask.id : undefined"
+        [entities]="entities"
+        [taskHistoryVisible]="taskHistoryVisible"
+        (loadTaskDetails)="loadTaskDetails()"
+      ></task-history>
+    </div>
+  </div>
+</div>

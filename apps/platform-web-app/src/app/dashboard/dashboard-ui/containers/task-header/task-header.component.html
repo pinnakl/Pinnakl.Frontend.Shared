@@ -1,0 +1,78 @@
+<main class="accordion-header-holder" (click)="openSummary()">
+  <table class="table table-accordion">
+    <tbody>
+      <tr>
+        <td class="task-icons-holder">
+          <span class="task-icons accordion-header-item">T</span>
+        </td>
+        <th class="task-name-holder">
+          <span class="task-name accordion-header-item">{{
+            task.description
+          }}</span>
+        </th>
+        <td class="date-holder">
+          <span class="run-time accordion-header-item">
+            <i class="icon-pinnakl-calendar"></i>
+            <span
+              class="date accordion-header-item"
+              [@lastRunDetailChanged]="task.lastRunDetails?.runtime"
+            >
+              {{ task.lastRunDetails?.runtime | date: 'shortDate' }}
+            </span>
+          </span>
+        </td>
+        <td class="time-holder">
+          <span class="time accordion-header-item">
+            <i class="icon-pinnakl-clock"></i>
+            <span [@lastRunDetailChanged]="task.lastRunDetails?.runtime">
+              {{ task.lastRunDetails?.runtime | date: 'shortTime' }}
+            </span>
+          </span>
+        </td>
+        <td class="run-by-name-holder">
+          <span
+            class="run-by-name accordion-header-item"
+            [@lastRunDetailChanged]="task.lastRunDetails?.runBy"
+            >{{ task.lastRunDetails?.runBy }}</span
+          >
+        </td>
+        <td class="accordion-list-holder">
+          <ul class="accordion-list accordion-header-item">
+            <li>
+              <a
+                (click)="switchTab($event, 'summary')"
+                class="accordion-list-item cursor-pointer"
+              >
+                <i title="Results" class="icon-pinnakl-reporting-categ"></i>
+              </a>
+            </li>
+            <li>
+              <a
+                (click)="switchTab($event, 'run')"
+                class="accordion-list-item cursor-pointer"
+              >
+                <i title="Run" class="icon-pinnakl-play"></i>
+              </a>
+            </li>
+            <li>
+              <a
+                (click)="switchTab($event, 'detail')"
+                class="accordion-list-item cursor-pointer"
+              >
+                <i title="Schedule" class="icon-pinnakl-calendar"></i>
+              </a>
+            </li>
+            <li>
+              <a
+                (click)="switchTab($event, 'history')"
+                class="accordion-list-item cursor-pointer"
+              >
+                <i title="History" class="icon-pinnakl-back-in-time"></i>
+              </a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</main>

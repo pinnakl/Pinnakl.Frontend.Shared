@@ -1,0 +1,940 @@
+/* You can add global styles to this file, and also import other style files */
+@import '../../../node_modules/bootstrap/scss/bootstrap';
+// We have issues with date-picker styling so currently switched to pre-compiled Kendo css
+@import '../../../node_modules/@progress/kendo-theme-default/dist/all.css';
+@import '../../../libs/shared/src/lib/styles/main.scss';
+@import '../../../node_modules/angular-tree-component/dist/angular-tree-component.css';
+@import '../../../node_modules/ngx-toastr/toastr.css';
+@import '../../../node_modules/optiscroll/scss/optiscroll.scss';
+
+// Form Validation
+form.ng-submitted {
+  .pnkl-validation-errors {
+    display: block;
+  }
+  input.pnkl-input,
+  kendo-combobox.k-combobox,
+  kendo-datepicker.k-datepicker,
+  kendo-timepicker.k-timepicker {
+    &.ng-invalid {
+      border-bottom: 1px solid #f74053;
+    }
+  }
+}
+
+// Kendo Dialog
+.k-dialog {
+  .k-dialog-titlebar {
+    background-color: #eae8e8;
+    color: #313131;
+    .k-dialog-title {
+      font-size: 16px;
+      overflow: unset;
+    }
+  }
+}
+
+.reconnect-window kendo-dialog .k-dialog-actions {
+  display: none;
+}
+
+// Kendo Window
+.k-window {
+  .k-window-titlebar {
+    background-color: $geyser;
+    color: #313131;
+    .k-window-title {
+      font-size: 16px;
+      overflow: unset;
+    }
+  }
+}
+
+// Kendo Date Picker AngularJS Styling Fix
+.k-widget.k-datepicker.k-header,
+.k-widget.k-timepicker.k-header {
+  .k-picker-wrap.k-state-default span.k-select {
+    background-image: none;
+    background-color: transparent;
+  }
+}
+
+//  Fix for pinnakl grid action buttons conflicting with kendo command buttons
+.action-button .k-button.action-icon {
+  min-width: 0;
+}
+
+input.pnkl-input,
+textarea.pnkl-input {
+  border: none;
+  background: transparent;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border-bottom: 1px solid #6e7c8f;
+  &.dark {
+    color: #fff;
+  }
+}
+
+input.pnkl-input {
+  height: 30px;
+}
+
+textarea.pnkl-input {
+  resize: none;
+}
+
+// Kendo Datepicker/Timepicker changes to match Pinnakl theme
+kendo-datepicker.k-datepicker,
+kendo-timepicker.k-timepicker {
+  width: 100%;
+  background: transparent;
+  border-bottom: 1px solid #6e7c8f;
+  border-radius: 0;
+  &:hover {
+    background-color: transparent;
+  }
+  span.k-picker-wrap {
+    background: transparent;
+    border: 0;
+    &:hover,
+    &:focus,
+    &.k-state-focused {
+      background: transparent;
+      border: 0;
+      kendo-dateinput span.k-dateinput-wrap {
+        background: transparent;
+        border: 0;
+        input {
+          padding: 0;
+        }
+      }
+      .k-select {
+        background: transparent none;
+      }
+    }
+    kendo-dateinput span.k-dateinput-wrap {
+      background: transparent;
+      border: 0;
+      input {
+        padding: 0;
+      }
+    }
+    .k-select {
+      background: transparent none;
+    }
+  }
+  span.k-picker-wrap.k-state-focused .k-input {
+    border: 0;
+  }
+}
+
+// Add class 'datepicker-dark' to filter datepickers
+// E.g. <kendo-datepicker [(value)]="date" class="datepicker-dark">
+kendo-datepicker.k-datepicker.datepicker-dark,
+kendo-timepicker.k-timepicker.timepicker-dark {
+  border-bottom: 1px solid #7e8c9e;
+  span.k-icon.k-i-calendar {
+    color: #7e8c9e;
+  }
+  kendo-dateinput span.k-dateinput-wrap {
+    color: #fff;
+  }
+}
+
+kendo-datepicker.k-datepicker.popup-left-margin-adjust {
+  kendo-popup {
+    margin-left: -100px;
+  }
+}
+
+// Kendo Combobox changes to match Pinnakl theme
+kendo-combobox.k-combobox {
+  border: 0;
+  background: transparent;
+  border-bottom: 1px solid #6e7c8f;
+  border-radius: 0;
+  width: 100%;
+
+  span.k-dropdown-wrap {
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+
+    span.k-clear-value {
+      right: 1.4285714286em;
+    }
+
+    input.k-input {
+      padding: 0;
+    }
+  }
+
+  span.k-select {
+    background: transparent;
+  }
+
+  &.k-combobox-clearable span.k-dropdown-wrap .k-input {
+    padding: 0 13px 0 0;
+  }
+
+  &.k-widget.ng-invalid .k-dropdown-wrap {
+    color: inherit;
+  }
+}
+
+kendo-combobox.k-combobox:hover span.k-select {
+  background: transparent;
+}
+
+.text-uppercase kendo-combobox input {
+  text-transform: inherit;
+}
+
+// Add class 'pnkl-select-dark' to filter comboboxes
+// E.g. <pnkl-select [options]="options" [(ngModel)]="selectedOption" class="pnkl-select-dark"></pnkl-select>
+.pnkl-select-dark kendo-combobox.k-combobox {
+  border-bottom: 1px solid #7e8c9e;
+  span.k-dropdown-wrap {
+    color: #fff;
+  }
+  span.k-select {
+    color: #7e8c9e;
+  }
+}
+
+.pnkl-select-dark kendo-multiselect.k-multiselect {
+  .k-multiselect-wrap,
+  .k-multiselect-wrap:hover {
+    background-color: transparent;
+    border: none;
+    border-radius: unset;
+    border-bottom: 1px solid #7e8c9e;
+    .k-button {
+      background-color: #38485a;
+      color: #fff;
+      background-image: none;
+      span {
+        text-transform: uppercase;
+        font-weight: 200;
+        color: #ffffff;
+      }
+      .k-i-close {
+        color: #fff;
+        opacity: 1;
+      }
+    }
+  }
+  .k-i-loading {
+    background-color: transparent;
+  }
+}
+
+kendo-grid.k-grid {
+  .k-grid-header th.k-header {
+    padding: 6px;
+  }
+  td {
+    padding: 2px 6px;
+    border-bottom: 1px solid #e4e9f0;
+    input.k-textbox {
+      margin: 1px 0 4px;
+    }
+  }
+}
+
+.width-13-percent {
+  width: 13%;
+}
+
+.width-7-percent {
+  width: 7%;
+}
+
+.width-30-percent {
+  width: 30%;
+}
+
+.width-10-percent {
+  width: 10%;
+}
+
+.width-25-percent {
+  width: 25%;
+}
+
+.width-50-percent {
+  width: 50%;
+}
+
+.width-5-percent {
+  width: 5%;
+}
+
+.height-8 {
+  height: 8rem;
+}
+
+.k-grid.fixed-header-grid {
+  thead,
+  tbody,
+  tfoot {
+    display: block;
+  }
+  tbody,
+  tfoot {
+    max-height: 70vh;
+    overflow-y: auto;
+    overflow-x: auto;
+    td:last-child {
+      border-right: 1px solid #e4e9f0;
+    }
+  }
+}
+
+.k-grid tr.k-alt {
+  background-color: #fff !important;
+}
+
+.visibility-hidden {
+  visibility: hidden;
+}
+
+.overflow-auto {
+  overflow: auto;
+}
+
+.reporting-filter-height {
+  height: calc(100vh - 58px - 12rem);
+}
+
+.grid-filter-columns {
+  border: 1px solid #0b1017;
+  background: #1f2832;
+  margin: 1rem;
+  height: 47vh;
+  overflow-y: auto;
+  input {
+    color: #7e8c9e;
+  }
+  .mCustomScrollBox {
+    width: 100%;
+  }
+}
+
+.grid-filter-label {
+  position: relative;
+  left: -8rem;
+  top: 1.5rem;
+}
+
+.display-block {
+  display: block !important;
+}
+
+.display-none {
+  display: none;
+}
+
+.float-right {
+  float: right;
+}
+
+.float-left {
+  float: left;
+}
+
+.max-height-80vh {
+  max-height: 80vh;
+}
+
+.ag-theme-fresh {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 13px;
+  color: #313131;
+  .ag-root {
+    border: none;
+  }
+  .ag-header {
+    font-weight: 700 !important;
+    border: 1px solid #6891e8;
+    background: rgba(255, 255, 255, 0.6) none,
+      linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.6) 0,
+        rgba(255, 255, 255, 0) 100%
+      );
+  }
+  .ag-body {
+    background-color: #fff;
+    border: 1px solid #c5c5c5;
+    border-top: none;
+  }
+  .ag-row-odd {
+    background-color: #fff;
+  }
+
+  .ag-tool-panel {
+    border: 1px solid #e4e9f0;
+    color: #313131;
+  }
+  .ag-pivot-mode {
+    padding: 5px;
+  }
+  .ag-column-drop-vertical .ag-column-drop-cell {
+    margin-top: 8px;
+  }
+  .ag-row-hover,
+  .ag-row-selected,
+  .ag-row-hover.ag-row-odd {
+    background-color: $catswill-white-lighen;
+  }
+  // Add EMS statuses
+  [class*='ems-status'] {
+    &:before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      margin: 2px 6px 2px 2px;
+    }
+  }
+  //  | 'PartialFill' - green
+  //  | 'Rejected' - red
+  //  | 'Filled' - blue
+  //  | 'DoneForDay' - blue
+  //  | 'Canceled' - blue
+  //  | 'Expired' - blue
+  //  | 'Stopped' - blue
+  //  | 'New' - black
+  //  | 'Replaced' = black
+  //  | 'Calculated' - black
+  //  | 'Restated' - black
+  //  | 'PendingCancel' - orange
+  //  | 'PendingNew' - orange
+  //  | 'PendingReplace' - orange
+  //  | 'Suspended' - orange
+  // custom
+  //  | 'Placed' - black
+  //  | 'Draft' - gray
+  //  | 'Staged' - gray
+  //  | 'Placement Pending' - orange
+  .ag-cell {
+    &.ems-status-filled:before,
+    &.ems-status-canceled:before,
+    &.ems-status-stopped:before,
+    &.ems-status-expired:before,
+    &.ems-status-doneforday:before {
+      background-color: $active-status-text-color;
+    }
+    &.ems-status-rejected:before {
+      background-color: $rejected-status-text-color;
+    }
+    &.ems-status-pending:before,
+    &.ems-status-placement-pending:before,
+    &.ems-status-pending-new:before,
+    &.ems-status-pending-cancel:before,
+    &.ems-status-pending-replace:before,
+    &.ems-status-suspended:before {
+      background-color: $pending-status-text-color;
+    }
+    &.ems-status-replace:before,
+    &.ems-status-partialfill:before {
+      background-color: $partial-fill-status-text-color;
+    }
+    // black
+    &.ems-status-new:before,
+    &.ems-status-placed:before,
+    &.ems-status-replaced:before,
+    &.ems-status-restated:before,
+    &.ems-status-calculated:before {
+      background-color: $black;
+    }
+    // gray
+    &.ems-status-staged:before,
+    &.ems-status-draft:before {
+      background-color: $inactive-status-text-color;
+    }
+  }
+  .ag-ltr {
+    .ag-cell {
+      border-bottom: 1px solid #e4e9f0;
+      border-right: 1px solid #e4e9f0;
+      padding: 0.4em 0.6em;
+    }
+    .ag-cell-focus {
+      padding: 0.4em 0.6em;
+    }
+    .ag-header-cell {
+      border-style: solid;
+      border-color: #6891e8;
+      border-width: 1px 0 2px 1px;
+      padding: 0 0.3em; // font-weight: 400;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      text-align: left;
+    }
+    .ag-header-cell:last-child {
+      border-right: 1px solid #6891e8;
+    }
+    .ag-column-select-column:first-child {
+      margin-top: 5px;
+    }
+    .ag-column-select-column {
+      margin-bottom: 5px;
+    }
+  }
+}
+
+.FS20 {
+  font-size: 20px !important;
+}
+
+.risk-filter {
+  right: -16px !important;
+  top: 43px !important;
+}
+
+.width100 {
+  width: 100% !important;
+}
+
+.color-grey {
+  color: #7e8c9e;
+}
+
+.oms-side-panel-border {
+  border-left: 2px solid #293542;
+}
+.request-container {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: stretch;
+  justify-content: space-between;
+
+  .request-left {
+    width: 65% !important;
+    background-color: #ffffff;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 15px;
+    height: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+  }
+
+  .request-right {
+    width: 35% !important;
+    height: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+  }
+}
+
+.paddingLR0 {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+
+.oms-grid-action-btn {
+  margin-left: -156px !important;
+  width: 156px !important;
+  top: 3px !important;
+}
+
+.padding20 {
+  padding: 20px;
+}
+
+.ellipse-highlighter {
+  background-color: #e7ebf0;
+  padding: 3px 5px;
+  border-radius: 40px;
+  color: rgb(126, 140, 158);
+}
+
+.report-card-ul li a.ellipse-highlighter {
+  color: rgb(126, 140, 158) !important;
+}
+
+.grid-align {
+  text-align: right;
+}
+
+.white-space-pre-line {
+  white-space: pre-line;
+}
+
+.border-default {
+  border: 1px solid black;
+}
+
+.center-aligned-row {
+  justify-content: center;
+}
+
+.right-aligned-row {
+  justify-content: flex-end;
+}
+
+.word-break-all {
+  word-break: break-all;
+}
+
+.color-blue {
+  color: $blue !important;
+}
+
+// bootstrap latest classes -- remove css below when upgrade from bootstrap alpha to a stable and latest version
+.no-gutters {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.no-gutters > .col,
+.no-gutters > [class*='col-'] {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.h-100 {
+  height: 100% !important;
+}
+
+.pl-1,
+.px-1 {
+  padding-left: 0.25rem !important;
+}
+
+.pt-2,
+.py-2 {
+  padding-top: 0.5rem !important;
+}
+
+.pb-2,
+.py-2 {
+  padding-bottom: 0.5rem !important;
+}
+
+.font-weight-bold {
+  font-weight: bold;
+}
+
+.text-capitalize {
+  text-transform: capitalize;
+}
+
+.px-5px {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+// End of bootstrap latest classes -- remove css above when upgrade from bootstrap alpha to a stable and latest version
+
+// for cash-flow only, need to make separately in shared
+.cash-flow-grid {
+  height: 800px;
+}
+
+.contact-selection-grid {
+  height: 620px;
+}
+
+.z-index-10 {
+  z-index: 10;
+}
+
+.FS18 {
+  font-size: 18px !important;
+}
+
+.right-align {
+  text-align: right;
+}
+
+.text-upper-case {
+  text-transform: uppercase;
+}
+
+.layout-align-center {
+  display: flex;
+  align-items: center;
+}
+
+.background-color-white {
+  background-color: #fff;
+}
+
+.horizontal-align-center {
+  display: flex;
+  justify-content: center;
+}
+
+.mt-2,
+.my-2 {
+  margin-top: 0.5rem !important;
+}
+
+.font-size-12px {
+  font-size: 12px;
+}
+
+.font-size-14px {
+  font-size: 14px;
+}
+
+.mr-2,
+.mx-2 {
+  margin-right: 0.5rem !important;
+}
+
+.text-transform-uppercase {
+  text-transform: uppercase;
+}
+
+.padding-top-2rem {
+  padding-top: 2rem;
+}
+
+.direction-tag {
+  border-radius: 10px;
+  background-color: #d9dde1;
+  padding: 2px 10px;
+}
+
+.bg-color-light-blue {
+  background-color: lightblue !important;
+}
+
+.bottom-border-blue {
+  border-bottom: blue solid 1px;
+}
+
+kendo-window .k-window-content {
+  border: 1px solid #dce2e8;
+}
+
+.investor-action-items-body {
+  .confirm-communication-delete {
+    margin-top: 0px;
+  }
+}
+
+.custom-scroll-light {
+  .optiscroll-vtrack,
+  .optiscroll-htrack {
+    background: rgba(247, 245, 245, 0.3);
+  }
+}
+
+.margin-top-5px {
+  margin-top: 5px;
+}
+
+.dropdown-content-align,
+.dropdown-menu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  display: unset !important;
+  float: left;
+  min-width: 160px;
+  padding: 5px 0;
+  margin: 2px 0 0;
+  font-size: 1rem;
+  color: #373a3c;
+  text-align: left;
+  list-style: none;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 0.25rem;
+}
+
+.password-change-dropdown-align,
+.notification-dropdown-align {
+  left: -90px;
+  top: 60px;
+}
+
+.btn:focus,
+.btn.focus {
+  box-shadow: none;
+}
+
+.badge {
+  padding: 0;
+}
+.upload-button {
+  height: 35px;
+}
+
+.tree-map-category-label {
+  margin-top: -3px !important;
+}
+
+.pnl-yearly-grid {
+  width: 100%;
+  height: 750px;
+}
+
+.contact-bulk-upload-grid {
+  height: 600px;
+}
+
+.cell-wrap-text {
+  white-space: normal !important;
+}
+
+.crm-contacts-upload-container .page-col-slider-container {
+  height: 100%;
+}
+
+.tracking-link-file-container {
+  .pnkl-validation-errors {
+    display: block !important;
+  }
+}
+
+.investor-returns-grid {
+  height: 450px;
+}
+
+.target-funds-grid {
+  height: 335px;
+}
+
+.payment-history-grid {
+  max-height: 45vh;
+  overflow-y: auto;
+}
+
+.communications-all-investors {
+  .section-container {
+    height: 50vh !important;
+  }
+
+  .communication-content-container {
+    background: #f1f1f1 !important;
+  }
+}
+
+.investor-search-remove {
+  position: absolute;
+  right: 15px;
+  top: 20px;
+}
+.newOrderModal .k-dialog {
+  border-radius: 8px;
+}
+// EMS Order statuses
+.order-status {
+  font-size: 12px;
+  font-weight: 600;
+  color: $status-text-color;
+  //  | 'PartialFill' - green
+  //  | 'Rejected' - red
+  //  | 'Filled' - blue
+  //  | 'DoneForDay' - blue
+  //  | 'Canceled' - blue
+  //  | 'Expired' - blue
+  //  | 'Stopped' - blue
+  //  | 'New' - black
+  //  | 'Replaced' = black
+  //  | 'Calculated' - black
+  //  | 'Restated' - black
+  //  | 'PendingCancel' - orange
+  //  | 'PendingNew' - orange
+  //  | 'PendingReplace' - orange
+  //  | 'Suspended' - orange
+  // custom
+  //  | 'Placed' - black
+  //  | 'Draft' - gray
+  //  | 'Staged' - gray
+  //  | 'Placement Pending' - orange
+  &.badge {
+    background-color: $status-bg-color;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    padding: 2px 12px;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 15px;
+    border-color: transparent;
+    &.partialfill {
+      background-color: $white;
+      border-color: $partial-fill-status-text-color;
+    }
+    &.canceled,
+    &.doneforday,
+    &.stopped,
+    &.filled,
+    &.expired {
+      background-color: $white;
+      border-color: $active-status-text-color;
+    }
+    &.rejected {
+      background-color: $white;
+      border-color: $rejected-status-text-color;
+    }
+    &.pendingcancel,
+    &.pendingnew,
+    &.pendingreplace,
+    &.suspended &.pending {
+      background-color: $white;
+      border-color: $pending-status-text-color;
+    }
+    &.replaced,
+    &.calculated,
+    &.restated,
+    &.placed {
+      background-color: $white;
+      border-color: $black;
+    }
+    &.draft,
+    &.staged {
+      background-color: $white;
+      border-color: $inactive-status-text-color;
+    }
+  }
+
+  &.partialfill {
+    color: $partial-fill-status-text-color;
+  }
+  &.canceled,
+  &.doneforday,
+  &.stopped,
+  &.filled,
+  &.expired {
+    color: $active-status-text-color;
+  }
+  &.rejected {
+    color: $rejected-status-text-color;
+  }
+  &.pendingcancel,
+  &.pendingnew,
+  &.pendingreplace,
+  &.suspended &.pending {
+    color: $pending-status-text-color;
+  }
+  &.replaced,
+  &.calculated,
+  &.restated,
+  &.placed {
+    color: $black;
+  }
+  &.draft,
+  &.staged {
+    color: $inactive-status-text-color;
+  }
+}
+
+.positions-slide-right {
+  position: fixed;
+  left: auto;
+  right: 0;
+  transform: translateX(100%);
+  z-index: 10;
+}

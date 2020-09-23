@@ -1,0 +1,29 @@
+<div
+  [ngClass]="[
+    applyActiveCss ? labelAlignCss : '',
+    inputOptions && inputOptions.floatingLabel ? 'input-field' : '',
+    inputOptions &&
+    inputOptions.inputContainerCss &&
+    inputOptions.inputContainerCss.length
+      ? inputOptions.inputContainerCss
+      : ''
+  ]"
+>
+  <input
+    #inputElement
+    (focus)="inputFocused()"
+    (focusout)="inputFocusedOut()"
+    [type]="type"
+    class="pnkl-input"
+    [attr.disabled]="disabledInput ? true : undefined"
+    [(ngModel)]="value"
+    [ngClass]="inputClass"
+    (ngModelChange)="valueChanged($event)"
+  />
+  <label
+    (click)="labelClicked()"
+    *ngIf="inputOptions && inputOptions.floatingLabel"
+    >{{ label }}
+    <span class="color-red pl-0-25" *ngIf="required">*</span></label
+  >
+</div>

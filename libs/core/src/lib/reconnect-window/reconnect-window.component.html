@@ -1,0 +1,15 @@
+<div class="reconnect-window">
+  <pinnakl-modal
+    [hideDialog]="!reconnectWindow.visible"
+    [width]="300"
+    title="Reconnecting"
+    [showCloseButton]="false"
+  >
+    <div>
+      Connection to the server was lost. Trying to re-establish connection..
+      <div class="text-align-center">
+        <img src="../../assets/core-lib/images/spinner.gif" class="mt-3" />
+      </div>
+    </div>
+  </pinnakl-modal>
+</div>

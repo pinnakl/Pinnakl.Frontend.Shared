@@ -1,0 +1,66 @@
+<div class="pnkl-page crm-investors container-fluid stock-loan">
+  <div class="row pnkl-page-header">
+    <div class="col-md-12 full-width-padding-fix">
+      <div class="row">
+        <div class="col-md-12"><h3 class="text-secondary">Help</h3></div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-3">
+      <div class="row locates-card py-5">
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-12 text-align-center">
+              <h1>
+                <i
+                  (click)="toggleCRMOptions()"
+                  class="icon-pinnakl-side-crm-active cursor-pointer"
+                  data-toggle="collapse"
+                  data-target="#crmComponents"
+                >
+                </i>
+              </h1>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-12 text-align-center"><h3>CRM</h3></div>
+          </div>
+          <div class="row mt-3" *ngIf="showCrmOptions" id="crmComponents">
+            <div class="col-md-12 text-align-center">
+              <ul class="list-group">
+                <li
+                  class="list-group-item list-group-item-action cursor-pointer"
+                  (click)="openDocumentation('CRM Organizations')"
+                >
+                  CRM App - Click for details
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3" *ngFor="let module of modules">
+      <div
+        class="row locates-card py-5"
+        (click)="openDocumentation(module.name)"
+      >
+        <div class="col-md-12">
+          <div class="row">
+            <div class="col-md-12 text-align-center">
+              <h1>
+                <i [ngClass]="module.iconClass" class="cursor-pointer"> </i>
+              </h1>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-md-12 text-align-center">
+              <h3>{{ module.name }}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

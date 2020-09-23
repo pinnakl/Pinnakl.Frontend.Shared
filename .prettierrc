@@ -1,0 +1,7 @@
+{
+  "singleQuote": true,
+  "trailingComma": "none",
+  "editor.formatOnSave": true,
+  "arrowParens": "avoid",
+  "printWidth": 80
+}

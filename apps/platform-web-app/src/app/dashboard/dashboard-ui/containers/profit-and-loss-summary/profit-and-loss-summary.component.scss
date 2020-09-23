@@ -1,0 +1,32 @@
+.summary-container {
+  height: 120px;
+  margin: 0;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.summary-container-col {
+  font-weight: 600;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.summary-text-font {
+  font-size: 24px;
+}
+
+.pnl-text-font {
+  font-size: 14px;
+}
+
+.pnl-image {
+  height: 40px;
+}
+
+.pnl-pct {
+  border: 3px solid #1c6eff;
+  font-weight: 600;
+  font-size: 18px;
+}

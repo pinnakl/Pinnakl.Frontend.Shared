@@ -1,0 +1,26 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="bgColorWhite p-y-1">
+  <div
+    *ngFor="let notificationTopic of pushNotificationTopics"
+    class="avatar-item-wrap row mx-3 pt-4 py-1 pl-3"
+  >
+    <div class="col-md-9 push-notification-label">
+      {{ notificationTopic.topicDescription }}
+    </div>
+    <div class="col-md-3 pt-2">
+      <pinnakl-input
+        [controlName]="notificationTopic.topicName"
+        [form]="form"
+        type="boolean"
+        checkBoxStyle="toggle"
+      >
+      </pinnakl-input>
+    </div>
+  </div>
+  <div class="row mb-4 mr-3 mt-3">
+    <div class="col-md-default-width flex-pull-right">
+      <button class="btn btn-success waves-effect text-uppercase" type="submit">
+        Save
+      </button>
+    </div>
+  </div>
+</form>

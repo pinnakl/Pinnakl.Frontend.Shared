@@ -1,0 +1,15 @@
+/* MAIN HOLDER */
+
+.main-holder {
+  @include transition(500ms);
+  padding-left: $aside-collapsed;
+  @include media-breakpoint-down(xs) {
+    padding-left: 0;
+  }
+  &.aside-opened {
+    padding-left: $aside-opened;
+    @include media-breakpoint-down(xs) {
+      padding-left: 0;
+    }
+  }
+}

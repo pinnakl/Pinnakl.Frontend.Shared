@@ -1,0 +1,38 @@
+.bgColorWhite {
+  background-color: #fff;
+}
+
+.risk-container {
+  width: 100%;
+}
+
+.portfolioCharacteristics {
+  border-bottom: 1px solid #e4e9f0;
+  padding: 10px 10px 30px;
+  margin-bottom: 10px;
+}
+
+.tooltip {
+  display: inline;
+  position: relative;
+  opacity: 1;
+  color: #36444c;
+}
+
+.tooltip:hover {
+  color: #36444c;
+}
+
+.tooltip:hover:after {
+  background: #333;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 5px;
+  bottom: 26px;
+  color: #fff;
+  content: attr(title);
+  left: 20%;
+  padding: 5px 15px;
+  position: absolute;
+  z-index: 98;
+  width: 220px;
+}

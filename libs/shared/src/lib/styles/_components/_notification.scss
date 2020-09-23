@@ -1,0 +1,38 @@
+/* NOTIFICATION */
+
+.notification-holder {
+  display: flex;
+  flex-direction: wrap;
+  background: $white;
+
+  @include media-breakpoint-down(sm) {
+    display: block;
+  }
+}
+
+.dashboard-main-div {
+  position: relative;
+  .container-fluid {
+    width: unset;
+  }
+}
+
+.btn-task-history {
+  color: #ffffff;
+  background-color: #00aae8;
+  border-color: #00aae8;
+}
+
+.btn-task-history-close {
+  color: #f74053 !important;
+  font-size: 18px !important;
+}
+
+.MB12 {
+  margin-bottom: 12px !important;
+}
+
+.task-history-grid {
+  width: 100%;
+  height: 350px;
+}

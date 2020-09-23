@@ -1,0 +1,60 @@
+<div class="container">
+  <div class="row">
+    <div class="login-form">
+      <div class="big-logo">
+        <img src="assets/images/big-logo2.png" alt="" />
+      </div>
+      <form
+        novalidate
+        [formGroup]="form"
+        (ngSubmit)="onSubmit(form)"
+        [class.ng-submitted]="submitted"
+      >
+        <div>
+          <pinnakl-input
+            [form]="form"
+            controlName="username"
+            label="EMAIL"
+            type="text"
+            [inputOptions]="{
+              floatingLabel: true,
+              inputContainerCss: 'color-lighter'
+            }"
+          >
+          </pinnakl-input>
+        </div>
+        <div>
+          <pinnakl-input
+            [form]="form"
+            controlName="password"
+            label="PASSWORD"
+            type="password"
+            [inputOptions]="{
+              floatingLabel: true,
+              inputContainerCss: 'color-lighter'
+            }"
+          >
+          </pinnakl-input>
+        </div>
+        <span class="input-check form-group">
+          <input id="remember" type="checkbox" formControlName="remember" />
+          <label for="remember">Remember me</label>
+        </span>
+        <div class="login">
+          <button class="btn btn-success btn-full" type="submit">Login</button>
+        </div>
+        <div><a href="">Forgot Password?</a></div>
+        <div>
+          <div class="versionNo">Version No: {{ version }}</div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<session-manager
+  [sessions]="activeSessions"
+  [visible]="sessionManagerVisible"
+  (deactivateAllSessions)="deactivateAllSessions()"
+  (deactivateSession)="deactivateSession($event)"
+  (onClose)="onSessionManagerClose()"
+></session-manager>

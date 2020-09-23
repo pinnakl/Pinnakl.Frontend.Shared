@@ -1,0 +1,55 @@
+<div class="mb-3 col-12 d-flex align-items-center justify-content-between flex-no-wrap">
+  <pnkl-line-chart-date-options
+    class="flex-grow-1"
+    [selectionItems]="selectionItems"
+    [(ngModel)]="options"
+    (ngModelChange)="onOptionsChange()"
+    [hideSelected]="hideSelected"
+  >
+  </pnkl-line-chart-date-options>
+
+  <div class="d-flex align-items-end align-self-end">
+    <i class="icon-pinnakl-upload cursor-pointer" (click)="exportToExcel()"></i>
+    <ng-content></ng-content>
+  </div>
+</div>
+<kendo-stockchart>
+  <kendo-chart-legend
+    position="bottom"
+    orientation="horizontal"
+  ></kendo-chart-legend>
+  <kendo-chart-series>
+    <kendo-chart-series-item
+      *ngFor="let item of options.selectedItems"
+      type="column" [stack]="true" [field]="item"
+      [data]="chartDataItems" [name]="item">
+      <kendo-chart-series-item-tooltip>
+        <ng-template let-value="value">
+          <em>{{ item }}</em> : {{ value | number }}
+        </ng-template>
+      </kendo-chart-series-item-tooltip>
+    </kendo-chart-series-item>
+  </kendo-chart-series>
+<!--  <kendo-chart-category-axis>-->
+<!--    <kendo-chart-category-axis-item [visible]="false"></kendo-chart-category-axis-item>-->
+<!--  </kendo-chart-category-axis>-->
+  <kendo-chart-value-axis>
+    <kendo-chart-value-axis-item [max]="maxVal" [min]="minVal">
+      <kendo-chart-value-axis-item-labels
+        [format]="valueFormat"
+      ></kendo-chart-value-axis-item-labels>
+    </kendo-chart-value-axis-item>
+  </kendo-chart-value-axis>
+  <kendo-chart-navigator>
+    <kendo-chart-navigator-series>
+      <kendo-chart-navigator-series-item
+        *ngFor="let item of options.selectedItems"
+        type="area"
+        [data]="chartDataItems"
+        [field]="item"
+        categoryField="date"
+      >
+      </kendo-chart-navigator-series-item>
+    </kendo-chart-navigator-series>
+  </kendo-chart-navigator>
+</kendo-stockchart>

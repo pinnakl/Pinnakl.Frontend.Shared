@@ -1,0 +1,23 @@
+.slider-z-index {
+  z-index: 2;
+}
+
+.accordion-list-item {
+  border-radius: 50%;
+  border: 1px solid #35bd64;
+  color: #35bd64 !important;
+  padding: 2px;
+  padding-right: 0;
+}
+
+.task-manager-open-button {
+  color: #35bd64;
+}
+
+.dashboard-rounded > .rounded {
+  border-radius: 0.4rem !important;
+}
+
+:host ::ng-deep child.rounded {
+  border-radius: 0.4rem !important;
+}

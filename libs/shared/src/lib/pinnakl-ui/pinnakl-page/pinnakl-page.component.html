@@ -1,0 +1,43 @@
+<div
+  *ngIf="sliderType === 'slider-as-column'"
+  class="row page-col-slider-container flex-no-wrap"
+>
+  <div [ngStyle]="pageColStyle" class="col-md page-col-alider-as-col">
+    <ng-content select=".page_column"></ng-content>
+  </div>
+  <div
+    [ngClass]="sliderDisplay ? '' : 'hide-slider'"
+    [ngStyle]="sliderColStyle"
+    class="col-md"
+  >
+    <div><ng-content select=".slider_column"></ng-content></div>
+  </div>
+</div>
+
+<div
+  *ngIf="sliderType === 'slider-as-absolute'"
+  class="row row-container-slider-absolute"
+>
+  <div [ngStyle]="pageColStyle" class="col-md">
+    <ng-content select=".page_absolute"></ng-content>
+  </div>
+  <div
+    [ngClass]="sliderDisplay ? '' : 'hide-slider'"
+    [ngStyle]="sliderColStyle"
+    class="col-md slider-transition-absolute slider-absolute"
+  >
+    <div><ng-content select=".slider_absolute"></ng-content></div>
+  </div>
+</div>
+
+<div
+  *ngIf="sliderType === 'slider-as-nowrap'"
+  class="row flex-no-wrap row-container-slider-nowrap"
+>
+  <div [ngStyle]="pageColStyle" class="col-md-12">
+    <ng-content select=".page_nowrap"></ng-content>
+  </div>
+  <div [ngStyle]="sliderColStyle" class="col-md transition-slider-nowrap">
+    <div><ng-content select=".slider_nowrap"></ng-content></div>
+  </div>
+</div>

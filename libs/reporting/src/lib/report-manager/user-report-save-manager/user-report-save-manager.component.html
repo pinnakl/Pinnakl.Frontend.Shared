@@ -1,0 +1,41 @@
+<a
+  *ngIf="!saveOnly"
+  class="sidebar-filter-trigger"
+  (click)="toggleDropdownMenu()"
+>
+  <i class="icon-pinnakl-floppy"></i>
+</a>
+<a *ngIf="saveOnly" class="sidebar-filter-trigger" (click)="save()">
+  <i class="icon-pinnakl-floppy"></i>
+</a>
+<div
+  *ngIf="showDropDownMenu"
+  class="dropdown-content-align user-report-dialog-align"
+  aria-labelledby="myDrop"
+>
+  <a *ngIf="userReportId" class="dropdown-item" (click)="save()">
+    <i class="icon-pinnakl-floppy"></i> Save
+  </a>
+  <a class="dropdown-item" (click)="toggleSaveAsModal()">
+    <i class="icon-pinnakl-floppy"></i> Save As
+  </a>
+</div>
+
+<!-- Modal -->
+<pinnakl-modal [hideDialog]="hideSaveAsModal" [showCloseButton]="false">
+  <div>
+    <div class="row modal-header">
+      <div class="col-md-8">
+        <h4 class="modal-title" id="myModalLabel">Save As</h4>
+      </div>
+      <div class="text-align-right col-md-4">
+        <button type="button" (click)="toggleSaveAsModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <report-name-editor (nameUpdated)="saveAs($event)"></report-name-editor>
+    </div>
+  </div>
+</pinnakl-modal>

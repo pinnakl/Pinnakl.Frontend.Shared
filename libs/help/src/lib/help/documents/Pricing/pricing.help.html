@@ -1,0 +1,126 @@
+<module-documentation #parent>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-12"><h1>Pricing</h1></div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          The Pricing screen is used to price the portfolio. Prices for
+          instruments, such as equities, options, preferreds, and futures, that
+          trade on the exchange are sourced from IDC. Prices for bonds and other
+          structured products are sourced via an external evaluated pricing
+          service. Other instruments like bank debt, trade claims do not have a
+          pricing feed and have to be priced manually. The pricing screen
+          workflow involves ensuring all prices received from the evaluated
+          pricing source are correct and prices for instruments that are not
+          available via the evaluated pricing source are inputted.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-12"><h2>Filter</h2></div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          Users can filter their portfolio by using the filtering panel. The
+          filter panel can be accessed via the funnel icon. The filter panel
+          loads with the most recent pricing date and the second most recent
+          pricing date (previous pricing date). The Price column and the
+          Previous Price column in the porfolio grid refer to the prices as of
+          Pricing Date and Previous Pricing date respectively. The Change column
+          in the difference between the two. Users can change the pricing and
+          the previous picing date from the filter panel. There is a Carry Over
+          button which copies prices from previous date to pricing date for the
+          selected asset type. On clicking carry over button, it will ask for a
+          confirmation(cancel & ok) to make sure user has not accidently click
+          the button. Upon clicking ok, it will perform the carry over task.
+          <br />
+          <p></p>
+          <button
+            class="top0 btn btn-success waves-effect"
+            (click)="
+              parent.showDemo(
+                'https://portalvhdsmhsd8nkfxlwl2.blob.core.windows.net/platformhelpcontent/filter.mp4'
+              )
+            "
+            href=""
+          >
+            View demo
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-12"><h2>Pricing Panel</h2></div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          This panel is used to add/delete prices for instruments that are
+          either priced via an evaluated pricing source or not priced at all via
+          an evaluated pricing source. Users can input multiple prices received
+          from multiple sources. The average of the prices that are “checked” is
+          used as the final price for the instrument. <br />
+          <p></p>
+          <button
+            class="top0 btn btn-success waves-effect"
+            (click)="
+              parent.showDemo(
+                'https://portalvhdsmhsd8nkfxlwl2.blob.core.windows.net/platformhelpcontent/side-panel-pricing.mp4'
+              )
+            "
+            href=""
+          >
+            View demo
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-12"><h2>Price History</h2></div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          Users can see price history of an instrument and compare it to price
+          history of other instruments, both in a chart format as well, as excel
+          via the Action button.
+          <ol>
+            <li>
+              At the bottom of the price comparison chart, there is another
+              graph called Focus graph which shows the overview of the main
+              graph. It also lets you to zoom in to view graph for particular
+              dates just by clicking and dragging it.
+            </li>
+            <li>
+              There is a Download Excel button at top-right which lets you
+              download the data of graph in excel format.
+            </li>
+          </ol>
+          <button
+            class="btn btn-success waves-effect"
+            (click)="
+              parent.showDemo(
+                'https://portalvhdsmhsd8nkfxlwl2.blob.core.windows.net/platformhelpcontent/action-button.mp4'
+              )
+            "
+            href=""
+          >
+            View demo
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</module-documentation>

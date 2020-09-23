@@ -1,0 +1,40 @@
+<div class="pnkl-page crm-investors container-fluid stock-loan">
+  <div class="row pnkl-page-header">
+    <div class="col-md-12 full-width-padding-fix">
+      <div class="row">
+        <div class="col-md-12">
+          <h3 class="text-secondary">Documentation</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row center-aligned-row">
+    <div class="col-md-8 pnkl-card module-documentation mt-5 p-5">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>
+
+<pinnakl-modal [hideDialog]="!showvideo" [showCloseButton]="false">
+  <div>
+    <div class="ng-tns-c0-0 k-window-titlebar k-header">
+      <div class="k-window-title k-dialog-title"></div>
+      <div class="k-window-actions k-dialog-actions">
+        <button
+          aria-label="Close"
+          class="k-button k-bare k-button-icon k-window-action k-dialog-action k-dialog-close"
+          href="#"
+          (click)="stopvideo()"
+        >
+          <span class="k-icon k-i-x"></span>
+        </button>
+      </div>
+    </div>
+    <div *ngIf="showvideo">
+      <video controls autoplay class="video-container">
+        <source [src]="safevideourl" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </div>
+</pinnakl-modal>

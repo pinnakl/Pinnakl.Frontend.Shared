@@ -1,0 +1,16 @@
+<div
+  kendoTooltip
+  [position]="position"
+  closable="true"
+  showOn="none"
+  [tooltipTemplate]="template"
+  tooltipClass="pnkl-tooltip"
+>
+  <div #tooltipTarget>
+    <ng-content></ng-content>
+  </div>
+</div>
+<ng-template #template>
+  <b>New!</b>
+  <div>{{ text }}</div>
+</ng-template>

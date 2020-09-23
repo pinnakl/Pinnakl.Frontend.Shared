@@ -1,0 +1,28 @@
+<div>
+  <div [ngClass]="inputClass">
+    <kendo-multiselect
+      [clearButton]="false"
+      [data]="dropdownCollection"
+      [attr.disabled]="disabled ? true : undefined"
+      [filterable]="true"
+      (filterChange)="filterDropdown($event)"
+      (valueChange)="onValueChange($event)"
+      [loading]="dropdownLoading"
+      [value]="selectedValue"
+      (open)="dropdownOpen($event, kendoMultiSelectInstance)"
+      [textField]="
+        dropdownOptions?.viewProperty ? dropdownOptions.viewProperty : undefined
+      "
+      [valueField]="
+        dropdownOptions?.viewProperty
+          ? dropdownOptions.modelProperty
+            ? dropdownOptions.modelProperty
+            : 'id'
+          : undefined
+      "
+      [valuePrimitive]="dropdownOptions ? !dropdownOptions.objectModel : true"
+      #kendoMultiSelectInstance="kendoMultiSelect"
+    >
+    </kendo-multiselect>
+  </div>
+</div>
