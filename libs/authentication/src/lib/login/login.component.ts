@@ -132,16 +132,16 @@ export class LoginComponent implements OnInit {
       );
       this.spinner.stop();
       this.userService.setUser(user);
-      try {
-        await this.sessionManagementService.post();
-      } catch (e) {
-        console.log(e.message);
-      }
-      try {
-        await this.pushNotificationService.loadWebNotificationSettings();
-      } catch (e) {
-        console.log(e.message);
-      }
+      // try {
+      //   await this.sessionManagementService.post();
+      // } catch (e) {
+      //   console.log(e.message);
+      // }
+      // try {
+      //   await this.pushNotificationService.loadWebNotificationSettings();
+      // } catch (e) {
+      //   console.log(e.message);
+      // }
       await this.router.navigate([this.ROUTE_AFTER_LOGIN]);
     } catch (error) {
       console.log(error);
