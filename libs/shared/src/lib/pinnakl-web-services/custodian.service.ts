@@ -1,36 +1,27 @@
 import { Injectable } from '@angular/core';
 
 import {
-  DeleteWebRequest,
-  GetWebRequest,
-  PostWebRequest,
-  PutWebRequest,
   WebServiceProvider
 } from '@pnkl-frontend/core';
-import { Custodian } from '../models/oms/custodian.model';
+import { Custodian } from '../models/oms';
 
 @Injectable()
 export class CustodianService {
-  private readonly RESOURCE_URL = 'custodians';
+  private readonly _custodiansEndpoint = 'entities/custodians';
 
-  constructor(private wsp: WebServiceProvider) {}
+  constructor(private readonly wsp: WebServiceProvider) {}
 
-  getCustodians(
+  async getCustodians(
     primeBrokerIndicator: boolean = undefined
   ): Promise<Custodian[]> {
-    let fields = ['CustodianCode', 'CustodianName', 'PrimeBrokerIndicator'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: {
-        fields: fields
-      }
-    };
+    const fields = ['CustodianCode', 'CustodianName', 'PrimeBrokerIndicator'];
 
+    let filters = [];
     if (
       primeBrokerIndicator !== undefined &&
       typeof primeBrokerIndicator === 'boolean'
     ) {
-      (<any>getWebRequest.options).filters = [
+      filters = [
         {
           key: 'primebrokerindicator',
           type: 'EQ',
@@ -39,63 +30,65 @@ export class CustodianService {
       ];
     }
 
-    return this.wsp
-      .get(getWebRequest)
-      .then(result => result.map(x => this.formatCustodian(x)));
+    const entities = await this.wsp.getHttp<any[]>({
+      endpoint: this._custodiansEndpoint,
+      params: {
+        fields: fields,
+        filters: filters
+      }
+    });
+
+    return entities.map(this.formatCustodian);
   }
 
   formatCustodian(result: any): Custodian {
-    let id = parseInt(result.id);
+    const id = parseInt(result.id, 10);
     return new Custodian(
       !isNaN(id) ? id : null,
       result.custodiancode,
       result.custodianname,
-      result.primebrokerindicator === 'True' ? true : false
+      result.primebrokerindicator === 'True'
     );
   }
 
-  saveCustodian(
-    custodianCode: string,
-    custodianName: string
+  async saveCustodian(
+    custodiancode: string,
+    custodianname: string
   ): Promise<Custodian> {
-    const postWebRequest: PostWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      payload: {
-        custodiancode: custodianCode,
-        custodianname: custodianName
+    const result = await this.wsp.postHttp<any>({
+      endpoint: this._custodiansEndpoint,
+      body: {
+        custodiancode,
+        custodianname
       }
-    };
+    });
 
-    return this.wsp
-      .post(postWebRequest)
-      .then(result => this.formatCustodian(result));
+    return this.formatCustodian(result);
   }
 
-  updateCustodian(
+  async updateCustodian(
     id: number,
     custodianCode: string,
     custodianName: string
   ): Promise<Custodian> {
-    const putWebRequest: PutWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      payload: {
-        id: id,
-        custodiancode: custodianCode,
-        custodianname: custodianName
-      }
-    };
+    const result = await this.wsp
+      .putHttp({
+        endpoint: this._custodiansEndpoint,
+        body: {
+          id: id,
+          custodiancode: custodianCode,
+          custodianname: custodianName
+        }
+      });
 
-    return this.wsp
-      .put(putWebRequest)
-      .then(result => this.formatCustodian(result));
+    return this.formatCustodian(result);
   }
 
-  confirmDeleteForCounterparty(id: number): Promise<any> {
-    let fields = ['id'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: 'trade_allocations',
-      options: {
-        fields: fields,
+  async confirmDeleteForCounterparty(id: number): Promise<any> {
+    return this.wsp.getHttp<any[]>({
+      endpoint: 'entities/trade_allocations',
+      params: {
+        fields: ['id'],
         filters: [
           {
             key: 'custodianid',
@@ -109,18 +102,12 @@ export class CustodianService {
           }
         ]
       }
-    };
-    return this.wsp.get(getWebRequest);
+    });
   }
 
-  deleteCustodian(id: number): Promise<any> {
-    const deleteWebRequest: DeleteWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      payload: {
-        id: id
-      }
-    };
-
-    return this.wsp.delete(deleteWebRequest);
+  async deleteCustodian(id: number): Promise<any> {
+    return this.wsp.deleteHttp({
+      endpoint: `${this._custodiansEndpoint}/${id}`
+    });
   }
 }

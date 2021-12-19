@@ -9,10 +9,11 @@ import {
   fileServiceUrls,
   firebaseConfigs,
   frontEndErrorServiceUrls,
+  httpServerUrls,
   httpServiceUrls,
   requestTimeoutPeriods,
-  serverUrls,
-  sseAppUrls
+  sseAppUrls,
+  sseBackupAppUrls
 } from './pinnakl-environment-options';
 import { PinnaklEnvironment } from './pinnakl-environment.model';
 
@@ -24,8 +25,9 @@ export const environment: PinnaklEnvironment = {
   includeTesting: false,
   production: false,
   requestTimeoutPeriod: requestTimeoutPeriods.prod,
-  serverUrl: serverUrls.prod,
   sseAppUrl: sseAppUrls.prod,
+  sseBackupAppUrl: sseBackupAppUrls.prod,
+  httpServerUrl: httpServerUrls.prod,
   httpServiceUrl: httpServiceUrls.prod,
   ...environmentDeveloperOverrides
 };

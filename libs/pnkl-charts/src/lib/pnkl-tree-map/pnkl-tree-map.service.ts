@@ -4,8 +4,6 @@ import { filter, find, maxBy, min, minBy, sortBy } from 'lodash';
 
 @Injectable()
 export class PnklTreeMapService {
-  constructor() {}
-
   // This method should not be bind with 'this' object of its component,
   // it is deliberately made to use 'this' object of high charts.
   dataLabelFormatter(): string {
@@ -30,15 +28,37 @@ export class PnklTreeMapService {
         return `<div style="background: black;width: ${width -
           2}px; color: white;text-align:center;">${name}</div>`;
       }
-      if (fontSize > 10) {
+      if (fontSize > 20 && width > 100) {
         return `<div style="text-align: center">
-                  <div style="font-size: ${fontSize}px" >${name}</div>
-                  <div style="font-size: ${fontSize -
-                    fontSize * 0.15}px;">${value}%</div>
+                  <div style="
+                    word-break: inherit;
+                    height: max-content;
+                    width: ${width}px;font-size: ${fontSize - fontSize * 0.40}px;
+                    padding: 0 ${width / 5}px;">${name}
+                  </div>
+                  <div style="font-size: ${fontSize - fontSize * 0.50}px;">${value}%</div>
                 </div>`;
+      } else {
+        if (fontSize > 12) {
+          return `<div style="text-align: center">
+                  <div style="word-break: inherit;
+                    height: max-content;
+                    width: ${width}px;
+                    font-size: ${fontSize - fontSize * 0.20}px">${name}
+                  </div>
+                  <div style="font-size: ${fontSize - fontSize * 0.15}px;">${value}%</div>
+                </div>`;
+        }
       }
       if (fontSize > 6 && width > 35) {
-        return name;
+        // return name;
+        return `<div style="text-align: center">
+                  <div style="word-break: inherit;
+                    height: max-content;
+                    width: ${width}px;
+                    font-size: ${fontSize * 0.8}px">${name}
+                  </div>
+                </div>`;
       }
       return '';
     } catch (e) {

@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
 import { ConfirmActionService } from './confirm-action.service';
 
 @Component({
-  selector: 'confirm-action',
+  selector: 'default-confirm-action',
   templateUrl: './confirm-action.component.html',
   styleUrls: ['./confirm-action.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -25,9 +25,9 @@ export class ConfirmActionComponent implements OnDestroy, OnInit {
     'Are you sure you want to perform this action?';
 
   constructor(
-    private changeDetectorRef: ChangeDetectorRef,
-    private confirmActionService: ConfirmActionService
-  ) {}
+    private readonly changeDetectorRef: ChangeDetectorRef,
+    private readonly confirmActionService: ConfirmActionService
+  ) { }
 
   confirm(): void {
     this.confirmActionService.confirm();

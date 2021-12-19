@@ -1,0 +1,27 @@
+<div
+  *ngIf="filterValue$ | async as filterValue"
+  class="bg-white d-flex flex-column h-100 justify-content-center rounded p-5"
+>
+  <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center">
+      <div class="account-badge bold">
+        {{ filterValue.account.name.slice(0, 1) | uppercase }}
+      </div>
+      <div class="ml-3 bold">{{ filterValue.account.name | uppercase }}</div>
+    </div>
+    <div>
+      {{ (realTimePnl ? today : filterValue.startDate) | date: 'mediumDate' }} -
+      {{ (realTimePnl ? today : filterValue.endDate) | date: 'mediumDate' }}
+    </div>
+  </div>
+  <div class="row pnl-values mt-5">
+    <div class="col-3">
+      <div class="bold"><span *ngIf="(totalPnl$ | async) < 0">-</span> $ {{ abs(totalPnl$ | async) | number: '1.0-0' }}</div>
+      <div class="grey">$ Return</div>
+    </div>
+    <div class="col-3">
+      <div class="bold">{{ mtdReturn$ | async | number: '1.2-2' }} %</div>
+      <div class="grey">% Return</div>
+    </div>
+  </div>
+</div>

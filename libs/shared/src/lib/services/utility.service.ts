@@ -17,10 +17,10 @@ export class Utility {
   };
 
   constructor(
-    private frontendErrorService: FrontendErrorService,
-    private pinnaklSpinner: PinnaklSpinner,
-    private toastr: Toastr
-  ) {}
+    private readonly frontendErrorService: FrontendErrorService,
+    private readonly pinnaklSpinner: PinnaklSpinner,
+    private readonly toastr: Toastr
+  ) { }
 
   addWeekdays(date: Date, days: number): Date {
     let dateMoment = moment(date);
@@ -202,4 +202,33 @@ export class Utility {
     }
     return lastWorkDay;
   }
+
+  getMostRecentBusinessDay(initialDate: Date = new Date()): Date {
+    const dayInMs = 24 * 60 * 60 * 1000;
+    switch (initialDate.getDay()) {
+      case 6: return new Date(Date.now() - dayInMs);
+      case 0: return new Date(Date.now() - dayInMs * 2);
+      default: return initialDate;
+    }
+  }
+
+  getCurrentFirstDayOf(value: 'month' | 'quarter' | 'year'): Date {
+    return moment(new Date()).startOf(value).toDate();
+  }
+
+  /**
+   * @param obj object that you would like to clean up from empty properties
+   * @description provide T - generic interface for provided object
+   * @returns Partial - not all of properties are required
+   * @example const obj = { a: 1, b: "b", c: null, d: [ ] } => @returns const obj = { a: 1, b: "b", d: [ ] }
+   */
+  removeEmptyKeyValuesFromObject<T>(obj: T): Partial<T> {
+    return Object.keys(obj)
+      .filter((k) => obj[k] !== null)
+      .reduce((acc, k) => {
+        acc[k] = obj[k];
+        return acc;
+      }, {} as Partial<T>);
+  }
+
 }

@@ -1,0 +1,21 @@
+# Node.js with Angular
+# Build a Node.js project that uses Angular.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+  - develop
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - bash: |
+      git checkout develop &&
+      git config --global user.email "system@pinnakl.com" &&
+      git config --global user.name "Tarun Kapoor" &&
+      npm version patch -m "%s [skip azurepipelines]" &&
+      git push https://arufokjurdcmpvltzfosnbfc24mcp6nch3g75fpcf56srfygovsq:PAT@pinnakl.visualstudio.com/PinnaklFrontendApps/_git/Pinnakl.Frontend.WebApp develop  &&
+      git push --force https://$(GITHUB_PAT)@github.com/$(REPO_NAME).git develop
+
+    displayName: 'Copy to Github'

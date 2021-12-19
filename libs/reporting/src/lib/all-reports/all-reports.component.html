@@ -1,7 +1,7 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-12">
-      <div class="row pnkl-page-header prospecting-header-height">
+<div class="container-fluid p-0">
+  <div class="row no-gutters">
+    <div class="col-12">
+      <div class="pnkl-page-header prospecting-header-height">
         <div class="col-md-12 full-width-padding-fix">
           <div class="row">
             <div class="col-md-9">
@@ -10,52 +10,57 @@
           </div>
         </div>
       </div>
-      <div class="row p-3">
-        <div
-          class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12 p-0"
+      <div class="reports-grid no-gutters p-3">
+        <ng-container
           *ngFor="let reportGroup of reportGroups"
         >
-          <div class="row report-card">
-            <div class="col-md-12">
-              <h2>
-                {{ reportGroup.reportCategory }}
-                <i class="sprites doc-icon"></i>
-              </h2>
+          <div class="row report-card flex-column align-items-start">
+            <div class="col-auto p-0 row no-gutters align-items-center justify-content-between w-100">
+              <div class="col flex-grow-1">
+                <h2>
+                  {{ reportGroup.reportCategory }}
+                </h2>
+              </div>
+              <div class="col-auto"><i class="sprites doc-icon"></i></div>
             </div>
-            <ul class="report-card-ul mt-3">
-              <li
-                class="mb-3"
-                *ngFor="let report of reportGroup.userReportList"
-              >
-                <a
-                  class="ellipse-highlighter"
-                  [routerLink]="[
-                    '/reporting/report-manager',
-                    report.reportId,
-                    report.reportName,
-                    report.clientReportId,
-                    report.id
-                  ]"
+            <div class="col p-0">
+              <ul class="report-card-ul my-4">
+                <div class="user-list">
+                  <li
+                  class="mb-3"
+                  *ngFor="let report of reportGroup.userReportList"
                 >
-                  <i class="icon-pinnakl-cog"></i> {{ report.reportName }}
-                </a>
-              </li>
-              <li *ngFor="let report of reportGroup.clientReportList">
-                <a
-                  [routerLink]="[
-                    '/reporting/report-manager',
-                    report.reportId,
-                    report.reportName,
-                    report.id,
-                    'null'
-                  ]"
-                >
-                  {{ report.reportName }}
-                </a>
-              </li>
-            </ul>
+                  <a
+                    class="ellipse-highlighter"
+                    [routerLink]="[
+                      '/reporting/report-manager',
+                      report.reportId,
+                      report.reportName,
+                      report.clientReportId,
+                      report.id
+                    ]"
+                  >
+                    <i class="icon-pinnakl-cog"></i> {{ report.reportName }}
+                  </a>
+                </li>
+                </div>
+                <li *ngFor="let report of reportGroup.clientReportList">
+                  <a
+                    [routerLink]="[
+                      '/reporting/report-manager',
+                      report.reportId,
+                      report.reportName,
+                      report.id,
+                      'null'
+                    ]"
+                  >
+                    {{ report.reportName }}
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
-        </div>
+        </ng-container>
       </div>
     </div>
   </div>

@@ -9,12 +9,12 @@ import { AttemptLoadAum } from './store/aum.actions';
 // TODO: Write tests
 @Injectable()
 export class AumBackendStateFacade {
-  constructor(private _store: Store<State>) {}
+  constructor(private readonly _store: Store<State>) {}
 
   aum$ = this._store.pipe(select(selectAumState));
   aumValue$ = this.aum$.pipe(map(aum => aum.aum));
 
   loadAum({ accountId, date }: { accountId: number; date: Date }): void {
-    this._store.dispatch(new AttemptLoadAum({ accountId, date }));
+    this._store.dispatch(AttemptLoadAum({ accountId, date }));
   }
 }

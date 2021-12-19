@@ -34,3 +34,5 @@ export {
   AttemptLoadTradeWorkflowSpecs,
   TradeWorkflowSpecEffects
 } from './trade-workflow-spec';
+
+export { LoadTradeWorkflowSpecs } from './trade-workflow-spec';

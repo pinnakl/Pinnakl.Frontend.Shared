@@ -1,14 +1,14 @@
 import { ActionReducer } from '@ngrx/store';
 
 import {
-  ClearStoreActions,
+	ClearStore,
   ClearStoreActionTypes
 } from './clear-store.actions';
 
 export function clearStore(
   reducer: ActionReducer<any>
-): (state: any, action: ClearStoreActions) => any {
-  return function(state: any, action: ClearStoreActions): any {
+): (state: any, action: typeof ClearStore) => any {
+  return function(state: any, action: typeof ClearStore): any {
     if (action.type === ClearStoreActionTypes.ClearStore) {
       state = undefined;
     }

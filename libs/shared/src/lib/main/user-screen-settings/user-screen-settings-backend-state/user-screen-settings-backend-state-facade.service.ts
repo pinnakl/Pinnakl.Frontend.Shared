@@ -37,14 +37,12 @@ export class UserScreenSettingsBackendStateFacade {
   }
 
   post(userScreenSetting: Partial<UserScreenSetting>): void {
-    this.store.dispatch(new AttemptAddUserScreenSetting({ userScreenSetting }));
+    this.store.dispatch(AttemptAddUserScreenSetting({ userScreenSetting }));
   }
 
   put(userScreenSetting: Partial<UserScreenSetting>): void {
-    this.store.dispatch(
-      new AttemptUpdateUserScreenSetting({ userScreenSetting })
-    );
+    this.store.dispatch(AttemptUpdateUserScreenSetting({ userScreenSetting }));
   }
 
-  constructor(private store: Store<any>) {}
+  constructor(private readonly store: Store<any>) {}
 }

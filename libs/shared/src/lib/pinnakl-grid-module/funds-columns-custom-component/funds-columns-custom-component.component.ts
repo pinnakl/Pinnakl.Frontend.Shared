@@ -8,11 +8,10 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
   styleUrls: ['./funds-columns-custom-component.component.scss']
 })
 export class FundsColumnsCustomComponentComponent
-  implements OnInit, ICellRendererAngularComp {
+  implements ICellRendererAngularComp
+{
   value;
-  constructor(private router: Router) {}
-
-  ngOnInit(): void {}
+  constructor(private readonly router: Router) {}
 
   agInit(params: any): void {
     this.value = params.value;
@@ -26,6 +25,6 @@ export class FundsColumnsCustomComponentComponent
   }
 
   routeToInvestorDashboard(): void {
-    this.router.navigate(['/crm/crm-home/investor-relations-dashboard']);
+    this.router.navigate(['/crm/crm-home/fund-performance-stats']);
   }
 }

@@ -1,0 +1,62 @@
+<div class="row">
+  <div class="col-md-12 security-information-header">
+    <span>Identifiers</span>
+  </div>
+</div>
+<div class="row">
+  <pb-identifiers
+    class="col-md-12"
+    [entities]="custodians"
+    [existingIdentifiers]="existingPbIdentifiers"
+    [security]="security"
+  >
+  </pb-identifiers>
+</div>
+<div class="row mt-4">
+  <admin-identifiers
+    [adminAccounts]="adminAccounts"
+    class="col-md-12"
+    [entities]="admins"
+    [existingIdentifiers]="existingAdminIdentifiers"
+    [security]="security"
+  >
+  </admin-identifiers>
+</div>
+<div class="row section-border mt-4"></div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="row security-information-action-panel">
+      <div class="col-md-default-width">
+        <div class="row">
+          <div class="col-md-default-width">
+            <button
+              #anchor
+              type="button"
+              class="btn btn-security btn-cancel"
+              (click)="showConfirmation()"
+            >
+              CANCEL
+            </button>
+            <confirm-action
+              [anchor]="anchor"
+              confirmationMessage="Are you sure you want to reset the form?"
+              (onCancelled)="hideConfirmation()"
+              (onConfirmed)="resetForm()"
+              [showConfirmation]="confirmationVisible"
+            >
+            </confirm-action>
+          </div>
+          <div class="col-md-default-width">
+            <button
+              type="button"
+              class="btn btn-security btn-save width-inherit"
+              (click)="saveAllIdentifiers()"
+            >
+              SAVE ALL IDENTIFIERS
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,48 @@
+<form class="row" [formGroup]="form" (ngSubmit)="saveInformation()" novalidate>
+  <div class="col-md-12 mt-3">
+    <div class="row mb-3">
+      <div class="col-md-2">
+        <pinnakl-input
+          controlName="underlyingSecurityId"
+          [form]="form"
+          label="UNDERLYING SECURITY ID"
+          type="numeric"
+        >
+        </pinnakl-input>
+      </div>
+    </div>
+    <div class="row section-border"></div>
+  </div>
+  <div class="col-md-12">
+    <div class="row security-information-action-panel">
+      <div class="col-md-1">
+        <button
+          #anchor
+          class="btn btn-security btn-cancel"
+          [disabled]="!form.dirty"
+          (click)="showFormCancelConfirmation()"
+          type="button"
+        >
+          CANCEL
+        </button>
+        <confirm-action
+          [anchor]="anchor"
+          confirmationMessage="Are you sure you want to reset the form?"
+          (onCancelled)="cancelReset()"
+          (onConfirmed)="resetForm()"
+          [showConfirmation]="cancelConfirmationVisible"
+        >
+        </confirm-action>
+      </div>
+      <div class="col-md-1">
+        <button
+          class="btn btn-security btn-save"
+          [disabled]="!form.dirty"
+          type="submit"
+        >
+          SAVE
+        </button>
+      </div>
+    </div>
+  </div>
+</form>

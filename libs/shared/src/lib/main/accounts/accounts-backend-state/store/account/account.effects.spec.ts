@@ -33,8 +33,8 @@ describe('AccountEffects', () => {
         }
       ]
     });
-    effects = TestBed.get(AccountEffects);
-    service = TestBed.get(AccountService);
+    effects = TestBed.inject(AccountEffects);
+    service = TestBed.inject(AccountService);
   });
 
   describe('load$', () => {

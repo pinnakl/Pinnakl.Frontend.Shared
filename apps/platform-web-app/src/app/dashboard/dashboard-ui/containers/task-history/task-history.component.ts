@@ -1,18 +1,4 @@
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger
-} from '@angular/animations';
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  SimpleChanges
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GridOptions } from 'ag-grid-community';
@@ -20,27 +6,16 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 
 import { PinnaklSpinner } from '@pnkl-frontend/core';
-import { WebServiceProvider } from '@pnkl-frontend/core';
-import { ClientConnectivity } from '@pnkl-frontend/shared';
-import { ClientFile } from '@pnkl-frontend/shared';
-import { FileService } from '@pnkl-frontend/shared';
-import { TaskHistoryService } from '../../../dashboard-backend';
-import { Utility } from '@pnkl-frontend/shared';
+import { ClientConnectivity, ClientFile, FileService, Utility } from '@pnkl-frontend/shared';
+import { TaskHistoryService } from '../../../dashboard-backend/dashboard/task-history.service';
 import { TaskHistoryParam } from './task-history-param.model';
 
 @Component({
   selector: 'task-history',
   templateUrl: './task-history.component.html',
-  styleUrls: ['./task-history.component.scss'],
-  animations: [
-    trigger('tasksVisibleChanged', [
-      state('1', style({ transform: 'translateX(-257%)' })),
-      state('0', style({ transform: 'translateX(0)' })),
-      transition('* => *', animate('500ms'))
-    ])
-  ]
+  styleUrls: ['./task-history.component.scss']
 })
-export class TaskHistoryComponent implements OnInit {
+export class TaskHistoryComponent implements OnInit, OnChanges {
   @Input() taskHistoryVisible = false;
   @Output() loadTaskDetails = new EventEmitter();
   @Input() taskId: string;
@@ -63,24 +38,23 @@ export class TaskHistoryComponent implements OnInit {
   submitted = false;
   private taskHistoryWithDynamicColumns: any[] = [];
   constructor(
-    private spinner: PinnaklSpinner,
-    private wsp: WebServiceProvider,
-    private fb: FormBuilder,
-    private fileService: FileService,
-    private taskHistoryService: TaskHistoryService,
-    private utility: Utility
+    private readonly spinner: PinnaklSpinner,
+    private readonly fb: FormBuilder,
+    private readonly fileService: FileService,
+    private readonly taskHistoryService: TaskHistoryService,
+    private readonly utility: Utility
   ) {
     this.gridOptions = {};
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges): void {
     if (changes.taskId && changes.taskId.currentValue) {
       this.taskId = changes.taskId.currentValue;
       this.ngOnInit();
     }
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.form = this.fb.group({
       startDate: [this.startDate, Validators.required],
       endDate: [this.endDate, Validators.required]
@@ -114,7 +88,7 @@ export class TaskHistoryComponent implements OnInit {
     if (!this.doesTaskHistoryExists()) {
       return;
     }
-    let columns = this.getColumns();
+    const columns = this.getColumns();
     let paramsToBeAddedInGridColumn = this.getTaskHistoryParams(
       this.taskHistoryWithDynamicColumns[0].params
     );
@@ -154,7 +128,7 @@ export class TaskHistoryComponent implements OnInit {
     this.onRowClicked({ data: this.taskHistoryWithDynamicColumns[0] });
   }
 
-  private emptyTaskHistory() {
+  private emptyTaskHistory(): void {
     this.columnDefs = [];
     this.rowData = [];
     this.inputParams = [];
@@ -168,9 +142,7 @@ export class TaskHistoryComponent implements OnInit {
         headerName: 'Last Run Time',
         field: 'runtime',
         minWidth: 170,
-        cellRenderer: field => {
-          return moment(field.value).format('MM/DD/YYYY h:mm:ss A');
-        }
+        cellRenderer: field => moment(field.value).format('MM/DD/YYYY h:mm:ss A')
       },
       {
         headerName: 'Run By',
@@ -193,9 +165,9 @@ export class TaskHistoryComponent implements OnInit {
   }
 
   private getTaskHistoryParams(params: string): TaskHistoryParam[] {
+    const taskHistoryParams = [];
     let commaSeparatedArr = [],
-      colonSeparatedArr = [],
-      taskHistoryParams = [];
+      colonSeparatedArr = [];
     if (params) {
       if (params.indexOf(',') >= 0) {
         commaSeparatedArr = params.split(',');
@@ -235,17 +207,16 @@ export class TaskHistoryComponent implements OnInit {
   private getParamsWithActualName(
     params: TaskHistoryParam[]
   ): TaskHistoryParam[] {
-    let paramsWithActualName = params.map(x => x);
+    const paramsWithActualName = params.map(x => x);
     paramsWithActualName.forEach(paramJson => {
-      let param = paramsWithActualName.find(
+      const param = paramsWithActualName.find(
         x => x.name.toLowerCase() === 'entityid'
       );
       if (!param) {
         return;
       }
       param.name = 'entity';
-      let entityId = param.value;
-      let entity: any = _.find(this.entities, ['id', parseInt(entityId)]);
+      const entity: any = _.find(this.entities, ['id', parseInt(param.value)]);
       if (!entity) {
         return;
       }
@@ -254,12 +225,12 @@ export class TaskHistoryComponent implements OnInit {
     return paramsWithActualName;
   }
 
-  onRowClicked(event): void {
-    let taskHistoryWithDynamicColumnsJson = event.data;
+  onRowClicked(event: any): void {
+    const taskHistoryWithDynamicColumnsJson = event.data;
     this.getAndRenderClientFiles(taskHistoryWithDynamicColumnsJson);
   }
 
-  private getAndRenderClientFiles(taskHistoryWithDynamicColumnsJson): void {
+  private getAndRenderClientFiles(taskHistoryWithDynamicColumnsJson: any): void {
     this.spinner.spin();
     this.fileService
       .getMany({

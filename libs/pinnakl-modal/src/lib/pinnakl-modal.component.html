@@ -1,10 +1,12 @@
-<kendo-dialog
+<ng-container *ngIf="!draggable">
+  <kendo-dialog
   [ngClass]="className"
-  *ngIf="!hideDialog"
+  *ngIf="!hideDialog && !draggable; else draggableDialog"
   [minWidth]="minWidth"
   [title]="title"
   [width]="width"
   [height]="height"
+  [maxHeight]="maxHeight"
 >
   <div *ngIf="showCloseButton" class="pb-4 text-align-right">
     <button
@@ -18,3 +20,23 @@
   </div>
   <ng-content></ng-content>
 </kendo-dialog>
+</ng-container>
+
+
+<ng-container *ngIf="draggable">
+  <kendo-window
+  [ngClass]="className"
+  *ngIf="!hideDialog"
+  [minWidth]="minWidth"
+  [title]="title"
+  [width]="width"
+  [height]="height"
+  [draggable]="true"
+  [resizable]="true"
+  (close)="closeModalEmit()"
+  >
+  <ng-content select="[draggable]"></ng-content>
+  </kendo-window>
+  <div class="k-overlay"></div>
+
+</ng-container>

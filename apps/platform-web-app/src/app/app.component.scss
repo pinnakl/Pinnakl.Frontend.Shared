@@ -6,6 +6,25 @@
   font-size: 18px;
 }
 
+.logout-btn {
+  margin-top: -15px;
+  width: 100%;
+
+  b {
+    margin-top: 10px;
+    display: block;
+  }
+}
+
+.versionNo {
+  margin-bottom: 10px !important;
+  margin-top: 0;
+}
+
+.acc-dropdown {
+  padding-bottom: 0;
+}
+
 .aside-item {
   margin-bottom: 0;
   padding: 10px 15px;
@@ -133,4 +152,10 @@
 .version-label {
   background: $white;
   font-size: 12px;
+}
+
+.change-password-modal {
+  display: flex;
+  flex-direction: column;
+  height: 93%;
 }

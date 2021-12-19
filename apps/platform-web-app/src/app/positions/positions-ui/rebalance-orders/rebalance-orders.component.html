@@ -1,0 +1,65 @@
+<div class="rebalance-orders">
+  <div class="rebalance-orders-header">Rebalance Orders Summary</div>
+  <div class="rebalance-orders-body">
+    <div class="orders-body-table">
+      <kendo-grid class="rebalance-orders-table"
+                  [data]="gridView"
+                  [sortable]="{ mode: 'single' }"
+                  [scrollable]="'scrollable'"
+                  [sort]="sort"
+                  [selectable]="true"
+                  (sortChange)="sortChange($event)">
+        <kendo-grid-column width="28">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <input kendoCheckBox type="checkbox" [(ngModel)]="dataItem.selected">
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="assetType"
+                           title="Asset Type"
+                           width="85">
+        </kendo-grid-column>
+        <kendo-grid-column field="ticker"
+                           title="Ticker">
+        </kendo-grid-column>
+        <kendo-grid-column field="tranType"
+                           title="Tran Type"
+                           width="83">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{ getLongTranType(dataItem.tranType) }}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="orderQuantity"
+                           title="Quantity"
+                           width="100"
+                           format="{0:n}"
+                           class="align-number">
+        </kendo-grid-column>
+        <kendo-grid-column field="orderPrice"
+                           title="Price"
+                           format="{0:c2}"
+                           class="align-number"
+                           width="80">
+        </kendo-grid-column>
+        <kendo-grid-column field="commission"
+                           title="Commission"
+                           width="95"
+                           class="align-number">
+        </kendo-grid-column>
+        <kendo-grid-column field="tradeCost"
+                           title="Trade Cost"
+                           class="align-number"
+                           format="{0:c2}">
+        </kendo-grid-column>
+        <kendo-grid-column field="brokerName"
+                           title="Broker"
+                           class="align-number">
+        </kendo-grid-column>
+      </kendo-grid>
+    </div>
+    <div class="orders-body-actions">
+      <button class="btn btn-primary waves-effect" type="button"
+              [disabled]="!hasSelectedOrders"
+              (click)="stageOrders()">STAGE</button>
+    </div>
+  </div>
+</div>

@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 
-import { GetWebRequest, PostWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
+import { WebServiceProvider } from '@pnkl-frontend/core';
+import { Fund } from '../../models/security';
 import { FundFromApi } from '../../models/security/fund-from-api.model';
-import { Fund } from '../../models/security/fund.model';
 
 @Injectable()
 export class FundService {
-  private readonly RESOURCE_URL = 'funds';
+  private readonly _fundsEndpoint = 'entities/funds';
 
-  constructor(private wsp: WebServiceProvider) {}
+  constructor(private readonly wsp: WebServiceProvider) { }
 
-  getFundFromSecurityId(securityId: number): Promise<Fund> {
-    let fields = [
+  async getFundFromSecurityId(securityId: number): Promise<Fund> {
+    const fields = [
       'Dividend_Frequency',
       'Dividend_Rate',
       'Id',
@@ -19,9 +19,9 @@ export class FundService {
       'SharesOutstanding'
     ];
 
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: {
+    const funds = await this.wsp.getHttp<FundFromApi[]>({
+      endpoint: this._fundsEndpoint,
+      params: {
         fields: fields,
         filters: [
           {
@@ -31,43 +31,34 @@ export class FundService {
           }
         ]
       }
-    };
+    });
 
-    return this.wsp
-      .get(getWebRequest)
-      .then((entities: FundFromApi[]) =>
-        entities.length === 0 ? null : this.formatFund(entities[0])
-      );
+    return funds.length === 0 ? null : this.formatFund(funds[0]);
   }
 
-  postFund(entityToSave: Fund): Promise<Fund> {
-    let requestBody = this.getFundForServiceRequest(entityToSave);
+  async postFund(entityToSave: Fund): Promise<Fund> {
+    const entity = await this.wsp.postHttp<FundFromApi>({
+      endpoint: this._fundsEndpoint,
+      body: this.getFundForServiceRequest(entityToSave)
+    });
 
-    let postWebRequest: PostWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      payload: requestBody
-    };
-
-    return this.wsp
-      .post(postWebRequest)
-      .then((entity: FundFromApi) => this.formatFund(entity));
+    return this.formatFund(entity);
   }
 
-  putFund(entityToSave: Fund): Promise<Fund> {
-    let requestBody = this.getFundForServiceRequest(entityToSave);
-    return this.wsp
-      .put({
-        endPoint: this.RESOURCE_URL,
-        payload: requestBody
-      })
-      .then((entity: FundFromApi) => this.formatFund(entity));
+  async putFund(entityToSave: Fund): Promise<Fund> {
+    const entity = await this.wsp.putHttp<FundFromApi>({
+      endpoint: this._fundsEndpoint,
+      body: this.getFundForServiceRequest(entityToSave)
+    });
+
+    return this.formatFund(entity);
   }
 
   private formatFund(entity: FundFromApi): Fund {
-    let dividendFrequencyId = parseInt(entity.dividend_frequency),
+    const dividendFrequencyId = parseInt(entity.dividend_frequency, 10),
       dividendRate = parseFloat(entity.dividend_rate),
-      id = parseInt(entity.id),
-      securityId = parseInt(entity.securityid),
+      id = parseInt(entity.id, 10),
+      securityId = parseInt(entity.securityid, 10),
       sharesOutstanding = parseFloat(entity.sharesoutstanding);
     return new Fund(
       !isNaN(dividendFrequencyId) ? dividendFrequencyId : null,
@@ -79,7 +70,7 @@ export class FundService {
   }
 
   private getFundForServiceRequest(entity: Fund): FundFromApi {
-    let entityForApi = {} as FundFromApi,
+    const entityForApi = {} as FundFromApi,
       {
         dividendFrequencyId,
         dividendRate,

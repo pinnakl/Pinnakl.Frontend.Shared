@@ -4,7 +4,6 @@ import { TooltipDirective } from '@progress/kendo-angular-tooltip';
 
 @Injectable()
 export class PnklTooltipService {
-  constructor() {}
   show({
     elementRef,
     name,

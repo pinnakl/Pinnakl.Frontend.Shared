@@ -26,8 +26,8 @@ describe('AccountsBackendStateFacade', () => {
       ],
       providers: [AccountsBackendStateFacade]
     });
-    facade = TestBed.get(AccountsBackendStateFacade);
-    store = TestBed.get(Store);
+    facade = TestBed.inject(AccountsBackendStateFacade);
+    store = TestBed.inject(Store);
   });
 
   describe('accounts$', () => {
@@ -53,7 +53,7 @@ describe('AccountsBackendStateFacade', () => {
   });
 
   function _dispatchLoadAccounts(accounts: Account[]): void {
-    store.dispatch(new LoadAccounts({ accounts }));
+    store.dispatch(LoadAccounts({ accounts }));
   }
 
   async function _getAccounts(): Promise<Account[]> {

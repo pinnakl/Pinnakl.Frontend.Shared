@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 
-import { GetWebRequest, PostWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
+import { WebServiceProvider } from '@pnkl-frontend/core';
 import { EquityFromApi } from '../../models/security/equity-from-api.model';
 import { Equity } from '../../models/security/equity.model';
 
 @Injectable()
 export class EquityService {
-  private readonly RESOURCE_URL = 'equities';
+  private readonly _equitiesEndpoint = 'entities/equities';
 
-  constructor(private wsp: WebServiceProvider) {}
+  constructor(private readonly wsp: WebServiceProvider) { }
 
-  getEquityFromSecurityId(securityId: number): Promise<Equity> {
-    let fields = [
+  async getEquityFromSecurityId(securityId: number): Promise<Equity> {
+    const fields = [
       'Dividend_Frequency',
       'Dividend_Rate',
       'Id',
@@ -19,9 +19,9 @@ export class EquityService {
       'SharesOutstanding'
     ];
 
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: {
+    const equities = await this.wsp.getHttp<EquityFromApi[]>({
+      endpoint: this._equitiesEndpoint,
+      params: {
         fields: fields,
         filters: [
           {
@@ -31,43 +31,33 @@ export class EquityService {
           }
         ]
       }
-    };
-
-    return this.wsp
-      .get(getWebRequest)
-      .then((entities: EquityFromApi[]) =>
-        entities.length === 0 ? null : this.formatEquity(entities[0])
-      );
+    });
+    return equities.length === 0 ? null : this.formatEquity(equities[0]);
   }
 
-  postEquity(entityToSave: Equity): Promise<Equity> {
-    let requestBody = this.getEquityForServiceRequest(entityToSave);
+  async postEquity(entityToSave: Equity): Promise<Equity> {
+    const entity = await this.wsp.postHttp<EquityFromApi>({
+      endpoint: this._equitiesEndpoint,
+      body: this.getEquityForServiceRequest(entityToSave)
+    });
 
-    let postWebRequest: PostWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      payload: requestBody
-    };
-
-    return this.wsp
-      .post(postWebRequest)
-      .then((entity: EquityFromApi) => this.formatEquity(entity));
+    return this.formatEquity(entity);
   }
 
-  putEquity(entityToSave: Equity): Promise<Equity> {
-    let requestBody = this.getEquityForServiceRequest(entityToSave);
-    return this.wsp
-      .put({
-        endPoint: this.RESOURCE_URL,
-        payload: requestBody
-      })
-      .then((entity: EquityFromApi) => this.formatEquity(entity));
+  async putEquity(entityToSave: Equity): Promise<Equity> {
+    const entity = await this.wsp.putHttp<EquityFromApi>({
+      endpoint: this._equitiesEndpoint,
+      body: this.getEquityForServiceRequest(entityToSave)
+    });
+
+    return this.formatEquity(entity);
   }
 
   private formatEquity(entity: EquityFromApi): Equity {
-    let dividendFrequencyId = parseInt(entity.dividend_frequency),
+    const dividendFrequencyId = parseInt(entity.dividend_frequency, 10),
       dividendRate = parseFloat(entity.dividend_rate),
-      id = parseInt(entity.id),
-      securityId = parseInt(entity.securityid),
+      id = parseInt(entity.id, 10),
+      securityId = parseInt(entity.securityid, 10),
       sharesOutstanding = parseFloat(entity.sharesoutstanding);
     return new Equity(
       entity.default_indicator === 'True',
@@ -80,7 +70,7 @@ export class EquityService {
   }
 
   private getEquityForServiceRequest(entity: Equity): EquityFromApi {
-    let entityForApi = {} as EquityFromApi,
+    const entityForApi = {} as EquityFromApi,
       {
         defaultIndicator,
         dividendFrequencyId,

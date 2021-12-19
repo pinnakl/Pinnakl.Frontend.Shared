@@ -3,11 +3,83 @@
 }
 
 .chart-percents {
-  font: 30px Verdana,Arial,sans-serif;
+  font: 2em Verdana, Arial, sans-serif;
   margin-bottom: 3px;
 }
 
 .chart-text {
-  font: 16px Verdana,Arial,sans-serif;
+  font: 1em Verdana, Arial, sans-serif;
   margin-bottom: 5px;
+}
+
+@media screen and (max-width: 1600px) {
+  .chart-percents {
+    font: 1.5em Verdana, Arial, sans-serif;
+    margin-bottom: 3px;
+  }
+
+  .chart-text {
+    font: 0.7em Verdana, Arial, sans-serif;
+    margin-bottom: 5px;
+  }
+}
+
+.chart-section {
+  height: 120px;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .circle-chart-color {
+    animation: circle-chart-fill 2s reverse;
+    /* 1 */
+    transform: rotate(-90deg);
+    /* 2, 3 */
+    transform-origin: center;
+    /* 4 */
+  }
+
+  .circle-chart {
+    transform: scale(3.5);
+  }
+
+  .circle-chart-medium {
+    animation: circle-chart-appear 2s forwards;
+    opacity: 0;
+    transform: translateY(0.3em);
+  }
+
+  text {
+    font-weight: 600;
+  }
+
+  .circle-chart-percent {
+    font-weight: 700;
+  }
+
+  @keyframes circle-chart-fill {
+    to {
+      stroke-dasharray: 0 100;
+    }
+  }
+
+  @keyframes circle-chart-appear {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (min-width: 31em) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}
+
+.total-sub-value {
+  text-align: center;
+  color: #36404c;
+  margin-bottom: 26px;
 }

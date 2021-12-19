@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import * as moment from 'moment';
 
@@ -6,11 +6,11 @@ import * as moment from 'moment';
   selector: 'activity-form',
   templateUrl: './activity-form.component.html'
 })
-export class ActivityFormComponent implements OnInit {
+export class ActivityFormComponent {
   form: FormGroup;
   @Output()
   private refreshActivitySummary = new EventEmitter();
-  constructor(private fb: FormBuilder) {
+  constructor(private readonly fb: FormBuilder) {
     this.form = this.fb.group({
       startDate: [
         new Date(
@@ -23,9 +23,7 @@ export class ActivityFormComponent implements OnInit {
     });
   }
 
-  ngOnInit() {}
-
-  fetchActivitySummaryData() {
+  fetchActivitySummaryData(): void {
     this.refreshActivitySummary.emit({
       startDate: this.form.controls.startDate.value,
       endDate: this.form.controls.endDate.value

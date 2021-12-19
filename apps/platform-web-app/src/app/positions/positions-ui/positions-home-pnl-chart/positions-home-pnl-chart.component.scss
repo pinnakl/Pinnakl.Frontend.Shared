@@ -1,0 +1,40 @@
+@import '../../../../../../../libs/shared/src/lib/styles/_components/colors';
+@import '../../../../../../../libs/shared/src/lib/styles/_components/mixins';
+
+:host {
+  display: block;
+  margin: 0 3px 10px 12px;
+  color: $shark;
+
+  .wrapper {
+    width: 100%;
+    margin: 0;
+    padding: 25px 30px 40px 30px;
+    border-radius: 8px;
+
+    .title {
+      width: 100%;
+      font-size: 16px;
+      text-align: left;
+      font-weight: bold;
+    }
+
+    .type-switcher {
+      float: right;
+      display: flex;
+
+      .type-switcher-item {
+        color: $shark;
+        display: flex;
+        font-size: 16px;
+        font-weight: bold;
+        margin-right: 8px;
+        align-items: center;
+
+        input {
+          margin-right: 2px;
+        }
+      }
+    }
+  }
+}

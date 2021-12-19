@@ -1,4 +1,4 @@
-<div class="container-fluid dashboard-rounded">
+<div class="container-fluid dashboard-rounded scrollable-section">
   <div class="row pt-4 pl-4 pr-4 padding-top-2rem flex-no-wrap">
     <div class="col-md-12">
       <div class="row">
@@ -55,23 +55,25 @@
         </div>
       </div>
     </div>
-    <div class="col-md-6 slider-z-index">
-      <task-details
-        [entities]="entities"
-        [tasks]="tasks"
-        [tasksVisible]="tasksVisible"
-        (loadTaskHistory)="loadTaskHistory()"
-        (closeTasks)="openTasks()"
-        (setSelectedTask)="setSelectedTask($event)"
-      ></task-details>
-    </div>
-    <div class="col-md-4 slider-z-index">
-      <task-history
-        [taskId]="selectedTask && selectedTask.id ? selectedTask.id : undefined"
-        [entities]="entities"
-        [taskHistoryVisible]="taskHistoryVisible"
-        (loadTaskDetails)="loadTaskDetails()"
-      ></task-history>
-    </div>
+
+    <task-details
+      class="background-color-white task-details slide-panel slider-z-index"
+      [ngClass]="tasksVisible ? 'show' : ''"
+      [entities]="entities$ | async"
+      [tasks]="tasks$ | async"
+      [tasksVisible]="tasksVisible"
+      (loadTaskHistory)="loadTaskHistory()"
+      (closeTasks)="openTasks()"
+      (setSelectedTask)="setSelectedTask($event)"
+    ></task-details>
+
+    <task-history
+      class="background-color-white task-history slide-panel slider-z-index"
+      [ngClass]="taskHistoryVisible ? 'show' : ''"
+      [taskId]="selectedTask && selectedTask.id ? selectedTask.id : undefined"
+      [entities]="entities$ | async"
+      [taskHistoryVisible]="taskHistoryVisible"
+      (loadTaskDetails)="loadTaskDetails()"
+    ></task-history>
   </div>
 </div>

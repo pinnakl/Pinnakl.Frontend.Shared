@@ -2,25 +2,28 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { StockChartModule } from '@progress/kendo-angular-charts';
+import { StockChartModule, ChartsModule } from '@progress/kendo-angular-charts';
 import {
   ComboBoxModule,
   MultiSelectModule
 } from '@progress/kendo-angular-dropdowns';
+import { AgGridModule } from 'ag-grid-angular';
 import { HighchartsChartModule } from 'highcharts-angular';
 
 import { PnklComparisonChartComponent } from './pnkl-comparison-chart';
 import { PnklLineChartDateComponent } from './pnkl-line-chart-date';
-import { PnklLineChartDateOptionsComponent } from './pnkl-line-chart-date-options';
+import { PnklLineStockchartDateComponent } from './pnkl-line-stockchart-date';
+import { PnklLineStockchartDateOptionsComponent } from './pnkl-line-stockchart-date-options';
 import { PnklStackbarChartDateComponent } from './pnkl-stackbar-chart-date';
 import { PnklTreeMapComponent } from './pnkl-tree-map';
 
 @NgModule({
   declarations: [
     PnklComparisonChartComponent,
-    PnklLineChartDateComponent,
+    PnklLineStockchartDateComponent,
     PnklStackbarChartDateComponent,
-    PnklLineChartDateOptionsComponent,
+    PnklLineChartDateComponent,
+    PnklLineStockchartDateOptionsComponent,
     PnklTreeMapComponent
   ],
   imports: [
@@ -30,13 +33,16 @@ import { PnklTreeMapComponent } from './pnkl-tree-map';
     HighchartsChartModule,
     MultiSelectModule,
     ReactiveFormsModule,
-    StockChartModule
+    StockChartModule,
+    AgGridModule,
+    ChartsModule
   ],
   exports: [
-    PnklLineChartDateComponent,
+    PnklLineStockchartDateComponent,
     PnklStackbarChartDateComponent,
     PnklTreeMapComponent,
-    PnklComparisonChartComponent
+    PnklComparisonChartComponent,
+    PnklLineChartDateComponent
   ]
 })
 export class PnklChartsModule {}

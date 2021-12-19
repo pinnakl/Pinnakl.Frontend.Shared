@@ -1,4 +1,4 @@
-import { AlertModel } from '../../../dashboard-backend/dashboard';
+import { AlertModel } from '../../../dashboard-backend/dashboard/alert.model';
 import {
   AddDashboardAlert,
   AttemptLoadDashboardBackend,
@@ -9,7 +9,7 @@ import {
 import { initialState, reducer } from './dashboard-backend.reducer';
 
 describe('DashboardBackend Reducer', () => {
-  let data = {
+  const data: any = {
     pnl: {
       daily: 89.12,
       MTD: 89.12,
@@ -53,7 +53,7 @@ describe('DashboardBackend Reducer', () => {
     it('should return the initial state', () => {
       const action = new AttemptLoadDashboardBackend();
 
-      let result = reducer(initialState, action);
+      const result = reducer(initialState, action);
 
       expect(result).toEqual({
         ...initialState,
@@ -67,7 +67,7 @@ describe('DashboardBackend Reducer', () => {
     it('should return the initial state', () => {
       const action = new LoadDashboardBackendFailed({ error: 'error' });
 
-      let result = reducer(initialState, action);
+      const result = reducer(initialState, action);
 
       expect(result).toEqual({
         ...initialState,
@@ -81,7 +81,7 @@ describe('DashboardBackend Reducer', () => {
     it('should return the new state', () => {
       const action = new LoadDashboardBackend({ dashboardBackend: data });
 
-      let result = reducer(initialState, action);
+      const result = reducer(initialState, action);
       expect(result).toEqual({
         ...initialState,
         loaded: true,
@@ -93,7 +93,7 @@ describe('DashboardBackend Reducer', () => {
 
   describe('Load Activity Summary action', () => {
     it('should return new state', () => {
-      let activitySummaryData = {
+      const activitySummaryData = {
         pnlAssetType: [{ type: 'BANKDEBT', exposure: 12.12, change: 12.12 }],
         pnlSector: [{ type: 'BANKDEBT', exposure: 12.12, change: 12.12 }],
         positionsAdded: [
@@ -118,7 +118,7 @@ describe('DashboardBackend Reducer', () => {
         activitySummary: activitySummaryData
       });
 
-      let result = reducer(initialState, action);
+      const result = reducer(initialState, action);
 
       expect(result).toEqual({
         ...initialState,
@@ -132,7 +132,7 @@ describe('DashboardBackend Reducer', () => {
 
   describe('Load Dashboard Backend Failed action', () => {
     it('should return the initial state', () => {
-      let alertData: AlertModel = {
+      const alertData: AlertModel = {
         id: 43003,
         clientId: 2,
         notificationType: 1,
@@ -146,11 +146,11 @@ describe('DashboardBackend Reducer', () => {
         dashboardBackend: data
       });
 
-      let resultDashbaord = reducer(initialState, actionDashboard);
+      const resultDashbaord = reducer(initialState, actionDashboard);
 
       const action = new AddDashboardAlert(alertData);
 
-      let result = reducer(resultDashbaord, action);
+      const result = reducer(resultDashbaord, action);
 
       expect(result).toEqual({
         ...resultDashbaord,

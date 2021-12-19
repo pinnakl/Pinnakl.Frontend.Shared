@@ -75,8 +75,6 @@ class ConfirmActionPage {
   cancelBtn: HTMLButtonElement;
   saveBtn: HTMLButtonElement;
 
-  constructor() {}
-
   addPageElements(
     comp: ConfirmActionHostComponent,
     fixture: ComponentFixture<ConfirmActionHostComponent>

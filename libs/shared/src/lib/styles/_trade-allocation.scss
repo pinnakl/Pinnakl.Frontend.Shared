@@ -22,13 +22,15 @@
   padding: 0;
   border-bottom: 1px solid $pigeon-post;
 }
+.table-border-bottom {
+  border-bottom: 1px solid $pigeon-post;
+}
 
 .account_row {
-  padding: 6px 0;
+  padding: 6px 15px;
   border-top: 1px solid #eaeef3;
-
   &:first-child {
-    border-top: none;
+    border-top-color: transparent;
   }
 }
 
@@ -52,7 +54,6 @@
 }
 
 .pbAccounts_column {
-  margin-left: 15px;
   padding-left: 0;
   padding-right: 15px;
   .column_header {
@@ -61,7 +62,7 @@
   }
 }
 
-.pbAccounts_column .tradeAllocationQuantity {
+.tradeAllocationQuantity {
   label {
     display: none;
   }
@@ -69,9 +70,13 @@
     display: none;
   }
   input {
-    height: 19px !important;
+    max-height: 17px;
+    max-width: 100px;
+    margin-right: 0;
+    margin-left: auto;
   }
 }
+
 
 .padding0 {
   padding: 0 !important;
@@ -86,9 +91,8 @@
   font-size: 14px;
   background-color: #fef0f2;
   padding: 6px 25px;
-  margin-top: -0px !important;
+  margin-top: 0 !important;
   border-bottom: 1px solid $pigeon-post;
-  border-left: 1px solid $pigeon-post;
 }
 
 .account-names-left {
@@ -105,18 +109,9 @@
   }
 }
 
-.action_buttons {
+.action_buttons, .allocation_action_buttons {
   height: 100%;
   border-bottom: 1px solid $pigeon-post;
-  .allocation_header {
-    padding: 8px 15px 8px 12px !important;
-    span {
-      height: 29px;
-    }
-  }
-  .allocation_text {
-    padding-top: 5px;
-  }
   .reset {
     cursor: pointer;
     width: 35px;
@@ -129,6 +124,19 @@
     border: 1px solid #9adfb1;
     background-color: #e7ffef;
   }
+  &.allocation_action_buttons {
+    border: none;
+  }
+}
+
+.allocation_header, .ratios_header {
+  padding: 8px 15px 8px 12px !important;
+  span {
+    height: 29px;
+  }
+}
+.allocation_text, .ratios_text {
+  padding-top: 5px;
 }
 
 .margin00 {
@@ -141,6 +149,7 @@
   border-left: 1px solid #b8c6db;
   border-right: 1px solid #b8c6db;
   padding: 15px;
+  height: 100%;
 }
 
 .oi-border-none .select-search-list-item_selection {

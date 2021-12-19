@@ -1,6 +1,7 @@
 $action-color-red: #f44336;
 $action-color-blue: #00a6e8;
 $action-color-pink: #f74053;
+$action-color-violet: #9b59b5;
 $action-color-green: #35bd64;
 $action-color-yellow: #ff7814;
 .action-icon {
@@ -26,6 +27,10 @@ $action-color-yellow: #ff7814;
   &.action-icon-add {
     background-color: $action-color-green;
     background-image: url('../../../assets/images/icons/add.png');
+  }
+  &.action-icon-allocate {
+    background-color: $action-color-violet !important;
+    background-image: url('../../../assets/images/icons/balance.png') !important;
   }
   &.action-icon-edit {
     background-color: $action-color-blue !important;
@@ -54,8 +59,8 @@ $action-color-yellow: #ff7814;
 .action-button-group {
   position: absolute;
   top: 9px;
-  margin-left: -140px;
-  width: 140px;
+  margin-left: -180px;
+  width: 169px;
   text-align: right;
   @include transition(opacity 0.3s ease-in-out);
   opacity: 0;
@@ -69,23 +74,37 @@ $action-color-yellow: #ff7814;
     opacity: 1;
     a.action-button {
       &:nth-child(1) {
-        @include transition(margin 0.1s ease-in-out 0.3s);
+        @include transition(margin 0.1s ease-in-out 0.4s);
         margin-right: 0;
       }
       &:nth-child(2) {
-        @include transition(margin 0.1s ease-in-out 0.2s);
+        @include transition(margin 0.1s ease-in-out 0.3s);
         margin-right: 0;
       }
       &:nth-child(3) {
-        @include transition(margin 0.1s ease-in-out 0.1s);
+        @include transition(margin 0.1s ease-in-out 0.2s);
         margin-right: 0;
       }
       &:nth-child(4) {
+        @include transition(margin 0.1s ease-in-out 0.1s);
+        margin-right: 0;
+      }
+      &:nth-child(5) {
         @include transition(margin 0.1s ease-in-out 0s);
         margin-right: 0;
       }
     }
   }
+
+	confirm-action.overlay-confirm {
+		kendo-popup {
+			left: 1200px !important;
+			top: -5px !important;
+			.col-md-default-width {
+				padding: 0px 1.5em;
+			}
+		}
+	}
 }
 
 .k-grid td {

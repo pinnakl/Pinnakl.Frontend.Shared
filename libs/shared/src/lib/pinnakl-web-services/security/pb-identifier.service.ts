@@ -1,23 +1,23 @@
 import { Injectable } from '@angular/core';
 
-import { GetWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
+import { WebServiceProvider } from '@pnkl-frontend/core';
+import { PbIdentifier } from '../../models/security';
 import { PbIdentifierFromApi } from '../../models/security/pb-identifier-from-api.model';
-import { PbIdentifier } from '../../models/security/pb-identifier.model';
 
 @Injectable()
 export class PbIdentifierService {
-  private readonly RESOURCE_URL = 'mappbid';
+  private readonly _mappbidEndpoint = 'entities/mappbid';
 
-  constructor(private wsp: WebServiceProvider) {}
+  constructor(private readonly wsp: WebServiceProvider) { }
 
   deleteIdentifier(id: number): Promise<void> {
-    return this.wsp.delete({ endPoint: this.RESOURCE_URL, payload: { id } });
+    return this.wsp.deleteHttp({ endpoint: `${this._mappbidEndpoint}/${id}` });
   }
 
-  getIdentifiers(securityId: number): Promise<PbIdentifier[]> {
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: {
+  async getIdentifiers(securityId: number): Promise<PbIdentifier[]> {
+    const identifiers = await this.wsp.getHttp<PbIdentifierFromApi[]>({
+      endpoint: this._mappbidEndpoint,
+      params: {
         fields: ['CustodianId', 'CustodianCode', 'ExtId', 'Id', 'PnklSecId'],
         filters: [
           {
@@ -27,21 +27,18 @@ export class PbIdentifierService {
           }
         ]
       }
-    };
-    return this.wsp
-      .get(getWebRequest)
-      .then((identifiers: PbIdentifierFromApi[]) =>
-        identifiers.map(identifier => this.formatIdentifier(identifier))
-      );
+    });
+
+    return identifiers.map(this.formatIdentifier);
   }
 
-  getIdentifiersForReconciliation(
+  async getIdentifiersForReconciliation(
     custodianId: number,
     securityId: number
   ): Promise<PbIdentifier[]> {
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: {
+    const identifiers = await this.wsp.getHttp<PbIdentifierFromApi[]>({
+      endpoint: this._mappbidEndpoint,
+      params: {
         fields: ['ExtId', 'Id'],
         filters: [
           {
@@ -56,26 +53,27 @@ export class PbIdentifierService {
           }
         ]
       }
-    };
-    return this.wsp
-      .get(getWebRequest)
-      .then((identifiers: PbIdentifierFromApi[]) =>
-        identifiers.map(identifier => this.formatIdentifier(identifier))
-      );
+    });
+
+    return identifiers.map(this.formatIdentifier);
   }
 
-  postIdentifier(entityToSave: PbIdentifier): Promise<PbIdentifier> {
-    let requestBody = this.getIdentifierForServiceRequest(entityToSave);
-    return this.wsp
-      .post({ endPoint: this.RESOURCE_URL, payload: requestBody })
-      .then((entity: PbIdentifierFromApi) => this.formatIdentifier(entity));
+  async postIdentifier(entityToSave: PbIdentifier): Promise<PbIdentifier> {
+    const entity = await this.wsp.postHttp<PbIdentifierFromApi>({
+      endpoint: this._mappbidEndpoint,
+      body: this.getIdentifierForServiceRequest(entityToSave)
+    });
+
+    return this.formatIdentifier(entity);
   }
 
-  putIdentifier(entityToSave: PbIdentifier): Promise<PbIdentifier> {
-    let requestBody = this.getIdentifierForServiceRequest(entityToSave);
-    return this.wsp
-      .put({ endPoint: this.RESOURCE_URL, payload: requestBody })
-      .then((entity: PbIdentifierFromApi) => this.formatIdentifier(entity));
+  async putIdentifier(entityToSave: PbIdentifier): Promise<PbIdentifier> {
+    const entity = await this.wsp.putHttp<PbIdentifierFromApi>({
+      endpoint: this._mappbidEndpoint,
+      body: this.getIdentifierForServiceRequest(entityToSave)
+    });
+
+    return this.formatIdentifier(entity);
   }
 
   private formatIdentifier(identifier: PbIdentifierFromApi): PbIdentifier {

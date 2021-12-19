@@ -1,28 +1,13 @@
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger
-} from '@angular/animations';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ClientConnectivity } from '@pnkl-frontend/shared';
 import { TaskObject } from '../../../shared/task-object.model';
 
 @Component({
   selector: 'task-details',
   templateUrl: './task-details.component.html',
-  styleUrls: ['./task-details.component.scss'],
-  animations: [
-    trigger('tasksVisibleChanged', [
-      state('1', style({ transform: 'translateX(-99%)' })),
-      state('0', style({ transform: 'translateX(0)' })),
-      transition('* => *', animate('500ms'))
-    ])
-  ]
+  styleUrls: ['./task-details.component.scss']
 })
-export class TaskDetailsComponent implements OnInit {
+export class TaskDetailsComponent {
   @Input() tasksVisible = false;
   @Output() loadTaskHistory = new EventEmitter();
   @Output() closeTasks = new EventEmitter();
@@ -52,13 +37,8 @@ export class TaskDetailsComponent implements OnInit {
   showTaskHistory = false;
   showTaskManager = false;
   @Input() tasks: TaskObject[];
-  constructor(private activatedRoute: ActivatedRoute) {
-    // Object.assign(this, this.activatedRoute.snapshot.data.resolvedData);
-  }
 
-  ngOnInit() {}
-
-  openTaskHistory() {
+  openTaskHistory(): void {
     this.loadTaskHistory.emit(); // TODO: also send the details of the task selected
   }
 
@@ -74,7 +54,7 @@ export class TaskDetailsComponent implements OnInit {
       this.showTaskManager = true;
       return;
     }
-    let operationChanged = this.selectedOperation !== operation,
+    const operationChanged = this.selectedOperation !== operation,
       taskChanged = this.selectedTask.id !== task.id,
       openTaskHistory = () => {
         if (operation === 'history') {
@@ -116,7 +96,7 @@ export class TaskDetailsComponent implements OnInit {
     );
   }
 
-  closeTaskSlider() {
+  closeTaskSlider(): void {
     this.closeTasks.emit();
   }
 }

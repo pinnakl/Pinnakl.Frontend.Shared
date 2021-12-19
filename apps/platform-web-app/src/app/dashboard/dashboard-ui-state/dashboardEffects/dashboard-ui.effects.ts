@@ -1,56 +1,51 @@
 import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { PinnaklSpinner } from '@pnkl-frontend/core';
+import { Utility } from '@pnkl-frontend/shared';
+import { concatMap, map, take } from 'rxjs/operators';
 import {
+  AttemptLoadDashboardBackend,
   DashboardBackendActionTypes,
   LoadActivitySummary,
   LoadActivitySummaryFailed,
   LoadDashboardBackendFailed
-} from '../../dashboard-backend-state/store/dashboard';
-import { Utility } from '@pnkl-frontend/shared';
-import { concatMap, map, take } from 'rxjs/operators';
+} from '../../dashboard-backend-state/store/dashboard/dashboard-backend.actions';
+
 @Injectable()
 export class DashboardUiEffects {
   constructor(
-    private actions$: Actions,
-    private spinner: PinnaklSpinner,
-    private utility: Utility
-  ) {}
+    private readonly actions$: Actions,
+    private readonly spinner: PinnaklSpinner,
+    private readonly utility: Utility
+  ) { }
 
-  @Effect({ dispatch: false })
-  applyDashboardSpiner$ = this.actions$.pipe(
-    ofType(DashboardBackendActionTypes.AttemptLoadDashboardBackend),
+  applyDashboardSpiner$ = createEffect(() => this.actions$.pipe(
+    ofType(AttemptLoadDashboardBackend),
     concatMap(() => {
       this.spinner.spin();
       return this.actions$.pipe(
-        ofType(DashboardBackendActionTypes.LoadDashboardBackendFailed),
+        ofType(LoadDashboardBackendFailed),
         take(1),
-        map((action: LoadDashboardBackendFailed) => {
-          this.utility.showError(action.payload.error);
-        })
+        map(action => this.utility.showError(action.error))
       );
     })
-  );
+  ), { dispatch: false });
 
-  @Effect({ dispatch: false })
-  applyActivitySummarySpiner$ = this.actions$.pipe(
+  applyActivitySummarySpiner$ = createEffect(() => this.actions$.pipe(
     ofType(DashboardBackendActionTypes.AttemptLoadActivitySummary),
     concatMap(() => {
       this.spinner.spin();
       return this.actions$.pipe(
-        ofType(
-          DashboardBackendActionTypes.LoadActivitySummary,
-          DashboardBackendActionTypes.LoadActivitySummaryFailed
-        ),
+        ofType(LoadActivitySummary, LoadActivitySummaryFailed),
         take(1),
-        map((action: LoadActivitySummary | LoadActivitySummaryFailed) => {
+        map(action => {
           if (action.type === DashboardBackendActionTypes.LoadActivitySummary) {
             this.spinner.stop();
           } else {
-            this.utility.showError(action.payload.error);
+            this.utility.showError(action.error);
           }
         })
       );
     })
-  );
+  ), { dispatch: false });
 }

@@ -1,0 +1,74 @@
+<div class="add-security-automatic">
+  <div>
+    <div class="modal-body">
+      <form
+        novalidate
+        [formGroup]="automaticSecurityForm"
+        (ngSubmit)="addSecurityAutomatically(automaticSecurityForm)"
+        [class.ng-submitted]="submitted"
+      >
+        <div class="container form-group">
+          <div class="row">
+            <h2>Add New Security Automatically</h2>
+          </div>
+          <div class="row mt-3" *ngIf="!hideAssetTypes">
+            <span *ngFor="let type of allowedAssetTypes" class="toggle-radio-btn">
+              <input
+                type="radio"
+                name="assetType"
+                required
+                formControlName="assetType"
+                [id]="type"
+                [value]="type"
+              />
+              <label [for]="type">{{type}}</label>
+            </span>
+          </div>
+          <div class="row mt-3">
+            <pinnakl-input
+              class="width100"
+              controlName="identifierType"
+              [dropdownSource]="identifierTypes"
+              [form]="automaticSecurityForm"
+              label="IDENTIFIER TYPE"
+              [required]="true"
+              type="dropdown"
+            >
+            </pinnakl-input>
+          </div>
+          <div class="row identifier">
+            <pinnakl-input
+              class="width100"
+              controlName="identifier"
+              [form]="automaticSecurityForm"
+              label="IDENTIFIER"
+              [required]="true"
+              type="text"
+            >
+            </pinnakl-input>
+            <div class="identifier-error" *ngIf="isCusipSearchEmpty">Unable to setup Security from ICE</div>
+          </div>
+          <div class="cusips" *ngIf="cusips?.length">
+            <div class="h5">Select Cusip</div>
+            <div class="cusips-container row mt-3" *ngIf="!hideAssetTypes">
+            <span *ngFor="let cusip of cusips" class="toggle-radio-btn">
+              <input
+                type="radio"
+                name="cusip"
+                required
+                formControlName="cusip"
+                [id]="cusip.cusip"
+                [value]="cusip.cusip"
+              />
+              <label [for]="cusip.cusip">{{cusip.cusip}}</label>
+            </span>
+            </div>
+          </div>
+          <div class="row mt-4">
+            <button class="btn btn-success" type="submit" [disabled]="automaticSecurityForm.invalid">ADD</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

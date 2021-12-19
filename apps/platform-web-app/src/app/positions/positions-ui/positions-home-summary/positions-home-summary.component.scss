@@ -1,0 +1,22 @@
+:host {
+  display: block;
+  margin: 20px 30px;
+
+  .wrapper {
+    margin: 0;
+    border-radius: 8px;
+
+    .col {
+      padding-left: 30px;
+
+      .label_sub_header {
+        color: #7c7e83;
+        font-size: 14px;
+      }
+
+      .border-right-gray {
+        border-right: 2px solid #d8d8d8;
+      }
+    }
+  }
+}

@@ -4,8 +4,11 @@
   [formGroup]="form"
   (ngSubmit)="onSubmit(form)"
 >
-  <div class="row center-aligned-row mt-3">
-    <div class="col-md-3" *ngFor="let parameter of task.params">
+  <div class="d-flex justify-content-center align-items-center mt-3">
+    <div
+      class="col-auto d-flex justify-content-end align-items-center"
+      *ngFor="let parameter of task.params"
+    >
       <pinnakl-input
         *ngIf="parameter.name.toLowerCase() !== 'entityid'"
         [controlName]="parameter.name"
@@ -29,8 +32,8 @@
         ></pnkl-validation>
       </div>
     </div>
-    <div class="col-md-1 pt-4">
-      <button class="btn btn-success" type="submit">RUN</button>
+    <div class="col-auto">
+      <button class="btn btn-success mb-4" type="submit">RUN</button>
     </div>
   </div>
 </form>

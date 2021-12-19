@@ -26,7 +26,7 @@ export class AgPeekTextComponent {
     this.text = `${this.params.value.trim()}\n`;
   }
 
-  constructor(private em: ElementRef) {}
+  constructor(private readonly em: ElementRef) {}
 
   private getRowHeight(): number {
     const element = (<HTMLElement>this.em.nativeElement)

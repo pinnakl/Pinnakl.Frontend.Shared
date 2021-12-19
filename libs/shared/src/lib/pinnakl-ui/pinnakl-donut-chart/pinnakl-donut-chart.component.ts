@@ -7,17 +7,27 @@ import { RenderEvent } from '@progress/kendo-angular-charts';
   styleUrls: ['./pinnakl-donut-chart.component.scss']
 })
 export class PinnaklDonutChartComponent implements AfterViewInit {
-  constructor() {}
   colorArray: string[] = ['#d7d7d7'];
   @Input() color = '#00d565';
-  @Input() transitions = false;
-  @Input() fieldName: string;
-  @Input() donutChartData: { [key: string]: number }[];
   @Input() percentCount: number;
   @Input() displayText: string;
-
+  @Input() totalSubValue;
   ngAfterViewInit(): void {
     this.setChartColor();
+    this.setPositionTextPercent();
+  }
+
+  setPositionTextPercent() {
+    const nodesWithTextPercent = document.querySelectorAll('.circle-chart-amount');
+    nodesWithTextPercent.forEach(element => {
+      console.log(+element.innerHTML);
+
+      if(+element.innerHTML === 100) {
+        element.setAttribute("x", '15');
+      } else {
+        element.setAttribute("x", '17');
+      }
+    });
   }
 
   private setChartColor(): void {

@@ -1,0 +1,25 @@
+.account-badge {
+  align-items: center;
+  background-color: rgba(32, 69, 255, 0.2);
+  border-radius: 50%;
+  color: rgb(32, 69, 255);
+  display: flex;
+  height: 42px;
+  justify-content: center;
+  width: 42px;
+}
+
+.bold {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.grey {
+  font-size: 14px;
+  color: #7c7e83;
+}
+
+.pnl-values .col-3:not(:first-child) {
+  border-left: 1px solid #d8d8d8;
+  padding-left: 30px;
+}

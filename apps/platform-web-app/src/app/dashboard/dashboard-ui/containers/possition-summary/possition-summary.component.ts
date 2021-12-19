@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { PositionEventModel } from '../../../dashboard-backend/dashboard';
+import { PositionEventModel } from '../../../dashboard-backend/dashboard/position-event.model';
+
 @Component({
   selector: 'possition-summary',
   templateUrl: './possition-summary.component.html',
@@ -8,5 +9,4 @@ import { PositionEventModel } from '../../../dashboard-backend/dashboard';
 export class PossitionSummaryComponent {
   @Input() positions: PositionEventModel[];
   @Input() type: string;
-  constructor() {}
 }

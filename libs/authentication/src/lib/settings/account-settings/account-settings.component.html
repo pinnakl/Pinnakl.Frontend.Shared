@@ -1,0 +1,113 @@
+<div class="account-settings">
+  <form [formGroup]="accountForm" (ngSubmit)="accountForm.valid && onSubmit()">
+    <div>
+      <div class="row">
+        <div class="account-settings-control">
+          <pinnakl-input
+            controlName="firstName"
+            [form]="accountForm"
+            label="FIRST NAME"
+            [required]="true"
+            type="text">
+          </pinnakl-input>
+          <span class="error-message"
+                *ngIf="accountForm.get('firstName').hasError('required')">This field is required.</span>
+        </div>
+        <div class="account-settings-control">
+          <pinnakl-input
+            controlName="lastName"
+            [form]="accountForm"
+            label="LAST NAME"
+            [required]="true"
+            type="text">
+          </pinnakl-input>
+          <span class="error-message"
+                *ngIf="accountForm.get('lastName').hasError('required')">This field is required.</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="account-settings-control">
+          <pinnakl-input
+            controlName="username"
+            [form]="accountForm"
+            label="USER NAME"
+            [required]="true"
+            [disabled]="!!user?.username"
+            type="text">
+          </pinnakl-input>
+          <span class="error-message" *ngIf="accountForm.get('username').hasError('required')">This field is required.</span>
+        </div>
+        <div class="account-settings-control">
+          <pinnakl-input
+            [disabled]="isEmailFormControlDisabled"
+            controlName="email"
+            [form]="accountForm"
+            label="EMAIL"
+            [required]="true"
+            type="email">
+          </pinnakl-input>
+          <span class="error-message" *ngIf="accountForm.get('email').hasError('required')">This field is required.</span>
+          <span class="error-message" *ngIf="accountForm.get('email').hasError('pattern')">Email is not valid.</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="account-settings-control">
+          <pinnakl-input
+            controlName="phone"
+            placeholder="+1-999-999-9999"
+            [form]="accountForm"
+            label="PHONE NUMBER"
+            placeholder="+1-999-999-9999"
+            [required]="true"
+            type="text">
+          </pinnakl-input>
+          <span class="error-message" *ngIf="accountForm.get('phone').hasError('required')">This field is required.</span>
+          <span class="error-message" *ngIf="accountForm.get('phone').hasError('pattern')">Phone is not valid.</span>
+        </div>
+        <div class="account-settings-control">
+          <pinnakl-input
+            controlName="timezone"
+            [dropdownSource]="availableTimezones"
+            [dropdownOptions]="{
+            modelProperty: 'timeZone',
+            viewProperty: 'timeZone'
+          }"
+            [form]="accountForm"
+            label="TIME ZONE"
+            type="dropdown">
+          </pinnakl-input>
+        </div>
+      </div>
+    </div>
+
+    <div class="row justify-content-between m-0 p-0">
+      <div>
+        <button
+          #anchor
+          class="btn btn-security btn-cancel"
+          [disabled]="!accountForm.dirty"
+          (click)="showFormCancelConfirmation()"
+          type="button"
+        >
+          CANCEL
+        </button>
+        <confirm-action
+          [anchor]="anchor"
+          confirmationMessage="Are you sure you want to reset the form?"
+          (onCancelled)="cancelReset()"
+          (onConfirmed)="resetForm()"
+          [showConfirmation]="cancelConfirmationVisible"
+        >
+        </confirm-action>
+      </div>
+      <div>
+        <button
+          class="btn btn-security btn-save"
+          [disabled]="(!accountForm.dirty || !accountForm.valid)"
+          type="submit">
+          SAVE
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

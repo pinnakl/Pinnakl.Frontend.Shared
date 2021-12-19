@@ -1,6 +1,7 @@
 /* BUTTONS */
 $main-green: #35bd64;
 $default-grey: #738599;
+$default-blue: #168eff;
 
 .btn {
   font-size: $font-small;
@@ -152,6 +153,31 @@ a.waves-effect .waves-ripple {
   }
 }
 
+.btn-blue {
+  color: white !important;
+  background-color: $default-blue;
+  border-color: darken($default-blue, 2%);
+
+  .btn-blue:hover {
+    color: white;
+  }
+
+  &:active:not([disabled]),
+  &:focus:not([disabled]),
+  &:hover:not([disabled]) {
+    color: white;
+    background-color: lighten($default-blue, 3%);
+    border-color: lighten($default-blue, 5%);
+  }
+
+  &:active:focus,
+  &:active:hover {
+    color: white;
+    background-color: darken($default-blue, 3%);
+    border-color: darken($default-blue, 5%);
+  }
+}
+
 .btn-default {
   background-color: $default-grey;
   border-color: darken($default-grey, 2%);
@@ -183,4 +209,37 @@ a.waves-effect .waves-ripple {
 .btn-full {
   width: 100%;
   text-align: center;
+}
+
+.button-container {
+  background-color: #168eff;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 19px;
+  cursor: pointer;
+  font-weight: 600;
+  height: fit-content;
+  span {
+    font-size: 14px;
+  }
+  &.blue {
+    color: #ffffff;
+  }
+  &.white {
+    border: solid 1px #c3c7cd;
+    background-color: #fff;
+    color: #23282d;
+    padding: 6px 20px;
+  }
+  &.b-r-100 {
+    border-radius: 100px;
+  }
+  &.disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+    pointer-events: none;
+    user-select: none;
+  }
 }

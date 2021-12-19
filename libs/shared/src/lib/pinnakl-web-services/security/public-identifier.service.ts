@@ -2,21 +2,24 @@ import { Injectable } from '@angular/core';
 
 import * as moment from 'moment';
 
-import { GetWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
+import { WebServiceProvider } from '@pnkl-frontend/core';
+import { PublicIdentifier } from '../../models/security';
 import { PublicIdentifierFromApi } from '../../models/security/public-identifier-from-api.model';
-import { PublicIdentifier } from '../../models/security/public-identifier.model';
 
 @Injectable()
 export class PublicIdentifierService {
-  private readonly RESOURCE_URL = 'security_identifiers';
+  private readonly _securityIdentifiersEndpoint =
+    'entities/security_identifiers';
 
-  constructor(private wsp: WebServiceProvider) {}
+  constructor(private readonly wsp: WebServiceProvider) { }
 
-  deleteIdentifier(id: number): Promise<void> {
-    return this.wsp.delete({ endPoint: this.RESOURCE_URL, payload: { id } });
+  async deleteIdentifier(id: number): Promise<void> {
+    return this.wsp.deleteHttp({
+      endpoint: `${this._securityIdentifiersEndpoint}/${id}`
+    });
   }
 
-  getPublicIdentifiers(securityId: number): Promise<PublicIdentifier[]> {
+  async getPublicIdentifiers(securityId: number): Promise<PublicIdentifier[]> {
     const fields = [
       'EndDate',
       'Id',
@@ -26,60 +29,69 @@ export class PublicIdentifierService {
       'SecurityId',
       'StartDate'
     ];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: {
-        fields,
-        filters: [
-          { key: 'SecurityId', type: 'EQ', value: [securityId.toString()] }
-        ]
+
+    const publicIdentifiers = await this.wsp.getHttp<PublicIdentifierFromApi[]>(
+      {
+        endpoint: this._securityIdentifiersEndpoint,
+        params: {
+          fields: fields,
+          filters: [
+            {
+              key: 'securityid',
+              type: 'EQ',
+              value: [securityId.toString()]
+            }
+          ]
+        }
       }
-    };
-    return this.wsp
-      .get(getWebRequest)
-      .then((entities: PublicIdentifierFromApi[]) =>
-        entities.map(entity => this.formatIdentifier(entity))
-      );
+    );
+
+    return publicIdentifiers.map(publicIdentifier =>
+      this.formatIdentifier(publicIdentifier)
+    );
   }
 
-  getPublicIdentifiersByValue(identifier: string): Promise<PublicIdentifier[]> {
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: {
-        fields: ['Id', 'SecurityId'],
-        filters: [{ key: 'Identifier', type: 'EQ', value: [identifier] }]
+  async getPublicIdentifiersByValue(
+    identifier: string
+  ): Promise<PublicIdentifier[]> {
+    const publicIdentifiers = await this.wsp.getHttp<PublicIdentifierFromApi[]>(
+      {
+        endpoint: this._securityIdentifiersEndpoint,
+        params: {
+          fields: ['Id', 'SecurityId'],
+          filters: [{ key: 'Identifier', type: 'EQ', value: [identifier] }]
+        }
       }
-    };
-    return this.wsp
-      .get(getWebRequest)
-      .then((identifiers: PublicIdentifierFromApi[]) =>
-        identifiers.map(publicIdentifier =>
-          this.formatIdentifier(publicIdentifier)
-        )
-      );
+    );
+
+    return publicIdentifiers.map(this.formatIdentifier);
   }
 
-  postIdentifier(entityToSave: PublicIdentifier): Promise<PublicIdentifier> {
-    let requestBody = this.getIdentifierForServiceRequest(entityToSave);
-    return this.wsp
-      .post({ endPoint: this.RESOURCE_URL, payload: requestBody })
-      .then((entity: PublicIdentifierFromApi) => this.formatIdentifier(entity));
+  async postIdentifier(entityToSave: PublicIdentifier): Promise<PublicIdentifier> {
+    const entity = await this.wsp.postHttp<PublicIdentifierFromApi>({
+      endpoint: this._securityIdentifiersEndpoint,
+      body: this.getIdentifierForServiceRequest(entityToSave)
+    });
+
+    return this.formatIdentifier(entity);
   }
 
-  putIdentifier(entityToSave: PublicIdentifier): Promise<PublicIdentifier> {
-    let requestBody = this.getIdentifierForServiceRequest(entityToSave);
-    return this.wsp
-      .put({ endPoint: this.RESOURCE_URL, payload: requestBody })
-      .then((entity: PublicIdentifierFromApi) => this.formatIdentifier(entity));
+  async putIdentifier(entityToSave: PublicIdentifier): Promise<PublicIdentifier> {
+    const entity = await this.wsp.putHttp<PublicIdentifierFromApi>({
+      endpoint: this._securityIdentifiersEndpoint,
+      body: this.getIdentifierForServiceRequest(entityToSave)
+    });
+
+    return this.formatIdentifier(entity);
   }
 
   private formatIdentifier(
     identifier: PublicIdentifierFromApi
   ): PublicIdentifier {
-    let endDateMoment = moment(identifier.enddate, 'MM/DD/YYYY'),
-      id = parseInt(identifier.id),
-      marketId = parseInt(identifier.marketid),
-      securityId = parseInt(identifier.securityid),
+    const endDateMoment = moment(identifier.enddate, 'MM/DD/YYYY'),
+      id = parseInt(identifier.id, 10),
+      marketId = parseInt(identifier.marketid, 10),
+      securityId = parseInt(identifier.securityid, 10),
       startDateMoment = moment(identifier.startdate, 'MM/DD/YYYY');
     return new PublicIdentifier(
       endDateMoment.isValid() ? endDateMoment.toDate() : null,
@@ -95,7 +107,7 @@ export class PublicIdentifierService {
   private getIdentifierForServiceRequest(
     entity: PublicIdentifier
   ): PublicIdentifierFromApi {
-    let entityForApi = {} as PublicIdentifierFromApi,
+    const entityForApi = {} as PublicIdentifierFromApi,
       {
         endDate,
         id,

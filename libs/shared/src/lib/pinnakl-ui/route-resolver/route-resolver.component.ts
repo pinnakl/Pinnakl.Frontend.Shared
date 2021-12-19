@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -6,10 +7,15 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './route-resolver.component.html',
   styleUrls: ['./route-resolver.component.scss']
 })
-export class RouteResolverComponent implements OnInit {
+export class RouteResolverComponent implements OnInit, OnDestroy {
   title: string;
   headerClass: string;
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  constructor(
+    private readonly route: ActivatedRoute,
+    private readonly router: Router,
+    private readonly titleService: Title
+    ) {}
+
   ngOnInit(): void {
     let { data, params } = this.route.snapshot,
       { title, headerClass, resolvingPath } = data as {
@@ -26,5 +32,10 @@ export class RouteResolverComponent implements OnInit {
         });
       });
     }
+    this.titleService.setTitle('Pinnakl CRM - Geographic search');
+  }
+
+  ngOnDestroy() {
+    this.titleService.setTitle('Pinnakl CRM');
   }
 }

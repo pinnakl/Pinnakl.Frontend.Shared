@@ -1,16 +1,19 @@
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 
-import { GetWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
+import { WebServiceProvider } from '@pnkl-frontend/core';
 import { TaskHistory } from '../../shared/task-history.model';
 
 @Injectable()
 export class TaskHistoryService {
-  private TASK_HISTORY_URL = 'tasks_status';
+  private _taskStatusEndpoint = 'entities/tasks_status';
 
-  constructor(private wsp: WebServiceProvider) {}
+  constructor(private readonly wsp: WebServiceProvider) {}
 
-  getTaskHistory(startDate: Date, taskId: string): Promise<TaskHistory[]> {
+  async getTaskHistory(
+    startDate: Date,
+    taskId: string
+  ): Promise<TaskHistory[]> {
     const fields = [
       'runtime',
       'taskinstancequeueid',
@@ -21,10 +24,11 @@ export class TaskHistoryService {
       'successparams',
       'failureparams'
     ];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.TASK_HISTORY_URL,
-      options: {
-        fields,
+
+    const entities = await this.wsp.getHttp<any[]>({
+      endpoint: this._taskStatusEndpoint,
+      params: {
+        fields: fields,
         filters: [
           {
             key: 'runtime',
@@ -39,20 +43,20 @@ export class TaskHistoryService {
         ],
         orderBy: [{ direction: 'DESC', field: 'runtime' }]
       }
-    };
-    return this.wsp.get(getWebRequest).then(taskHistoryRes => {
-      return taskHistoryRes.map(x => {
-        return new TaskHistory(
-          x.failureparams,
-          x.params,
-          x.runby,
-          new Date(x.runtime),
-          x.status,
-          x.successparams,
-          x.taskinstancequeueid,
-          x.taskrequestid
-        );
-      });
     });
+
+    return entities.map(
+      entity =>
+        new TaskHistory(
+          entity.failureparams,
+          entity.params,
+          entity.runby,
+          new Date(entity.runtime),
+          entity.status,
+          entity.successparams,
+          entity.taskinstancequeueid,
+          entity.taskrequestid
+        )
+    );
   }
 }

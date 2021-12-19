@@ -1,8 +1,6 @@
-import { Injectable, Inject } from '@angular/core';
-
-import * as firebase from 'firebase/app';
+import { Inject, Injectable } from '@angular/core';
+import firebase from 'firebase/app';
 import 'firebase/messaging';
-
 import { FIREBASE_CONFIG } from '../environment.tokens';
 
 interface FirebaseMessage {
@@ -17,7 +15,9 @@ interface FirebaseMessage {
 export class FirebaseMessagingService {
   private messaging: firebase.messaging.Messaging;
 
-  constructor(@Inject(FIREBASE_CONFIG) private firebaseConfig) {}
+  constructor(@Inject(FIREBASE_CONFIG) private readonly firebaseConfig: any) {
+    firebase.initializeApp(this.firebaseConfig);
+  }
 
   async initialize(): Promise<void> {
     firebase.initializeApp(this.firebaseConfig);
@@ -26,6 +26,7 @@ export class FirebaseMessagingService {
       const firebaseServiceWorkerRegistration = await navigator.serviceWorker.register(
         'firebase-messaging-sw-custom.js'
       );
+      console.log(firebaseServiceWorkerRegistration);
       this.messaging.useServiceWorker(firebaseServiceWorkerRegistration);
       await this.messaging.requestPermission();
       this.messaging.onMessage(this.handlePushNotificationInForeground);
@@ -35,11 +36,15 @@ export class FirebaseMessagingService {
   }
 
   async getFCMWebSetting(): Promise<string> {
-    if (!this.messaging) {
-      await this.initialize();
+    try {
+      if (!this.messaging) {
+        await this.initialize();
+      }
+      const token = await this.messaging.getToken();
+      return JSON.stringify({ fcmUserToken: token });
+    } catch (e) {
+      console.error('FirebaseMessage error:', e);
     }
-    const token = await this.messaging.getToken();
-    return JSON.stringify({ fcmUserToken: token });
   }
 
   private async handlePushNotificationInForeground({

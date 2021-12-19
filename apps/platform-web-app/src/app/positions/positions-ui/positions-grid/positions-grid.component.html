@@ -1,0 +1,27 @@
+  <ag-grid-angular
+  id="myGrid"
+  [columnDefs]="colDefs"
+  class="ag-theme-fresh"
+  [immutableData]="true"
+  [getRowNodeId]="getRowNodeId"
+  [gridOptions]="gridOptions"
+  [autoGroupColumnDef]="autoGroupColumnDef"
+  [groupIncludeFooter]="true"
+  headerHeight="30"
+  [pinnedBottomRowData]="gridAggregations"
+  [quickFilterText]="searchText"
+  [rowGroupPanelShow]="'always'"
+  rowHeight="30"
+  [rowData]="gridData"
+  [applyColumnDefOrder]="true"
+  (gridReady)="onGridReady($event)"
+  (columnRowGroupChanged)="groupHandler($event)"
+  (dragStopped)="columnMovedHandler($event)"
+  (newColumnsLoaded)="columnMovedHandler($event)"
+  (sortChanged)="sortHandler($event)"
+  (componentStateChanged)="componentStateChanged($event)"
+  [ngClass]="'font-size-' + fontSize + '-px'"
+  ></ag-grid-angular>
+   <div
+    class="resizing-bottom-line"
+  ></div>

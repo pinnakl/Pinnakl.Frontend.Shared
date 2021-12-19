@@ -17,7 +17,7 @@ export class AddEditComponent implements OnInit {
   submitted = false;
   form: FormGroup;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private readonly fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({

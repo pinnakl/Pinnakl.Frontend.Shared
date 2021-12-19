@@ -32,6 +32,7 @@ export class SecurityFromApi {
     public principal_factor: string,
     public initialmargin: string,
     public maintenancemargin: string,
-    public maturity: string
+    public maturity: string,
+    public underlyingsecid: string = null
   ) {}
 }

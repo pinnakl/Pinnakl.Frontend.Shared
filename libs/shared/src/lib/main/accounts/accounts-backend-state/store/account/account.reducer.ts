@@ -1,7 +1,8 @@
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { Action, createReducer, on } from '@ngrx/store';
 
 import { Account } from '../../../../../models';
-import { AccountActions, AccountActionTypes } from './account.actions';
+import { LoadAccounts, LoadAccountsWithoutAum } from './account.actions';
 
 export interface State extends EntityState<Account> {
   loaded: boolean;
@@ -13,21 +14,21 @@ export const initialState: State = adapter.getInitialState({
   loaded: false
 });
 
-export function reducer(
-  state: State = initialState,
-  action: AccountActions
-): State {
-  switch (action.type) {
-    case AccountActionTypes.LoadAccounts: {
-      return adapter.addAll(action.payload.accounts, {
-        ...state,
-        loaded: true
-      });
-    }
-    default: {
-      return state;
-    }
-  }
+
+const featureReducer = createReducer(
+  initialState,
+  on(LoadAccounts, (state, { accounts }) => adapter.setAll(accounts, {
+    ...state,
+    loaded: true
+  })),
+  on(LoadAccountsWithoutAum, (state, { accounts }) => adapter.setAll(accounts, {
+    ...state,
+    loaded: true
+  }))
+);
+
+export function reducer(state: State | undefined, action: Action): State {
+  return featureReducer(state, action);
 }
 
 export const { selectAll } = adapter.getSelectors();

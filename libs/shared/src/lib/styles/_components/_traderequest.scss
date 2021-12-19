@@ -23,7 +23,7 @@ main.main-holder {
       width: 800px;
       flex: none;
       position: relative;
-      z-index: 1000;
+      z-index: 100;
       .trade-request-frame {
         display: flex;
         flex-direction: column;
@@ -124,6 +124,9 @@ main.main-holder {
           display: flex;
           height: 100%;
           max-height: calc(100vh - #{$section-header-height + $nav-height});
+          allocation-panel, request {
+            width: 100%;
+          }
           form.container-fluid {
             height: 100%;
           }

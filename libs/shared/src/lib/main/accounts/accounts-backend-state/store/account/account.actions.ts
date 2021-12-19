@@ -1,30 +1,28 @@
-import { Action } from '@ngrx/store';
-
+import { createAction, props } from '@ngrx/store';
 import { Account } from '../../../../../models';
 
 export enum AccountActionTypes {
   AttemptLoadAccounts = '[Account] Attempt Load Accounts',
   LoadAccounts = '[Account] Load Accounts',
+  LoadAccountsWithoutAum = '[Account] Load Accounts without aum',
   LoadAccountsFailed = '[Account] Load Accounts Failed'
 }
 
-export class AttemptLoadAccounts implements Action {
-  readonly type = AccountActionTypes.AttemptLoadAccounts;
-}
+export const AttemptLoadAccounts = createAction(
+  AccountActionTypes.AttemptLoadAccounts
+);
 
-export class LoadAccounts implements Action {
-  readonly type = AccountActionTypes.LoadAccounts;
+export const LoadAccounts = createAction(
+  AccountActionTypes.LoadAccounts,
+  props<{ accounts: Account[] }>()
+);
 
-  constructor(public payload: { accounts: Account[] }) {}
-}
+export const LoadAccountsWithoutAum = createAction(
+  AccountActionTypes.LoadAccountsWithoutAum,
+  props<{ accounts: Account[] }>()
+);
 
-export class LoadAccountsFailed implements Action {
-  readonly type = AccountActionTypes.LoadAccountsFailed;
-
-  constructor(public payload: { error: any }) {}
-}
-
-export type AccountActions =
-  | AttemptLoadAccounts
-  | LoadAccounts
-  | LoadAccountsFailed;
+export const LoadAccountsFailed = createAction(
+  AccountActionTypes.LoadAccountsFailed,
+  props<{ error: any }>()
+);

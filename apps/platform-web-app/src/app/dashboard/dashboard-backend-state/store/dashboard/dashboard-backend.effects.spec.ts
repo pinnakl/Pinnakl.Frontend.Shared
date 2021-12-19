@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of } from 'rxjs';
+import { DashboardBackend } from '../../../dashboard-backend/dashboard/dashboard-backend.model';
+import { DashboardService } from '../../../dashboard-backend/dashboard/dashboard.service';
 
-import { DashboardService } from '../../../dashboard-backend/dashboard';
 import { DashboardBackendEffects } from './dashboard-backend.effects';
 
-import { DashboardBackend } from '../../../dashboard-backend/dashboard';
 import {
   AttemptLoadActivitySummary,
   AttemptLoadDashboardBackend,
@@ -14,12 +14,13 @@ import {
 } from './dashboard-backend.actions';
 
 import * as moment from 'moment';
+
 describe('DashboardBackendService', () => {
   let actions$: Observable<any>;
   let effects: DashboardBackendEffects;
   let service: DashboardService;
 
-  const dahsboardData: DashboardBackend = {
+  const dashboardData: any = {
     pnl: {
       daily: 0,
       MTD: 0,
@@ -406,24 +407,22 @@ describe('DashboardBackendService', () => {
       ]
     });
 
-    effects = TestBed.get(DashboardBackendEffects);
-    service = TestBed.get(DashboardService);
+    effects = TestBed.inject(DashboardBackendEffects);
+    service = TestBed.inject(DashboardService);
   });
 
   describe('attempt load dashboard action$', () => {
     it('should listen to Attemp Load dashboard Data and dispatch load dashboard data action', () => {
       spyOn(service, 'getDashboardData').and.returnValue(
-        Promise.resolve(dahsboardData)
+        Promise.resolve(dashboardData)
       );
       const action = new AttemptLoadDashboardBackend(),
         completion = new LoadDashboardBackend({
-          dashboardBackend: dahsboardData
+          dashboardBackend: dashboardData
         });
 
       actions$ = of(action);
-      effects.loadDashboard$.subscribe(result => {
-        return expect(result).toEqual(completion);
-      });
+      effects.loadDashboard$.subscribe(result => expect(result).toEqual(completion));
     });
   });
 
@@ -445,9 +444,7 @@ describe('DashboardBackendService', () => {
         });
 
       actions$ = of(action);
-      effects.loadActivitySummary$.subscribe(result => {
-        return expect(result).toEqual(completion);
-      });
+      effects.loadActivitySummary$.subscribe(result => expect(result).toEqual(completion));
     });
   });
 });

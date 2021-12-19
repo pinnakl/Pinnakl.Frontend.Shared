@@ -1,0 +1,19 @@
+<div class="configuration-lists-item">
+  <div pnklCustomScroll darkMode="true" class="configuration-lists mt-3">
+    <p class="text-uppercase">Available IDC Items</p>
+    <div class="input-field is-ready text-uppercase mb-3 m-t-minus-2">
+      <input
+        type="text"
+        [(ngModel)]="idcColumnsSearchText"
+        (ngModelChange)="searchIdcColumns($event, tree.treeModel)"
+        class="search-security-input"
+      />
+    </div>
+    <tree-root
+      class="color-casper"
+      [nodes]="idcColumns"
+      (activate)="selectIdcColumn($event)"
+      #tree
+    ></tree-root>
+  </div>
+</div>

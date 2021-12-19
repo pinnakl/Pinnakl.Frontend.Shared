@@ -1,0 +1,42 @@
+<div class="container-fluid">
+  <div class="row flex-no-wrap">
+    <div class="col-lg-12 col-md-12">
+      <div class="header">
+        <profit-loss-header></profit-loss-header>
+      </div>
+      <div class="row ">
+        <div class="col-12 light-bg padding20 py-0">
+          <pinnakl-grid
+            [columnDefs]="pnlCalculatedColumns$ | async"
+            [headerHeight]="30"
+            [gridOptions]="{}"
+            [pinnedBottomRowData]="aggregation$ | async"
+            [rowData]="pnl$ | async"
+            [rowHeight]="30"
+            [gridHeight]="'600px'"
+            styleClass="full-width"
+          >
+          </pinnakl-grid>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="pnlFilterValue$ | async as pnlFilterValue" class="col-md-3">
+      <pnl-calculated-filter
+        [accounts]="accounts$ | async"
+        [filterVisible]="filterVisible$ | async"
+        [pnlCalculatedColumnSelections]="
+          _pnlUiStateFacade.pnlCalculatedColumnSelections$ | async
+        "
+        [pnlStartDate]="pnlFilterValue.startDate"
+        [pnlEndDate]="pnlFilterValue.endDate"
+        [isStartDateVisible]="true"
+        [selectedAccount]="pnlFilterValue.account"
+        (onAdd)="addColumn($event)"
+        (onApply)="applyFilter($event)"
+        (onClose)="hideFilter()"
+        (onRemove)="removeColumn($event)"
+      >
+      </pnl-calculated-filter>
+    </div>
+  </div>
+</div>

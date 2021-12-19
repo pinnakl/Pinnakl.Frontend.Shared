@@ -1,73 +1,65 @@
 import { Injectable } from '@angular/core';
 
-import { GetWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
-import { UserReportFromApi } from '../../models/reporting/user-report-from-api.model';
-import { UserReport } from '../../models/reporting/user-report.model';
+import { WebServiceProvider } from '@pnkl-frontend/core';
+import { UserReport, UserReportFromApi } from '../../models/reporting';
 
 @Injectable()
 export class UserReportService {
-  private readonly RESOURCE_URL = '/user_reports';
+  private readonly _userReportsEndpoint = 'entities/user_reports';
 
-  constructor(private wsp: WebServiceProvider) {}
+  constructor(private readonly wsp: WebServiceProvider) {}
 
   deleteUserReport(id: number): Promise<void> {
-    return this.wsp.delete({
-      endPoint: this.RESOURCE_URL,
-      payload: { id: id.toString() }
+    return this.wsp.deleteHttp({
+      endpoint: `${this._userReportsEndpoint}/${id}`
     });
   }
 
   getUserReports(userId: number): Promise<UserReport[]> {
     const fields = [
-        'ClientReportId',
-        'Id',
-        'isInternal',
-        'Name',
-        'ReportCategory',
-        'ReportId',
-        'UserId'
-      ],
-      getWebRequest: GetWebRequest = {
-        endPoint: this.RESOURCE_URL,
-        options: {
+      'ClientReportId',
+      'Id',
+      'isInternal',
+      'Name',
+      'ReportCategory',
+      'ReportId',
+      'UserId'
+    ];
+
+    return this.wsp
+      .getHttp<UserReportFromApi[]>({
+        endpoint: this._userReportsEndpoint,
+        params: {
           fields,
           filters: [
             {
-              key: 'userId',
+              key: 'isDevUser',
               type: 'EQ',
-              value: [userId.toString()]
+              value: ['0']
             }
           ]
         }
-      };
-    return this.wsp
-      .get(getWebRequest)
-      .then((reports: UserReportFromApi[]) =>
-        reports.map(report => this.formatUserReport(report))
-      );
+      })
+      .then(reports => reports.map(this.formatUserReport));
   }
 
   getUserReportsForClientReport(
     clientReportId: number,
     userId: number
   ): Promise<UserReport[]> {
-    let query =
-      `${
-        this.RESOURCE_URL
-      }?fields=ClientReportId,Id,isInternal,Name,ReportCategory,ReportId,UserId` +
-      `&clientReportId=${clientReportId}&userId=${userId}`;
     const fields = [
-        'ClientReportId',
-        'Id',
-        'isInternal',
-        'Name',
-        'ReportCategory',
-        'ReportId',
-        'UserId'
-      ],
-      getWebRequest: GetWebRequest = {
-        endPoint: this.RESOURCE_URL,
-        options: {
+      'ClientReportId',
+      'Id',
+      'isInternal',
+      'Name',
+      'ReportCategory',
+      'ReportId',
+      'UserId'
+    ];
+    return this.wsp
+      .getHttp<UserReportFromApi[]>({
+        endpoint: this._userReportsEndpoint,
+        params: {
           fields,
           filters: [
             {
@@ -82,26 +74,32 @@ export class UserReportService {
             }
           ]
         }
-      };
-    return this.wsp
-      .get(getWebRequest)
-      .then((reports: UserReportFromApi[]) =>
-        reports.map(report => this.formatUserReport(report))
-      );
+      })
+      .then(reports => reports.map(this.formatUserReport));
   }
 
   postUserReport(userReport: UserReport): Promise<UserReport> {
-    let userReportForRequest = this.getUserReportForServiceRequest(userReport);
+    const userReportForRequest = this.getUserReportForServiceRequest(
+      userReport
+    );
     return this.wsp
-      .post({ endPoint: this.RESOURCE_URL, payload: userReportForRequest })
-      .then((entity: UserReportFromApi) => this.formatUserReport(entity));
+      .postHttp<UserReportFromApi>({
+        endpoint: this._userReportsEndpoint,
+        body: userReportForRequest
+      })
+      .then(this.formatUserReport);
   }
 
   putUserReport(userReport: UserReport): Promise<UserReport> {
-    let userReportForRequest = this.getUserReportForServiceRequest(userReport);
+    const userReportForRequest = this.getUserReportForServiceRequest(
+      userReport
+    );
     return this.wsp
-      .put({ endPoint: this.RESOURCE_URL, payload: userReportForRequest })
-      .then((entity: UserReportFromApi) => this.formatUserReport(entity));
+      .putHttp<UserReportFromApi>({
+        endpoint: this._userReportsEndpoint,
+        body: userReportForRequest
+      })
+      .then(this.formatUserReport);
   }
 
   private getUserReportForServiceRequest(
@@ -138,10 +136,10 @@ export class UserReportService {
   }
 
   private formatUserReport(report: UserReportFromApi): UserReport {
-    let clientReportId = parseInt(report.clientreportid),
-      id = parseInt(report.id),
-      reportId = parseInt(report.reportid),
-      userId = parseInt(report.userid);
+    const id = parseInt(report.id, 10);
+    const userId = parseInt(report.userid, 10);
+    const reportId = parseInt(report.reportid, 10);
+    const clientReportId = parseInt(report.clientreportid, 10);
     return new UserReport(
       !isNaN(clientReportId) ? clientReportId : null,
       !isNaN(id) ? id : null,

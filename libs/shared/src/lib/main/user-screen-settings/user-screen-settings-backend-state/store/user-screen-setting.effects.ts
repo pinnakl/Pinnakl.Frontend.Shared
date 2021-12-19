@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatMap } from 'rxjs/operators';
 
-import { UserScreenSettingsService } from '../../user-screen-settings-backend';
+import { UserScreenSettingsService } from '../../../user-screen-settings/user-screen-settings-backend/user-screen-settings.service';
 import {
   AddUserScreenSetting,
   AddUserScreenSettingFailed,
@@ -13,68 +13,58 @@ import {
   LoadUserScreenSettings,
   LoadUserScreenSettingsFailed,
   UpdateUserScreenSetting,
-  UpdateUserScreenSettingFailed,
-  UserScreenSettingActionTypes
+  UpdateUserScreenSettingFailed
 } from './user-screen-setting.actions';
 
 @Injectable()
 export class UserScreenSettingEffects {
   constructor(
-    private actions$: Actions,
-    private userScreenSettingsService: UserScreenSettingsService
-  ) {}
+    private readonly actions$: Actions,
+    private readonly userScreenSettingsService: UserScreenSettingsService
+  ) { }
 
-  @Effect()
-  add$ = this.actions$.pipe(
-    ofType<AttemptAddUserScreenSetting>(
-      UserScreenSettingActionTypes.AttemptAddUserScreenSettings
-    ),
-    concatMap(async ({ payload }) => {
+  add$ = createEffect(() => this.actions$.pipe(
+    ofType(AttemptAddUserScreenSetting),
+    concatMap(async (payload) => {
       try {
         const userScreenSetting = await this.userScreenSettingsService.post(
           payload.userScreenSetting
         );
-        return new AddUserScreenSetting({ userScreenSetting });
+        return AddUserScreenSetting({ userScreenSetting });
       } catch (error) {
-        return new AddUserScreenSettingFailed({ error });
+        return AddUserScreenSettingFailed({ error });
       }
     })
-  );
+  ));
 
-  @Effect()
-  load$ = this.actions$.pipe(
-    ofType<AttemptLoadUserScreenSettings>(
-      UserScreenSettingActionTypes.AttemptLoadUserScreenSettings
-    ),
+  load$ = createEffect(() => this.actions$.pipe(
+    ofType(AttemptLoadUserScreenSettings),
     concatMap(async () => {
       try {
         const userScreenSettings = await this.userScreenSettingsService.getAll();
-        return new LoadUserScreenSettings({ userScreenSettings });
+        return LoadUserScreenSettings({ userScreenSettings });
       } catch (error) {
-        return new LoadUserScreenSettingsFailed({ error });
+        return LoadUserScreenSettingsFailed({ error });
       }
     })
-  );
+  ));
 
-  @Effect()
-  update$ = this.actions$.pipe(
-    ofType<AttemptUpdateUserScreenSetting>(
-      UserScreenSettingActionTypes.AttemptUpdateUserScreenSettings
-    ),
-    concatMap(async ({ payload }) => {
+  update$ = createEffect(() => this.actions$.pipe(
+    ofType(AttemptUpdateUserScreenSetting),
+    concatMap(async (payload) => {
       try {
         const userScreenSetting = await this.userScreenSettingsService.put(
           payload.userScreenSetting
         );
-        return new UpdateUserScreenSetting({
+        return UpdateUserScreenSetting({
           userScreenSetting: {
             id: userScreenSetting.id,
             changes: userScreenSetting
           }
         });
       } catch (error) {
-        return new UpdateUserScreenSettingFailed({ error });
+        return UpdateUserScreenSettingFailed({ error });
       }
     })
-  );
+  ));
 }

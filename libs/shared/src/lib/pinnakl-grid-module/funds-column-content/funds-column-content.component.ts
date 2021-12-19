@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 
 @Component({
@@ -6,12 +6,8 @@ import { ICellRendererAngularComp } from 'ag-grid-angular';
   templateUrl: './funds-column-content.component.html',
   styleUrls: ['./funds-column-content.component.scss']
 })
-export class FundsColumnContentComponent
-  implements OnInit, ICellRendererAngularComp {
+export class FundsColumnContentComponent implements ICellRendererAngularComp {
   value: boolean;
-  constructor() {}
-
-  ngOnInit() {}
 
   agInit(params: any): void {
     this.value = params.value;

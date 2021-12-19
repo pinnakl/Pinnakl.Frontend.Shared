@@ -1,0 +1,95 @@
+<section class="authentication-page">
+  <div class="authentication-container">
+    <div class="h-100">
+      <div class="header">Settings</div>
+      <div class="content">
+        <div class="navigations relative">
+          <ul class="w-100 p-0">
+            <li class="nav-option"
+                [class.nav-option-active]="currentTab === settingsTabs.accountSettings"
+                (click)="switchTab(settingsTabs.accountSettings)">
+              <a>Account settings</a>
+              <div>Personal info, time zone</div>
+            </li>
+            <li class="nav-option"
+                [class.nav-option-active]="currentTab === settingsTabs.loginSecurity"
+                (click)="switchTab(settingsTabs.loginSecurity)">
+              <a>Login security</a>
+              <div>Authentification type, number of factors</div>
+            </li>
+            <li class="nav-option"
+                [class.nav-option-active]="currentTab === settingsTabs.notifications"
+                (click)="switchTab(settingsTabs.notifications)">
+              <a>Notifications</a>
+              <div>Toggle ON/OFF notifications for
+                trades, risks factors
+              </div>
+            </li>
+            <li class="nav-option"
+                [class.nav-option-active]="currentTab === settingsTabs.accessControl"
+                (click)="switchTab(settingsTabs.accessControl)">
+              <a>Access control</a>
+              <div>Set the level of access for trade info</div>
+            </li>
+            <li class="nav-option"
+                [class.nav-option-active]="currentTab === settingsTabs.changePassword"
+                (click)="switchTab(settingsTabs.changePassword)">
+              <a>Change Password</a>
+              <div>Change your account password</div>
+            </li>
+            <li class="nav-option"
+                [class.nav-option-active]="currentTab === settingsTabs.CRMSettings"
+                (click)="switchTab(settingsTabs.CRMSettings)"
+                *ngIf="projectName === ProjectNames.CRM"
+                >
+              <a>Blocked IPs</a>
+              <div>Select IPs that are blocked from CRM campaign tracking</div>
+            </li>
+            <li class="nav-option"
+            [class.nav-option-active]="currentTab === settingsTabs.customAttributes"
+            (click)="switchTab(settingsTabs.customAttributes)"
+            *ngIf="projectName === ProjectNames.CRM"
+            >
+          <a>Custom Fields</a>
+          <div>Add/Edit custom fields</div>
+        </li>
+            <!-- <div>
+              <a
+              routerLink="/crm/crm-home/investor-custom-attributes"
+                [ngClass]="{
+                  'crm-tab-div__activeButton': tabSelected === 'crm/crm-home/investor-custom-attributes'
+                }"
+                class="btn crm-tab-div__button"
+              >
+              Add/Edit Fields
+              </a>
+            </div> -->
+          </ul>
+          <div class="application-version">Version No: {{ version }}</div>
+        </div>
+        <div class="right-side">
+          <ng-container [ngSwitch]="currentTab">
+            <account-settings class="w-100"
+                              [user]="user"
+                              (updateUser)="updateUser($event)"
+                              *ngSwitchCase="settingsTabs.accountSettings"></account-settings>
+            <login-security class="w-100"
+                            [users]="[user]"
+                            (updateUsers)="updateUser($event[0])"
+                            *ngSwitchCase="settingsTabs.loginSecurity"></login-security>
+            <user-notifications class="w-100"
+                                *ngSwitchCase="settingsTabs.notifications"></user-notifications>
+            <access-control class="w-100"
+                            *ngSwitchCase="settingsTabs.accessControl"></access-control>
+            <change-password class="w-100"
+                             *ngSwitchCase="settingsTabs.changePassword"></change-password>
+            <crm-settings class="w-100"
+                             *ngSwitchCase="settingsTabs.CRMSettings"></crm-settings>
+            <custom-attributes-field-list class="w-100"
+                             *ngSwitchCase="settingsTabs.customAttributes"></custom-attributes-field-list>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

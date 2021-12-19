@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { PinnaklSpinner } from '@pnkl-frontend/core';
@@ -19,7 +19,8 @@ export class TaskRunnerComponent implements OnInit {
   constructor(
     private dashboardService: DashboardService,
     private spinner: PinnaklSpinner,
-    private toastr: Toastr
+    private toastr: Toastr,
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -31,37 +32,39 @@ export class TaskRunnerComponent implements OnInit {
     if (!form.valid) {
       return;
     }
-    let { value: formValue } = form,
-      parameters = this.task.params;
+
+    const { value: formValue } = form;
+    const parameters = this.task?.params || [];
     if (parameters) {
-      for (let parameter of parameters) {
+      for (const parameter of parameters) {
         parameter.value = formValue[parameter.name];
       }
     }
 
     if (this.task && this.task.params) {
-      let fileParam = this.task.params.find(x => x.name === 'file');
+      const fileParam = this.task.params.find(x => x.name === 'file');
       if (fileParam && fileParam.value.file.size <= 0) {
         this.toastr.error('File cannot be empty');
         return;
       }
     }
     this.spinner.spin();
+    this.form.reset();
+    this.cd.detectChanges();
     this.dashboardService
       .runTask(this.task)
       .then(() => {
-        this.spinner.stop();
         this.taskRunCompleted.emit();
+        this.spinner.stop();
       })
       .catch(() => this.spinner.stop());
-    this.form.reset();
   }
 
   private setForm(): void {
-    let group = {},
-      parameters = this.task.params;
+    const group = {};
+    const parameters = this.task.params;
     if (parameters) {
-      for (let parameter of parameters) {
+      for (const parameter of parameters) {
         group[parameter.name] = new FormControl(
           parameter.value,
           Validators.required

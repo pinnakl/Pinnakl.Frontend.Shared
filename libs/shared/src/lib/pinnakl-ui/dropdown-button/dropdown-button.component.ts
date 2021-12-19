@@ -12,7 +12,6 @@ export class DropdownButtonComponent {
   @Output() optionSelected = new EventEmitter<void>();
   @Input() menutext: string;
   selectedItem: any;
-  constructor() {}
 
   onFocus(): void {}
 

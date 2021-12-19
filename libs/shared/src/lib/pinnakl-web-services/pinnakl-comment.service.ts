@@ -2,16 +2,16 @@ import { Injectable } from '@angular/core';
 
 import * as moment from 'moment';
 
-import { GetWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
+import { WebServiceProvider } from '@pnkl-frontend/core';
+import { ReconciliationComment } from '../models/recon';
 import { ReconciliationCommentFromApi } from '../models/recon/reconciliation-comment-from-api.model';
-import { ReconciliationComment } from '../models/recon/reconciliation-comment.model';
-import { Utility } from '../services/utility.service';
+import { Utility } from '../services';
 
 @Injectable()
 export class PinnaklCommentService {
-  private readonly RESOURCE_URL = 'recon_comments';
+  private readonly reconCommentsEndpoint = 'entities/recon_comments';
 
-  constructor(private wsp: WebServiceProvider, private utility: Utility) {}
+  constructor(private readonly wsp: WebServiceProvider, private readonly utility: Utility) {}
 
   savePnklComment(
     accountId: number,
@@ -48,12 +48,8 @@ export class PinnaklCommentService {
   }
 
   private deletePnklComment(id: number): Promise<ReconciliationComment> {
-    let deleteCommentRequestBody = {
-      id
-    };
-    return this.wsp.delete({
-      endPoint: this.RESOURCE_URL,
-      payload: deleteCommentRequestBody
+    return this.wsp.deleteHttp({
+      endpoint: `${this.reconCommentsEndpoint}/${id}`
     });
   }
 
@@ -62,31 +58,30 @@ export class PinnaklCommentService {
     entityId: number,
     securityId: number
   ): Promise<ReconciliationComment[]> {
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: {
-        fields: ['Id', 'Comment', 'ReconDate'],
-        filters: [
-          {
-            key: 'AccountId',
-            type: 'EQ',
-            value: [accountId.toString()]
-          },
-          {
-            key: 'EntityId',
-            type: 'EQ',
-            value: [entityId.toString()]
-          },
-          {
-            key: 'SecurityId',
-            type: 'EQ',
-            value: [securityId.toString()]
-          }
-        ]
-      }
-    };
     return this.wsp
-      .get(getWebRequest)
+      .getHttp<ReconciliationCommentFromApi[]>({
+        params: {
+          fields: ['Id', 'Comment', 'ReconDate'],
+          filters: [
+            {
+              key: 'AccountId',
+              type: 'EQ',
+              value: [accountId.toString()]
+            },
+            {
+              key: 'EntityId',
+              type: 'EQ',
+              value: [entityId.toString()]
+            },
+            {
+              key: 'SecurityId',
+              type: 'EQ',
+              value: [securityId.toString()]
+            }
+          ]
+        },
+        endpoint: this.reconCommentsEndpoint
+      })
       .then((reconComments: ReconciliationCommentFromApi[]) =>
         reconComments.map(reconComment => this.formatReconComment(reconComment))
       );
@@ -99,39 +94,30 @@ export class PinnaklCommentService {
     reconciliationDate: Date,
     securityId: number
   ): Promise<ReconciliationComment> {
-    let postCommentRequestBody = {
-      accountId,
-      comment,
-      entityId,
-      reconDate: moment(reconciliationDate).format('MM/DD/YYYY'),
-      securityId
-    };
-    return this.wsp
-      .post({
-        endPoint: this.RESOURCE_URL,
-        payload: postCommentRequestBody
-      })
-      .then((pinnaklComment: ReconciliationCommentFromApi) =>
-        this.formatReconComment(pinnaklComment)
-      );
+    return this.wsp.postHttp<ReconciliationCommentFromApi>({
+      endpoint: this.reconCommentsEndpoint,
+      body: {
+        comment,
+        entityId: entityId.toString(),
+        accountId: accountId.toString(),
+        securityId: securityId.toString(),
+        reconDate: moment(reconciliationDate).format('MM/DD/YYYY')
+      }
+    }).then((pinnaklComment: ReconciliationCommentFromApi) =>
+      this.formatReconComment(pinnaklComment)
+    );
   }
 
   private putPnklComment(
     id: number,
     comment: string
   ): Promise<ReconciliationComment> {
-    let putCommentRequestBody = {
-      id,
-      comment
-    };
-    return this.wsp
-      .put({
-        endPoint: this.RESOURCE_URL,
-        payload: putCommentRequestBody
-      })
-      .then((pinnaklComment: ReconciliationCommentFromApi) =>
-        this.formatReconComment(pinnaklComment)
-      );
+    return this.wsp.putHttp<ReconciliationCommentFromApi>({
+      endpoint: this.reconCommentsEndpoint,
+      body: { id: id.toString(), comment }
+    }).then((pinnaklComment: ReconciliationCommentFromApi) =>
+      this.formatReconComment(pinnaklComment)
+    );
   }
 
   private formatReconComment(

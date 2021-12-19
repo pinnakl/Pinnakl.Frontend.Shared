@@ -8,9 +8,10 @@ import {
 } from '@angular/core';
 
 import { orderBy } from 'lodash';
+import { AlertModel } from '../../../dashboard-backend/dashboard/alert.model';
 
-import { AlertModel } from '../../../dashboard-backend/dashboard';
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'alerts',
   templateUrl: './alerts.component.html',
   styleUrls: ['./alerts.component.scss']

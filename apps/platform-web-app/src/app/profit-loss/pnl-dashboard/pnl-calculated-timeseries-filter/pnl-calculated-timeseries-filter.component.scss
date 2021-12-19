@@ -1,0 +1,16 @@
+@import '../../../../../../../libs/shared/src/lib/styles/_components/colors';
+@import '../../../../../../../libs/shared/src/lib/styles/_components/variables';
+@import '../../../../../../../libs/shared/src/lib/styles/_components/mixins';
+
+.time-series-filters {
+  @include toggle-radios(auto, 4px 13px, 1.3);
+  .data-type-radios {
+    display: flex;
+  }
+  .input-col {
+    flex: 0 0 12.5%;
+    max-width: 12.5%;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}

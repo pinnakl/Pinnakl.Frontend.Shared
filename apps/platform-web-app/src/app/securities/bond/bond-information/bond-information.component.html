@@ -1,0 +1,343 @@
+<form
+  class="row"
+  [class.ng-submitted]="submitted"
+  [formGroup]="form"
+  (ngSubmit)="saveInformation()"
+  novalidate
+>
+  <div class="col-md-12">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="row mb-3" formGroupName="security">
+          <div class="col-md-2 col-md-1_1">
+            <span class="input-check">
+              <label>BOND TYPE <span class="color-red pl-0-25">*</span> </label>
+            </span>
+          </div>
+          <div *ngFor="let securityType of securityTypes" class="col-md-1">
+            <span class="input-check">
+              <input
+                formControlName="securityTypeId"
+                type="radio"
+                [value]="securityType.id"
+              />
+              <label class="text-uppercase">{{ securityType.secType }}</label>
+            </span>
+          </div>
+          <div class="col-md-1 mt-4">
+            <pnkl-validation
+              controlName="securityTypeId"
+              [form]="form.controls['security']"
+            >
+            </pnkl-validation>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-2" formGroupName="security">
+            <pinnakl-input
+              controlName="description"
+              [form]="form.controls['security']"
+              label="DESCRIPTION"
+              [required]="true"
+              type="text"
+            >
+            </pinnakl-input>
+          </div>
+          <div class="col-md-2 col-md-1_6" formGroupName="security">
+            <pinnakl-input
+              controlName="sector"
+              [dropdownSource]="sectorOptions"
+              [dropdownOptions]="{
+                modelProperty: 'optionDescription',
+                viewProperty: 'optionDescription'
+              }"
+              [form]="form.controls['security']"
+              label="SECTOR"
+              [required]="true"
+              type="dropdown"
+            >
+            </pinnakl-input>
+          </div>
+          <div class="col-md-1" formGroupName="security">
+            <pinnakl-input
+              controlName="multiplier"
+              [form]="form.controls['security']"
+              label="MULTIPLIER"
+              [required]="true"
+              type="numeric"
+            >
+            </pinnakl-input>
+          </div>
+          <div class="col-md-1" formGroupName="security">
+            <pinnakl-input
+              controlName="currencyId"
+              [dropdownSource]="currencies"
+              [dropdownOptions]="{
+                modelProperty: 'id',
+                viewProperty: 'currency'
+              }"
+              [form]="form.controls['security']"
+              label="CURRENCY"
+              [required]="true"
+              type="dropdown"
+            >
+            </pinnakl-input>
+          </div>
+          <div class="col-md-1" formGroupName="asset">
+            <pinnakl-input
+              controlName="maturityDate"
+              [form]="form.controls['asset']"
+              label="MATURITY DATE"
+              [required]="true"
+              type="date"
+            >
+            </pinnakl-input>
+          </div>
+          <div class="col-md-1" formGroupName="security">
+            <span class="input-check">
+              <input type="checkbox" formControlName="privateIndicator" />
+              <label>PRIVATE</label>
+            </span>
+          </div>
+          <div class="col-md-2 col-md-1_3" formGroupName="security">
+            <span class="input-check">
+              <input type="checkbox" formControlName="manualPricingIndicator" />
+              <label>MANUAL PRICING</label>
+            </span>
+          </div>
+          <div *ngIf="security" class="col-md-1" formGroupName="security">
+            <pinnakl-input
+              controlName="sandpRating"
+              [form]="form.controls['security']"
+              label="S&P RATING"
+              type="text"
+            >
+            </pinnakl-input>
+          </div>
+          <div *ngIf="security" class="col-md-1" formGroupName="security">
+            <pinnakl-input
+              controlName="moodyRating"
+              [disabled]="true"
+              [form]="form.controls['security']"
+              label="MOODY RATING"
+              type="text"
+            >
+            </pinnakl-input>
+          </div>
+        </div>
+        <div class="row section-border"></div>
+      </div>
+    </div>
+    <div class="row">
+      <organization-selector
+        class="col-md-12"
+        [form]="form.controls['security']"
+        [organizations]="organizations"
+      >
+      </organization-selector>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-12 security-information-header">
+            <span>Coupon</span>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-2" formGroupName="asset">
+            <pinnakl-input
+              controlName="couponTypeId"
+              [dropdownSource]="couponTypes"
+              [dropdownOptions]="{
+                modelProperty: 'optionValue',
+                viewProperty: 'optionDescription'
+              }"
+              [form]="form.controls['asset']"
+              label="COUPON TYPE"
+              [required]="true"
+              type="dropdown"
+            >
+            </pinnakl-input>
+          </div>
+          <div class="col-md-1" *ngIf="!asset" formGroupName="asset">
+            <pinnakl-input
+              controlName="couponRate"
+              [form]="form.controls['asset']"
+              label="COUPON RATE"
+              [required]="true"
+              type="numeric"
+            >
+            </pinnakl-input>
+          </div>
+          <div *ngIf="asset" class="mx-4">
+            <label class="mb-0">COUPON RATE</label>
+            <div class="bottom-border-blue">
+              <button
+                type="button"
+                class="btn btn-link pl-0"
+                (click)="couponRateManagerVisible = true"
+              >
+                {{ asset.couponRate }}
+              </button>
+            </div>
+          </div>
+          <div class="col-md-2" formGroupName="asset">
+            <pinnakl-input
+              controlName="interestBasisId"
+              [dropdownSource]="interestBasisOptions"
+              [dropdownOptions]="{
+                modelProperty: 'optionValue',
+                viewProperty: 'optionDescription'
+              }"
+              [form]="form.controls['asset']"
+              label="INTEREST BASIS"
+              [required]="true"
+              type="dropdown"
+            >
+            </pinnakl-input>
+          </div>
+          <div class="col-md-2" formGroupName="asset">
+            <pinnakl-input
+              controlName="paymentFrequencyId"
+              [dropdownSource]="paymentFrequencyOptions"
+              [dropdownOptions]="{
+                modelProperty: 'optionValue',
+                viewProperty: 'optionDescription'
+              }"
+              [form]="form.controls['asset']"
+              label="PAYMENT FREQUENCY"
+              [required]="true"
+              type="dropdown"
+            >
+            </pinnakl-input>
+          </div>
+
+          <div class="col-md-1" formGroupName="asset">
+            <pinnakl-input
+              controlName="firstAccrualDate"
+              [form]="form.controls['asset']"
+              label="FIRST ACCRUAL DATE"
+              type="date"
+            >
+            </pinnakl-input>
+          </div>
+          <div class="col-md-1" formGroupName="asset">
+            <pinnakl-input
+              controlName="firstCouponDate"
+              [form]="form.controls['asset']"
+              label="FIRST COUPON DATE"
+              type="date"
+            >
+            </pinnakl-input>
+          </div>
+          <div class="col-md-2" formGroupName="asset">
+            <span class="input-check">
+              <input formControlName="accruingIndicator" type="checkbox" />
+              <label>ACCRUING INDICATOR</label>
+            </span>
+          </div>
+        </div>
+        <div class="row section-border"></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-12 security-information-header">
+            <span>Issuance and Trading</span>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col-md-1" formGroupName="asset">
+            <pinnakl-input
+              controlName="issueAmount"
+              [form]="form.controls['asset']"
+              label="ISSUE AMOUNT"
+              type="numeric"
+            >
+            </pinnakl-input>
+          </div>
+          <div class="col-md-2 col-md-1_1" formGroupName="asset">
+            <pinnakl-input
+              controlName="outstandingAmount"
+              [form]="form.controls['asset']"
+              label="OUTSTANDING AMOUNT"
+              type="numeric"
+            >
+            </pinnakl-input>
+          </div>
+          <div class="col-md-1" formGroupName="asset">
+            <pinnakl-input
+              controlName="minPiece"
+              [form]="form.controls['asset']"
+              label="MINIMUM PIECE"
+              [required]="true"
+              type="numeric"
+            >
+            </pinnakl-input>
+          </div>
+          <div class="col-md-1" formGroupName="asset">
+            <pinnakl-input
+              controlName="nominalValue"
+              [form]="form.controls['asset']"
+              label="NOMINAL VALUE"
+              [required]="true"
+              type="numeric"
+            >
+            </pinnakl-input>
+          </div>
+          <div class="col-md-1" formGroupName="asset">
+            <pinnakl-input
+              controlName="principalFactor"
+              [form]="form.controls['asset']"
+              label="PRINCIPAL FACTOR"
+              type="numeric"
+            >
+            </pinnakl-input>
+          </div>
+        </div>
+        <div class="row section-border"></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="row security-information-action-panel">
+          <div class="col-md-1">
+            <button
+              #anchor
+              class="btn btn-security btn-cancel"
+              [disabled]="!form.dirty"
+              (click)="showFormCancelConfirmation()"
+              type="button"
+            >
+              CANCEL
+            </button>
+            <confirm-action
+              [anchor]="anchor"
+              confirmationMessage="Are you sure you want to reset the form?"
+              (onCancelled)="cancelReset()"
+              (onConfirmed)="resetForm()"
+              [showConfirmation]="cancelConfirmationVisible"
+            >
+            </confirm-action>
+          </div>
+          <div class="col-md-1">
+            <button
+              class="btn btn-security btn-save"
+              [disabled]="!form.dirty"
+              type="submit"
+            >
+              SAVE
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<bond-coupon-rate-manager
+  *ngIf="couponRateManagerVisible"
+  [bondId]="asset.id"
+  (onClose)="couponRateManagerVisible = false"
+  (onCouponChange)="onCouponValueChange($event)"
+></bond-coupon-rate-manager>

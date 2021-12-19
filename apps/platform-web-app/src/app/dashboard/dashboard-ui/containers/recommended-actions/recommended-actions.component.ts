@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { RecommendedAction } from '../../../dashboard-backend';
+import { RecommendedAction } from '../../../dashboard-backend/recommended-actions/recommended-action.model';
 import { DashboardStateFacadeService } from '../../../dashboard-ui-state';
 
 @Component({

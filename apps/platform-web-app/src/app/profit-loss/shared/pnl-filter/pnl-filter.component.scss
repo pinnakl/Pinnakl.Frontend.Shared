@@ -1,0 +1,12 @@
+@import '../../../../../../../libs/shared/src/lib/styles/_components/colors';
+
+.background-black {
+  background: $ebony-clay;
+}
+.pnl-filter-wrap {
+  height: calc(100vh - 118px);
+}
+.projected-content {
+  margin-left: 2rem;
+  margin-right: 2rem;
+}

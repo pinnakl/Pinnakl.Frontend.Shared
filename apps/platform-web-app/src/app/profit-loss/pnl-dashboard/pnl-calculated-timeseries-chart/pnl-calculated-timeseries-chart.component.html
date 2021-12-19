@@ -1,0 +1,24 @@
+<div *ngIf="isLine">
+  <pnkl-line-stockchart-date
+    [values]="pnlCalculatedTimeSeries"
+    [hideSelected]="hideSelected"
+    valuesType="currency"
+  >
+    <pnl-chart-switch
+      [chartType]="pnlTimeSeriesChartType"
+      (onChartTypeChanged)="onTypeChanged($event)"
+    ></pnl-chart-switch>
+  </pnkl-line-stockchart-date>
+</div>
+<div *ngIf="!isLine">
+  <pnkl-stackbar-chart-date
+    [values]="pnlCalculatedTimeSeries"
+    [hideSelected]="hideSelected"
+    valuesType="currency"
+  >
+    <pnl-chart-switch
+      [chartType]="pnlTimeSeriesChartType"
+      (onChartTypeChanged)="onTypeChanged($event)"
+    ></pnl-chart-switch>
+  </pnkl-stackbar-chart-date>
+</div>

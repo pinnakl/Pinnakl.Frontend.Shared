@@ -2,18 +2,18 @@ import { Injectable } from '@angular/core';
 
 import * as moment from 'moment';
 
-import { GetWebRequest, PostWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
+import { WebServiceProvider } from '@pnkl-frontend/core';
 import { CurrencyFromApi } from '../../models/security/currency-from-api.model';
 import { Currency } from '../../models/security/currency.model';
 
 @Injectable()
 export class CurrencyService {
-  private readonly RESOURCE_URL = 'currencies';
+  private readonly _currenciesEndpoint = 'entities/currencies';
 
-  constructor(private wsp: WebServiceProvider) {}
+  constructor(private readonly wsp: WebServiceProvider) { }
 
-  getCurrencyFromSecurityId(securityId: number): Promise<Currency> {
-    let fields = [
+  async getCurrencyFromSecurityId(securityId: number): Promise<Currency> {
+    const fields = [
       'ForwardPrice',
       'Id',
       'Maturity',
@@ -21,9 +21,9 @@ export class CurrencyService {
       'SecurityId'
     ];
 
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: {
+    const currencies = await this.wsp.getHttp<CurrencyFromApi[]>({
+      endpoint: this._currenciesEndpoint,
+      params: {
         fields: fields,
         filters: [
           {
@@ -33,44 +33,35 @@ export class CurrencyService {
           }
         ]
       }
-    };
+    });
 
-    return this.wsp
-      .get(getWebRequest)
-      .then((entities: CurrencyFromApi[]) =>
-        entities.length === 0 ? null : this.formatCurrency(entities[0])
-      );
+    return currencies.length === 0 ? null : this.formatCurrency(currencies[0]);
   }
 
-  postCurrency(entityToSave: Currency): Promise<Currency> {
-    let requestBody = this.getCurrencyForServiceRequest(entityToSave);
+  async postCurrency(entityToSave: Currency): Promise<Currency> {
+    const entity = await this.wsp.postHttp<CurrencyFromApi>({
+      endpoint: this._currenciesEndpoint,
+      body: this.getCurrencyForServiceRequest(entityToSave)
+    });
 
-    let postWebRequest: PostWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      payload: requestBody
-    };
-
-    return this.wsp
-      .post(postWebRequest)
-      .then((entity: CurrencyFromApi) => this.formatCurrency(entity));
+    return this.formatCurrency(entity);
   }
 
-  putCurrency(entityToSave: Currency): Promise<Currency> {
-    let requestBody = this.getCurrencyForServiceRequest(entityToSave);
-    return this.wsp
-      .put({
-        endPoint: this.RESOURCE_URL,
-        payload: requestBody
-      })
-      .then((entity: CurrencyFromApi) => this.formatCurrency(entity));
+  async putCurrency(entityToSave: Currency): Promise<Currency> {
+    const entity = await this.wsp.putHttp<CurrencyFromApi>({
+      endpoint: this._currenciesEndpoint,
+      body: this.getCurrencyForServiceRequest(entityToSave)
+    });
+
+    return this.formatCurrency(entity);
   }
 
   private formatCurrency(entity: CurrencyFromApi): Currency {
-    let forwardPrice = parseInt(entity.forwardprice),
-      id = parseInt(entity.id),
+    const forwardPrice = parseInt(entity.forwardprice, 10),
+      id = parseInt(entity.id, 10),
       maturityMoment = moment(entity.maturity, 'MM/DD/YYYY'),
-      secondaryCurrencyId = parseInt(entity.secondarycurrencyid),
-      securityId = parseInt(entity.securityid);
+      secondaryCurrencyId = parseInt(entity.secondarycurrencyid, 10),
+      securityId = parseInt(entity.securityid, 10);
     return new Currency(
       !isNaN(forwardPrice) ? forwardPrice : null,
       !isNaN(id) ? id : null,
@@ -81,7 +72,7 @@ export class CurrencyService {
   }
 
   private getCurrencyForServiceRequest(entity: Currency): CurrencyFromApi {
-    let entityForApi = {} as CurrencyFromApi,
+    const entityForApi = {} as CurrencyFromApi,
       { forwardPrice, id, maturity, secondaryCurrencyId, securityId } = entity;
     if (forwardPrice !== undefined) {
       entityForApi.forwardprice =

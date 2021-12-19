@@ -1,8 +1,8 @@
-import { DatePipe, DecimalPipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { GridOptions, ICellRendererParams } from 'ag-grid-community';
+import { GridOptions, ValueFormatterParams } from 'ag-grid-community';
 import { filter, find, orderBy } from 'lodash';
 import * as moment from 'moment';
 
@@ -23,14 +23,16 @@ import {
   OMSService,
   ReportingService,
   Utility,
-  ReportingHelper
+  CellLinkComponent
 } from '@pnkl-frontend/shared';
+import { ReportingHelper } from '../shared/reporting-helper.service';
+import { reportColumnDateTypeFormat } from "../util/date";
 
 @Component({
   selector: 'report-manager',
   templateUrl: 'report-manager.component.html',
   styleUrls: ['./report-manager.component.scss'],
-  providers: [DatePipe, DecimalPipe]
+  providers: [DecimalPipe]
 })
 export class ReportManagerComponent implements OnInit {
   // Data from resolves
@@ -62,6 +64,10 @@ export class ReportManagerComponent implements OnInit {
   reportData: any[];
   savedColumns: ReportingColumn[];
 
+  readonly frameworkComponents = {
+    cellLinkComponent: CellLinkComponent
+  };
+
   get toolPanelVisible(): boolean {
     if (this.gridOptions && this.gridOptions.api) {
       return this.gridOptions.api.isToolPanelShowing();
@@ -70,15 +76,14 @@ export class ReportManagerComponent implements OnInit {
   }
 
   constructor(
-    private activatedRoute: ActivatedRoute,
-    private datePipe: DatePipe,
-    private decimalPipe: DecimalPipe,
-    private omsService: OMSService,
-    private reportingHelper: ReportingHelper,
-    private reportingService: ReportingService,
-    private spinner: PinnaklSpinner,
-    private utility: Utility
-  ) {}
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly decimalPipe: DecimalPipe,
+    private readonly omsService: OMSService,
+    private readonly reportingHelper: ReportingHelper,
+    private readonly reportingService: ReportingService,
+    private readonly spinner: PinnaklSpinner,
+    private readonly utility: Utility
+  ) { }
 
   applyFilter(): void {
     this.filterString = this.reportingHelper.getFilterString(
@@ -102,14 +107,14 @@ export class ReportManagerComponent implements OnInit {
       )
     ])
       .then(result => {
-        let [fxRate, data] = result,
+        const [fxRate, data] = result,
           columnsForCrcyConversion = filter(
             this.filterColumns,
             'convertToBaseCurrency'
           );
         if (columnsForCrcyConversion.length > 0 && fxRate) {
-          data.map(row => {
-            for (let col of columnsForCrcyConversion) {
+          data.forEach(row => {
+            for (const col of columnsForCrcyConversion) {
               row[col.name] = row[col.name] * fxRate.fxRate;
             }
           });
@@ -123,11 +128,11 @@ export class ReportManagerComponent implements OnInit {
   }
 
   hideToolPanel(): void {
-    this.gridOptions.api.showToolPanel(false);
+    (this.gridOptions.api as any).showToolPanel(false);
   }
 
   ngOnInit(): void {
-    let { resolvedData } = this.activatedRoute.snapshot.data;
+    const { resolvedData } = this.activatedRoute.snapshot.data;
     Object.assign(this, resolvedData);
     this.selectedCurrency = find(this.currencies, { currency: 'USD' });
     this.reportParameters = orderBy(this.reportParameters, ['name'], ['desc']);
@@ -173,7 +178,7 @@ export class ReportManagerComponent implements OnInit {
     return !columns
       ? []
       : columns.map(col => {
-          let cd: PinnaklColDef = {};
+          const cd: PinnaklColDef & { suppressToolPanel?: boolean } = {};
           cd.enableRowGroup = true;
           cd.field = col.reportingColumnType === 'idc' ? col.caption : col.name;
           cd.headerName = col.caption;
@@ -188,15 +193,19 @@ export class ReportManagerComponent implements OnInit {
           }
           cd.suppressToolPanel = true;
 
+          if (col.type === 'Url') {
+            cd.cellRenderer = 'cellLinkComponent';
+          }
+
           if (col.isAggregating) {
             cd.aggFunc = 'sum';
             cd.pinnedRowCellRenderer = params => `<b>${params.value}</b>`;
           }
-          if (col.type === 'date') {
-            cd.valueFormatter = (cell: ICellRendererParams) => {
-              let { value } = cell;
+          if (col.type === 'date' || col.type === 'datetime' || col.type === 'datetimeutc') {
+            cd.valueFormatter = (cell: ValueFormatterParams) => {
+              const { value } = cell;
               try {
-                return this.datePipe.transform(value, 'MM/dd/y');
+                return reportColumnDateTypeFormat(value, col.type);
               } catch (e) {
                 return value;
               }
@@ -243,9 +252,9 @@ export class ReportManagerComponent implements OnInit {
       aggregation[column.name] = '';
       if (column.isAggregating) {
         let sumCol = this.reportData.reduce(
-            (sum: number, row) => sum + row[column.name],
-            0
-          ),
+          (sum: number, row) => sum + row[column.name],
+          0
+        ),
           digitInfo = this.isUndefinedOrNull(column.decimalPlaces)
             ? null
             : `1.${column.decimalPlaces}-${column.decimalPlaces}`;
@@ -260,9 +269,8 @@ export class ReportManagerComponent implements OnInit {
   }
 
   private getGridHeight(): string {
-    let rowHeight = this.gridOptions.rowHeight;
-    let height =
-      (this.gridOptions.api.getModel().getRowCount() + 5) * rowHeight;
+    const rowHeight = this.gridOptions.rowHeight;
+    const height = (this.gridOptions.api.getModel().getRowCount() + 5) * rowHeight;
     return height > document.documentElement.clientHeight * 0.7
       ? '100%'
       : `${height}px`;
@@ -282,7 +290,7 @@ export class ReportManagerComponent implements OnInit {
       )
     );
     setTimeout(() => {
-      let { gridOptions } = this;
+      const { gridOptions } = this;
       gridOptions.api.expandAll();
       this.gridHeight = this.getGridHeight();
       this.reportingHelper.setGroupSorts(gridOptions);
@@ -291,12 +299,12 @@ export class ReportManagerComponent implements OnInit {
 
   private numericFormatter(col: ReportingColumn, cd: PinnaklColDef): void {
     const prefix = col.type === 'currency' ? '$' : '';
-    cd.valueFormatter = (cell: ICellRendererParams) => {
-      let { value } = cell;
+    cd.valueFormatter = (cell: ValueFormatterParams) => {
+      const { value } = cell;
       if (!value && value !== 0) {
         return '';
       }
-      let digitInfo = this.isUndefinedOrNull(col.decimalPlaces)
+      const digitInfo = this.isUndefinedOrNull(col.decimalPlaces)
         ? null
         : `1.${col.decimalPlaces}-${col.decimalPlaces}`;
       try {
@@ -308,4 +316,5 @@ export class ReportManagerComponent implements OnInit {
     cd.cellStyle = { 'text-align': 'right' };
     cd.filter = 'number';
   }
+
 }

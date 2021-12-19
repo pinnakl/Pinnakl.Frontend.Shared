@@ -1,0 +1,26 @@
+.resizing-bottom-line {
+    cursor: row-resize;
+    height: 3px;
+    background-color: transparent;
+}
+
+:host ::ng-deep {
+  .font-size-13-px {
+    font-size: 13px !important;
+  }
+  .font-size-14-px {
+    font-size: 14px !important;
+  }
+  .font-size-15-px {
+    font-size: 15px !important;
+  }
+  .font-size-16-px {
+    font-size: 16px !important;
+  }
+  .font-size-17-px {
+    font-size: 17px !important;
+  }
+  .font-size-18-px {
+    font-size: 18px !important;
+  }
+}

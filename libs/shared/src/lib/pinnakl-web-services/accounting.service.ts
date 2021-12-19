@@ -1,30 +1,28 @@
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 
-import {
-  DeleteWebRequest,
-  GetWebRequest,
-  PostWebRequest,
-  PutWebRequest,
-  WebServiceProvider
-} from '@pnkl-frontend/core';
-import { AUM } from '../models/aum.model';
-import { CapitalRatio } from '../models/capital-ratio.model';
-import { CashBalance } from '../models/cash-balance.model';
+import { WebServiceProvider } from '@pnkl-frontend/core';
+import { AUM, CapitalRatio, CashBalance } from '../models';
+import { AccountService } from '@pnkl-frontend/shared';
 
 @Injectable()
 export class AccountingService {
-  private readonly AUM_URL = 'aum';
-  private readonly CAPITAL_RATIO_URL = 'tradeallocationratios';
-  private readonly CASH_BAL_URL = 'account_cash';
+  private readonly _aumEndpoint = 'entities/aum';
+  private readonly _allAumsEndpoint = 'entities/all_aums';
+  private readonly _accountCashEndpoint = 'entities/account_cash';
+  private readonly _tradeAllocationRationsEndpoint =
+    'entities/tradeallocationratios';
 
-  constructor(private wsp: WebServiceProvider) {}
+  constructor(
+    private readonly wsp: WebServiceProvider,
+    private readonly accountService: AccountService
+  ) {}
 
   getAUMByAccountIdAndDate(accountId: string, date: Date): Promise<any> {
     const fields = ['id', 'AccountId', 'AUM', 'date'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.AUM_URL,
-      options: {
+    return this.wsp.getHttp({
+      endpoint: this._aumEndpoint,
+      params: {
         fields: fields,
         filters: [
           {
@@ -50,54 +48,71 @@ export class AccountingService {
           }
         ]
       }
-    };
-    return this.wsp.get(getWebRequest);
+    });
   }
 
-  getAUM(startDate: Date): Promise<AUM[]> {
+  getAUM(startDate: Date, endDate: Date = new Date()): Promise<AUM[]> {
     const fields = ['id', 'AccountId', 'AUM', 'date'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.AUM_URL,
-      options: {
-        fields: fields,
+    return this.wsp
+      .getHttp<any[]>({
+        endpoint: this._aumEndpoint,
+        params: {
+          fields: fields,
+          filters: [
+            {
+              key: 'date',
+              type: 'GE',
+              value: [moment(startDate).format('MM/DD/YYYY')]
+            },
+            {
+              key: 'date',
+              type: 'LE',
+              value: [moment(endDate).format('MM/DD/YYYY')]
+            }
+          ]
+        }
+      })
+      .then(result => result.map(x => this.formatAUM(x)));
+  }
+
+  async getAllAUM(startDate: Date = new Date()): Promise<AUM[]> {
+    const accounts = await this.accountService.getAccounts();
+
+    const allAUM = await this.wsp.getHttp<any[]>({
+      endpoint: this._allAumsEndpoint,
+      params: {
         filters: [
           {
             key: 'date',
-            type: 'GE',
+            type: 'EQ',
             value: [moment(startDate).format('MM/DD/YYYY')]
           }
         ]
       }
-    };
-    return this.wsp
-      .get(getWebRequest)
-      .then(result => result.map(x => this.formatAUM(x)));
-  }
+    });
 
-  private formatAUM(result: any): AUM {
-    let id = parseInt(result.id);
-    let accountId = parseInt(result.accountid);
-    let aum = parseFloat(result.aum);
-    let date = moment(result.date, 'MM/DD/YYYY');
-    return new AUM(
-      !isNaN(id) ? id : null,
-      !isNaN(accountId) ? accountId : null,
-      !isNaN(aum) ? aum : null,
-      date.isValid() ? date.toDate() : null
+    const aums = allAUM.map(this.formatAUM);
+    aums.forEach(
+      aum =>
+        (aum.account = accounts.find(
+          account => parseInt(account.id) === aum.accountId
+        ))
     );
+
+    return aums;
   }
 
   saveAUM(accountId: number, aum: number, date: Date): Promise<AUM> {
-    const postWebRequest: PostWebRequest = {
-      endPoint: this.AUM_URL,
-      payload: {
-        AccountId: accountId,
-        AUM: aum,
-        date: moment(date).format('MM/DD/YYYY')
-      }
-    };
-
-    return this.wsp.post(postWebRequest).then(x => this.formatAUM(x));
+    return this.wsp
+      .postHttp<any>({
+        endpoint: this._aumEndpoint,
+        body: {
+          AccountId: accountId.toString(),
+          AUM: aum.toString(),
+          date: moment(date).format('MM/DD/YYYY')
+        }
+      })
+      .then(x => this.formatAUM(x));
   }
 
   updateAUM(
@@ -106,32 +121,30 @@ export class AccountingService {
     aum: number,
     date: Date
   ): Promise<AUM> {
-    const putWebRequest: PutWebRequest = {
-      endPoint: this.AUM_URL,
-      payload: {
-        id: id,
-        AccountId: accountId,
-        AUM: aum,
-        date: moment(date).format('MM/DD/YYYY')
-      }
-    };
-
-    return this.wsp.put(putWebRequest).then(x => this.formatAUM(x));
+    return this.wsp
+      .putHttp<any>({
+        endpoint: this._aumEndpoint,
+        body: {
+          id: id.toString(),
+          AccountId: accountId.toString(),
+          AUM: aum.toString(),
+          date: moment(date).format('MM/DD/YYYY')
+        }
+      })
+      .then(x => this.formatAUM(x));
   }
 
   deleteAUM(id: number): Promise<any> {
-    const deleteWebRequest: DeleteWebRequest = {
-      endPoint: this.AUM_URL,
-      payload: {
-        id: id
-      }
-    };
-
-    return this.wsp.delete(deleteWebRequest);
+    return this.wsp.deleteHttp({
+      endpoint: `${this._aumEndpoint}/${id}`
+    });
   }
 
-  getCapitalRatios(startDate: Date, endDate: Date): Promise<CapitalRatio[]> {
-    let fields = [
+  async getCapitalRatios(
+    startDate: Date,
+    endDate: Date
+  ): Promise<CapitalRatio[]> {
+    const fields = [
       'id',
       'HierarchyType',
       'HierarchyName',
@@ -139,9 +152,10 @@ export class AccountingService {
       'StartDate',
       'EndDate'
     ];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.CAPITAL_RATIO_URL,
-      options: {
+
+    const capitalRatios = await this.wsp.getHttp<any[]>({
+      endpoint: this._tradeAllocationRationsEndpoint,
+      params: {
         fields: fields,
         filters: [
           {
@@ -156,80 +170,60 @@ export class AccountingService {
           }
         ]
       }
-    };
+    });
 
-    return this.wsp
-      .get(getWebRequest)
-      .then(result => result.map(x => this.formatCapitalRatio(x)));
+    return capitalRatios.map(this.formatCapitalRatio);
   }
 
-  private formatCapitalRatio(result: any): CapitalRatio {
-    let id = parseInt(result.id);
-    let capitalRatio = parseFloat(result.capitalratio);
-    return new CapitalRatio(
-      !isNaN(id) ? id : null,
-      result.hierarchytype,
-      result.hierarchyname,
-      !isNaN(capitalRatio) ? capitalRatio : null,
-      new Date(result.startdate),
-      new Date(result.enddate)
-    );
-  }
-
-  saveCapitalRatio(
+  async saveCapitalRatio(
     hierarchyName: string,
     hierarchyType: string,
-    CapitalRatio: number,
+    capitalRatio: number,
     startDate: Date,
     endDate: Date
   ): Promise<CapitalRatio> {
-    const postWebRequest: PostWebRequest = {
-      endPoint: this.CAPITAL_RATIO_URL,
-      payload: {
+    const result = await this.wsp.postHttp<any>({
+      endpoint: this._tradeAllocationRationsEndpoint,
+      body: {
         HierarchyType: hierarchyType,
         HierarchyName: hierarchyName,
-        CapitalRatio: CapitalRatio,
+        CapitalRatio: capitalRatio.toString(),
         StartDate: moment(startDate).format('MM/DD/YYYY'),
         EndDate: moment(endDate).format('MM/DD/YYYY')
       }
-    };
+    });
 
-    return this.wsp
-      .post(postWebRequest)
-      .then(result => this.formatCapitalRatio(result));
+    return this.formatCapitalRatio(result);
   }
 
-  updateCapitalRatio(
+  async updateCapitalRatio(
     id: number,
     hierarchyName: string,
     hierarchyType: string,
-    CapitalRatio: number,
+    capitalRatio: number,
     startDate: Date,
     endDate: Date
   ): Promise<CapitalRatio> {
-    const putWebRequest: PutWebRequest = {
-      endPoint: this.CAPITAL_RATIO_URL,
-      payload: {
-        id: id,
+    const result = await this.wsp.putHttp<any>({
+      endpoint: this._tradeAllocationRationsEndpoint,
+      body: {
+        id: id.toString(),
         HierarchyType: hierarchyType,
         HierarchyName: hierarchyName,
-        CapitalRatio: CapitalRatio,
+        CapitalRatio: capitalRatio.toString(),
         StartDate: moment(startDate).format('MM/DD/YYYY'),
         EndDate: moment(endDate).format('MM/DD/YYYY')
       }
-    };
+    });
 
-    return this.wsp
-      .put(putWebRequest)
-      .then(result => this.formatCapitalRatio(result));
+    return this.formatCapitalRatio(result);
   }
 
   confirmDeleteForCapitalRatio(startDate: Date): Promise<any> {
-    let fields = ['id'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: 'trade_requests',
-      options: {
-        fields: fields,
+    return this.wsp.getHttp<any[]>({
+      endpoint: 'entities/trade_requests',
+      params: {
+        fields: ['id'],
         filters: [
           {
             key: 'tradedate',
@@ -243,22 +237,16 @@ export class AccountingService {
           }
         ]
       }
-    };
-
-    return this.wsp.get(getWebRequest);
+    });
   }
 
-  deleteCapitalRatio(id: number): Promise<any> {
-    const deleteWebRequest: DeleteWebRequest = {
-      endPoint: this.CAPITAL_RATIO_URL,
-      payload: {
-        id: id
-      }
-    };
-    return this.wsp.delete(deleteWebRequest);
+  async deleteCapitalRatio(id: number): Promise<any> {
+    return this.wsp.deleteHttp({
+      endpoint: `${this._tradeAllocationRationsEndpoint}/${id}`
+    });
   }
 
-  getCashBal(date: Date): Promise<CashBalance[]> {
+  async getCashBal(date: Date): Promise<CashBalance[]> {
     const fields = [
       'id',
       'date',
@@ -268,9 +256,10 @@ export class AccountingService {
       'amount',
       'amountusd'
     ];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.CASH_BAL_URL,
-      options: {
+
+    const entities = await this.wsp.getHttp<any[]>({
+      endpoint: this._accountCashEndpoint,
+      params: {
         fields: fields,
         filters: [
           {
@@ -280,14 +269,15 @@ export class AccountingService {
           }
         ]
       }
-    };
+    });
 
-    return this.wsp
-      .get(getWebRequest)
-      .then(result => result.map(x => this.formatCashBalance(x)));
+    return entities.map(this.formatCashBalance);
   }
 
-  getCashBalancesFromDate(startDate: Date): Promise<CashBalance[]> {
+  async getCashBalancesFromDate(
+    startDate: Date,
+    endDate: Date = new Date()
+  ): Promise<CashBalance[]> {
     const fields = [
       'id',
       'date',
@@ -295,28 +285,33 @@ export class AccountingService {
       'custodianid',
       'currency',
       'amount',
-      'amountusd'
+      'amountusd',
+      'cashtype'
     ];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.CASH_BAL_URL,
-      options: {
+
+    const cashBalances = await this.wsp.getHttp<any[]>({
+      endpoint: this._accountCashEndpoint,
+      params: {
         fields: fields,
         filters: [
           {
             key: 'date',
             type: 'GE',
             value: [moment(startDate).format('MM/DD/YYYY')]
+          },
+          {
+            key: 'date',
+            type: 'LE',
+            value: [moment(endDate).format('MM/DD/YYYY')]
           }
         ]
       }
-    };
+    });
 
-    return this.wsp
-      .get(getWebRequest)
-      .then(result => result.map(x => this.formatCashBalance(x)));
+    return cashBalances.map(this.formatCashBalance);
   }
 
-  private formatCashBalance(result: any): CashBalance {
+  formatCashBalance(result: any): CashBalance {
     const id = +result.id;
     const accountId = +result.accountid;
     const custodianId = +result.custodianid;
@@ -324,7 +319,7 @@ export class AccountingService {
     const amount = +result.amount;
     const amountUSD = +result.amountusd;
 
-    return new CashBalance(
+    const cashBalance = new CashBalance(
       !isNaN(id) ? id : null,
       new Date(result.date),
       !isNaN(accountId) ? accountId : null,
@@ -333,63 +328,89 @@ export class AccountingService {
       !isNaN(amount) ? amount : null,
       !isNaN(amountUSD) ? amountUSD : null
     );
+
+    cashBalance.cashType = result.cashtype;
+    return cashBalance;
   }
 
-  saveCashBal(
+  async saveCashBal(
     accountId: number,
     custodianId: number,
     date: Date,
     position: number,
-    currencyId: number
+    currencyId: number,
+    cashType: string
   ): Promise<CashBalance> {
-    const postWebRequest: PostWebRequest = {
-      endPoint: this.CASH_BAL_URL,
-      payload: {
-        accountid: accountId,
-        custodianid: custodianId,
+    const result = await this.wsp.postHttp<any>({
+      endpoint: this._accountCashEndpoint,
+      body: {
+        accountid: accountId.toString(),
+        custodianid: custodianId.toString(),
         date: moment(date).format('MM/DD/YYYY'),
-        amount: position,
-        currencyid: currencyId,
+        amount: position.toString(),
+        currencyid: currencyId.toString(),
+        cashtype: cashType.toUpperCase()
       }
-    };
+    });
 
-    return this.wsp
-      .post(postWebRequest)
-      .then(result => this.formatCashBalance(result));
+    return this.formatCashBalance(result);
   }
 
-  updateCashBal(
+  async updateCashBal(
     id: number,
     accountId: number,
     custodianId: number,
     date: Date,
     position: number,
-    currencyId: number
+    currencyId: number,
+    cashType: string
   ): Promise<CashBalance> {
-    const putWebRequest: PutWebRequest = {
-      endPoint: this.CASH_BAL_URL,
-      payload: {
-        id: id,
-        accountid: accountId,
-        custodianid: custodianId,
-        date: moment(date).format('MM/DD/YYYY'),
-        amount: position,
-        currencyId: currencyId
-      }
+    const body = {
+      id: id.toString(),
+      accountid: accountId.toString(),
+      custodianid: custodianId.toString(),
+      date: moment(date).format('MM/DD/YYYY'),
+      amount: position.toString(),
+      currencyId: currencyId.toString(),
+      cashtype: cashType.toUpperCase()
     };
+    const result = await this.wsp.putHttp({
+      endpoint: this._accountCashEndpoint,
+      body
+    });
 
-    return this.wsp
-      .put(putWebRequest)
-      .then(result => this.formatCashBalance(result));
+    return this.formatCashBalance(result);
   }
 
-  deleteCashBal(id: number): Promise<any> {
-    const deleteWebRequest: DeleteWebRequest = {
-      endPoint: this.CASH_BAL_URL,
-      payload: {
-        id: id
-      }
-    };
-    return this.wsp.delete(deleteWebRequest);
+  async deleteCashBal(id: number): Promise<any> {
+    return this.wsp.deleteHttp({
+      endpoint: `${this._accountCashEndpoint}/${id}`
+    });
+  }
+
+  private formatCapitalRatio(result: any): CapitalRatio {
+    const id = parseInt(result.id, 10);
+    const capitalRatio = parseFloat(result.capitalratio);
+    return new CapitalRatio(
+      !isNaN(id) ? id : null,
+      result.hierarchytype,
+      result.hierarchyname,
+      !isNaN(capitalRatio) ? capitalRatio : null,
+      new Date(result.startdate),
+      new Date(result.enddate)
+    );
+  }
+
+  public formatAUM(result: any): AUM {
+    const id = parseInt(result.id, 10);
+    const accountId = parseInt(result.accountid, 10);
+    const aum = parseFloat(result.aum);
+    const date = moment(result.date, 'MM/DD/YYYY');
+    return new AUM(
+      !isNaN(id) ? id : null,
+      !isNaN(accountId) ? accountId : null,
+      !isNaN(aum) ? aum : null,
+      date.isValid() ? date.toDate() : null
+    );
   }
 }

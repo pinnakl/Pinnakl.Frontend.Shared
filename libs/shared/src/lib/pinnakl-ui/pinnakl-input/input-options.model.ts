@@ -3,3 +3,8 @@ export interface InputOptions {
   floatingLabel?: boolean;
   placeHolder?: string;
 }
+
+export enum PinnaklDateType {
+  Date = 'date',
+  MonthPicker = 'month-picker',
+}

@@ -23,12 +23,12 @@ export class UserScreenSettingsLoadedGuard implements CanActivate {
         if (loaded) {
           return;
         }
-        this.store.dispatch(new AttemptLoadUserScreenSettings());
+        this.store.dispatch(AttemptLoadUserScreenSettings());
       }),
       filter(loaded => loaded),
       first()
     );
   }
 
-  constructor(private store: Store<any>) {}
+  constructor(private readonly store: Store<any>) {}
 }

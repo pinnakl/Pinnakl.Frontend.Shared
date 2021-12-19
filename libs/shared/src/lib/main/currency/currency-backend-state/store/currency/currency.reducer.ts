@@ -1,7 +1,8 @@
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { Action, createReducer, on } from '@ngrx/store';
 
 import { CurrencyForOMS } from '../../../../../models/oms/currency.model';
-import { CurrencyActions, CurrencyActionTypes } from './currency.actions';
+import { LoadCurrencies } from './currency.actions';
 
 export interface State extends EntityState<CurrencyForOMS> {
   loaded: boolean;
@@ -13,22 +14,16 @@ export const initialState: State = adapter.getInitialState({
   loaded: false
 });
 
-export function reducer(
-  state: State = initialState,
-  action: CurrencyActions
-): State {
-  switch (action.type) {
-    case CurrencyActionTypes.LoadCurrencies: {
-      return adapter.addAll(action.payload.currencies, {
-        ...state,
-        loaded: true
-      });
-    }
+const featureReducer = createReducer(
+  initialState,
+  on(LoadCurrencies, (state, { currencies }) => adapter.setAll(currencies, {
+    ...state,
+    loaded: true
+  }))
+);
 
-    default: {
-      return state;
-    }
-  }
+export function reducer(state: State | undefined, action: Action): State {
+  return featureReducer(state, action);
 }
 
 export const { selectAll } = adapter.getSelectors();

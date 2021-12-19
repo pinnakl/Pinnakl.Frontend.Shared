@@ -7,17 +7,21 @@ import { PositionsPnlDataField } from './positions-pnl-data-fields.model';
 @Injectable()
 export class PositionsPnlDataFieldsService {
   private readonly _FIELDS = ['id', 'name', 'type'];
-  private readonly _RESOURCE_URL = 'positions_pnl_data_fields';
+  private readonly _positionPnlDataFieldsEndPoint =
+    'entities/positions_pnl_data_fields';
 
-  constructor(private _wsp: WebServiceProvider) {}
+  constructor(private readonly _wsp: WebServiceProvider) {}
 
   async getAll(): Promise<PositionsPnlDataField[]> {
-    const pnlFieldsFromApi: PositionsPnlDataFieldFromApi[] = await this._wsp.get(
-      {
-        endPoint: this._RESOURCE_URL,
-        options: { fields: this._FIELDS }
+    const pnlFieldsFromApi = await this._wsp.getHttp<
+      PositionsPnlDataFieldFromApi[]
+    >({
+      endpoint: this._positionPnlDataFieldsEndPoint,
+      params: {
+        fields: this._FIELDS
       }
-    );
+    });
+
     const pnlFields = pnlFieldsFromApi.map(this._formatPnlField);
     return pnlFields;
   }

@@ -1,6 +1,6 @@
-import { Action } from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
 
-import { CurrencyForOMS } from '../../../../../models/oms/currency.model';
+import { CurrencyForOMS } from '../../../../../models/oms';
 
 export enum CurrencyActionTypes {
   AttemptLoadCurrencies = '[Currency] Attempt Load Currencies',
@@ -8,23 +8,16 @@ export enum CurrencyActionTypes {
   LoadCurrenciesFailed = '[Currency] Load Currencies Failed'
 }
 
-export class AttemptLoadCurrencies implements Action {
-  readonly type = CurrencyActionTypes.AttemptLoadCurrencies;
-}
+export const AttemptLoadCurrencies = createAction(
+  CurrencyActionTypes.AttemptLoadCurrencies
+);
 
-export class LoadCurrencies implements Action {
-  readonly type = CurrencyActionTypes.LoadCurrencies;
+export const LoadCurrencies = createAction(
+  CurrencyActionTypes.LoadCurrencies,
+  props<{ currencies: CurrencyForOMS[] }>()
+);
 
-  constructor(public payload: { currencies: CurrencyForOMS[] }) {}
-}
-
-export class LoadCurrenciesFailed implements Action {
-  readonly type = CurrencyActionTypes.LoadCurrenciesFailed;
-
-  constructor(public payload: { error: any }) {}
-}
-
-export type CurrencyActions =
-  | AttemptLoadCurrencies
-  | LoadCurrencies
-  | LoadCurrenciesFailed;
+export const LoadCurrenciesFailed = createAction(
+  CurrencyActionTypes.LoadCurrenciesFailed,
+  props<{ error: any }>()
+);

@@ -1,0 +1,17 @@
+
+.widget-container {
+  display: flex;
+  flex-direction: column;
+
+  .inner-container {
+    flex-grow: 2;
+    flex-shrink: 1;
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .k-chart {
+    display: block;
+    max-height: 25vh;
+  }
+}

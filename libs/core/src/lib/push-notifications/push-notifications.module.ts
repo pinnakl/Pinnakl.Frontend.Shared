@@ -11,6 +11,4 @@ import { UserPushNotificationSettingsService } from './user-push-noification-set
     UserPushNotificationSettingsService
   ]
 })
-export class PushNotificationModule {
-  constructor() {}
-}
+export class PushNotificationModule { }

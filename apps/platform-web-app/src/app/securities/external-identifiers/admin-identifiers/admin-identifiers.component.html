@@ -1,0 +1,109 @@
+<div class="row mb-3">
+  <div class="col-md-12"><b>ADMIN IDENTIFIERS</b></div>
+</div>
+<div *ngIf="identifiers?.length > 0" class="row">
+  <div class="col-md-5">
+    <table class="table table-bordered">
+      <thead>
+        <th>ID TYPE</th>
+        <th>ID</th>
+        <th>ACCOUNT</th>
+        <th>START DATE</th>
+        <th>END DATE</th>
+        <th>ACTION</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let identifier of (identifiers | sortAdminIdentifiers)">
+          <td class="text-uppercase">{{ getAdminCode(identifier.adminId) }}</td>
+          <td>{{ identifier.adminSecurityIdentifier }}</td>
+          <td class="text-uppercase">
+            {{ getAccountCode(identifier.accountId) }}
+          </td>
+          <td>{{ identifier.startDate | date: 'MM/dd/yyyy' }}</td>
+          <td>{{ identifier.endDate | date: 'MM/dd/yyyy' }}</td>
+          <td>
+            <i
+              class="icon-pinnakl-trash-empty color-red cursor-pointer"
+              (click)="deleteIdentifier(identifier)"
+            ></i>
+            <i
+              class="icon-pinnakl-edit-securities cursor-pointer"
+              (click)="editIdentifier(identifier)"
+            ></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<form
+  class="row"
+  [class.ng-submitted]="submitted"
+  [formGroup]="form"
+  (ngSubmit)="saveIdentifier()"
+  novalidate
+>
+  <div class="col-md-1">
+    <pinnakl-input
+      class="text-uppercase"
+      controlName="adminId"
+      [dropdownSource]="entities"
+      [dropdownOptions]="{
+        modelProperty: 'adminId',
+        viewProperty: 'entity'
+      }"
+      [form]="form"
+      label="ID TYPE"
+      [required]="true"
+      type="dropdown"
+    >
+    </pinnakl-input>
+  </div>
+  <div class="col-md-1">
+    <pinnakl-input
+      controlName="adminSecurityIdentifier"
+      [form]="form"
+      label="ID"
+      [required]="true"
+      type="text"
+    >
+    </pinnakl-input>
+  </div>
+  <div class="col-md-1">
+    <pinnakl-input
+      class="text-uppercase"
+      controlName="accountId"
+      [dropdownSource]="accounts"
+      [dropdownOptions]="{
+        modelProperty: 'accountId',
+        viewProperty: 'accountCode'
+      }"
+      [form]="form"
+      label="ACCOUNT"
+      [required]="true"
+      type="dropdown"
+    >
+    </pinnakl-input>
+  </div>
+  <div class="col-md-2 col-md-1_2">
+    <pinnakl-input
+      controlName="startDate"
+      [form]="form"
+      label="START DATE"
+      type="date"
+    >
+    </pinnakl-input>
+  </div>
+  <div class="col-md-2 col-md-1_2">
+    <pinnakl-input
+      controlName="endDate"
+      [form]="form"
+      label="END DATE"
+      type="date"
+    >
+    </pinnakl-input>
+  </div>
+  <div class="col-md-1 identifier-save-button">
+    <button type="submit" class="btn btn-success">SAVE</button>
+  </div>
+</form>

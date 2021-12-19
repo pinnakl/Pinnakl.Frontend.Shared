@@ -3,4 +3,5 @@ export interface UserPushNotificationTopic {
   topicDescription: string;
   topicName: string;
   userPushNotificationId: number;
+  checked: boolean;
 }

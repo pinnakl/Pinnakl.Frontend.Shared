@@ -1,27 +1,24 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { select, Store } from '@ngrx/store';
-import * as fromBackendModel from '../../../dashboard-backend';
-import * as fromStore from '../../../dashboard-backend-state/store';
-
-import { Observable, of, Subscription } from 'rxjs';
-
-import * as _ from 'lodash';
-
-import { WebServiceProvider } from '@pnkl-frontend/core';
-import { OnDemandPreloadService } from '@pnkl-frontend/core';
-import {
-  DashboardMarketMacroStat,
-  RecommendedAction
-} from '../../../../dashboard/dashboard-backend';
-import * as fromAction from '../../../dashboard-backend-state/store/dashboard/dashboard-backend.actions';
-import {
-  AddRecommendedAction,
-  UpdateRecommendedAction
-} from '../../../dashboard-backend-state/store/recommended-actions';
-import { DashboardService } from '../../../dashboard-backend/dashboard';
-import { DashboardStateFacadeService } from '../../../dashboard-ui-state/dashboard-state-facade.service';
+import { OnDemandPreloadService, UserService } from '@pnkl-frontend/core';
 import { ClientConnectivity } from '@pnkl-frontend/shared';
+import { Observable, Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
+import * as fromStore from '../../../dashboard-backend-state/store';
+import {
+  SubscribeToDashboardMarketMacroStats,
+  UnsubscribeFromDashboardMarketMacroStats
+} from '../../../dashboard-backend-state/store/dashboard-market-macro-stat/dashboard-market-macro-stat.actions';
+import * as fromAction from '../../../dashboard-backend-state/store/dashboard/dashboard-backend.actions';
+import { DashboardMarketMacroStat } from '../../../dashboard-backend/dashboard-market-macro-stat/dashboard-market-macro-stat.model';
+import { AlertModel } from '../../../dashboard-backend/dashboard/alert.model';
+import { DashboardService } from '../../../dashboard-backend/dashboard/dashboard.service';
+import { PnlExposure } from '../../../dashboard-backend/dashboard/pnl-exposure.model';
+import { PnlModel } from '../../../dashboard-backend/dashboard/pnl.model';
+import { PositionEventModel } from '../../../dashboard-backend/dashboard/position-event.model';
+import { RecommendedAction } from '../../../dashboard-backend/recommended-actions/recommended-action.model';
+import { DashboardStateFacadeService } from '../../../dashboard-ui-state';
 import { TaskObject } from '../../../shared/task-object.model';
 
 @Component({
@@ -30,33 +27,33 @@ import { TaskObject } from '../../../shared/task-object.model';
   styleUrls: ['./dashboard-home.component.scss']
 })
 export class DashboardHomeComponent implements OnInit, OnDestroy {
-  pnlSummary$: Observable<fromBackendModel.PnlModel>;
+  pnlSummary$: Observable<PnlModel>;
   actions$: Observable<string[]>;
-  alerts$: Observable<fromBackendModel.AlertModel[]>;
+  alerts$: Observable<AlertModel[]>;
   activitySummary$: Observable<{
-    pnlAssetType: fromBackendModel.PnlExposure[];
-    pnlSector: fromBackendModel.PnlExposure[];
-    positionsAdded: fromBackendModel.PositionEventModel[];
-    positionsExited: fromBackendModel.PositionEventModel[];
+    pnlAssetType: PnlExposure[];
+    pnlSector: PnlExposure[];
+    positionsAdded: PositionEventModel[];
+    positionsExited: PositionEventModel[];
   }>;
   recommendedActions$: Observable<RecommendedAction[]>;
-  alertSubscription: Subscription;
-  TasksStatusSubscription: Subscription;
+  entities$: Observable<ClientConnectivity[]>;
+  tasks: TaskObject[];
   entities: ClientConnectivity[];
   macroStats$: Observable<DashboardMarketMacroStat[]>;
-  private subscription: Subscription;
   selectedTask: TaskObject;
-  tasks: TaskObject[];
+  tasks$: Observable<TaskObject[]>;
   tasksVisible = false;
   taskHistoryVisible = false;
+  private notifier = new Subject();
   constructor(
     private store: Store<fromStore.State>,
     private dashboardService: DashboardService,
     private activatedRoute: ActivatedRoute,
     private dashboardStateFacadeService: DashboardStateFacadeService,
     private onDemandPreloadStrategy: OnDemandPreloadService,
-    private wsp: WebServiceProvider
-  ) {}
+    private userService: UserService
+  ) { }
 
   ngOnInit(): void {
     this.pnlSummary$ = this.store.pipe(select(fromStore.selectDashboardPnl));
@@ -69,68 +66,47 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
     this.macroStats$ = this.store.pipe(
       select(fromStore.selectAllDashboardMarketMacroStats)
     );
-    this.store.dispatch(new fromStore.SubscribeToDashboardMarketMacroStats());
-    let [
-      notificationObservable,
-      taskStatusDetailObservable,
-      recommendedActionsObservable
-    ] = this.dashboardService.subscribeToNotificationsAndTaskStatusDetailsAndRecommendedActions();
+    this.tasks$ = this.store
+      .pipe(select(fromStore.selectDashboardFulfilledTasks))
+      .pipe(map(i => JSON.parse(JSON.stringify(i))));
+    this.entities$ = this.store
+      .pipe(select(fromStore.selectDashboardClientConnectivity))
+      .pipe(map(i => JSON.parse(JSON.stringify(i))));
+    this.store.dispatch(SubscribeToDashboardMarketMacroStats());
+    const [notificationsObservable, taskStatusesObservable] = this.dashboardService
+      .subscribeToNotifications();
 
-    let notificationSubscription = notificationObservable.subscribe(
-        ({ action, body: alert }) => {
-          this.store.dispatch(new fromAction.AddDashboardAlert(alert));
-        }
-      ),
-      taskStatusDetailSubscription = taskStatusDetailObservable.subscribe(
-        ({ action, body: taskStatusDetail }) => {
-          this.tasks = this.tasks.map((task: TaskObject) => {
-            if (task.id === taskStatusDetail.taskId) {
-              task.lastRunDetails = taskStatusDetail.lastRunDetails;
-              task.result = taskStatusDetail.result;
-            }
-            return task;
-          });
-        }
-      ),
-      recommendedActionsSubscription = recommendedActionsObservable.subscribe(
-        ({ action, body }) => {
-          if (action === 'POST') {
-            this.store.dispatch(
-              new AddRecommendedAction({ recommendedAction: body })
-            );
+    notificationsObservable.pipe(takeUntil(this.notifier)).subscribe(
+      alert => this.store.dispatch(fromAction.AddDashboardAlert({ payload: alert }))
+    );
+    taskStatusesObservable.pipe(takeUntil(this.notifier)).subscribe(taskStatusDetail => {
+      this.tasks$ = this.tasks$.pipe(
+        map((tasks: TaskObject[]) => tasks.map((task: TaskObject) => {
+          if (task.id === taskStatusDetail.taskId) {
+            task.result = taskStatusDetail.result;
+            task.lastRunDetails = taskStatusDetail.lastRunDetails;
           }
-          if (action === 'PUT') {
-            this.store.dispatch(
-              new UpdateRecommendedAction({
-                recommendedAction: {
-                  id: body.id,
-                  changes: body
-                }
-              })
-            );
-          }
-        }
+          return task;
+        }))
       );
-    notificationSubscription
-      .add(taskStatusDetailSubscription)
-      .add(recommendedActionsSubscription);
-    this.subscription = notificationSubscription;
+    });
+
     Object.assign(this, this.activatedRoute.snapshot.data.resolvedData);
     this.onDemandPreloadStrategy.preloadAllModules();
+
+    this.userService.validateUserResetPasswordModal();
   }
 
   ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-    this.store.dispatch(
-      new fromStore.UnsubscribeFromDashboardMarketMacroStats()
-    );
+    this.notifier.next();
+    this.notifier.complete();
+    this.store.dispatch(UnsubscribeFromDashboardMarketMacroStats());
+    this.dashboardService.unsubscribeFromNotifications();
     this.dashboardStateFacadeService.unSubscribeToRecommendedActions();
   }
 
   loadActivitySummary(date: { startDate: Date; endDate: Date }): void {
-    this.store.dispatch(new fromAction.AttemptLoadActivitySummary(date));
+    this.store.dispatch(fromAction.AttemptLoadActivitySummary(date));
   }
 
   openTasks(): void {
@@ -148,7 +124,7 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
   }
 
   removeAlert(id: number): void {
-    this.store.dispatch(new fromAction.RemoveDashboardAlert({ id }));
+    this.store.dispatch(fromAction.RemoveDashboardAlert({ id }));
   }
 
   setSelectedTask(selectedTask: TaskObject): void {

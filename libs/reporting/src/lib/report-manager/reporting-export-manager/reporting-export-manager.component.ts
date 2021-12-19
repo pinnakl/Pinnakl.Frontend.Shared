@@ -5,11 +5,11 @@ import { GridOptions } from 'ag-grid-community';
 import { Toastr } from '@pnkl-frontend/core';
 import {
   ReportingColumn,
-  ReportingHelper,
   ReportingService,
   ReportParameter,
   Utility
 } from '@pnkl-frontend/shared';
+import { ReportingHelper } from '../../shared/reporting-helper.service';
 
 @Component({
   selector: 'reporting-export-manager',
@@ -25,12 +25,12 @@ export class ReportingExportManagerComponent {
   @Input() private reportParameters: ReportParameter[] = [];
 
   constructor(
-    private reportingHelper: ReportingHelper,
-    private reportingService: ReportingService,
-    private toastr: Toastr,
-    private utility: Utility,
-    private eRef: ElementRef
-  ) {}
+    private readonly reportingHelper: ReportingHelper,
+    private readonly reportingService: ReportingService,
+    private readonly toastr: Toastr,
+    private readonly utility: Utility,
+    private readonly eRef: ElementRef
+  ) { }
 
   @HostListener('document:click', ['$event'])
   documentClick(event: any): void {

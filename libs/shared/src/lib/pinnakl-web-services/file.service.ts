@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 
 import { UserService } from '@pnkl-frontend/core';
+import moment from 'moment';
 import { FILE_SERVICE_URL } from '../enviroment.tokens';
 import { ClientFile } from '../models/client-file.model';
 
@@ -24,12 +25,14 @@ interface UploadArguments {
   osTypeId?: number;
 }
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class FileService {
   constructor(
-    private _http: HttpClient,
-    private _userService: UserService,
-    @Inject(FILE_SERVICE_URL) private _RESOURCE_URL: string
+    private readonly _http: HttpClient,
+    private readonly _userService: UserService,
+    @Inject(FILE_SERVICE_URL) private readonly _RESOURCE_URL: string
   ) {
     if (this._RESOURCE_URL === '') {
       this._RESOURCE_URL = fileUrl.url;
@@ -114,8 +117,7 @@ export class FileService {
 
   private _createHeaders(): HttpHeaders {
     const { token } = this._userService.getUser();
-    const httpHeaders = new HttpHeaders({ token });
-    return httpHeaders;
+    return new HttpHeaders({ token });
   }
 
   private _createUploadFormData({
@@ -135,7 +137,7 @@ export class FileService {
   private _formatClientFile(entityFromApi: ClientFileFromApi): ClientFile {
     return {
       ...entityFromApi,
-      createDate: new Date(entityFromApi.createDate),
+      createDate: moment.utc(new Date(Date.parse(`${entityFromApi.createDate}`))).toDate(),
       updateDate: entityFromApi.updateDate
         ? new Date(entityFromApi.updateDate)
         : null

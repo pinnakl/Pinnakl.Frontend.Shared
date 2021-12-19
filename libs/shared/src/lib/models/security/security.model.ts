@@ -39,7 +39,8 @@ export class Security {
     public principalFactor: number,
     public initialMargin: number,
     public maintenanceMargin: number,
-    public maturity: Date
+    public maturity: Date,
+    public underlyingsecid: number = null
   ) {}
 
   public identifier() {

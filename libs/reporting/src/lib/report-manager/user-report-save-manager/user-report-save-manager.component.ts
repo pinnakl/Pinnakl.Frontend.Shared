@@ -10,17 +10,17 @@ import {
   IdcColumn,
   ReportColumn,
   ReportingColumn,
-  ReportingHelper,
-  UserReportColumn,
-  UserReportCustomAttribute,
-  UserReportIdcColumn,
   UserReport,
+  UserReportColumn,
   UserReportColumnService,
+  UserReportCustomAttribute,
   UserReportCustomAttributeService,
+  UserReportIdcColumn,
   UserReportIdcColumnService,
   UserReportService,
   Utility
 } from '@pnkl-frontend/shared';
+import { ReportingHelper } from '../../shared/reporting-helper.service';
 
 declare let $: any;
 
@@ -46,17 +46,17 @@ export class UserReportSaveManagerComponent {
   @Input() private savedColumns: ReportingColumn[];
 
   constructor(
-    private pinnaklSpinner: PinnaklSpinner,
-    private reportingHelper: ReportingHelper,
-    private router: Router,
-    private toastr: Toastr,
-    private userReportColumnService: UserReportColumnService,
-    private userReportCustomAttributeService: UserReportCustomAttributeService,
-    private userReportIdcColumnService: UserReportIdcColumnService,
-    private userReportService: UserReportService,
-    private userService: UserService,
-    private utility: Utility
-  ) {}
+    private readonly pinnaklSpinner: PinnaklSpinner,
+    private readonly reportingHelper: ReportingHelper,
+    private readonly router: Router,
+    private readonly toastr: Toastr,
+    private readonly userReportColumnService: UserReportColumnService,
+    private readonly userReportCustomAttributeService: UserReportCustomAttributeService,
+    private readonly userReportIdcColumnService: UserReportIdcColumnService,
+    private readonly userReportService: UserReportService,
+    private readonly userService: UserService,
+    private readonly utility: Utility
+  ) { }
 
   save(): void {
     let entities = this.getCurrentColumns();

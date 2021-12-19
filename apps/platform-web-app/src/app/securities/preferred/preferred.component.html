@@ -1,0 +1,21 @@
+<div [hidden]="securitiesHelper.currentTab !== 'securityInformation'">
+  <preferred-information
+    [asset]="preferred"
+    [currencies]="currencies"
+    [dividendFrequencyOptions]="dividendFrequencyOptions"
+    [manualSecuritySource]="manualSecuritySource"
+    [organizations]="organizations"
+    [sectorOptions]="sectorOptions"
+    [security]="security"
+    [securityTypes]="securityTypes"
+  >
+  </preferred-information>
+</div>
+
+<div
+  *ngIf="preferred"
+  [hidden]="securitiesHelper.currentTab !== 'additionalInformation'"
+>
+  <preferred-additional-information [asset]="preferred">
+  </preferred-additional-information>
+</div>

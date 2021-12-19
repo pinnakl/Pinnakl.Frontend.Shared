@@ -1,0 +1,137 @@
+@import '../../../../../../libs/shared/src/lib/styles/_components/_colors.scss';
+@import '../../../../../../libs/shared/src/lib/styles/_components/_mixins.scss';
+@import '../../../../../../libs/shared/src/lib/styles/_components/_variables.scss';
+
+.oms-grid-filter {
+  @include toggle-radios(100px);
+
+  @media all {
+    ::ng-deep .presets-config {
+      display: flex;
+      flex-direction: row;
+      gap: 30px;
+      justify-content: flex-start;
+      margin-left: 15px;
+      padding: 0;
+    }
+    .presets-config > div {
+      width: 50%;
+    }
+  }
+
+  .radioGroup {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+    margin: 5px 15px;
+
+    .group-label {
+      font-size: 14px;
+      color: white;
+    }
+
+    form {
+      height: 30px;
+      gap: 5px;
+      display: flex;
+    }
+
+    label {
+      color: white;
+      width: fit-content;
+      padding: 0 11px;
+    }
+  }
+
+  .filter-actions {
+    padding: 0 15px;
+
+    .presets-btn {
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      color: white;
+
+      &:hover {
+        opacity: 0.6;
+      }
+    }
+  }
+
+  .toggle-radio-btn input[type='radio']:checked + label {
+    background-color: white;
+    border-color: white;
+    color: #282931;
+  }
+
+  .presets-list {
+    padding: 0 15px 15px;
+
+    .presets-header {
+      color: white;
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 7px;
+    }
+
+    .presets {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 5px;
+      max-height: 70px;
+      overflow: auto;
+    }
+
+    .toggle-radio-btn {
+      position: relative;
+      margin-top: 5px;
+
+      .remove-radio-btn {
+        position: absolute;
+        background-color: #738291;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        top: 3px;
+        right: 3px;
+
+        &:after {
+          content: "\00d7";
+          font-size: 27px;
+          top: -15.7px;
+          right: -4px;
+          position: relative;
+          color: white;
+        }
+      }
+
+      ::ng-deep label {
+        border-color: white;
+        text-align: inherit;
+        color: white;
+        padding-left: 10px;
+        width: fit-content;
+        padding-right: 35px;
+      }
+
+      input[type='radio']:checked + label {
+        .remove-radio-btn {
+          background-color: #282931;
+        }
+      }
+    }
+  }
+}
+
+::ng-deep .filter-presets-modal {
+  .k-overlay {
+    width: calc(100% + 30px);
+    left: -15px;
+  }
+
+  .k-window {
+    border-radius: 7px;
+  }
+}

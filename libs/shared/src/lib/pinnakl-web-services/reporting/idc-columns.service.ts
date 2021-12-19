@@ -2,35 +2,32 @@ import { Injectable } from '@angular/core';
 
 import * as _ from 'lodash';
 
-import { GetWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
-import { IdcColumnFromApi } from '../../models/reporting/idc-column-from-api.model';
-import { IdcColumn } from '../../models/reporting/idc-column.model';
-import { IdcColumnsObject } from '../../models/reporting/idc-columns-object.model';
+import { WebServiceProvider } from '@pnkl-frontend/core';
+import { IdcColumnFromApi } from '../../models/reporting';
+import { IdcColumn } from '../../models/reporting';
+import { IdcColumnsObject } from '../../models/reporting';
 
 @Injectable()
 export class IdcColumnsService {
-  private readonly RESOURCE_URL = '/idc_reporting_columns';
+  private readonly RESOURCE_URL = 'entities/idc_reporting_columns';
   private _idcColumns: IdcColumn[];
   private _idcColumnsObject: IdcColumnsObject;
 
-  constructor(private wsp: WebServiceProvider) {}
+  constructor(private readonly wsp: WebServiceProvider) {}
 
   getIdcColumns(): Promise<IdcColumn[]> {
     if (this._idcColumns) {
       return Promise.resolve(this._idcColumns);
     }
-    const fields = ['id', 'idcColumnName', 'pnklColumnName', 'Type'],
-      getWebRequest: GetWebRequest = {
-        endPoint: this.RESOURCE_URL,
-        options: { fields }
-      };
+
     return this.wsp
-      .get(getWebRequest)
-      .then((idcColumnsFromApi: IdcColumnFromApi[]) => {
-        return idcColumnsFromApi.map(idcColumn =>
-          this.formatIdcColumn(idcColumn)
-        );
-      });
+      .getHttp<IdcColumnFromApi[]>({
+        endpoint: this.RESOURCE_URL,
+        params: {
+          fields: ['id', 'idcColumnName', 'pnklColumnName', 'Type']
+        }
+      })
+      .then(idcColumnsFromApi => idcColumnsFromApi.map(this.formatIdcColumn.bind(this)));
   }
 
   getIdcColumnsObject(): Promise<IdcColumnsObject> {
@@ -83,8 +80,8 @@ export class IdcColumnsService {
     });
   }
 
-  private formatIdcColumn(column: IdcColumnFromApi): IdcColumn {
-    let id = parseInt(column.id);
+  public formatIdcColumn(column: IdcColumnFromApi): IdcColumn {
+    const id = parseInt(column.id, 10);
     return new IdcColumn(
       !isNaN(id) ? id : null,
       column.idccolumnname,

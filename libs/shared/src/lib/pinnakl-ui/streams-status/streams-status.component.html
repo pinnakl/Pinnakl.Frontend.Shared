@@ -1,0 +1,10 @@
+<i
+  class="icon-pinnakl-high"
+  [ngClass]="{
+    'done-status': !(requiredStreamsErrored$ | async) && (requiredEstablishedStreamsReady$ | async),
+    'pending-status': !(requiredEstablishedStreamsReady$ | async) && !(requiredStreamsErrored$ | async),
+    'error-status': requiredStreamsErrored$ | async
+  }"
+></i>
+
+

@@ -1,0 +1,25 @@
+<div class="container-fluid">
+  <div class="tab-div row pl-3 pr-5">
+    <div class="col-md-6 pt-3 align-items-center">
+      <button
+        [routerLink]="component.componentRoute"
+        *ngFor="let component of pnlComponents"
+        [ngClass]="{
+          'tab-div__activeButton': tabSelected.includes(
+            component.componentRoute
+          )
+        }"
+        class="btn tab-div__button pb-3"
+        (click)="selectTab(component.componentRoute)"
+      >
+        {{ component.componentName }}
+      </button>
+    </div>
+    <div class="col-md-default-width flex-pull-right d-flex align-items-center">
+      <a (click)="toggleFilter()" class="sidebar-filter-trigger">
+        <i class="icon-pinnakl-filter cursor-pointer"></i>
+      </a>
+    </div>
+  </div>
+</div>
+<div class="pnl-content-wrap"><router-outlet> </router-outlet></div>

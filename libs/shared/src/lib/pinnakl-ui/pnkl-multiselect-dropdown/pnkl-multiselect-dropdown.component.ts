@@ -93,14 +93,13 @@ export class PnklMultiselectDropdownComponent
     });
   }
 
-  constructor() {}
-
   public onValueChange(value: any): void {
     if (this.dropdownOptions && this.dropdownOptions.disableSelectAll) {
       this.selectedValue = value;
       this.propagateChange(value);
       return;
     }
+    this.onDropdownValueChange.emit(value);
 
     if (
       this.dropdownOptions &&
@@ -170,6 +169,7 @@ export class PnklMultiselectDropdownComponent
         this.selectedValue = value;
         this.propagateChange(value);
       }
+
     }
   }
 

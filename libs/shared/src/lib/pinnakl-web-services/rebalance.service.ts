@@ -2,58 +2,54 @@ import { Injectable } from '@angular/core';
 
 import * as moment from 'moment';
 
-import { GetWebRequest, PostWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
+import {
+  WebServiceProvider
+} from '@pnkl-frontend/core';
 
 @Injectable()
 export class RebalanceService {
-  private readonly REBALANCE_URL = '/rebalancing';
+  private readonly _rebalancingEndpoint = 'entities/rebalancing';
   private _funds: any;
-  constructor(private wsp: WebServiceProvider) {}
+  constructor(private readonly wsp: WebServiceProvider) {}
 
-  getFundsDetails(): Promise<any> {
+  async getFundsDetails(): Promise<any> {
     if (this._funds) {
       return Promise.resolve(this._funds);
     }
-    const fields = ['ClientId', 'Id', 'Name'],
-      getWebRequest: GetWebRequest = {
-        endPoint: '/client_products',
-        options: { fields }
-      };
-    return this.wsp.get(getWebRequest).then(results => {
-      this._funds = results;
-      return this._funds;
+
+    this._funds = await this.wsp.getHttp<any[]>({
+      endpoint: 'entities/client_products',
+      params: { fields: ['ClientId', 'Id', 'Name'] }
+    });
+
+    return this._funds;
+  }
+
+  async postRebalancedData(tradedate: Date, brokerId: number): Promise<any> {
+    return this.wsp.postHttp({
+      endpoint: this._rebalancingEndpoint,
+      body: {
+        brokerId: brokerId.toString(),
+        tradeDate: moment(tradedate).format('MM/DD/YYYY'),
+        tradeType: 'rebalance'
+      }
     });
   }
 
-  postRebalancedData(tradedate: Date, brokerId: number): Promise<any> {
-    const requestBody = {
-        brokerId: brokerId,
+  async postIvDvData(tradedate: Date, brokerId: number, ivdv: number): Promise<any> {
+    return this.wsp.postHttp({
+      endpoint: this._rebalancingEndpoint,
+      body: {
+        brokerId: brokerId.toString(),
+        investment: ivdv.toString(),
         tradeDate: moment(tradedate).format('MM/DD/YYYY'),
         tradeType: 'rebalance'
-      },
-      postWebRequest: PostWebRequest = {
-        endPoint: this.REBALANCE_URL,
-        payload: requestBody
-      };
-    return this.wsp.post(postWebRequest);
+      }
+    });
   }
 
-  postIvDvData(tradedate: Date, brokerId: number, ivdv: number): Promise<any> {
-    const requestBody = {
-        brokerId: brokerId,
-        investment: ivdv,
-        tradeDate: moment(tradedate).format('MM/DD/YYYY'),
-        tradeType: 'rebalance'
-      },
-      postWebRequest: PostWebRequest = {
-        endPoint: this.REBALANCE_URL,
-        payload: requestBody
-      };
-    return this.wsp.post(postWebRequest);
-  }
-
-  getRebalancedData(tradedate: Date): Promise<any> {
-    let formatteddate = moment(tradedate).format('MM/DD/YYYY'),
+  async getRebalancedData(tradedate: Date): Promise<any> {
+    const formatteddate = moment(tradedate).format('MM/DD/YYYY'),
       fields = [
         'AccountId',
         'AccountCode',
@@ -67,10 +63,11 @@ export class RebalanceService {
         'TradeDate',
         'TranType'
       ];
-    const getWebRequest: GetWebRequest = {
-      endPoint: '/rebalancing',
-      options: {
-        fields,
+
+    return this.wsp.getHttp<any[]>({
+      endpoint: 'entities/rebalancing',
+      params: {
+        fields: fields,
         filters: [
           {
             key: 'TradeDate',
@@ -84,12 +81,11 @@ export class RebalanceService {
           }
         ]
       }
-    };
-    return this.wsp.get(getWebRequest);
+    });
   }
 
-  getIvDvData(tradedate: Date): Promise<any> {
-    let formatteddate = moment(tradedate).format('MM/DD/YYYY'),
+  async getIvDvData(tradedate: Date): Promise<any> {
+    const formatteddate = moment(tradedate).format('MM/DD/YYYY'),
       fields = [
         'AccountId',
         'AccountCode',
@@ -103,10 +99,11 @@ export class RebalanceService {
         'TradeDate',
         'TranType'
       ];
-    const getWebRequest: GetWebRequest = {
-      endPoint: '/rebalancing',
-      options: {
-        fields,
+
+    return this.wsp.getHttp<any[]>({
+      endpoint: 'entities/rebalancing',
+      params: {
+        fields: fields,
         filters: [
           {
             key: 'TradeDate',
@@ -120,7 +117,6 @@ export class RebalanceService {
           }
         ]
       }
-    };
-    return this.wsp.get(getWebRequest);
+    });
   }
 }

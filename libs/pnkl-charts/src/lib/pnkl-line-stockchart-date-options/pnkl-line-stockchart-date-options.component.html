@@ -1,0 +1,27 @@
+<form
+  class="row flex-column chart-date-options"
+  [formGroup]="formGroup"
+>
+  <div class="col-6 mb-4" *ngIf="hideSelected">
+    <label>
+      Selected
+    </label>
+    <kendo-multiselect [data]="selectionItems" formControlName="selectedItems">
+    </kendo-multiselect>
+  </div>
+
+  <div class="d-flex align-items-center mb-4" [ngClass]="{'col-6': hideSelected, 'col-12': !hideSelected}">
+    <ng-container *ngIf="!hideAllOptions">
+      <div  class="toggle-radio-btn" *ngFor="let option of viewOptions">
+        <input
+          type="radio"
+          name="frequency"
+          formControlName="frequency"
+          [id]="'frequency-' + option"
+          [value]="option"
+        />
+        <label [for]="'frequency-' + option">{{ option }}</label>
+      </div>
+    </ng-container>
+  </div>
+</form>

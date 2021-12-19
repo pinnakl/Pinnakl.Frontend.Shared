@@ -1,0 +1,81 @@
+<form
+  class="time-series-filters"
+  [formGroup]="formGroup"
+  (ngSubmit)="onSubmit()"
+  [class.ng-submitted]="submitted"
+>
+  <div class="col-12 d-flex align-items-center justify-content-between">
+    <div><h3>Time Series</h3></div>
+    <span class="data-type-radios">
+      <span class="toggle-radio-btn">
+        <input
+          type="radio"
+          name="dataType"
+          required
+          formControlName="dataType"
+          id="Total"
+          value="total"
+        />
+        <label for="Total">Cumulative</label>
+      </span>
+      <span class="toggle-radio-btn">
+        <input
+          type="radio"
+          name="dataType"
+          required
+          formControlName="dataType"
+          id="ByCategory"
+          value="by_category"
+        />
+        <label for="ByCategory">Detailed</label>
+      </span>
+    </span>
+  </div>
+
+  <div class="d-flex align-items-center">
+    <pinnakl-input
+      class="input-col"
+      controlName="startDate"
+      [form]="formGroup"
+      label="START DATE"
+      [required]="true"
+      type="date"
+    ></pinnakl-input>
+
+    <pinnakl-input
+      class="input-col"
+      controlName="endDate"
+      [form]="formGroup"
+      label="END DATE"
+      [required]="true"
+      type="date"
+    ></pinnakl-input>
+
+    <pinnakl-input
+      class="input-col"
+      controlName="accountId"
+      [dropdownSource]="accounts"
+      [dropdownOptions]="{ viewProperty: 'accountCode' }"
+      [form]="formGroup"
+      label="ACCOUNT"
+      [required]="true"
+      type="dropdown"
+    ></pinnakl-input>
+
+    <pinnakl-input
+      *ngIf="!isTotal"
+      class="input-col"
+      controlName="groupingKey"
+      [dropdownSource]="pnlFields"
+      [dropdownOptions]="{ viewProperty: 'name', objectModel: true }"
+      [form]="formGroup"
+      label="Field"
+      [required]="true"
+      type="dropdown"
+    ></pinnakl-input>
+
+    <div class="input-col">
+      <button class="btn btn-success" type="submit">APPLY</button>
+    </div>
+  </div>
+</form>

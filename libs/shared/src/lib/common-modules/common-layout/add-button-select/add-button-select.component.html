@@ -1,0 +1,32 @@
+<!-- <div class="button-container-circle" routerLink="/crm/crm-home/investor-details-home">
+  <i class="icon-pinnakl-close"></i>
+</div> -->
+
+<div class="button-container-circle" (click)="openSelectMenu()">
+  <i class="icon-pinnakl-close"></i>
+</div>
+
+<div class="selected-menu" *ngIf="oppenedMenu">
+  <div class="menu-item" routerLink="/crm/crm-home/investor-details-home" (click)="oppenedMenu = false">
+    <i class="icon-pinnakl-organization-icon"></i>
+    <span>Organization</span>
+  </div>
+  <div class="menu-item" (click)="openContactModal()">
+    <i class="icon-pinnakl-investor-count-icon"></i>
+    <span>Contact</span>
+  </div>
+</div>
+<div class="close-menu" *ngIf="oppenedMenu" (click)="oppenedMenu = false"></div>
+
+
+<pinnakl-modal
+[hideDialog]="!showContactModal"
+[width]="632"
+[maxHeight]="'80vh'"
+[showCloseButton]="true"
+(closeModal)="showContactModal = false"
+[className]="'newDesignModal'"
+>
+<app-contact-modal [crmOptions]="crmOptions" (onEditorClose)="onEditorClose()">
+</app-contact-modal>
+</pinnakl-modal>

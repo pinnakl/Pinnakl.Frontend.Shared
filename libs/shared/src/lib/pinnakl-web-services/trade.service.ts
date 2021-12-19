@@ -1,9 +1,6 @@
 // Angular
 import { Injectable } from '@angular/core';
-import {
-  TradeAuthorization,
-  TradeAuthorizationFromAPI
-} from './../models/oms/trade-authorization.model';
+import { TradeAuthorization, TradeAuthorizationFromAPI } from '../models/oms';
 
 // Third party libs
 import * as _ from 'lodash';
@@ -11,41 +8,40 @@ import * as moment from 'moment';
 
 // Models
 import {
-  DeleteWebRequest,
-  GetWebRequest,
-  PostWebRequest,
-  PutWebRequest,
-  WebServiceProvider
+  WebServiceProvider,
+  WebSocketMessageFilter
 } from '@pnkl-frontend/core';
 
-import { Broker } from '../models/oms/broker/broker.model';
-import { PSET } from '../models/oms/pset.model';
-import { TradeRequestLog } from '../models/oms/trade-request-log.model';
-import { TradeRequestFromApi } from '../models/oms/trade-request.model';
-import { TradeRequest } from '../models/oms/trade-request.model';
-import { TradingCurrency } from '../models/oms/trading-currency.model';
-import { Security } from '../models/security/security.model';
-import { CurrencyForOMS } from './../models/oms/currency.model';
-import { TradeExecutionReporting } from './../models/oms/trade-execution-reporting.model';
+import { PSET } from '../models/oms';
+import { TradeRequestLog } from '../models/oms';
+import { TradeRequestFromApi } from '../models/oms';
+import { TradeRequest } from '../models/oms';
+import { TradingCurrency } from '../models/oms';
+import { CurrencyForOMS } from '../models/oms';
+import { TradeExecutionReporting } from '../models/oms';
+import { Broker } from '../models/oms/broker';
+import { Security } from '../models/security';
 
 // Services
 import {
   TradeRequestAllocation,
   TradeRequestAllocationFromAPI
-} from '../models/oms/trade-request-allocations.model';
-import { OMSService } from '../pinnakl-web-services/oms.service';
+} from '../models/oms';
+import { OMSService } from './oms.service';
 import { TradeAllocationService } from './trade-allocation.service';
 
 @Injectable()
 export class TradeService {
-  private readonly TRADE_REQUEST_API_URL = 'trade_requests';
-  private readonly TRADE_REQUEST_LOG_API_URL = 'trade_requests_log';
-  private readonly TRADE_REQUEST_ALLOCATION_API = 'trade_request_allocations';
+  private readonly _tradeRequestsEndpoint = 'entities/trade_requests';
+  private readonly _tradeRequestsLogEndpoint = 'entities/trade_requests_log';
+  private readonly _tradeAuthorizationsEndpoint =
+    'entities/trade_authorizations';
+  private readonly _tradeRequestAllocationsEndpoint =
+    'entities/trade_request_allocations';
+  private readonly _tradeExecutionReportingEndpoint =
+    'entities/trade_execution_reporting';
 
-  private readonly TRADE_EXECUTION_REPORTING_API_URL =
-    '/trade_execution_reporting';
-
-  private readonly TRADE_REQUEST_FIELDS = [
+  private readonly _tradeRequestsFields = [
     'tradeid',
     'securityId',
     'securityMarketId',
@@ -53,7 +49,6 @@ export class TradeService {
     'tradeDate',
     'settleDate',
     'assetType',
-    'trsIndicator',
     'ticker',
     'cusip',
     'identifier',
@@ -72,14 +67,14 @@ export class TradeService {
     'brokerName',
     'allocationsIndicator',
     'allocationId',
+    'allocationStatus',
     'psetid',
     'customattribId',
     'counterpartyId',
     'comments',
     'approverMessage'
   ];
-  private TRADE_AUTHORIZATIONS_API = 'trade_authorizations';
-  private allocationImpactingFields = [
+  private readonly _allocationImpactingFields = [
     'tranType',
     'tradedate',
     'quantity',
@@ -88,85 +83,93 @@ export class TradeService {
   ];
 
   constructor(
-    private wsp: WebServiceProvider,
-    private omsService: OMSService,
-    private tradeAllocationService: TradeAllocationService
-  ) {}
+    private readonly wsp: WebServiceProvider,
+    private readonly omsService: OMSService,
+    private readonly tradeAllocationService: TradeAllocationService
+  ) { }
 
-  public getMostRecentTradeRequests({
+  public async getMostRecentTradeRequests({
     from,
     to,
+    onlyViewTodayActivity,
     date,
     requestFromServer
   }: {
     from: number;
     to: number;
+    onlyViewTodayActivity: boolean;
     date: Date;
     requestFromServer: boolean;
   }): Promise<TradeRequest[]> {
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.TRADE_REQUEST_API_URL,
-      options: {
-        fields: this.TRADE_REQUEST_FIELDS,
-        filters: [
-          {
-            key: '',
-            type: 'RANGE',
-            value: [from.toString(), to.toString()]
-          }
-        ],
-        orderBy: [
-          {
-            field: 'tradedate',
-            direction: 'DESC'
-          }
-        ]
-      }
-    };
+    let wsFilter: WebSocketMessageFilter;
+    if (onlyViewTodayActivity === false) {
+      wsFilter = {
+        key: '',
+        type: 'RANGE',
+        value: [from.toString(), to.toString()]
+      };
+    } else {
+      wsFilter = {
+        key: 'tradeDate',
+        type: 'GE',
+        value: [moment(new Date()).format('MM/DD/YYYY')]
+      };
+    }
 
-    return this.wsp
-      .get(getWebRequest)
-      .then((tradeRequests: TradeRequestFromApi[]) => {
-        return this.getTradeRequestSetterDependencies(
-          date,
-          requestFromServer
-        ).then(result => {
-          return tradeRequests.map(tradeRequest =>
-            this.formatTradeRequest(tradeRequest, result)
-          );
-        });
-      });
+    const [tradeRequests, dependencies] = await Promise.all([
+      this.wsp.getHttp<TradeRequestFromApi[]>({
+        endpoint: this._tradeRequestsEndpoint,
+        params: {
+          fields: this._tradeRequestsFields,
+          filters: [wsFilter],
+          orderBy: [
+            {
+              field: 'tradedate',
+              direction: 'DESC'
+            }
+          ]
+        }
+      }),
+      this.getTradeRequestSetterDependencies(date, requestFromServer)
+    ]);
+
+    return tradeRequests.map(tradeRequest =>
+      this.formatTradeRequest(tradeRequest, dependencies)
+    );
   }
 
-  public getTradeRequest(tradeId: number): Promise<TradeRequest> {
-    const getWebRequest: GetWebRequest = {
-      endPoint: 'trade_requests',
-      options: {
+  public async getTradeRequest(tradeId: number): Promise<TradeRequest> {
+    const tradeRequest = await this.wsp.getHttp<TradeRequestFromApi>({
+      endpoint: this._tradeRequestsEndpoint,
+      params: {
         id: tradeId.toString()
       }
-    };
+    });
 
-    return this.wsp
-      .get(getWebRequest)
-      .then((tradeRequest: TradeRequestFromApi) => {
-        const tradeDate = moment(
-          tradeRequest[0].tradedate,
-          'MM/DD/YYYY hh:mm:ss A'
-        ).toDate();
-        return this.getTradeRequestSetterDependencies(tradeDate, false).then(
-          result => {
-            return this.formatTradeRequest(tradeRequest[0], result);
-          }
-        );
-      });
+    const tradeDate = moment(
+      tradeRequest.tradedate,
+      'MM/DD/YYYY hh:mm:ss A'
+    ).toDate();
+
+    // Make sure security is not missing
+    await this.omsService.getSecuritiesIfMissing([
+      parseInt(tradeRequest.securityid)
+    ]);
+
+    // Set dependencies
+    const dependencies = await this.getTradeRequestSetterDependencies(
+      tradeDate,
+      false
+    );
+    return this.formatTradeRequest(tradeRequest, dependencies);
   }
 
   async tradesExistForSecurityMarketId(
     securityMarketIds: number[]
   ): Promise<number[]> {
-    const tradeRequests: any[] = await this.wsp.get({
-      endPoint: this.TRADE_REQUEST_API_URL,
-      options: {
+    const tradeRequests = await this.wsp.getHttp<any[]>({
+      endpoint: this._tradeRequestsEndpoint,
+      params: {
         fields: ['securityMarketId'],
         filters: [
           {
@@ -183,7 +186,9 @@ export class TradeService {
       .value();
   }
 
-  public getTradeRequestLogs(tradeId: number): Promise<TradeRequestLog[]> {
+  public async getTradeRequestLogs(
+    tradeId: number
+  ): Promise<TradeRequestLog[]> {
     if (tradeId) {
       const fields = [
         'Id',
@@ -193,7 +198,6 @@ export class TradeService {
         'tradeDate',
         'settleDate',
         'assetType',
-        'trsIndicator',
         'quantity',
         'price',
         'CurrencyId',
@@ -210,75 +214,62 @@ export class TradeService {
         'asof'
       ];
 
-      const getWebRequest: GetWebRequest = {
-        endPoint: this.TRADE_REQUEST_LOG_API_URL,
-        options: {
-          fields: fields,
+      const entities = await this.wsp.getHttp<any[]>({
+        endpoint: this._tradeRequestsLogEndpoint,
+        params: {
+          fields,
           filters: [{ key: 'tradeId', type: 'EQ', value: [tradeId.toString()] }]
         }
-      };
+      });
 
-      return this.wsp
-        .get(getWebRequest)
-        .then(result => result.map(x => this.formatTradeRequestLog(x)));
+      return entities.map(this.formatTradeRequestLog);
     }
+    return [];
   }
 
-  public saveTradeRequest(tradeReq: TradeRequest): Promise<any> {
-    const saveTradeRequestBody = this.getTradePostJSON(tradeReq);
-    const postWebRequest: PostWebRequest = {
-      endPoint: this.TRADE_REQUEST_API_URL,
-      payload: saveTradeRequestBody
-    };
-    return this.wsp.post(postWebRequest);
+  public async saveTradeRequest(tradeReq: TradeRequest): Promise<any> {
+    return this.wsp.postHttp({
+      endpoint: this._tradeRequestsEndpoint,
+      body: this.getTradePostJSON(tradeReq)
+    });
   }
 
-  public updateTradeRequest(
+  public async updateTradeRequest(
     oldTradeReq: TradeRequest,
     newTradeReq: TradeRequest,
     deleteChildAllocationsFlag: boolean
   ): Promise<any> {
     const updatedTradeJSON = this.getTradePutJSON(oldTradeReq, newTradeReq);
 
-    return this.handleChildAllocationDeletion(
+    await this.handleChildAllocationDeletion(
       updatedTradeJSON,
       deleteChildAllocationsFlag,
       newTradeReq.id
-    ).then(result => {
-      if (Object.keys(updatedTradeJSON).length > 1) {
-        const putWebRequest: PutWebRequest = {
-          endPoint: this.TRADE_REQUEST_API_URL,
-          payload: updatedTradeJSON
-        };
-        return this.wsp.put(putWebRequest);
-      } else {
-        if (
-          Object.keys(updatedTradeJSON).length === 0 ||
-          (Object.keys(updatedTradeJSON).length === 1 &&
-            Object.keys(updatedTradeJSON)[0].toLowerCase() === 'id')
-        ) {
-          return Promise.resolve(newTradeReq);
-        } else {
-          return Promise.reject('The JSON to update the trade is incorrect');
-        }
+    );
+
+    if (Object.keys(updatedTradeJSON).length > 1) {
+      return this.wsp.putHttp({
+        endpoint: this._tradeRequestsEndpoint,
+        body: updatedTradeJSON
+      });
+    } else {
+      if (
+        Object.keys(updatedTradeJSON).length === 0 ||
+        (Object.keys(updatedTradeJSON).length === 1 &&
+          Object.keys(updatedTradeJSON)[0].toLowerCase() === 'id')
+      ) {
+        return newTradeReq;
       }
+    }
+  }
+
+  public async deleteTradeRequest(tradeId: number): Promise<any> {
+    return this.wsp.deleteHttp({
+      endpoint: `${this._tradeRequestsEndpoint}/${tradeId}`
     });
   }
 
-  public deleteTradeRequest(tradeId: number): Promise<any> {
-    const deleteTradeJSON = {
-      id: tradeId
-    };
-
-    const deleteWebRequest: DeleteWebRequest = {
-      endPoint: this.TRADE_REQUEST_API_URL,
-      payload: deleteTradeJSON
-    };
-
-    return this.wsp.delete(deleteWebRequest);
-  }
-
-  public getTradeRequestSetterDependencies(
+  public async getTradeRequestSetterDependencies(
     date: Date,
     requestFromServer: boolean = false
   ): Promise<any> {
@@ -289,18 +280,17 @@ export class TradeService {
       this.omsService.getAssetTypes(),
       this.omsService.getSECFeeRates(),
       this.omsService.LoadFxRates(date),
-      this.omsService.getAllSecurities(requestFromServer),
+      this.omsService.getAllSecurities(false),
       this.omsService.getPBAccounts(),
       this.omsService.getHolidays()
     ]);
   }
 
-  public getTradeApprover(tReqId: number): Promise<any> {
-    const fields = ['id', 'traderequestid', 'userid', 'asOf'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.TRADE_AUTHORIZATIONS_API,
-      options: {
-        fields: fields,
+  public async getTradeApprover(tReqId: number): Promise<any> {
+    const entities = await this.wsp.getHttp<TradeAuthorizationFromAPI[]>({
+      endpoint: this._tradeAuthorizationsEndpoint,
+      params: {
+        fields: ['id', 'traderequestid', 'userid', 'asOf'],
         filters: [
           {
             key: 'traderequestid',
@@ -309,32 +299,18 @@ export class TradeService {
           }
         ]
       }
-    };
+    });
 
-    return this.wsp
-      .get(getWebRequest)
-      .then(result => result.map(x => this.formatTradeAuthorization(x)));
+    return entities.map(this.formatTradeAuthorization);
   }
 
-  public formatTradeAuthorization(
-    tradeAuth: TradeAuthorizationFromAPI
-  ): TradeAuthorization {
-    const id = +tradeAuth.id,
-      tradeRequestId = +tradeAuth.traderequestid,
-      userId = +tradeAuth.userid,
-      asOf = tradeAuth.asof;
-
-    return new TradeAuthorization(id, tradeRequestId, asOf, userId);
-  }
-
-  public getTradeRequestAllocations(
+  public async getTradeRequestAllocations(
     tReqId: number
-  ): Promise<TradeRequestAllocation> {
-    const fields = ['id', 'traderequestid', 'accountId', 'quantity'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.TRADE_REQUEST_ALLOCATION_API,
-      options: {
-        fields: fields,
+  ): Promise<TradeRequestAllocation[]> {
+    const entities = await this.wsp.getHttp<TradeRequestAllocationFromAPI[]>({
+      endpoint: this._tradeRequestAllocationsEndpoint,
+      params: {
+        fields: ['id', 'traderequestid', 'accountId', 'quantity'],
         filters: [
           {
             key: 'traderequestid',
@@ -343,11 +319,130 @@ export class TradeService {
           }
         ]
       }
-    };
+    });
 
-    return this.wsp
-      .get(getWebRequest)
-      .then(result => result.map(x => this.formatTradeRequestAllocations(x)));
+    return entities.map(this.formatTradeRequestAllocations);
+  }
+
+  public async getTradeExecutionReporting(
+    tradeRequestId: number
+  ): Promise<TradeExecutionReporting> {
+    const tradeExecutionReporting = await this.wsp.getHttp({
+      endpoint: this._tradeExecutionReportingEndpoint,
+      params: {
+        fields: ['Id', 'SendToBroker', 'SendToCustodian', 'SendToAdmin'],
+        filters: [
+          {
+            key: 'TradeId',
+            type: 'EQ',
+            value: [tradeRequestId.toString()]
+          }
+        ]
+      }
+    });
+
+    return {
+      id: +tradeExecutionReporting[0]['id'],
+      sendToAdmin: tradeExecutionReporting[0]['sendtoadmin'] === 'True',
+      sendToBroker: tradeExecutionReporting[0]['sendtobroker'] === 'True',
+      sendToCustodian: tradeExecutionReporting[0]['sendtocustodian'] === 'True'
+    };
+  }
+
+  public async putTradeExecutionReporting(
+    tradeExec: TradeExecutionReporting
+  ): Promise<any> {
+    return this.wsp.putHttp({
+      endpoint: this._tradeExecutionReportingEndpoint,
+      body: {
+        id: tradeExec.id.toString(),
+        sendToBroker: tradeExec.sendToBroker === true ? '1' : '0',
+        sendToAdmin: tradeExec.sendToAdmin === true ? '1' : '0',
+        sendToCustodian: tradeExec.sendToCustodian === true ? '1' : '0'
+      }
+    });
+  }
+
+  private async handleChildAllocationDeletion(
+    updatedTradeJSON: any,
+    tradeRequestAllocationsChanged: boolean,
+    tradeRequestId: number
+  ): Promise<any> {
+    if (
+      _.intersection(
+        this._allocationImpactingFields,
+        Object.keys(updatedTradeJSON)
+      ).length > 0 ||
+      tradeRequestAllocationsChanged
+    ) {
+      return this.tradeAllocationService.deleteAllocationsFromTradeRequestId(
+        tradeRequestId
+      );
+    } else {
+      return null;
+    }
+  }
+
+  async postTradesRequestAllocation(
+    tradesRequestAllocation: TradeRequestAllocation[]
+  ): Promise<any> {
+    return this.wsp.postHttp({
+      endpoint: this._tradeRequestAllocationsEndpoint,
+      body: [
+        ...tradesRequestAllocation.map(tra => ({
+          payload: {
+            TradeRequestId: tra.tradeRequestId.toString(),
+            AccountId: tra.accountId.toString(),
+            Quantity: tra.quantity.toString()
+          }
+        }))
+      ]
+    });
+  }
+
+  async saveTradeRequestAllocations(
+    saveAllocationsArray: TradeRequestAllocation[]
+  ): Promise<TradeRequestAllocation[]> {
+    let allocs = await this.postTradesRequestAllocation(saveAllocationsArray);
+    if (allocs) {
+      // If the response is single object
+      if (!Array.isArray(allocs)) {
+        if (allocs.fields) {
+          allocs = [allocs];
+        } else {
+          allocs = [{ fields: allocs }];
+        }
+      }
+      return allocs.map(
+        alloc =>
+          new TradeRequestAllocation(
+            parseFloat(alloc.fields.id),
+            parseFloat(alloc.fields.traderequestid),
+            parseFloat(alloc.fields.accountid),
+            parseFloat(alloc.fields.quantity)
+          )
+      );
+    }
+  }
+
+  async deleteTradeRequestAllocation(id: number): Promise<any> {
+    return this.wsp.deleteHttp({
+      endpoint: `${this._tradeRequestAllocationsEndpoint}/${id}`
+    });
+  }
+
+  async deleteTradeRequestAllocations(
+    deleteAllocationsArray: TradeRequestAllocation[]
+  ): Promise<TradeRequestAllocation[]> {
+    const deletedTradeAllocations: TradeRequestAllocation[] = [];
+
+    for await (const allocatedTrade of deleteAllocationsArray.map<Promise<any>>(
+      alloc => this.deleteTradeRequestAllocation(alloc.id)
+    )) {
+      deletedTradeAllocations.push(allocatedTrade);
+    }
+
+    return deletedTradeAllocations;
   }
 
   public formatTradeRequestAllocations(
@@ -429,10 +524,10 @@ export class TradeService {
     const id = +tradeReqFromApi.tradeid;
     const tranType = tradeReqFromApi.trantype.toLowerCase();
     const securityMarketId = +tradeReqFromApi.securitymarketid;
-    const trs = tradeReqFromApi.trsindicator === 'True' ? true : false;
     const comments = tradeReqFromApi.comments;
     const allocationsIndicator =
       tradeReqFromApi.allocationsindicator === 'True' ? true : false;
+      const allocationStatus = tradeReqFromApi.allocationstatus;
     const approverMessage = tradeReqFromApi.approvermessage;
     const customAttribId: number = +tradeReqFromApi.customattribid;
     let counterparty;
@@ -445,7 +540,6 @@ export class TradeService {
       const privateIndicator =
         tradeReqFromApi.privateindicator === 'True' ? true : false;
       const cpties = this.omsService.getCounterparties(
-        trs,
         tradeReqFromApi.assettype,
         privateIndicator
       );
@@ -466,7 +560,6 @@ export class TradeService {
       tranType,
       securityMarketId,
       security,
-      trs,
       quantity,
       price,
       secFee,
@@ -482,6 +575,7 @@ export class TradeService {
       pset,
       approverMessage,
       allocationsIndicator,
+      allocationStatus,
       comments,
       customAttribId,
       false
@@ -489,7 +583,7 @@ export class TradeService {
     return trade;
   }
 
-  private formatTradeRequestLog(x): TradeRequestLog {
+  private formatTradeRequestLog(x: any): TradeRequestLog {
     const id = +x.id,
       accruedInterest = parseFloat(x.accruedinterest),
       brokerId = +x.brokerid,
@@ -505,7 +599,7 @@ export class TradeService {
       securityId = +x.securityid,
       settleDate = moment(x.settledate, 'MM/DD/YYYY h:mm:ss A'),
       tradeDate = moment(x.tradedate, 'MM/DD/YYYY h:mm:ss A'),
-      asOfDate = moment(x.asof, 'MM/DD/YYYY h:mm:ss A'),
+      asOfDate = moment.utc(x.asof, 'MM/DD/YYYY h:mm:ss A'),
       userId = +x.userid;
 
     return new TradeRequestLog(
@@ -529,7 +623,6 @@ export class TradeService {
       settleDate.isValid() ? settleDate.toDate() : null,
       tradeDate.isValid() ? tradeDate.toDate() : null,
       x.trantype,
-      x.trsindicator === 'True' ? true : false,
       !isNaN(userId) ? userId : null
     );
   }
@@ -540,7 +633,7 @@ export class TradeService {
   ): any {
     const putJSON = {};
     if (newTradeReq.securityMarketId !== oldTradeReq.securityMarketId) {
-      putJSON['securitymarketid'] = newTradeReq.securityMarketId;
+      putJSON['securitymarketid'] = newTradeReq.securityMarketId.toString();
     }
     if (newTradeReq.tranType !== oldTradeReq.tranType) {
       putJSON['tranType'] = newTradeReq.tranType;
@@ -553,228 +646,103 @@ export class TradeService {
         'MM/DD/YYYY'
       );
     }
-    if (newTradeReq.trs !== oldTradeReq.trs) {
-      putJSON['trsindicator'] =
-        newTradeReq.trs && newTradeReq.trs === true ? 1 : 0;
-    }
     if (newTradeReq.quantity !== oldTradeReq.quantity) {
-      putJSON['quantity'] = newTradeReq.quantity;
+      putJSON['quantity'] = newTradeReq.quantity.toString();
     }
     if (newTradeReq.price !== oldTradeReq.price) {
-      putJSON['price'] = newTradeReq.price;
+      putJSON['price'] = newTradeReq.price.toString();
     }
     if (newTradeReq.currency.id !== oldTradeReq.currency.id) {
-      putJSON['currencyid'] = newTradeReq.currency.id;
+      putJSON['currencyid'] = newTradeReq.currency.id.toString();
     }
     if (newTradeReq.commissionPerShare !== oldTradeReq.commissionPerShare) {
-      putJSON['commission'] = newTradeReq.commissionPerShare;
+      putJSON['commission'] = newTradeReq.commissionPerShare.toString();
     }
     if (newTradeReq.secFee !== oldTradeReq.secFee) {
-      putJSON['secFee'] = newTradeReq.secFee;
+      putJSON['secFee'] = newTradeReq.secFee.toString();
     }
     if (newTradeReq.optionFee !== oldTradeReq.optionFee) {
-      putJSON['optionFee'] = newTradeReq.optionFee;
+      putJSON['optionFee'] = newTradeReq.optionFee.toString();
     }
     if (newTradeReq.accruedInterest !== oldTradeReq.accruedInterest) {
-      putJSON['accruedInterest'] = newTradeReq.accruedInterest;
+      putJSON['accruedInterest'] = newTradeReq.accruedInterest.toString();
     }
     if (newTradeReq.fxRate !== oldTradeReq.fxRate) {
-      putJSON['fxRate'] = newTradeReq.fxRate;
+      putJSON['fxRate'] = newTradeReq.fxRate.toString();
     }
     if (newTradeReq.netMoneyLocal !== oldTradeReq.netMoneyLocal) {
-      putJSON['netMoneyLocal'] = newTradeReq.netMoneyLocal;
+      putJSON['netMoneyLocal'] = newTradeReq.netMoneyLocal.toString();
     }
     if (newTradeReq.netMoneyBook !== oldTradeReq.netMoneyBook) {
-      putJSON['netMoneyBook'] = newTradeReq.netMoneyBook;
+      putJSON['netMoneyBook'] = newTradeReq.netMoneyBook.toString();
     }
     if (newTradeReq.broker.id !== oldTradeReq.broker.id) {
-      putJSON['brokerid'] = newTradeReq.broker.id;
+      putJSON['brokerid'] = newTradeReq.broker.id.toString();
     }
     if (newTradeReq.pset.id !== oldTradeReq.pset.id) {
-      putJSON['psetid'] = newTradeReq.pset.id;
+      putJSON['psetid'] = newTradeReq.pset.id.toString();
     }
     if (newTradeReq.counterparty !== oldTradeReq.counterparty) {
-      putJSON['counterpartyId'] = newTradeReq.counterparty.custodianId;
+      putJSON[
+        'counterpartyId'
+      ] = newTradeReq.counterparty.custodianId.toString();
     }
     if (newTradeReq.comments !== oldTradeReq.comments) {
       putJSON['comments'] = newTradeReq.comments;
     }
 
     if (Object.keys(putJSON).length >= 1) {
-      putJSON['id'] = newTradeReq.id;
+      putJSON['id'] = newTradeReq.id.toString();
     }
+
+    putJSON['createLog'] = '1';
     return putJSON;
   }
+
   private getTradePostJSON(tradeRequest: TradeRequest): any {
     const saveTradeRequestBody: any = {
-      securityMarketId: tradeRequest.securityMarketId,
+      securityMarketId: tradeRequest.securityMarketId.toString(),
       tranType: tradeRequest.tranType,
       tradeDate: moment(tradeRequest.tradeDate).format('MM/DD/YYYY'),
       settleDate: moment(tradeRequest.settleDate).format('MM/DD/YYYY'),
-      quantity: tradeRequest.quantity,
-      price: tradeRequest.price,
-      currencyId: tradeRequest.currency.id,
+      quantity: tradeRequest.quantity.toString(),
+      price: tradeRequest.price.toString(),
+      currencyId: tradeRequest.currency.id.toString(),
       commissionType: 'pershare',
       commission: tradeRequest.commissionPerShare
-        ? tradeRequest.commissionPerShare
-        : 0,
-      secFee: tradeRequest.secFee ? tradeRequest.secFee : 0,
-      optionFee: tradeRequest.optionFee ? tradeRequest.optionFee : 0,
+        ? tradeRequest.commissionPerShare.toString()
+        : '0',
+      secFee: tradeRequest.secFee ? tradeRequest.secFee.toString() : '0',
+      optionFee: tradeRequest.optionFee
+        ? tradeRequest.optionFee.toString()
+        : '0',
       accruedInterest: tradeRequest.accruedInterest
-        ? tradeRequest.accruedInterest
-        : 0,
-      fxRate: tradeRequest.fxRate,
-      netMoneyLocal: tradeRequest.netMoneyLocal,
-      netMoneyBook: tradeRequest.netMoneyBook ? tradeRequest.netMoneyBook : 0,
-      brokerId: tradeRequest.broker.id,
-      PSETId: tradeRequest.pset.id,
-      trsindicator: tradeRequest.trs && tradeRequest.trs === true ? 1 : 0,
+        ? tradeRequest.accruedInterest.toString()
+        : '0',
+      fxRate: tradeRequest.fxRate.toString(),
+      netMoneyLocal: tradeRequest.netMoneyLocal.toString(),
+      netMoneyBook: tradeRequest.netMoneyBook
+        ? tradeRequest.netMoneyBook.toString()
+        : '0',
+      brokerId: tradeRequest.broker.id.toString(),
+      PSETId: tradeRequest.pset.id.toString(),
       comments: tradeRequest.comments ? tradeRequest.comments : ''
     };
 
     if (tradeRequest.counterparty) {
-      saveTradeRequestBody.counterpartyId =
-        tradeRequest.counterparty.custodianId;
+      saveTradeRequestBody.counterpartyId = tradeRequest.counterparty.custodianId.toString();
     }
     return saveTradeRequestBody;
   }
 
-  public getTradeExecutionReporting(
-    tradeRequestId: number
-  ): Promise<TradeExecutionReporting> {
-    const fields = ['Id', 'SendToBroker', 'SendToCustodian', 'SendToAdmin'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.TRADE_EXECUTION_REPORTING_API_URL,
-      options: {
-        fields: fields,
-        filters: [
-          {
-            key: 'TradeId',
-            type: 'EQ',
-            value: [tradeRequestId.toString()]
-          }
-        ]
-      }
-    };
+  public formatTradeAuthorization(
+    tradeAuth: TradeAuthorizationFromAPI
+  ): TradeAuthorization {
+    const id = +tradeAuth.id,
+      tradeRequestId = +tradeAuth.traderequestid,
+      userId = +tradeAuth.userid,
+      asOf = tradeAuth.asof;
 
-    return this.wsp.get(getWebRequest).then(result => {
-      return {
-        id: +result[0]['id'],
-        sendToBroker: result[0]['sendtobroker'] === 'True' ? true : false,
-        sendToAdmin: result[0]['sendtoadmin'] === 'True' ? true : false,
-        sendToCustodian: result[0]['sendtocustodian'] === 'True' ? true : false
-      };
-    });
-  }
-
-  public putTradeExecutionReporting(
-    tradeExec: TradeExecutionReporting
-  ): Promise<any> {
-    const updatedTradeJSON = {
-      id: tradeExec.id,
-      sendToBroker: tradeExec.sendToBroker === true ? 1 : 0,
-      sendToAdmin: tradeExec.sendToAdmin === true ? 1 : 0,
-      sendToCustodian: tradeExec.sendToCustodian === true ? 1 : 0
-    };
-
-    const putWebRequest: PutWebRequest = {
-      endPoint: this.TRADE_EXECUTION_REPORTING_API_URL,
-      payload: updatedTradeJSON
-    };
-
-    return this.wsp.put(putWebRequest);
-  }
-
-  private handleChildAllocationDeletion(
-    updatedTradeJSON: any,
-    tradeRequestAllocationsChanged: boolean,
-    tradeRequestId: number
-  ): Promise<any> {
-    if (
-      _.intersection(
-        this.allocationImpactingFields,
-        Object.keys(updatedTradeJSON)
-      ).length > 0 ||
-      tradeRequestAllocationsChanged
-    ) {
-      return this.tradeAllocationService.deleteAllocationsFromTradeRequestId(
-        tradeRequestId
-      );
-    } else {
-      return Promise.resolve(null);
-    }
-  }
-
-  saveTradeRequestAllocation(
-    tradeRequestAllocation: TradeRequestAllocation
-  ): Promise<any> {
-    const postWebRequest: PostWebRequest = {
-      endPoint: this.TRADE_REQUEST_ALLOCATION_API,
-      payload: {
-        TradeRequestId: tradeRequestAllocation.tradeRequestId,
-        AccountId: tradeRequestAllocation.accountId,
-        Quantity: tradeRequestAllocation.quantity
-      }
-    };
-
-    return this.wsp.post(postWebRequest);
-  }
-
-  saveTradeRequestAllocations(
-    saveAllocationsArray: TradeRequestAllocation[]
-  ): Promise<TradeRequestAllocation[]> {
-    return new Promise((resolve, reject) => {
-      let insertCount = 0;
-      const newTradeAllocations: TradeRequestAllocation[] = [];
-      saveAllocationsArray.forEach(tradeAllocationToSave => {
-        this.saveTradeRequestAllocation(tradeAllocationToSave).then(result => {
-          insertCount += 1;
-          newTradeAllocations.push(
-            new TradeRequestAllocation(
-              parseFloat(result.id),
-              parseFloat(result.traderequestid),
-              parseFloat(result.accountid),
-              parseFloat(result.quantity)
-            )
-          );
-          if (saveAllocationsArray.length === insertCount) {
-            insertCount = 0;
-            resolve(newTradeAllocations);
-          }
-        });
-      });
-    });
-  }
-
-  deleteTradeRequestAllocation(
-    tradeRequestAllocation: TradeRequestAllocation
-  ): Promise<any> {
-    const deleteWebRequest: DeleteWebRequest = {
-      endPoint: this.TRADE_REQUEST_ALLOCATION_API,
-      payload: {
-        id: tradeRequestAllocation.id.toString()
-      }
-    };
-
-    return this.wsp.delete(deleteWebRequest);
-  }
-
-  deleteTradeRequestAllocations(
-    deleteAllocationsArray: TradeRequestAllocation[]
-  ): Promise<TradeRequestAllocation[]> {
-    return new Promise((resolve, reject) => {
-      let deleteCount = 0;
-      const deletedTradeAllocations: TradeRequestAllocation[] = [];
-      deleteAllocationsArray.forEach(allocatedTrade => {
-        this.deleteTradeRequestAllocation(allocatedTrade).then(result => {
-          deleteCount += 1;
-          deletedTradeAllocations.push(result);
-          if (deleteAllocationsArray.length === deleteCount) {
-            deleteCount = 0;
-            resolve(deletedTradeAllocations);
-          }
-        });
-      });
-    });
+    return new TradeAuthorization(id, tradeRequestId, asOf, userId);
   }
 }

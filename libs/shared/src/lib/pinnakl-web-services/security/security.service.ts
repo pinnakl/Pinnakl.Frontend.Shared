@@ -1,44 +1,48 @@
 import { Injectable } from '@angular/core';
 
+import { HttpClient } from '@angular/common/http';
 import {
-  GetWebRequest,
   WebServiceProvider,
-  WebSocketMessageFilter,
+  WebSocketMessageFilter
 } from '@pnkl-frontend/core';
-import {
-  SecurityMarketFlattened,
-  SecurityMarketFlattenedFromAPI,
-} from '../../models/security/security-market-flattened.model';
+import * as moment from 'moment';
+import { from, Observable } from 'rxjs';
 import { AssetType } from '../../models/security/asset-type.model';
 import { SecurityAttributeOptionFromApi } from '../../models/security/security-attribute-option-from-api.model';
 import { SecurityAttributeOption } from '../../models/security/security-attribute-option.model';
 import { SecurityFromApi } from '../../models/security/security-from-api.model';
+import {
+  SecurityMarketFlattened,
+  SecurityMarketFlattenedFromAPI
+} from '../../models/security/security-market-flattened.model';
 import { SecurityTypeFromApi } from '../../models/security/security-type-from-api.model';
 import { SecurityType } from '../../models/security/security-type.model';
 import { Security } from '../../models/security/security.model';
-import { HttpClient } from '@angular/common/http';
-import { initial } from 'lodash';
-import * as moment from 'moment';
 
 @Injectable()
 export class SecurityService {
-  private readonly RESOURCE_URL = 'securities';
-  private readonly ASSETTYPE_URL = 'asset_types';
-  private readonly SECURITYTYPE_URL = 'security_types';
-  private readonly SECURITY_IDENTIFIERS_FLATTENED_RESOURCE_URL =
-    'security_identifiers_flattened';
+  private readonly _securitiesEndpoint = 'entities/securities';
+  private readonly _securitiesSearchEndpoint = 'entities/security_search';
+  private readonly _assetTypesEndpoint = 'entities/asset_types';
+  private readonly _securityAttributesEndpoint = 'entities/security_attribute_options';
+  private readonly _securityTypesEndpoint = 'entities/security_types';
+  private readonly _securityIdentifiersFlattenedEndpoint = 'entities/security_identifiers_flattened';
+  private readonly _securityIdentifiersTickerSearchEndpoint = 'entities/idc_ticker_search';
 
   private _assetTypes: AssetType[];
   private _securities: Security[];
   private _securityTypes: SecurityType[];
 
-  constructor(private wsp: WebServiceProvider, private http: HttpClient) {}
+  constructor(private readonly wsp: WebServiceProvider, private readonly http: HttpClient) { }
+
+  getCusipsByTicker(identifier: string): Observable<any> {
+    return from(this.wsp.getHttp({
+      endpoint: this._securityIdentifiersTickerSearchEndpoint,
+      params: { filters: [{ key: 'ticker', type: 'EQ', value: [identifier] }] }
+    }));
+  }
 
   getAllSecurities(): Promise<Security[]> {
-    if (this._securities) {
-      return Promise.resolve(this._securities);
-    }
-
     const fields = [
       'Id',
       'AssetType',
@@ -61,20 +65,18 @@ export class SecurityService {
       'InitialMargin',
       'MaintenanceMargin',
       'Maturity',
+      'underlyingsecid'
     ];
 
-    const filters: WebSocketMessageFilter[] = [];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: {
-        fields: fields,
-      },
-    };
-
-    return this.wsp.get(getWebRequest).then((entities: SecurityFromApi[]) => {
-      this._securities = entities.map((entity) => this.formatSecurity(entity));
-      return this._securities;
-    });
+    return this.wsp
+      .getHttp<SecurityFromApi[]>({
+        endpoint: this._securitiesEndpoint,
+        params: { fields }
+      })
+      .then(entities => {
+        this._securities = entities.map(entity => this.formatSecurity(entity));
+        return this._securities;
+      });
   }
 
   getAllTradingSecurities(): Promise<Security[]> {
@@ -83,18 +85,8 @@ export class SecurityService {
       .get(SECURITIES_URL)
       .toPromise()
       .then((securitiesApiData: SecurityFromApi[]) => {
-        const securities = securitiesApiData.map((p) => this.formatSecurity(p));
+        const securities = securitiesApiData.map(p => this.formatSecurity(p));
         return securities;
-      });
-  }
-
-  getSecurityHTTP(id: number): Promise<Security> {
-    const SECURITIES_URL = `https://localhost:44323/api/securities/${id}`;
-    return this.http
-      .get(SECURITIES_URL)
-      .toPromise()
-      .then((securityApiData: SecurityFromApi) => {
-        return this.formatSecurity(securityApiData);
       });
   }
 
@@ -111,45 +103,80 @@ export class SecurityService {
       filters.push({
         key: 'active_trading_indicator',
         type: 'EQ',
-        value: ['1'],
+        value: ['1']
       });
     }
     if (securityMarketId) {
       filters.push({
         key: 'securityMarketId',
         type: 'EQ',
-        value: [securityMarketId.toString()],
+        value: [securityMarketId.toString()]
       });
     }
     const fields = [
-        'securityid',
-        'marketid',
-        'securitymarketid',
-        'assettype',
-        'assettypeid',
-        'sectypeid',
-        'sectype',
-        'ticker',
-        'cusip',
-        'isin',
-        'sedol',
-        'loanid',
-        'opracode',
-        'description',
-        'multiplier',
-        'currency',
-        'currencyid',
-        'privateIndicator',
-      ],
-      getWebRequest: GetWebRequest = {
-        endPoint: this.SECURITY_IDENTIFIERS_FLATTENED_RESOURCE_URL,
-        options: { fields, filters },
-      };
+      'securityid',
+      'marketid',
+      'securitymarketid',
+      'assettype',
+      'assettypeid',
+      'sectypeid',
+      'sectype',
+      'ticker',
+      'cusip',
+      'isin',
+      'sedol',
+      'loanid',
+      'opracode',
+      'description',
+      'multiplier',
+      'currency',
+      'currencyid',
+      'privateIndicator'
+    ];
+
     return this.wsp
-      .get(getWebRequest)
-      .then((securities: SecurityMarketFlattenedFromAPI[]) =>
-        securities.map((sec) => this.formatSecurityMarketFlattened(sec))
-      );
+      .getHttp<SecurityMarketFlattenedFromAPI[]>({
+        endpoint: this._securityIdentifiersFlattenedEndpoint,
+        params: {
+          fields,
+          filters
+        }
+      })
+      .then(securities => securities.map(this.formatSecurityMarketFlattened));
+  }
+
+  async getSecuritiesByText(
+    text: string,
+    assetType: string,
+    additionalFilters: {
+      key: string;
+      type: string;
+      value: string[];
+    }[] = [], includeCheckForExpiration = false): Promise<SecurityMarketFlattened[]> {
+    const filters = [
+      { 'key': 'searchstring', 'type': 'LIKE', 'value': [text] }
+    ].concat(additionalFilters);
+    if (assetType) {
+      filters.push({ 'key': 'assettype', 'type': 'EQ', 'value': [assetType] });
+      if (includeCheckForExpiration) {
+        filters.push({ 'key': 'checkforexpiration', 'type': 'EQ', 'value': [`${(assetType === 'option').toString()}`] },)
+      }
+    }
+    const securities = await this.wsp
+      .getHttp<SecurityMarketFlattenedFromAPI[]>({
+        endpoint: this._securitiesSearchEndpoint,
+        params: {
+          filters
+        }
+      });
+    return securities.map(this.formatSecurityMarketFlattened);
+  }
+
+  formatAndSetSecurities(securitiesFromApi: SecurityFromApi[]): Security[] {
+    this._securities = securitiesFromApi.map(entity =>
+      this.formatSecurity(entity)
+    );
+    return this._securities;
   }
 
   getAssetTypes(): Promise<AssetType[]> {
@@ -157,35 +184,45 @@ export class SecurityService {
       return Promise.resolve(this._assetTypes);
     }
 
-    const fields = ['id', 'assettype', 'daysforsettlement', 'multiplier'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.ASSETTYPE_URL,
-      options: {
-        fields: fields,
-      },
-    };
-
-    return this.wsp.get(getWebRequest).then((assetTypes) => {
-      this._assetTypes = assetTypes.map((x) => {
-        return new AssetType(
-          +x.id,
-          x.assettype,
-          +x.daysforsettlement,
-          x.multiplier
-        );
+    return this.wsp
+      .getHttp<any[]>({
+        endpoint: this._assetTypesEndpoint,
+        params: {
+          fields: ['id', 'assettype', 'daysforsettlement', 'multiplier']
+        }
+      })
+      .then(assetTypes => {
+        this._assetTypes = assetTypes.map(x => {
+          return this.formatAssetType(x);
+        });
+        return this._assetTypes;
       });
-      return this._assetTypes;
-    });
+  }
+
+  public formatAssetType(assetTypeFromApi: any): AssetType {
+    return new AssetType(
+      +assetTypeFromApi.id,
+      assetTypeFromApi.assettype,
+      +assetTypeFromApi.daysforsettlement,
+      assetTypeFromApi.multiplier
+    );
+  }
+
+  public formatAndSetAssetTypes(assetTypesFromApi: any[]): AssetType[] {
+    this._assetTypes = assetTypesFromApi.map(entity =>
+      this.formatAssetType(entity)
+    );
+
+    return this._assetTypes;
   }
 
   getSecurity(id: number): Promise<Security> {
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: { id: id.toString() },
-    };
     return this.wsp
-      .get(getWebRequest)
-      .then((entities: SecurityFromApi[]) => this.formatSecurity(entities[0]));
+      .getHttp<SecurityFromApi>({
+        endpoint: this._securitiesEndpoint,
+        params: { id: id.toString() }
+      })
+      .then(entities => this.formatSecurity(entities));
   }
 
   getSecurityAttributeOptions(
@@ -193,18 +230,16 @@ export class SecurityService {
     isNumeric?: boolean
   ): Promise<SecurityAttributeOption[]> {
     attribute = attribute.replace(/ /g, '%20');
-    const fields = ['optionvalue', 'optiondescription'],
-      getWebRequest: GetWebRequest = {
-        endPoint: 'security_attribute_options',
-        options: {
-          fields,
-          filters: [{ key: 'attribute', type: 'EQ', value: [attribute] }],
-        },
-      };
     return this.wsp
-      .get(getWebRequest)
-      .then((entities: SecurityAttributeOptionFromApi[]) => {
-        let securityAttributeOptions = entities.map((entity) =>
+      .getHttp<SecurityAttributeOptionFromApi[]>({
+        endpoint: this._securityAttributesEndpoint,
+        params: {
+          fields: ['optionvalue', 'optiondescription'],
+          filters: [{ key: 'attribute', type: 'EQ', value: [attribute] }]
+        }
+      })
+      .then(entities => {
+        let securityAttributeOptions = entities.map(entity =>
           this.formatSecurityAttributeOption(entity)
         );
         if (isNumeric) {
@@ -226,46 +261,43 @@ export class SecurityService {
       return Promise.resolve(this._securityTypes);
     }
 
-    const fields = ['id', 'AssetTypeId', 'SecType', 'SecTypeDescription'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.SECURITYTYPE_URL,
-      options: {
-        fields: fields,
-      },
-    };
-
-    return this.wsp.get(getWebRequest).then((entities) => {
-      this._securityTypes = entities.map((entity) =>
-        this.formatSecurityType(entity)
-      );
-      return this._securityTypes;
-    });
+    return this.wsp
+      .getHttp<SecurityTypeFromApi[]>({
+        endpoint: this._securityTypesEndpoint,
+        params: {
+          fields: ['id', 'AssetTypeId', 'SecType', 'SecTypeDescription']
+        }
+      })
+      .then(entities => {
+        this._securityTypes = entities.map(this.formatSecurityType);
+        return this._securityTypes;
+      });
   }
 
   getSecurityTypesForAssetType(assetTypeId: number): Promise<SecurityType[]> {
-    return this.getSecurityTypes().then((securityTypes) => {
+    return this.getSecurityTypes().then(securityTypes => {
       return securityTypes.filter(
-        (secType) => secType.assetTypeId === assetTypeId
+        secType => secType.assetTypeId === assetTypeId
       );
     });
   }
 
   postSecurity(entityToSave: Security): Promise<Security> {
-    let requestBody = this.getSecurityForServiceRequest(entityToSave);
+    const requestBody = this.getSecurityForServiceRequest(entityToSave);
     return this.wsp
-      .post({
-        endPoint: this.RESOURCE_URL,
-        payload: requestBody,
+      .postHttp<SecurityFromApi>({
+        endpoint: this._securitiesEndpoint,
+        body: requestBody
       })
       .then((entity: SecurityFromApi) => this.formatSecurity(entity));
   }
 
   putSecurity(entityToSave: Security): Promise<Security> {
-    let requestBody = this.getSecurityForServiceRequest(entityToSave);
+    const requestBody = this.getSecurityForServiceRequest(entityToSave);
     return this.wsp
-      .put({
-        endPoint: this.RESOURCE_URL,
-        payload: requestBody,
+      .putHttp<SecurityFromApi>({
+        endpoint: this._securitiesEndpoint,
+        body: requestBody
       })
       .then((entity: SecurityFromApi) => this.formatSecurity(entity));
   }
@@ -276,12 +308,15 @@ export class SecurityService {
     identifierValue: string
   ): Promise<Security> {
     try {
-      const securityFromApi: SecurityFromApi = await this.wsp.post({
-        endPoint: this.RESOURCE_URL,
-        payload: { autoAdd, identifierType, identifierValue },
+      const securityFromApi = await this.wsp.postHttp<SecurityFromApi>({
+        endpoint: this._securitiesEndpoint,
+        body: {
+          autoAdd: autoAdd === true ? 'true' : 'false',
+          identifierType: identifierType,
+          identifierValue: identifierValue
+        }
       });
-      const security = this.formatSecurity(securityFromApi);
-      return security;
+      return this.formatSecurity(securityFromApi);
     } catch (e) {
       if (e.message && e.message.toLowerCase().includes('mandatory fields')) {
         throw { clientMessage: e.message };
@@ -336,7 +371,8 @@ export class SecurityService {
       !isNaN(principalFactor) ? principalFactor : null,
       !isNaN(initialMargin) ? initialMargin : null,
       !isNaN(maintenanceMargin) ? maintenanceMargin : null,
-      maturityMoment.isValid() ? maturityMoment.toDate() : null
+      maturityMoment.isValid() ? maturityMoment.toDate() : null,
+      entity.underlyingsecid ? +entity.underlyingsecid : null
     );
   }
 
@@ -360,6 +396,8 @@ export class SecurityService {
       secTypeId: +sec.sectypeid,
       sedol: sec.sedol,
       ticker: sec.ticker,
+      position: sec.position,
+      id: +sec.securityid
     };
   }
 
@@ -375,8 +413,8 @@ export class SecurityService {
   }
 
   private formatSecurityType(entity: SecurityTypeFromApi): SecurityType {
-    let assetTypeId = parseInt(entity.assettypeid),
-      id = parseInt(entity.id);
+    const id = parseInt(entity.id, 10);
+    const assetTypeId = parseInt(entity.assettypeid, 10);
     return new SecurityType(
       !isNaN(assetTypeId) ? assetTypeId : null,
       !isNaN(id) ? id : null,
@@ -386,7 +424,7 @@ export class SecurityService {
   }
 
   private getSecurityForServiceRequest(entity: Security): SecurityFromApi {
-    let entityForApi = {} as SecurityFromApi,
+    const entityForApi = {} as SecurityFromApi,
       {
         currencyId,
         dataSourceId,
@@ -398,7 +436,7 @@ export class SecurityService {
         privateIndicator,
         sandpRating,
         sector,
-        securityTypeId,
+        securityTypeId
       } = entity;
 
     if (currencyId !== undefined) {

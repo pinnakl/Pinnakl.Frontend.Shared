@@ -2,6 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
+    "allowSyntheticDefaultImports": true,
     "types": [
       "googlemaps",
       "lodash",
@@ -20,6 +21,8 @@
     "**/*.test.ts",
     "**/*.spec.ts",
     "**/*.stub.ts",
-    "src/environments/environment.prod.ts"
+    "src/environments/environment.prod.ts",
+    "src/environments/environment.dev.ts",
+    "src/app/securities/securities-test-helper.ts"
   ]
 }

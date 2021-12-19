@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 
-import { GetWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
+import { WebServiceProvider } from '@pnkl-frontend/core';
+import { Preferred } from '../../models/security';
 import { PreferredFromApi } from '../../models/security/preferred-from-api.model';
-import { Preferred } from '../../models/security/preferred.model';
 
 @Injectable()
 export class PreferredService {
-  private readonly RESOURCE_URL = 'preferreds';
+  private readonly _preferredEndpoint = 'entities/preferreds';
 
-  constructor(private wsp: WebServiceProvider) {}
+  constructor(private readonly wsp: WebServiceProvider) { }
 
-  getPreferredFromSecurityId(securityId: number): Promise<Preferred> {
+  async getPreferredFromSecurityId(securityId: number): Promise<Preferred> {
     const fields = [
       'accruing_indicator',
       'convertible_indicator',
@@ -24,9 +24,9 @@ export class PreferredService {
       'SecurityId'
     ];
 
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: {
+    const preferreds = await this.wsp.getHttp<PreferredFromApi[]>({
+      endpoint: this._preferredEndpoint,
+      params: {
         fields: fields,
         filters: [
           {
@@ -36,43 +36,36 @@ export class PreferredService {
           }
         ]
       }
-    };
-
-    return this.wsp
-      .get(getWebRequest)
-      .then((entities: PreferredFromApi[]) =>
-        entities.length === 0 ? null : this.formatPreferred(entities[0])
-      );
+    });
+    return preferreds.length === 0 ? null : this.formatPreferred(preferreds[0]);
   }
 
-  postPreferred(entityToSave: Preferred): Promise<Preferred> {
-    const requestBody = this.getPreferredForServiceRequest(entityToSave);
-    return this.wsp
-      .post({
-        endPoint: this.RESOURCE_URL,
-        payload: requestBody
-      })
-      .then((entity: PreferredFromApi) => this.formatPreferred(entity));
+  async postPreferred(entityToSave: Preferred): Promise<Preferred> {
+    const entity = await this.wsp.postHttp<PreferredFromApi>({
+      endpoint: this._preferredEndpoint,
+      body: this.getPreferredForServiceRequest(entityToSave)
+    });
+
+    return this.formatPreferred(entity);
   }
 
-  putPreferred(entityToSave: Preferred): Promise<Preferred> {
-    const requestBody = this.getPreferredForServiceRequest(entityToSave);
-    return this.wsp
-      .put({
-        endPoint: this.RESOURCE_URL,
-        payload: requestBody
-      })
-      .then((entity: PreferredFromApi) => this.formatPreferred(entity));
+  async putPreferred(entityToSave: Preferred): Promise<Preferred> {
+    const entity = await this.wsp.putHttp<PreferredFromApi>({
+      endpoint: this._preferredEndpoint,
+      body: this.getPreferredForServiceRequest(entityToSave)
+    });
+
+    return this.formatPreferred(entity);
   }
 
   private formatPreferred(entity: PreferredFromApi): Preferred {
-    const dividendFrequencyId = parseInt(entity.dividend_frequency),
+    const dividendFrequencyId = parseInt(entity.dividend_frequency, 10),
       dividendRate = parseFloat(entity.dividend_rate),
-      id = parseInt(entity.id),
+      id = parseInt(entity.id, 10),
       minPiece = parseFloat(entity.min_piece),
       nominalValue = parseFloat(entity.nominal_value),
       outstandingAmount = parseFloat(entity.outstanding_amount),
-      securityId = parseInt(entity.securityid);
+      securityId = parseInt(entity.securityid, 10);
     return new Preferred(
       entity.accruing_indicator === 'True',
       entity.convertible_indicator === 'True',

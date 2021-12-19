@@ -1,0 +1,76 @@
+<div class="overlay" [ngClass]="{openned: openSearchResultsBlock}" (click)="openSearchResultsBlock = false"></div>
+<div class="universal-search">
+  <div class="input-container">
+    <i class="icon-pinnakl-search-security"></i>
+    <input
+    type="text"
+    #searchInput
+    (keyup)="searchOrganizations(searchInput.value)"
+    (click)="openSearchResultsBlock = true"
+    >
+  </div>
+  <div class="search-result" [ngClass]="{openned: openSearchResultsBlock && searchInput.value.length >= 3}">
+    <div class="list-menu-search">
+      <div class="item-menu-search" [ngClass]="{active: artifactType === ''}" (click)="changeArtifactType('')">
+        <i class="icon-pinnakl-all-icon"></i>
+        <span class="title">
+          All
+        </span>
+      </div>
+      <div class="item-menu-search" [ngClass]="{active: artifactType === 'contact'}" (click)="changeArtifactType('contact')">
+        <i class="icon-pinnakl-investor-count-icon"></i>
+        <span class="title">
+          Contacts
+        </span>
+      </div>
+      <div class="item-menu-search" [ngClass]="{active: artifactType === 'organization'}" (click)="changeArtifactType('organization')">
+        <i class="icon-pinnakl-organization-icon"></i>
+        <span class="title">
+          Organizations
+        </span>
+      </div>
+      <div class="item-menu-search" [ngClass]="{active: artifactType === 'deal'}" (click)="changeArtifactType('deal')">
+        <i class="icon-pinnakl-deal-icon"></i>
+        <span class="title">
+          Deals
+        </span>
+      </div>
+    </div>
+
+    <div class="list-result-search">
+      <div class="title-result">
+        <span>All search results</span>
+      </div>
+      <div class="result-items">
+        <div
+        class="result-item"
+        *ngFor="let el of searchResults">
+          <div class="icon-container" [ngStyle]="{background: addAlpha(el?.color)}">
+            <i class="{{getCurrentIconByType(el)}}" [ngStyle]="{color: el?.color}"></i>
+          </div>
+          <div class="info-container">
+            <div class="title">
+              <a
+              innerHTML="{{getTitle(el) | highlight : searchInput.value}}"
+              [routerUrlLink]="linkToEntity(el)"
+              (click)="openSearchResultsBlock = false"
+              >
+            </a>
+            </div>
+            <div class="sub-title" *ngIf="el.ArtifactType === 'Contact' || el.ArtifactType === 'Deal'">
+              <a
+              [routerUrlLink]="linkToEntity(el, 'Organization')"
+              (click)="openSearchResultsBlock = false"
+              > {{ el.Result['OrganizationName'] }} </a>
+            </div>
+            <div class="email" *ngIf="el.ArtifactType === 'Contact'">
+              <span>{{el.Result['Email']}}</span>
+            </div>
+            
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>

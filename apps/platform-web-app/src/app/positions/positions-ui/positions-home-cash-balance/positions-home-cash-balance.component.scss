@@ -1,0 +1,81 @@
+@import '../../../../../../../libs/shared/src/lib/styles/_components/colors';
+@import '../../../../../../../libs/shared/src/lib/styles/_components/mixins';
+
+:host {
+  display: block;
+  margin: 0 0 20px 30px;
+  color: $shark;
+
+  .wrapper {
+    width: 100%;
+    margin: 0;
+    padding: 25px 30px 40px 30px;
+    border-radius: 8px;
+
+    .title {
+      width: 100%;
+      font-size: 16px;
+      text-align: left;
+      font-weight: bold;
+    }
+
+    .table-wrapper {
+      width: 100%;
+
+      .table-responsive-container {
+        .items-table {
+          @include styled-table();
+          width: 100%;
+
+          .table {
+            width: 100%;
+            font-size: 14px;
+            table-layout: fixed;
+
+            .first-col {
+              width: 20px;
+            }
+
+            td {
+              width: 40%;
+
+              &:first-child {
+                width: 20%;
+              }
+            }
+
+            .row-title {
+              font-size: 14px;
+              font-weight: bold;
+            }
+            .row-convert {
+              font-weight: bold;
+            }
+            .summary-row {
+              border-top: 1px solid $ghost;
+
+              .row-convert {
+                width: 80%;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .clear {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+@media (max-width: 1800px) {
+  td {
+    width: 45%;
+
+    &:first-child {
+      width: 10%;
+    }
+  }
+}

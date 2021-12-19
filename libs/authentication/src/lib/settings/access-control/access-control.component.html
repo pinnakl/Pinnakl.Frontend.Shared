@@ -1,0 +1,145 @@
+<div class="access-control">
+  <div class="selected-users" *ngIf="selectedUsersCount">
+    <span class="selected-users-amount">
+      Edit login security for <strong>{{ selectedUsersCount }} users</strong>
+    </span>
+    <button class="selected-users-edit" (click)="onEditLoginSecurityForMultipleUsers()">Edit</button>
+  </div>
+  <div *ngIf="!isAdminRole && accessControlForm" class="access-message">
+    You do not have authorization to make changes to Access control.
+  </div>
+  <form *ngIf="users?.length && accessControlForm"
+        [formGroup]="accessControlForm"
+        [ngClass]="{
+          'container-with-message': !isAdminRole,
+          'h-100': isAdminRole
+        }">
+    <div class="form-controls-container">
+      <div class="access-control-option"
+           [formGroupName]="user.id.toString()"
+           *ngFor="let user of users; let i = index">
+           <div class="user-info-container">
+          <div class="select-user">
+            <span class="input-check">
+              <pinnakl-input
+                controlName="selected"
+                [form]="accessControlForm.controls[user.id.toString()]"
+                type="boolean"
+                checkBoxStyle="input-check"
+              >
+            </pinnakl-input>
+            </span>
+          </div>
+          <name-avatar [nameString]="user.fullName" [width]="'32px'" [height]="'32px'"></name-avatar>
+          <div class="user-name">
+            <div class="name">
+              <span>{{ user.fullName }}</span>
+            </div>
+            <div class="user-auth">
+              <span class="authtype">{{ getUserAuthTypeShort(user).label }}</span>
+              <span *ngIf="getUserAuthTypeShort(user).icon" class="icon {{getUserAuthTypeShort(user).icon}}"></span>
+            </div>
+
+          </div>
+        </div>
+        <div class="user-controls active-tooltip">
+          <button class="login-security" (click)="onEditSingleUserLoginSecurity($event, user)" *ngIf="user.clientAdmin" data-tooltip="ADMIN">
+            <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="user-lock" class="svg-inline--fa fa-user-lock fa-w-20" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path fill="currentColor" d="M224 256A128 128 0 1 0 96 128a128 128 0 0 0 128 128zm96 64a63.08 63.08 0 0 1 8.1-30.5c-4.8-.5-9.5-1.5-14.5-1.5h-16.7a174.08 174.08 0 0 1-145.8 0h-16.7A134.43 134.43 0 0 0 0 422.4V464a48 48 0 0 0 48 48h280.9a63.54 63.54 0 0 1-8.9-32zm288-32h-32v-80a80 80 0 0 0-160 0v80h-32a32 32 0 0 0-32 32v160a32 32 0 0 0 32 32h224a32 32 0 0 0 32-32V320a32 32 0 0 0-32-32zM496 432a32 32 0 1 1 32-32 32 32 0 0 1-32 32zm32-144h-64v-80a32 32 0 0 1 64 0z"></path></svg>
+          </button>
+          <div class="toggle-control" [ngClass]="{ 'disabled-toggle': !isAdminRole }">
+            <pinnakl-input
+              [form]="accessControlForm.controls[user.id.toString()]"
+              [controlName]="'tradingAccess'+user.id"
+              type="boolean"
+              checkBoxStyle="toggle"
+              label="Trading Access"
+              [disabled]="!isAdminRole"
+            >
+            </pinnakl-input>
+          </div>
+          <div class="radioGroup">
+            <span class="toggle-radio-btn">
+              <input
+                [id]="'fullAccessLevel'+i"
+                formControlName="applicationAccessLevel"
+                type="radio"
+                [value]="applicationAccessLevel.FULL_ACCESS"
+                [attr.disabled]="!isAdminRole ? '' : undefined"
+              />
+              <label [for]="'fullAccessLevel'+i">Full access</label>
+            </span>
+            <span class="toggle-radio-btn">
+              <input
+                [id]="'viewOnlyLevel'+i"
+                formControlName="applicationAccessLevel"
+                type="radio"
+                [value]="applicationAccessLevel.VIEW_ONLY"
+                [attr.disabled]="!isAdminRole ? '' : undefined"
+              />
+              <label [for]="'viewOnlyLevel'+i">View Only</label>
+                </span>
+            <span class="toggle-radio-btn">
+              <input
+                [id]="'inactiveLevel'+i"
+                formControlName="applicationAccessLevel"
+                type="radio"
+                [value]="applicationAccessLevel.INACTIVE"
+                [attr.disabled]="!isAdminRole ? '' : undefined"
+              />
+              <label [for]="'inactiveLevel'+i">Inactive</label>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="access-form-actions">
+      <div>
+        <button
+          #anchor
+          class="btn btn-security btn-cancel"
+          [disabled]="!accessControlForm.dirty"
+          (click)="showFormCancelConfirmation()"
+          type="button"
+        >
+          CANCEL
+        </button>
+        <confirm-action
+          [anchor]="anchor"
+          confirmationMessage="Are you sure you want to reset the form?"
+          (onCancelled)="cancelReset()"
+          (onConfirmed)="resetForm()"
+          [showConfirmation]="cancelConfirmationVisible"
+        >
+        </confirm-action>
+      </div>
+      <div>
+        <button
+          [disabled]="!accessControlForm.dirty"
+          (click)="onSubmit()"
+          class="btn btn-security btn-save"
+          type="submit">
+          SAVE
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+
+  <pinnakl-modal
+    [hideDialog]="hideLoginSecurityModal"
+    (closeModal)="toggleLoginSecurityModal()"
+    [width]="632"
+  >
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <login-security 
+            [users]="selectedUsers"
+            (cancelModal)="toggleLoginSecurityModal()"
+            (updateUsers)="updateUsersLoginSecurity($event)"
+          ></login-security>
+        </div>
+      </div>
+    </div>
+  </pinnakl-modal>

@@ -1,0 +1,145 @@
+<form [formGroup]="form" (ngSubmit)="saveInformation()" class="row">
+  <div class="col-md-12">
+    <div class="row my-3" formGroupName="security">
+      <div class="col-md-2 col-md-1_1">
+            <span class="input-check">
+              <label>TRS TYPE <span class="color-red pl-0-25">*</span> </label>
+            </span>
+      </div>
+      <div *ngFor="let securityType of securityTypes" class="col-md-1">
+            <span class="input-check">
+              <input
+                [required]="true"
+                formControlName="securityTypeId"
+                type="radio"
+                id="secType-{{securityType.id}}}"
+                [value]="securityType.id"
+              />
+              <label class="text-uppercase" for="secType-{{securityType.id}}}">
+                {{ securityType.secTypeDescription.split(' ')[0] }}
+              </label>
+            </span>
+      </div>
+      <div class="col-md-1 mt-4">
+        <pnkl-validation
+          controlName="securityTypeId"
+          [form]="form.controls['security']"
+        >
+        </pnkl-validation>
+      </div>
+    </div>
+    <div class="row my-3">
+      <div class="col-md-2" formGroupName="security">
+        <pinnakl-input
+          controlName="description"
+          [form]="form.controls['security']"
+          label="DESCRIPTION"
+          [required]="true"
+          type="text"
+        >
+        </pinnakl-input>
+      </div>
+      <div class="col-md-2 col-md-1_6" formGroupName="security">
+        <pinnakl-input
+          controlName="sector"
+          [dropdownSource]="sectorOptions"
+          [dropdownOptions]="{
+                    modelProperty: 'optionDescription',
+                    viewProperty: 'optionDescription'
+                  }"
+          [form]="form.controls['security']"
+          label="SECTOR"
+          [required]="true"
+          type="dropdown"
+        >
+        </pinnakl-input>
+      </div>
+      <div class="col-md-1" formGroupName="security">
+        <pinnakl-input
+          controlName="multiplier"
+          [form]="form.controls['security']"
+          label="MULTIPLIER"
+          [required]="true"
+          type="numeric"
+        >
+        </pinnakl-input>
+      </div>
+      <div class="col-md-1" formGroupName="security">
+        <pinnakl-input
+          controlName="currencyId"
+          [dropdownSource]="currencies"
+          [dropdownOptions]="{
+            modelProperty: 'id',
+            viewProperty: 'currency'
+          }"
+          [form]="form.controls['security']"
+          label="CURRENCY"
+          [required]="true"
+          type="dropdown"
+        >
+        </pinnakl-input>
+      </div>
+      <div class="col-md-1" formGroupName="security">
+        <span class="input-check">
+          <input type="checkbox" formControlName="privateIndicator" />
+          <label>PRIVATE</label>
+        </span>
+      </div>
+      <div class="col-md-2 col-md-1_3" formGroupName="security">
+        <span class="input-check">
+          <input type="checkbox" formControlName="manualPricingIndicator" />
+          <label>MANUAL PRICING</label>
+        </span>
+      </div>
+      <div class="col-md-2" formGroupName="asset">
+        <security-selector
+          formControlName="underlyingSecurity"
+          [objectModel]="true"
+          [required]="true"
+          [securities]="filteredSecuritiesList"
+        >
+        </security-selector>
+      </div>
+    </div>
+    <div class="row section-border"></div>
+  </div>
+  <div class="col-md-12">
+    <organization-selector
+      [form]="form.controls['security']"
+      [organizations]="organizations"
+    >
+    </organization-selector>
+  </div>
+  <div class="col-md-12">
+    <div class="row mt-4">
+      <div class="col-md-2">
+        <pinnakl-input controlName="startDate" [form]="form.controls['asset']" label="Start Date" [required]="true" type="date"></pinnakl-input>
+      </div>
+      <div class="col-md-2">
+        <pinnakl-input controlName="effectiveDate" [form]="form.controls['asset']" label="Effective Date" [required]="true" type="date"></pinnakl-input>
+      </div>
+      <div class="col-md-2">
+        <pinnakl-input controlName="terminationDate" [form]="form.controls['asset']" label="Termination Date" [required]="true" type="date"></pinnakl-input>
+      </div>
+      <div class="col-md-2">
+        <pinnakl-input controlName="baseRate" [form]="form.controls['asset']" label="Base Rate" [required]="true" type="numeric"></pinnakl-input>
+      </div>
+      <div class="col-md-2">
+        <pinnakl-input controlName="spread" [form]="form.controls['asset']" label="Spread" [required]="true" type="numeric"></pinnakl-input>
+      </div>
+      <div class="col-md-2">
+        <pinnakl-input controlName="dayCount" [form]="form.controls['asset']" label="Day Count" [required]="true" type="text"></pinnakl-input>
+      </div>
+      <div class="col-md-2">
+        <pinnakl-input controlName="swapRefNo" [form]="form.controls['asset']" label="Swap Ref No" [required]="true" type="text"></pinnakl-input>
+      </div>
+      <div class="col-md-2">
+        <pinnakl-input controlName="resetIndicator" [form]="form.controls['asset']" label="Reset Indicator" [required]="true" type="text"></pinnakl-input>
+      </div>
+
+      <div class="col-md-3">
+        <button class="btn btn-security ml-2 btn-success" [disabled]="!form.dirty" type="submit">SAVE</button>
+      </div>
+    </div>
+  </div>
+</form>

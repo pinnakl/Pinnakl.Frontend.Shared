@@ -13,13 +13,15 @@ import {
 export class GridActionButtonComponent implements ICellRendererAngularComp {
   params: ICellRendererParams;
   showOptions = false;
-  refresh(params: ICellRendererParams): boolean {
+  showConfirmDialog = false;
+
+  refresh(): boolean {
     return false;
   }
   agInit(params: ICellRendererParams): void {
     this.params = params;
   }
-  afterGuiAttached?(params: IAfterGuiAttachedParams): void {}
+  afterGuiAttached?(params: IAfterGuiAttachedParams): void { }
 
   cloneClicked(): void {
     this.params.context.clone(this.params.data);
@@ -27,12 +29,16 @@ export class GridActionButtonComponent implements ICellRendererAngularComp {
   }
 
   deleteClicked(): void {
-    this.params.context.delete(this.params.data);
-    this.showOptions = false;
+    this.showConfirmDialog = !this.showConfirmDialog;
   }
 
   editClicked(): void {
     this.params.context.edit(this.params.data);
+    this.showOptions = false;
+  }
+
+  allocateClicked(): void {
+    this.params.context.allocate(this.params.data);
     this.showOptions = false;
   }
 
@@ -44,4 +50,15 @@ export class GridActionButtonComponent implements ICellRendererAngularComp {
   toggleOptions(): void {
     this.showOptions = !this.showOptions;
   }
+
+  //#region confirm handle
+  onDeleteCancelledClicked() {
+    this.showConfirmDialog = !this.showConfirmDialog;
+  }
+
+  onDeleteConfirmedClicked() {
+    this.params.context.delete(this.params.data);
+    this.showOptions = false;
+  }
+  //#endregion
 }

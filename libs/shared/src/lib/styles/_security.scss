@@ -89,6 +89,10 @@
 
 .edit-security-modal-content {
   padding: 1.5rem !important;
+  padding-top: 0 !important;
+  .modal-body {
+    padding-top: 0;
+  }
 }
 
 .search-security {

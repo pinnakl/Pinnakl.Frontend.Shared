@@ -1,69 +1,92 @@
 import { Injectable } from '@angular/core';
 
-import { WebServiceProvider, WebServiceUtility } from '@pnkl-frontend/core';
+import {
+  ServerSentEventsStreamService,
+  WebServiceProvider
+} from '@pnkl-frontend/core';
+import {
+  filter,
+  find,
+  groupBy,
+  isEmpty,
+  map as lodashMap,
+  reduce,
+  uniq
+} from 'lodash';
 
-// Third party libs
-import * as _ from 'lodash';
 import * as moment from 'moment';
 
-import { Broker } from '@pnkl-frontend/shared';
 import {
+  Broker,
+  CurrencyForOMS,
+  ExecutionReport,
+  ExecutionReportFromApi,
   InternalOrdStatus,
+  Order,
   OrderAction,
   OrderDispatch,
+  OrderFromAPI,
   OrderTIF,
   OrderType,
   Placement,
-  PlacementFromApi
-} from '@pnkl-frontend/shared';
-import { Order, OrderFromAPI } from '@pnkl-frontend/shared';
-import { TradingCurrency } from '../models/oms/trading-currency.model';
-import { Security } from '../models/security/security.model';
-import { CurrencyForOMS } from './../models/oms/currency.model';
-import {
-  ExecutionReport,
-  ExecutionReportFromApi
-} from './../models/oms/trade-fills.model';
+  PlacementFromApi,
+  QuoteRequest,
+  Security,
+  StrategyParams,
+  TradingCurrency
+} from '../models';
 
 // Services
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { EventSourceService, UserService } from '@pnkl-frontend/core';
-import { BrokerService, SecurityService } from '@pnkl-frontend/shared';
-import { Observable, timer } from 'rxjs';
+import { BehaviorSubject, from, Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { environment } from '../../../../../apps/platform-web-app/src/environments';
+import { BrokerService } from './broker.service';
+import { SecurityService } from './security';
+import {
+  EMSBIData,
+  EMSBIDataFromApi,
+  EMSBusinessIntelligenceFilter
+} from '../models/ems';
 
 @Injectable()
 export class EMSTradeService {
-  private readonly RESOURCE_URL = `${environment.sseAppUrl}Placement/Subscribe`;
-  private readonly EVENT_TYPE = 'message';
   private readonly ORDERS_URL = 'orders';
   private readonly SEARCH_ORDERS_URL = 'searchorders';
   private readonly PLACEMENTS_URL = 'placements';
   private readonly ER_URL = 'executionreport';
+  private readonly _quotesRequestEndpoint = 'entities/quotes_request';
+  private readonly _orderAllocationsEndpoint = 'entities/order_allocations';
 
   HTTP_REQUEST_HEADERS = new HttpHeaders().set(
     'Content-Type',
     'application/json; charset=utf-8'
   );
 
-  constructor(
-    private brokerService: BrokerService,
-    private securityService: SecurityService,
-    private http: HttpClient,
-    private _userService: UserService,
-    private _eventSourceService: EventSourceService
-  ) {}
+  selectedTradeRows$ = new BehaviorSubject<Order[]>(null);
+  placeSelectedStagedOrders$ = new BehaviorSubject<boolean>(false);
 
-  public subscribeToPlacements(): Observable<any[]> {
-    return this._eventSourceService
-      .create<any[]>({
-        eventType: this.EVENT_TYPE,
-        url: `${this.RESOURCE_URL}?usertoken=${
-          this._userService.getUser().token
-        }`
-      })
+  constructor(
+    private readonly brokerService: BrokerService,
+    private readonly securityService: SecurityService,
+    private readonly http: HttpClient,
+    private readonly _sse: ServerSentEventsStreamService,
+    private readonly wsp: WebServiceProvider
+  ) { }
+
+  public subscribeToPlacements(url: string): Observable<any[]> {
+    return this._sse
+      .subscribeToServerSentEvents(url, [], 'Placement')
       .pipe(map(this.formatPlacementMsg));
+
+    // TODO: left as it is not clear how it was working
+    // return this._eventSourceService
+    //   .create<any[]>({
+    //     eventType: this.EVENT_TYPE,
+    //     url: `${this.RESOURCE_URL}?usertoken=${
+    //       this._userService.getUser().token
+    //     }`
+    //   })
+    //   .pipe(map(this.formatPlacementMsg));
   }
 
   public formatPlacementMsg(data: any): any {
@@ -71,6 +94,7 @@ export class EMSTradeService {
     console.log(data);
     return data;
   }
+
   public OrdersStream(
     currencies: CurrencyForOMS[],
     brokers: Broker[],
@@ -92,6 +116,7 @@ export class EMSTradeService {
           new Date(),
           'B',
           securities[secId],
+          null,
           quantity,
           'LMT',
           'DAY',
@@ -114,17 +139,18 @@ export class EMSTradeService {
         const id = Math.floor(Math.random() * Math.floor(100));
 
         // Find unfilled Trades Ids
-        const unfilledTradeIds = _.filter(trades, function (
-          trade: Order
-        ): boolean {
-          return trade.quantity - trade.filledQty() > 0;
-        }).map((trade: Order) => trade.id);
+        const unfilledTradeIds = filter(
+          trades,
+          function (trade: Order): boolean {
+            return trade.quantity - trade.filledQty() > 0;
+          }
+        ).map((trade: Order) => trade.id);
 
         // Pick one
         const unfilledTradeIndex = Math.floor(
           Math.random() * Math.floor(unfilledTradeIds.length)
         );
-        const refTrade: Order = _.find(trades, {
+        const refTrade: Order = find(trades, {
           id: unfilledTradeIds[unfilledTradeIndex]
         });
 
@@ -141,6 +167,8 @@ export class EMSTradeService {
           id, // Id
           refTrade.id, // OrderId
           null, // Order Status
+          null,
+          null,
           null, // Order Qty
           null, // Order Prc
           new Date(), // As Of
@@ -195,7 +223,7 @@ export class EMSTradeService {
       executionReports = placementFromApi.ers.map(p => this.formatER(p));
     }
 
-    return new Placement(
+    const placement = new Placement(
       +placementFromApi.Id,
       +placementFromApi.ParentOrderId,
       placementFromApi.Action,
@@ -207,26 +235,54 @@ export class EMSTradeService {
       +placementFromApi.StopPrice,
       executionReports
     );
+
+    placement.strategyParams = this.formatStrategyParams(
+      placementFromApi.StrategyParams
+    );
+    return placement;
+  }
+
+  private formatStrategyParams(strategiesFromApi: any): StrategyParams {
+    const strategyParams = { ...strategiesFromApi } as StrategyParams;
+
+    // strategyParams.startDate = moment.utc(strategiesFromApi.startDate, 'MM/DD/YYYY hh:mm:ss A').toDate();
+    // strategyParams.endDate = moment.utc(strategiesFromApi.endDate, 'MM/DD/YYYY hh:mm:ss A').toDate();
+    // if (strategiesFromApi.displayQty) {
+    //   strategyParams.displayQty = +strategiesFromApi.displayQty;
+    // }
+    //
+    // if (strategiesFromApi.maxVolume) {
+    //   strategyParams.maxVolume = +strategiesFromApi.maxVolume;
+    // }
+    //
+    // if (strategiesFromApi.minQty) {
+    //   strategyParams.minQty = +strategiesFromApi.minQty;
+    // }
+
+    return strategyParams;
   }
 
   public formatER(erFromApi: ExecutionReportFromApi): ExecutionReport {
     const id = +erFromApi.Id;
     const refOrderId = +erFromApi.PnklPlacementId;
     const status = erFromApi.Status;
+    const execType = erFromApi.ExecType;
     const orderQty = +erFromApi.OrderQty;
     const lastQty = +erFromApi.LastQty;
     const cumQty = +erFromApi.CumQty;
     const leftQty = +erFromApi.LeftQty;
     const avgPrc = +erFromApi.AvgPrc;
-    const fillPrc = +erFromApi.FillPrc;
+    const lastPrc = +erFromApi.LastPrc;
     const time = moment
-      .utc(new Date(Date.parse(erFromApi.Timestamp + 'Z')))
+      .utc(new Date(Date.parse(`${erFromApi.Timestamp}Z`)))
       .toDate();
 
     const er = new ExecutionReport(
       id,
       refOrderId,
       status,
+      execType,
+      erFromApi.MsgType,
       orderQty,
       null,
       time,
@@ -234,7 +290,7 @@ export class EMSTradeService {
       cumQty,
       leftQty,
       avgPrc,
-      fillPrc
+      lastPrc
     );
 
     return er;
@@ -245,8 +301,6 @@ export class EMSTradeService {
     brokers: Broker[],
     securities: Security[]
   ): Promise<Order[]> {
-    let orders: Order[];
-
     return this.http
       .get(this.ORDERS_URL)
       .toPromise()
@@ -287,27 +341,32 @@ export class EMSTradeService {
     securities: Security[],
     emsTradeFromAPI: OrderFromAPI
   ): Order {
-    const currency = _.filter(tradingCurrencies, {
+    const currency = filter(tradingCurrencies, {
       currency: emsTradeFromAPI.currency
     })[0];
 
-    const broker = _.filter(brokers, {
+    const broker = filter(brokers, {
       id: +emsTradeFromAPI.brokerid
     })[0];
 
-    const security = _.filter(securities, {
+    const security = filter(securities, {
       id: +emsTradeFromAPI.securityid
+    })[0];
+
+    const securitysecondary = filter(securities, {
+      id: +emsTradeFromAPI.securityidsecondary
     })[0];
 
     let placements = [];
     placements = emsTradeFromAPI.placements.map(q => this.formatPlacement(q));
 
-    return new Order(
+    const order = new Order(
       +emsTradeFromAPI.id,
       moment.utc(emsTradeFromAPI.tradedate, 'MM/DD/YYYY hh:mm:ss A').toDate(),
       // new Date(Date.parse(emsTradeFromAPI.tradedate)),
       emsTradeFromAPI.trtype.toLowerCase(),
       security,
+      securitysecondary,
       +emsTradeFromAPI.quantity,
       <OrderType>emsTradeFromAPI.type.toLowerCase(),
       <OrderTIF>emsTradeFromAPI.tif.toLowerCase(),
@@ -320,6 +379,9 @@ export class EMSTradeService {
       <InternalOrdStatus>emsTradeFromAPI.orderstatus,
       emsTradeFromAPI.name
     );
+
+    order.traderText = emsTradeFromAPI.tradertext;
+    return order;
   }
 
   public getTradingCurrencies(): Promise<CurrencyForOMS[]> {
@@ -395,8 +457,11 @@ export class EMSTradeService {
       action: action.toUpperCase(),
       order: {
         id: order.id,
-        tradeDate: moment.utc(order.tradeDate),
+        tradeDate: moment.utc(order._tradeDate),
         securityId: order.security.id,
+        securityIdSecondary: order.securitySecondary
+          ? order.securitySecondary.id
+          : null,
         trType: order.tranType,
         quantity: order.quantity,
         type: order.type,
@@ -404,7 +469,9 @@ export class EMSTradeService {
         stopPrice: order.stopPrice,
         limitPrice: order.limitPrice,
         brokerId: order.broker.id,
-        orderStatus: order.internalStatus
+        orderStatus: order.internalStatus,
+        traderText: order.traderText,
+        strategyParams: order?.strategyParams
       }
     };
   }
@@ -421,5 +488,229 @@ export class EMSTradeService {
       .then((newOrderID: number) => {
         return newOrderID;
       });
+  }
+
+  public postQuoteRequest(req: any): Promise<QuoteRequest> {
+    return this.wsp.postHttp({
+      endpoint: this._quotesRequestEndpoint,
+      body: req
+    });
+  }
+
+  async postOrderAllocations(
+    orderId: number,
+    allocations: { accountId: number; quantity: number }[]
+  ): Promise<any> {
+    const orderAllocReqData = {
+      parentOrderId: orderId.toString(),
+      allocations: JSON.stringify(allocations)
+    };
+
+    return this.wsp.postHttp({
+      endpoint: this._orderAllocationsEndpoint,
+      body: orderAllocReqData
+    });
+  }
+
+  putOrderAllocation(allocation: {
+    id: number;
+    parentOrderId: number;
+    accountId: number;
+    quantity: number;
+  }): Observable<any> {
+    const orderAllocReqData = {
+      id: allocation.id.toString(),
+      parentorderid: allocation.parentOrderId.toString(),
+      accountid: allocation.accountId.toString(),
+      quantity: allocation.quantity.toString()
+    };
+
+    return from(
+      this.wsp.putHttp({
+        endpoint: this._orderAllocationsEndpoint,
+        body: orderAllocReqData
+      })
+    );
+  }
+
+  getOrderAllocations(orderId: number): Observable<any> {
+    return from(
+      this.wsp.getHttp({
+        endpoint: this._orderAllocationsEndpoint,
+        params: {
+          filters: [
+            {
+              key: 'parentorderid',
+              type: 'EQ',
+              value: [orderId.toString()]
+            }
+          ]
+        }
+      })
+    ).pipe(
+      map(allocations =>
+        !isEmpty(allocations) ? this.mapAllocationsFromApi(allocations) : null
+      )
+    );
+  }
+
+  formatMany(
+    entities: EMSBIDataFromApi[],
+    groupingKey: string,
+    startDate: any,
+    endDate: any
+  ): EMSBIData[] {
+    const sectorName = groupingKey.toLowerCase();
+    const filteredEntities = entities.filter(
+      el => el[sectorName] || el[sectorName] === ''
+    );
+    const sectors = uniq(filteredEntities.map(el => el[sectorName])).reduce(
+      (obj, key) => ({ ...obj, [key === '' ? 'BLANK' : key.toUpperCase()]: 0 }),
+      {}
+    );
+
+    const mappedEntities = lodashMap(
+      filteredEntities,
+      e =>
+        ({
+          date: moment(e.tradedate, 'MM/DD/YYYY').toDate(),
+          [e[sectorName.toLowerCase()] === ''
+            ? 'BLANK'
+            : e[sectorName.toLowerCase()].toUpperCase()]: +e.value
+        } as EMSBIData)
+    );
+    const groupedByDate = groupBy(mappedEntities, e => e.date);
+    const mappedToGroupedByDateDefault = lodashMap(groupedByDate, e => {
+      const propsPerDay = reduce(
+        e,
+        (general, current) => ({ ...general, ...current }),
+        {}
+      );
+      return propsPerDay;
+    }).map(x => ({ ...sectors, ...x })) as EMSBIData[];
+
+    const zeroPropNames = [] as string[];
+    Object.keys(sectors).forEach(s => {
+      const eachZero = mappedToGroupedByDateDefault.every(x => !x[s]);
+      if (eachZero) {
+        zeroPropNames.push(s);
+      }
+    });
+    mappedToGroupedByDateDefault.forEach(entity => {
+      zeroPropNames.forEach(prop => delete entity[prop]);
+    });
+
+    const result = [];
+    result.push({
+      date: moment(startDate, 'MM/DD/YYYY').toDate(),
+      ...(mappedToGroupedByDateDefault.find(el =>
+        moment(startDate, 'MM/DD/YYYY').isSame(
+          moment(el.date, 'MM/DD/YYYY'),
+          'day'
+        )
+      ) || sectors)
+    } as EMSBIData);
+
+    while (startDate.add(1, 'days').diff(endDate) < 0) {
+      result.push({
+        date: moment(startDate, 'MM/DD/YYYY').toDate(),
+        ...(mappedToGroupedByDateDefault.find(el =>
+          moment(startDate, 'MM/DD/YYYY').isSame(
+            moment(el.date, 'MM/DD/YYYY'),
+            'day'
+          )
+        ) || sectors)
+      } as EMSBIData);
+    }
+
+    result.push({
+      date: moment(endDate, 'MM/DD/YYYY').toDate(),
+      ...(mappedToGroupedByDateDefault.find(el =>
+        moment(endDate, 'MM/DD/YYYY').isSame(
+          moment(el.date, 'MM/DD/YYYY'),
+          'day'
+        )
+      ) || sectors)
+    } as EMSBIData);
+
+    return result;
+  }
+
+  getTradingVolumeChartData({
+    startDate,
+    endDate,
+    dataType,
+    groupingField,
+    ...otherTradingDataFilters
+  }: EMSBusinessIntelligenceFilter): Observable<EMSBIData[]> {
+    const startdate = moment(startDate, 'MM/DD/YYYY');
+    const enddate = moment(endDate, 'MM/DD/YYYY');
+    let filters = [
+      { key: 'startdate', type: 'EQ', value: [startdate] },
+      { key: 'enddate', type: 'EQ', value: [enddate] },
+      { key: 'groupingkey', type: 'EQ', value: [groupingField] },
+      { key: 'value', type: 'EQ', value: [dataType?.toLowerCase()] }
+    ];
+    filters = filters.concat(
+      lodashMap(otherTradingDataFilters, (value, key) => ({
+        key: key.split(' ').join(''),
+        type: 'EQ',
+        value: [value?.toString() || null]
+      }))
+    );
+    return from(
+      this.wsp.getHttp<any[]>({
+        endpoint: 'entities/ems_bi',
+        params: {
+          filters
+        }
+      })
+    ).pipe(
+      map((entities: EMSBIDataFromApi[]) =>
+        this.formatMany(entities, groupingField, startdate, enddate)
+      )
+    );
+  }
+
+  getAdditionalFiltersValues(
+    startDate: any,
+    endDate: any,
+    filterName: string
+  ): Promise<any> {
+    return this.wsp.getHttp({
+      endpoint: 'entities/ems_bi_filter_values',
+      params: {
+        filters: [
+          {
+            key: 'startdate',
+            type: 'EQ',
+            value: [moment(startDate, 'MM/DD/YYYY')]
+          },
+          {
+            key: 'enddate',
+            type: 'EQ',
+            value: [moment(endDate, 'MM/DD/YYYY')]
+          },
+          {
+            key: 'filterfield',
+            type: 'EQ',
+            value: [filterName?.split(' ').join('')]
+          }
+        ]
+      }
+    });
+  }
+
+  private mapAllocationsFromApi(
+    allocationsFromApi: any
+  ): { accountId: number; quantity: number }[] {
+    return allocationsFromApi.map(allocation => {
+      return {
+        id: +allocation?.id,
+        parentOrderId: +allocation?.parentorderid,
+        accountId: +allocation?.accountid,
+        quantity: +allocation?.quantity
+      };
+    });
   }
 }

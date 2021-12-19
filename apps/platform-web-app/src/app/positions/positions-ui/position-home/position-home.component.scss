@@ -1,0 +1,191 @@
+@import '../../../../../../../libs/shared/src/lib/styles/_components/colors';
+@import '../../../../../../../libs/shared/src/lib/styles/_components/variables';
+@import '../../../../../../../libs/shared/src/lib/styles/_components/mixins';
+
+.scrollable-section {
+  padding-top: 5px;
+  @include scrollable-section();
+
+  .drag-container {
+    gap: 30px;
+    display: flex;
+    flex-direction: column;
+
+    &>div:last-child {
+      padding-bottom: 20px;
+    }
+
+    &>div:first-child {
+      padding-top: 20px;
+    }
+  }
+
+  .p-grid-container {
+    padding: 0 15px 0 23px;
+    width: 100%;
+
+    .grid-handle-button {
+      width: fit-content;
+      padding: 2px 5px;
+      background-color: #f6f6f6;
+      border: 1px solid darkgrey;
+      border-bottom: none;
+      position: relative;
+      top: 1px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      gap: 5px;
+      cursor: move;
+    }
+  }
+
+  .p-summary-container {
+    position: relative;
+    padding-right: 0;
+    .grid-handle-button {
+      user-select: none;
+      width: fit-content;
+      padding: 2px 5px 10px 5px;
+      background-color: white;
+      border-radius: 8px;
+      position: absolute;
+      top: -18px;
+      left: 27px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      gap: 5px;
+      cursor: move;
+    }
+  }
+
+  .p-statistic-container {
+    position: relative;
+    margin-left: 12px;
+    padding-right: 0;
+
+    .statistics-blocks {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      gap: 20px;
+      padding: 0 0 0 30px;
+
+      .left-section, .right-section {
+        display: flex;
+        flex: 1 1 50%;
+      }
+
+      .col-6 {
+        margin: 0;
+        padding: 0;
+      }
+    }
+
+    .grid-handle-button {
+      user-select: none;
+      width: fit-content;
+      padding: 2px 5px 10px 5px;
+      background-color: white;
+      border-radius: 8px;
+      position: absolute;
+      top: -17px;
+      left: 15px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      gap: 5px;
+      cursor: move;
+    }
+
+    positions-home-market-value-summary, positions-home-cash-balance {
+      margin: 0;
+    }
+
+    positions-home-market-value-summary {
+      width: 100%;
+      padding-right: 3px;
+    }
+  }
+
+  positions-home-summary {
+    margin: 0;
+    padding-right: 18px;
+    padding-left: 12px;
+  }
+}
+
+
+.pms-head-line {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+
+  .actions-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .text-secondary {
+    margin-bottom: 0;
+  }
+
+  .open-close-action {
+    background: #2e3d4d;
+    border-radius: 2px;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    i {
+      font-size: 20px;
+      color: #8da2be;
+
+      &:before {
+        margin: 0;
+        width: 15px;
+        vertical-align: baseline;
+      }
+    }
+  }
+
+  .rebalance-actions {
+    transition: all 0.5s linear;
+    position: relative;
+    left: 0;
+
+    .filter-list [data-tooltip]:hover:before {
+      position: fixed;
+    }
+  }
+
+  .hidden {
+    left: 185px;
+  }
+
+}
+
+.position-home {
+  .filter-holder {
+    .preset-with-filters {
+      display: flex;
+      .filter-list-item:not(:first-child) {
+        height: fit-content;
+        border-left: 1px solid #c8d0de;
+        padding-left: 19px;
+        margin-left: 19px;
+      }
+    }
+  }
+  
+}

@@ -6,7 +6,7 @@ export class PBAccount {
   custodianName: string;
   custodianId: number;
   custodianCode: string;
-  custodianAccountNumber: number;
+  custodianAccountNumber: string;
 }
 export class PBSubAccount {
   constructor(

@@ -5,18 +5,18 @@ import * as moment from 'moment';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { RecommendedAction } from '../dashboard-backend';
-import { selectAllRecommendedActions } from '../dashboard-backend-state';
+import { selectAllRecommendedActions } from '../dashboard-backend-state/store';
 import {
   AttemptUpdateRecommendedAction,
   SubscribeToDashboardRecommendedActions,
   UnSubscribeToDashboardRecommendedActions
 } from '../dashboard-backend-state/store/recommended-actions';
+import { RecommendedAction } from '../dashboard-backend/recommended-actions/recommended-action.model';
 import { ProcessRecommendedAction } from './recommended-actions-processing';
 
 @Injectable()
 export class DashboardStateFacadeService {
-  constructor(private _store: Store<any>) {}
+  constructor(private readonly _store: Store<any>) {}
 
   selectRecommendedActions$: Observable<
     RecommendedAction[]
@@ -37,26 +37,26 @@ export class DashboardStateFacadeService {
 
   supressAction(action: RecommendedAction): void {
     this._store.dispatch(
-      new AttemptUpdateRecommendedAction({
+      AttemptUpdateRecommendedAction({
         recommendedAction: { id: action.id, actionSupressedAt: new Date() }
       })
     );
   }
 
   subscribeToRecommendedActions(): void {
-    this._store.dispatch(new SubscribeToDashboardRecommendedActions());
+    this._store.dispatch(SubscribeToDashboardRecommendedActions());
   }
 
   unSubscribeToRecommendedActions(): void {
-    this._store.dispatch(new UnSubscribeToDashboardRecommendedActions());
+    this._store.dispatch(UnSubscribeToDashboardRecommendedActions());
   }
 
   processRecommendedAction(action: RecommendedAction): void {
-    this._store.dispatch(new ProcessRecommendedAction(action));
+    this._store.dispatch(ProcessRecommendedAction({ payload: action }));
   }
 
   private _selectFromStore<T>(
-    selector: MemoizedSelector<object, T>
+    selector: MemoizedSelector<any, T>
   ): Observable<T> {
     return this._store.pipe(select(selector));
   }

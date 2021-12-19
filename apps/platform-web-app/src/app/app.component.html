@@ -1,4 +1,4 @@
-<nav class="navbar navbar-fixed-top">
+<nav class="navbar navbar-fixed-top" *ngIf="showMenu">
   <div class="navbar-inner-holder">
     <a class="navbar-brand">
       <img src="assets/images/elements/site-logo.svg" alt="" />
@@ -7,6 +7,13 @@
 
   <div id="main-nav">
     <nav class="nav pnkl-navbar-nav navbar-right">
+      <li class="dropdown">
+        <a class="pointer" (click)="searchModalOpen()">
+          <div>
+            <i class="icon-pinnakl-search navbar-icon"></i>
+          </div>
+        </a>
+      </li>
       <li class="dropdown">
         <a routerLink="/help">
           <div class="navbar-notification-holder">
@@ -18,17 +25,14 @@
         <a (click)="toggleNotifications()">
           <div class="navbar-notification-holder">
             <i class="icon-pinnakl-bell-alt navbar-icon"></i>
-            <span
-              class="navbar-notification navbar-notification-success"
-            ></span>
           </div>
         </a>
         <ul
           *ngIf="showNotifications"
           class="notification-dropdown-align dropdown-menu dropdown-notification"
         >
-          <li class="dropdown-header">
-            Notifications <span class="badge badge-succes">2</span>
+          <li class="dropdown-header font-size-12px">
+            You don't have any notifications.
           </li>
           <!-- <li><b>Kurt</b> entered a Buy of 1000 shares of IBM.</li>
           <li><b>Kurt</b> deleted the IBM trade.</li>
@@ -37,29 +41,14 @@
         </ul>
       </li>
       <li class="dropdown">
-        <a (click)="togglePasswordChangeDropdown()">
+        <a class="pointer" (click)="navigateToSettings()">
           <div class="navbar-notification-holder">
             <i class="icon-pinnakl-cog navbar-icon"></i>
           </div>
         </a>
-        <ul
-          *ngIf="showPasswordChangeDropdown"
-          class="password-change-dropdown-align dropdown-menu dropdown-notification"
-        >
-          <li class="dropdown-header">Settings</li>
-          <li>
-            <a routerLink="/change-password"> <b>Change Password</b> </a>
-          </li>
-          <li>
-            <a routerLink="/push-notification"> <b>Push Notifications</b> </a>
-          </li>
-          <li class="version-label">
-            <div>Version No: {{ version }}</div>
-          </li>
-        </ul>
       </li>
-      <li class="navbar-profile cursor-pointer">
-        <a (click)="showUserActionsDropdown = !showUserActionsDropdown">
+      <li class="navbar-profile">
+        <a class="cursor-pointer" (click)="showUserActionsDropdown = !showUserActionsDropdown">
           {{ userService.getUser()?.fullName }}
           <img
             src="assets/images/elements/user-profile.png"
@@ -69,11 +58,14 @@
         </a>
         <ul
           *ngIf="showUserActionsDropdown"
-          class="password-change-dropdown-align dropdown-menu dropdown-notification"
-          (click)="showUserActionsDropdown = false; logout()"
+          class="acc-dropdown password-change-dropdown-align dropdown-menu dropdown-notification"
         >
+          <li class="logout-btn cursor-pointer" (click)="showUserActionsDropdown = false; logout()">
+            <b >Logout</b>
+            <hr>
+          </li>
           <li>
-            <b class="cursor-pointer">Logout</b>
+            <div class="versionNo">Version No: {{ version }}</div>
           </li>
         </ul>
       </li>
@@ -81,6 +73,7 @@
   </div>
 </nav>
 <aside
+  *ngIf="showMenu"
   [ngClass]="{ 'aside-opened': menuOpen }"
   class="aside-menu-holder"
   id="main-aside"
@@ -163,12 +156,20 @@
       </a>
     </li>
 
-    <li routerLinkActive="active">
+    <!-- <li routerLinkActive="active">
       <a routerLink="/rebalancing/rebalancing-home" class="tooltip" title="">
         <i title="Rebalancing" class="icon-pinnakl-rebalance"></i>
         <span>Rebalancing</span>
       </a>
+    </li> -->
+
+    <li routerLinkActive="active">
+      <a routerLink="/modeling" class="tooltip" title="">
+        <i title="Modeling" class="icon-pinnakl-rebalance"></i>
+        <span>Rebalancing</span>
+      </a>
     </li>
+
 
     <li routerLinkActive="active">
       <a routerLink="/cash-flow" class="tooltip" title="">
@@ -212,7 +213,7 @@
 <main class="main-holder" [ngClass]="{ 'aside-opened': menuOpen }">
   <pnkl-spinner></pnkl-spinner>
   <reconnect-window></reconnect-window>
-  <confirm-action></confirm-action>
+  <default-confirm-action></default-confirm-action>
 
   <div class="riskSubCategories">
     <div class="riskSubCategoriesRow">
@@ -259,7 +260,7 @@
           <div>Yearly P&L</div>
         </a>
         <a
-          routerLink="/pnl/pnl-calculated"
+          routerLink="/pnl/pnl-table"
           routerLinkActive="active"
           class="pnlSubCategoriesOptions pnlSubCategoriesOptionsLeft"
         >
@@ -275,3 +276,15 @@
   <router-outlet></router-outlet>
   <!-- <div *ngIf="enableBot"><pnkl-bot></pnkl-bot></div> -->
 </main>
+
+
+<pinnakl-modal [hideDialog]="hideChangePasswordModal"
+               [width]="900"
+               [height]="360"
+               [maxHeight]="'80vh'"
+               [showCloseButton]="true"
+               (closeModal)="hideChangePasswordModal = true">
+  <change-password class="change-password-modal"
+                   (isResetPasswordDone)="hideChangePasswordModal = true"
+                   [isResetPassword]="true"></change-password>
+</pinnakl-modal>

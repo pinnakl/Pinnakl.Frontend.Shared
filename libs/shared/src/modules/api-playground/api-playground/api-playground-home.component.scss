@@ -1,0 +1,6 @@
+.wrapper {
+  height: calc(100vh - 58px);
+  overflow: auto;
+  display: flex;
+  flex-flow: column nowrap;
+}

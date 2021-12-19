@@ -6,31 +6,33 @@ import { UserPushNotificationTopic } from './user-push-notification-topic.model'
 
 @Injectable()
 export class UserPushNotificationTopicsService {
-  private readonly RESOURCE_URL = 'user_push_notification_topics';
-  constructor(private wsp: WebServiceProvider) {}
+  private readonly userPushNotificationTopicsEndpoint = 'entities/user_push_notification_topics';
 
-  get(): Promise<UserPushNotificationTopic[]> {
-    return this.wsp
-      .get({ endPoint: this.RESOURCE_URL })
-      .then(results => results.map(this.formatUserPushNotificationTopic));
+  constructor(private readonly wsp: WebServiceProvider) {}
+
+  async get(): Promise<UserPushNotificationTopic[]> {
+    const result = await this.wsp.getHttp<UserNotificationTopicFromApi[]>({
+      endpoint: this.userPushNotificationTopicsEndpoint
+    });
+
+    return result.map(this.formatUserPushNotificationTopic);
   }
 
-  delete(id: number): Promise<void> {
-    return this.wsp.delete({ endPoint: this.RESOURCE_URL, payload: { id } });
+  async delete(id: number): Promise<void> {
+    return this.wsp.deleteHttp({
+      endpoint: `${this.userPushNotificationTopicsEndpoint}/${id}`
+    });
   }
 
-  post(
+  async post(
     entityToSave: UserPushNotificationTopic
   ): Promise<UserPushNotificationTopic> {
-    return this.wsp
-      .post({
-        endPoint: this.RESOURCE_URL,
-        payload: { pushnotificationtopicid: entityToSave.id.toString() }
-      })
-      .then(result => {
-        entityToSave.userPushNotificationId = parseInt(result.id);
-        return entityToSave;
-      });
+    const result = await this.wsp.postHttp<any>({
+      endpoint: this.userPushNotificationTopicsEndpoint,
+      body: { pushnotificationtopicid: entityToSave.id.toString() }
+    });
+
+    return { ...result, userPushNotificationId: +result.id };
   }
 
   saveMany(x: {
@@ -40,7 +42,7 @@ export class UserPushNotificationTopicsService {
     add: UserPushNotificationTopic[];
     delete: number[];
   }> {
-    let deletePromises = x.delete.map(this.delete.bind(this));
+    const deletePromises = x.delete.map(this.delete.bind(this));
     return Promise.all(deletePromises)
       .then(() => {
         return Promise.all(x.add.map(entity => this.post(entity)));
@@ -61,7 +63,8 @@ export class UserPushNotificationTopicsService {
         parseInt(entityFromApi.userpushnotificationid)
       )
         ? parseInt(entityFromApi.userpushnotificationid)
-        : null
+        : null,
+      checked: !!entityFromApi.userpushnotificationid,
     };
   }
 }

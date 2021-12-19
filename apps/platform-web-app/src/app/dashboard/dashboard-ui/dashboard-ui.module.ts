@@ -2,14 +2,12 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import {
-  DashboardService,
-  TaskHistoryService
-} from '../dashboard-backend/dashboard';
 import { PinnaklGridModule } from '@pnkl-frontend/shared';
 import { SharedModule } from '@pnkl-frontend/shared';
 import { DashboardBackendStateModule } from '../dashboard-backend-state/dashboard-backend-state.module';
-import { DashboardUiStateModule } from '../dashboard-ui-state/dashboard-ui-state.module';
+import { DashboardService } from '../dashboard-backend/dashboard/dashboard.service';
+import { TaskHistoryService } from '../dashboard-backend/dashboard/task-history.service';
+import { DashboardUiStateModule } from '../dashboard-ui-state';
 import {
   DashboardMarketMacroStatsByTypeComponent,
   DashboardMarketMacroStatsComponent,
@@ -35,7 +33,6 @@ import { TaskHistoryComponent } from './containers/task-history/task-history.com
 import { TaskManagerComponent } from './containers/task-manager/task-manager.component';
 import { TaskRunnerComponent } from './containers/task-runner/task-runner.component';
 import { DashboardUiRoutingModule } from './dashboard-ui-routing.module';
-import { environment } from '../../../environments';
 
 @NgModule({
   imports: [
@@ -45,8 +42,7 @@ import { environment } from '../../../environments';
     DashboardBackendStateModule,
     ReactiveFormsModule,
     SharedModule,
-    PinnaklGridModule,
-    SharedModule.register({ fileServiceUrl: environment.fileServiceUrl })
+    PinnaklGridModule
   ],
   declarations: [
     ActivitySummaryComponent,
@@ -72,6 +68,9 @@ import { environment } from '../../../environments';
     TaskRunnerComponent,
     RecommendedActionComponent
   ],
-  providers: [DashboardService, TaskHistoryService]
+  providers: [
+    DashboardService,
+    TaskHistoryService
+  ]
 })
 export class DashboardUiModule {}

@@ -12,8 +12,8 @@ import { PushNotificationHomeComponent } from './push-notification-home/push-not
 export class PushNotificationHomeResolve
   implements Resolve<UserPushNotificationTopic[]> {
   constructor(
-    private userPushNotificatioTopicService: UserPushNotificationTopicsService
-  ) {}
+    private readonly userPushNotificatioTopicService: UserPushNotificationTopicsService
+  ) { }
   resolve(): Promise<UserPushNotificationTopic[]> {
     return this.userPushNotificatioTopicService.get();
   }

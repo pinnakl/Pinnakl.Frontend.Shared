@@ -9,7 +9,7 @@ import {
 
 @Injectable()
 export class PositionsPnlDataFieldsBackendStateFacade {
-  constructor(private store: Store<any>) {}
+  constructor(private readonly store: Store<any>) {}
 
   positionsPnlDataFields$ = this.store.pipe(
     select(selectPositionsPnlDataFields)

@@ -1,0 +1,67 @@
+<div class="container-fluid">
+  <div class="row flex-no-wrap">
+    <div class="col-md-12 ">
+      <div class="row my-4">
+        <profit-loss-header class="col-md-6"></profit-loss-header>
+        <pnl-top-mover class="col-md-3">
+          <i class="icon-pinnakl-arrow-up positive-arrow"></i>
+        </pnl-top-mover>
+        <pnl-top-mover class="col-md-3" [inverse]="true">
+          <i class="icon-pinnakl-arrow-down negative-arrow"></i>
+        </pnl-top-mover>
+      </div>
+      <div class="row my-4">
+        <div
+          class="col-md-2 mt-3"
+          *ngFor="let pnlWidget of pnlDashboardWidgets$ | async"
+        >
+          <pnl-widget
+            [pnlWidgetInfo]="pnlWidget"
+            (onClose)="closeWidget(pnlWidget.fieldId)"
+          >
+          </pnl-widget>
+        </div>
+        <div class="col-md-2 mt-3">
+          <pnl-add-widget
+            [pnlFields]="pnlFields$ | async"
+            [selectedPnlFieldIds]="selectedPnlFields$ | async"
+            (AddPnlFields)="onPnlFieldAdd($event)"
+            (saveWidgets)="saveWidgets()"
+          ></pnl-add-widget>
+        </div>
+      </div>
+      <div class="row my-4">
+        <div class="col-md-12">
+          <div class="calculated-timeseries bg-white rounded">
+            <pnl-calculated-timeseries
+              [accounts]="accounts$ | async"
+              [pnlCalculatedTimeSeries]="
+                _pnlUiStateFacade.pnlCalculatedTimeSeries$ | async
+              "
+              [pnlCalculatedTimeseriesFilter]="
+                _pnlUiStateFacade.pnlCalculatedTimeSeriesFilter$ | async
+              "
+              [pnlFields]="pnlFields$ | async"
+              (onFilterChanged)="
+                _pnlUiStateFacade.setPnlCalculatedTimeseriesFilter($event)
+              "
+            ></pnl-calculated-timeseries>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="pnlFilterValue$ | async as pnlFilterValue" class="col-md-3">
+      <pnl-filter
+        [accounts]="accounts$ | async"
+        [filterVisible]="filterVisible$ | async"
+        [pnlStartDate]="pnlFilterValue.startDate"
+        [pnlEndDate]="pnlFilterValue.endDate"
+        [isStartDateVisible]="true"
+        [selectedAccount]="pnlFilterValue.account"
+        (onApply)="applyFilter($event)"
+        (onClose)="hideFilter()"
+      >
+      </pnl-filter>
+    </div>
+  </div>
+</div>

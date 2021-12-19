@@ -1,0 +1,114 @@
+<div
+  [@filterVisibleChanged]="filterVisible"
+  class="background-black p-4 pnl-filter-wrap"
+>
+  <form
+    class="full-height"
+    [formGroup]="form"
+    (ngSubmit)="onFilter()"
+    [class.ng-submitted]="submitted"
+  >
+    <h3 class="filter-sidebar-title">
+      Filters
+      <a
+        (click)="onClose.emit()"
+        class="btn-close-icon icon-pinnakl-cancel text-danger cursor-pointer"
+      ></a>
+    </h3>
+    <ul class="filter-input-list">
+      <li>
+        <div
+          class="form-group reconciliation-filter-form-group"
+          *ngIf="isStartDateVisible"
+        >
+          <pinnakl-input
+            controlName="pnlStartDate"
+            [disabled]="disableDates"
+            [form]="form"
+            label="START DATE"
+            [inputClass]="'datepicker-dark'"
+            [required]="true"
+            type="date"
+          >
+          </pinnakl-input>
+        </div>
+        <div class="form-group reconciliation-filter-form-group">
+          <pinnakl-input
+            controlName="pnlEndDate"
+            [disabled]="disableDates"
+            [form]="form"
+            label="{{ isStartDateVisible ? 'END DATE' : 'DATE' }}"
+            [inputClass]="'datepicker-dark'"
+            [required]="true"
+            type="date"
+          >
+          </pinnakl-input>
+        </div>
+      </li>
+      <li>
+        <div class="form-group reconciliation-filter-form-group">
+          <pnkl-select
+            class="pnkl-select-dark"
+            [required]="true"
+            [label]="'Account'"
+            [options]="accounts"
+            [modelProperty]="'id'"
+            [viewProperty]="'accountCode'"
+            formControlName="accountId"
+          ></pnkl-select>
+        </div>
+      </li>
+      <li>
+        <div
+          class="form-group reconciliation-filter-form-group"
+          *ngIf="assetTypes"
+        >
+          <pnkl-select
+            class="pnkl-select-dark"
+            [required]="false"
+            [label]="'Asset Type'"
+            [options]="assetTypes"
+            [modelProperty]="'assetType'"
+            [viewProperty]="'assetType'"
+            formControlName="selectedAssetType"
+          ></pnkl-select>
+        </div>
+      </li>
+      <li>
+        <div class="row" *ngIf="isDiscardedSecuritesVisible">
+          <div class="col-md-12">
+            <span class="input-check input-check-switch indeterminate-input">
+              <span class="switch-label">View Discarded Securities</span>
+              <label class="switch">
+                <input type="checkbox" formControlName="viewDiscarded" />
+                <div class="slider round"></div>
+              </label>
+            </span>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <div class="projected-content">
+      <ng-content></ng-content>
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-default-width">
+        <button
+          class="btn reset-background waves-effect text-uppercase"
+          type="button"
+          (click)="onReset()"
+        >
+          Reset
+        </button>
+      </div>
+      <div class="col-md-default-width flex-pull-right">
+        <button
+          type="submit"
+          class="btn btn-success waves-effect text-uppercase"
+        >
+          Apply
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

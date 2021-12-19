@@ -1,0 +1,160 @@
+<div class="login-security">
+  <form [formGroup]="loginSecurityForm" (ngSubmit)="loginSecurityForm.valid && onSubmit()">
+    <div>
+      <div class="row auth-type-controls">
+        <div class="login-security-control">
+          <input
+            class="radio-input"
+            id="singleFactorAuth"
+            type="radio"
+            formControlName="authType"
+            [value]="userAuthTypes.singleFactor.value"
+          />
+          <label class="radio-label" for="singleFactorAuth">{{userAuthTypes.singleFactor.label}}</label>
+        </div>
+        <div class="login-security-control">
+          <div>
+            <input
+              class="radio-input"
+              id="multiFactorAuth"
+              type="radio"
+              formControlName="authType"
+              [value]="userAuthTypes.multiFactor.value"
+              [attr.disabled]="!forMultipleUsers && (!users[0]?.email || !users[0]?.phone) ? '' : undefined"
+            />
+            <label class="radio-label" for="multiFactorAuth">{{userAuthTypes.multiFactor.label}}</label>
+          </div>
+          <div *ngIf="!forMultipleUsers && (!users[0]?.email || !users[0]?.phone)" class="pt-1">
+            &nbsp;(To use this option, please set the correct email and phone)
+          </div>
+        </div>
+
+        <ng-container *ngIf="forMultipleUsers && ((loginSecurityForm.get('otpChannel').value === multiFactorTypes.email.value && usersWithMissedEmail?.length) || (loginSecurityForm.get('otpChannel').value === multiFactorTypes.mobile.value && usersWithMissedPhone?.length))">
+          <div class="twofactor-users-warning">
+            <span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12">
+              <g fill="none" fill-rule="evenodd">
+                  <g>
+                      <g>
+                          <g>
+                              <g transform="translate(-727 -300) translate(669 160) translate(30 114) translate(28 26)">
+                                  <circle cx="6" cy="6" r="6" fill="#FF9213"/>
+                                  <path fill="#FFF" d="M5 2H7V7H5zM5 8H7V10H5z"/>
+                              </g>
+                          </g>
+                      </g>
+                  </g>
+              </g>
+          </svg>
+          </span>
+            <span class="twofactor-users-warning-text">
+              You can’t set a 2 factor authentication for the following users because they are missing
+                <ng-container *ngIf="loginSecurityForm.get('otpChannel').value === multiFactorTypes.email.value">
+                  an email: <strong>{{ usersFullNamesWithMissedEmail }}</strong>
+                </ng-container>
+                <ng-container *ngIf="loginSecurityForm.get('otpChannel').value === multiFactorTypes.mobile.value">
+                  a phone number: <strong>{{ usersFullNamesWithMissedPhone }}</strong>
+                </ng-container>
+            </span>
+          </div>
+        </ng-container>
+
+        <div class="multi-factor-controls">
+          <span class="multi-factor-header">ONE TIME PASSWORD</span>
+          <div class="radioGroup">
+                <span class="toggle-radio-btn">
+                  <input
+                    id="multiFactorEmail"
+                    formControlName="otpChannel"
+                    type="radio"
+                    [value]="multiFactorTypes.email.value"
+                    [attr.disabled]="!isMultiFactorSelected ? '' : undefined"
+                  />
+                  <label for="multiFactorEmail">{{multiFactorTypes.email.label}}</label>
+                </span>
+                <span class="toggle-radio-btn">
+                  <input
+                    id="multiFactorMobile"
+                    formControlName="otpChannel"
+                    type="radio"
+                    [value]="multiFactorTypes.mobile.value"
+                    [attr.disabled]="!isMultiFactorSelected ? '' : undefined"
+                  />
+                  <label for="multiFactorMobile">{{multiFactorTypes.mobile.label}}</label>
+                </span>
+                <span class="toggle-radio-btn">
+                  <input
+                    id="multiFactorQr"
+                    formControlName="otpChannel"
+                    type="radio"
+                    [value]="multiFactorTypes.qr.value"
+                    [attr.disabled]="!isMultiFactorSelected ? '' : undefined"
+                  />
+                  <label for="multiFactorQr">{{multiFactorTypes.qr.label}}</label>
+                </span>
+          </div>
+        </div>
+        <div class="sso-container">
+          <div class="login-security-control">
+            <input
+              class="radio-input"
+              id="ssoAuth"
+              type="radio"
+              formControlName="authType"
+              [attr.disabled]="true"
+              [value]="userAuthTypes.sso.value"
+            />
+            <label class="radio-label" for="ssoAuth">{{userAuthTypes.sso.label}}</label>
+          </div>
+          <p class="sso-description">Single sign-on enables users to access both the on-premises and Microsoft 365
+            or Office 365 organizations with a single username and password</p>
+        </div>
+      </div>
+      <hr>
+      <div class="re-auth-interval-container form-group">
+        <span class="re-auth-interval-header">Request authentication</span>
+        <div>Idle time span after which your authentication token will expire</div>
+        <div class="radioGroup">
+          <span class="toggle-radio-btn" *ngFor="let authRequestTime of requestAuthenticationHours; let i = index">
+            <input
+              [id]="'tokenReAuth' + i"
+              formControlName="tokenReAuthInterval"
+              type="radio"
+              [value]="authRequestTime"
+            />
+            <label [for]="'tokenReAuth' + i">Every {{authRequestTime}} hrs</label>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="row justify-content-between m-0 p-0">
+      <div>
+        <button
+          #anchor
+          class="btn btn-security btn-cancel"
+          [disabled]="!forMultipleUsers && !loginSecurityForm.dirty"
+          (click)="forMultipleUsers ? onCancelModal() : showFormCancelConfirmation()"
+          type="button"
+        >
+          CANCEL
+        </button>
+        <confirm-action
+          [anchor]="anchor"
+          confirmationMessage="Are you sure you want to reset the form?"
+          (onCancelled)="cancelReset()"
+          (onConfirmed)="resetForm()"
+          [showConfirmation]="cancelConfirmationVisible"
+        >
+        </confirm-action>
+      </div>
+      <div>
+        <button
+          class="btn btn-security btn-save"
+          [disabled]="(!loginSecurityForm.dirty || !loginSecurityForm.valid)"
+          type="submit">
+          SAVE
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

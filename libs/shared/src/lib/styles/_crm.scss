@@ -76,6 +76,18 @@
   padding: 2rem 0.5rem;
 }
 
+.contact-component-card {
+  background-color: $white;
+  padding: 2rem 0.5rem;
+  &:first-child {
+    padding-bottom: 0;
+  }
+
+  &:last-child {
+    padding-top: 0;
+  }
+}
+
 .subject-person {
   color: $blue;
   font-size: $regular-font;
@@ -355,14 +367,19 @@ oi-select.search-security-input {
 // CRM Dahsboard css ends
 
 .crm-tab-div .k-button {
-  font-size: 16px;
-  font-weight: 400;
-  color: #777;
-  text-transform: uppercase;
-  padding-bottom: 0px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #222;
+  text-transform: capitalize;
+  padding: 0px;
+  &:hover {
+    &::before {
+      opacity: 0;
+    }
+  }
 }
 
-camapign-spikes-chart pnkl-line-chart-date-options {
+camapign-spikes-chart pnkl-line-stockchart-date-options {
   display: none;
 }
 

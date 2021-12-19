@@ -1,43 +1,56 @@
-import { AumActions, AumActionTypes } from './aum.actions';
+import { Action, createReducer, on } from '@ngrx/store';
+import { AttemptLoadAum, LoadAum, LoadFullAum, LoadAccountsAum } from './aum.actions';
 
 export interface State {
-  accountId?: number;
-  aum?: number;
-  date?: Date;
+	accountId?: number;
+	aum?: number;
+	date?: Date;
 }
 
 export const initialState: State = {};
 
+const featureReducer = createReducer(
+	initialState,
+	on(AttemptLoadAum, (state, { accountId, date }) => {
+		return {
+			...state,
+			accountId,
+			date
+		};
+	}),
+	on(LoadFullAum, (state, { accountId, aum, date }) => {
+		return {
+			...state,
+			...{ accountId, aum, date }
+		};
+	}),
+	on(LoadAum, (state, { aum }) => {
+		return {
+			...state,
+			aum
+		};
+	})
+);
+
 export function reducer(
-  state: State = initialState,
-  action: AumActions
-): State {
-  switch (action.type) {
-    case AumActionTypes.AttemptLoadAum:
-      const { accountId, date } = action.payload;
-      return {
-        accountId,
-        date
-      };
-    case AumActionTypes.LoadAum:
-      const { aum } = action.payload;
-      return {
-        ...state,
-        aum
-      };
-    default:
-      return state;
-  }
+	state: State | undefined,
+	action: Action
+) {
+	return featureReducer(state, action);
 }
 
+//
+
+const featureAccountsReducer = createReducer(
+	[],
+	on(LoadAccountsAum, (_, { payload }) => {
+		return [...payload];
+	})
+);
+
 export function accountsReducer(
-  state: State[] = [],
-  action: AumActions
-): State[] {
-  switch (action.type) {
-    case AumActionTypes.LoadAccountsAum:
-      return [...action.payload];
-    default:
-      return state;
-  }
+	state: [] | undefined,
+	action: Action
+) {
+	return featureAccountsReducer(state, action);
 }

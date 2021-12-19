@@ -1,0 +1,16 @@
+<pnl-filter
+  [accounts]="accounts"
+  [filterVisible]="filterVisible"
+  [pnlStartDate]="pnlStartDate"
+  [pnlEndDate]="pnlEndDate"
+  [isStartDateVisible]="true"
+  [selectedAccount]="selectedAccount"
+  (onApply)="onApply.emit($event)"
+  (onClose)="onClose.emit()"
+>
+  <pnl-calculated-columns
+    [pnlCalculatedColumnSelections]="pnlCalculatedColumnSelections"
+    (onAdd)="onAdd.emit($event)"
+    (onRemove)="onRemove.emit($event)"
+  ></pnl-calculated-columns>
+</pnl-filter>

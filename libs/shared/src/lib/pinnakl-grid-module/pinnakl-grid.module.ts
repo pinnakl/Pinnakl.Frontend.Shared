@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { AgGridModule } from 'ag-grid-angular';
+import { SharedModule } from '../shared.module';
 
 import { GridActionButtonComponent } from './action-buttons';
 import { CfActionButtonComponent } from './action-buttons/cf-action-button/cf-action-button.component';
@@ -26,7 +27,8 @@ import { PinnaklGridComponent } from './pinnakl-grid/pinnakl-grid.component';
       PNLActionButtonComponent,
       PositionActionButtonComponent
     ]),
-    CommonModule
+    CommonModule,
+    SharedModule
   ],
   declarations: [
     AgPeekTextComponent,
@@ -38,7 +40,7 @@ import { PinnaklGridComponent } from './pinnakl-grid/pinnakl-grid.component';
     PinnaklGridCheckboxComponent,
     PinnaklGridComponent,
     PNLActionButtonComponent,
-    PositionActionButtonComponent
+    PositionActionButtonComponent,
   ],
   exports: [
     AgGridModule,
@@ -49,7 +51,7 @@ import { PinnaklGridComponent } from './pinnakl-grid/pinnakl-grid.component';
     GridActionButtonComponent,
     PinnaklGridComponent,
     PNLActionButtonComponent,
-    PositionActionButtonComponent
+    PositionActionButtonComponent,
   ]
 })
 export class PinnaklGridModule {}

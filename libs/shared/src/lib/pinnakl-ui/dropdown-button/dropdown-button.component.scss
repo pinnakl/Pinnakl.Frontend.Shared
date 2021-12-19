@@ -10,9 +10,26 @@
 }
 
 .menu-button {
-  padding-bottom: 5px;
-  padding-left: 25px;
-  padding-right: 25px;
+  color: #222;
+  text-transform: capitalize;
+  transition: 0.3s ease;
+  padding: 10px 12px;
+  margin-left: 6px;
+  border-radius: 8px;
+  height: 33px;
+  &:hover {
+    background: linear-gradient(
+      0deg, rgba(0, 0, 0, 0.02), rgba(0, 0, 0, 0.02)), rgb(239, 242, 245);
+  }
+  button {
+    padding: 0;
+    // &:hover {
+    //   background-color: ;
+    // }
+  }
+  .k-button:hover:before {
+    opacity: 0;
+  }
 }
 
 .menu-item {

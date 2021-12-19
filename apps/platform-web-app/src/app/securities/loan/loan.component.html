@@ -1,0 +1,22 @@
+<div [hidden]="securitiesHelper.currentTab !== 'securityInformation'">
+  <loan-information
+    [asset]="loan"
+    [couponTypes]="couponTypes"
+    [currencies]="currencies"
+    [interestBasisOptions]="interestBasisOptions"
+    [manualSecuritySource]="manualSecuritySource"
+    [organizations]="organizations"
+    [paymentFrequencyOptions]="paymentFrequencyOptions"
+    [sectorOptions]="sectorOptions"
+    [security]="security"
+    [securityTypes]="securityTypes"
+  >
+  </loan-information>
+</div>
+
+<div
+  *ngIf="loan"
+  [hidden]="securitiesHelper.currentTab !== 'additionalInformation'"
+>
+  <loan-additional-information [asset]="loan"> </loan-additional-information>
+</div>

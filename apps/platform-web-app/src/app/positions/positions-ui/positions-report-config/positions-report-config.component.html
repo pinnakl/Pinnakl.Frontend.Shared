@@ -1,0 +1,147 @@
+<div [@visibleChanged]="configVisible" class="col-md-5 positions-slide-right full-height report-config-container">
+  <div class="row pnkl-page-header prospecting-header-height">
+    <div class="col-md-12 full-width-padding-fix">
+      <div class="row">
+        <div class="col-md-7">
+          <h3 class="text-secondary">Configuration</h3>
+        </div>
+        <currency-dropdown
+          *ngIf="isCurrencyDropdownVisible"
+          class="col-md-5"
+          [currencies]="currencies$ | async"
+          (selectedCurrency)="onCurrencySelected($event)"
+        ></currency-dropdown>
+      </div>
+    </div>
+  </div>
+  <div class="row crm-prospecting-filter-body">
+    <div class="col-md-12">
+      <div class="configuration-lists-holder row no-gutters">
+        <available-config-columns
+          class="col-md-6"
+          [availableReportingColumn]="availableReportingColumns$ | async"
+          [importantColumnNames]="importantColumnNames"
+          (columnsAdded)="addColumns($event)"
+        ></available-config-columns>
+        <selected-config-columns
+          class="col-md-6"
+          [height]="280"
+          [selectedColumns]="selectedReportingColumns$ | async"
+          [importantColumnNames]="importantColumnNames"
+          (columnsRemoved)="removeColumns($event)"
+        ></selected-config-columns>
+      </div>
+      <div class="configuration-lists-holder row no-gutters">
+        <available-idc-columns
+          class="col-md-6"
+          [allIdcColumns]="allIdcColumns$ | async"
+          [selectedIdcColumns]="selectedIdcColumns$ | async"
+          (columnsAdded)="addColumns($event)"
+        ></available-idc-columns>
+        <selected-config-columns
+          class="col-md-6"
+          [height]="240"
+          [selectedColumns]="selectedIdcColumns$ | async"
+          (columnsRemoved)="removeColumns($event)"
+        ></selected-config-columns>
+      </div>
+    </div>
+  </div>
+  <div class="row mb-5 presets-container">
+    <div class="presets-wrapper" *ngIf="availableGridPresets.length">
+      <div class="presets-header">
+        <h3 class="text-secondary">Grid Presets</h3>
+        <button class="btn share-btn"
+                type="button"
+                style="color: white;"
+                (click)="toggleSharePresetsModal()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" viewBox="0 0 20 16">
+            <g fill="none" fill-rule="evenodd">
+              <g fill-rule="nonzero" stroke="#FFF" stroke-width="2">
+                <g>
+                  <g>
+                    <path
+                      d="M12.355 1.511l6.499 6.173-6.5 6.318V10.11c-6.429-.096-9.9 2.807-11.232 4.266l-.026.027c.255-1.197.986-3.852 3.075-5.983l.194-.192c1.69-1.63 4.224-2.89 7.99-2.961h0V1.51z"
+                      transform="translate(-1826 -1203) translate(1826 1198) translate(0 5)"/>
+                  </g>
+                </g>
+              </g>
+            </g>
+          </svg>
+          Share
+        </button>
+      </div>
+      <div class="presets-container">
+        <div
+          class="preset mb-2"
+          *ngFor="let preset of availableGridPresets"
+          [ngClass]="{ 'selected': preset.id === selectedGridPresetId }"
+        >
+          <span class="pointer" (click)="selectPreset(preset, 'grid')">{{ preset.name }}</span>
+          <a class="pointer ml-2" (click)="startDeletePreset(preset.id)"><i class="icon-pinnakl-close"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!----------  GRID FONT SIZE START ---------->
+  <div class="grid-font-size">
+    <form class="row" novalidate [formGroup]="gridFontSizeForm">
+      <pinnakl-input class="col-md-5"
+                     controlName="fontSize"
+                     [dropdownSource]="fontSizes"
+                     [form]="gridFontSizeForm"
+                     label="FONT SIZE"
+                     type="dropdown">
+      </pinnakl-input>
+    </form>
+  </div>
+  <!----------  GRID FONT SIZE END ---------->
+
+  <div class="row" *ngIf="false">
+    <div class="col-12">
+      <div class="presets-wrapper" *ngIf="availableWidgetPresets.length">
+        <div class="filter-presets-title">Widget Presets</div>
+        <div class="presets-container">
+          <div
+            class="preset"
+            *ngFor="let preset of availableWidgetPresets"
+            [ngClass]="{ 'selected': preset.id === selectedWidgetPresetId }">
+            <span class="pointer" (click)="selectPreset(preset, 'widget')">{{ preset.name }}</span>
+            <a
+              class="pointer"
+              (click)="startDeletePreset(preset.id)"
+            ><i class="icon-pinnakl-close"></i
+            ></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<pinnakl-modal [hideDialog]="hideSharePresetsModal"
+               [width]="600"
+               [maxHeight]="'80vh'"
+               (closeModal)="toggleSharePresetsModal()"
+               [showCloseButton]="true"
+               [className]="'newDesignModal'">
+  <positions-share-presets *ngIf="!hideSharePresetsModal"
+                           [presets]="availableGridPresets"
+                           (closeModal)="toggleSharePresetsModal()"></positions-share-presets>
+</pinnakl-modal>
+
+<pinnakl-modal *ngIf="presetIdToDelete"
+               [hideDialog]="!showDeletePresetConfirmation"
+               [width]="330"
+               [maxHeight]="'80vh'"
+               (closeModal)="showDeletePresetConfirmation = false"
+               [showCloseButton]="true"
+               [className]="'newDesignModal'">
+  <div class="delete-preset-modal">
+    <div class="title">Do you confirm that you want to delete preset?</div>
+    <div class="delete-actions">
+      <button class="btn btn-success waves-effect" type="button" (click)="showDeletePresetConfirmation = false">No</button>
+      <button class="btn btn-danger waves-effect" type="button" (click)="deletePreset()">Yes</button>
+    </div>
+  </div>
+</pinnakl-modal>

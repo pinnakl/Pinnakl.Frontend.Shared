@@ -1,0 +1,26 @@
+.custom-attributes-container {
+    width: 95%;
+    padding-left: 15px;
+    overflow-x: clip;
+    overflow-y: auto;
+    height: 100%;
+    .investor-component-card {
+        padding-top: 0;
+    }
+    .custom-attributes {
+        // padding: 0 20px;
+    
+        &-item:nth-child(1) {
+            font-weight: 600;
+            padding-bottom: 20px;
+            font-size: 16px;
+        }
+        .custom-attributes-item-actions {
+            display: flex;
+        }
+    }
+    .add-new {
+        margin: 0 20px;
+    }
+    
+}

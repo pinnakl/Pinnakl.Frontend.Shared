@@ -7,7 +7,7 @@ import {
   OnInit,
   Renderer2
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { PinnaklInputComponent } from './pinnakl-input/pinnakl-input.component';
 
 @Directive({
@@ -23,12 +23,13 @@ import { PinnaklInputComponent } from './pinnakl-input/pinnakl-input.component';
 export class PinnaklNumFormatDirective implements ControlValueAccessor, OnInit {
   @Input('decimals') decimals = 15;
   @Input('textalign') textalign = 'left';
+	@Input('allowNegative') allowNegative = true;
   private keycodepressed: any;
 
   constructor(
-    private el: ElementRef,
-    private rd: Renderer2,
-    private pinnaklinput: PinnaklInputComponent
+    private readonly el: ElementRef,
+    private readonly rd: Renderer2,
+    private readonly pinnaklinput: PinnaklInputComponent
   ) {}
 
   ngOnInit() {
@@ -41,7 +42,7 @@ export class PinnaklNumFormatDirective implements ControlValueAccessor, OnInit {
       // this.rd.setAttribute(this.el.nativeElement, 'value', '')
       this.el.nativeElement.value = '';
       setTimeout(_ =>
-        this.pinnaklinput.form.controls[this.pinnaklinput.controlName].reset()
+        (this.pinnaklinput.form as FormGroup).controls[this.pinnaklinput.controlName].reset()
       );
     } else {
       if (viewvalue === null) {
@@ -80,6 +81,13 @@ export class PinnaklNumFormatDirective implements ControlValueAccessor, OnInit {
         range.moveStart('character', pos);
         range.select();
       }
+    }
+    // if the user start type with minus (both - under the F9 and on the right side)
+    // and negatie values are not allowed - prevent of typing.
+    if (($event.keyCode === 189 || $event.keyCode === 109) && !this.allowNegative) {
+      $event.preventDefault();
+      $event.stopPropagation();
+      return;
     }
     if ($event.keyCode === 190 && this.decimals === 0) {
       $event.preventDefault();
@@ -157,7 +165,14 @@ export class PinnaklNumFormatDirective implements ControlValueAccessor, OnInit {
       $event.preventDefault();
       $event.stopPropagation();
       return;
-    } else if ($event.keyCode == 190) {
+    } else if ($event.keyCode === 190) {
+      // if it is a first input character and started from dot - assign to the input `.` value
+      if (doGetCaretPosition($event.target) === 0 || $event.target.value === "") {
+        this.el.nativeElement.value = ".";
+        $event.preventDefault();
+        $event.stopPropagation();
+        return;
+      }
       if (
         doGetCaretPosition($event.target) == 0 ||
         ($event.target.value[0] == '-' &&

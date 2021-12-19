@@ -1,49 +1,43 @@
 import { Injectable } from '@angular/core';
 
-import { GetWebRequest, PostWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
+import { WebServiceProvider } from '@pnkl-frontend/core';
+import { Market } from '../../models/security';
+import { SecurityMarket } from '../../models/security';
 import { MarketFromApi } from '../../models/security/market-from-api.model';
-import { Market } from '../../models/security/market.model';
 import { SecurityMarketFromApi } from '../../models/security/security-market-from-api.model';
-import { SecurityMarket } from '../../models/security/security-market.model';
 
 @Injectable()
 export class MarketService {
-  private readonly MARKETS_URL = 'markets';
-  private readonly SECURITY_MARKETS_URL = 'securitymarkets';
+  private readonly _marketsEndpoint = 'entities/markets';
+  private readonly _securityMarketsEndpoint = 'entities/securitymarkets';
 
   private _markets: Market[];
 
-  constructor(private wsp: WebServiceProvider) {}
+  constructor(private readonly wsp: WebServiceProvider) { }
 
   deleteSecurityMarket(id: number): Promise<void> {
-    return this.wsp.delete({
-      endPoint: this.SECURITY_MARKETS_URL,
-      payload: {
-        id: id.toString()
-      }
+    return this.wsp.deleteHttp({
+      endpoint: `${this._securityMarketsEndpoint}/${id}`
     });
   }
 
-  getMarkets(): Promise<Market[]> {
+  async getMarkets(): Promise<Market[]> {
     if (this._markets) {
       return Promise.resolve(this._markets);
     }
     const fields = ['Country_Of_Quotation', 'Id', 'Mic'];
-
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.MARKETS_URL,
-      options: {
+    const markets = await this.wsp.getHttp<MarketFromApi[]>({
+      endpoint: this._marketsEndpoint,
+      params: {
         fields: fields
       }
-    };
-
-    return this.wsp.get(getWebRequest).then((entities: MarketFromApi[]) => {
-      this._markets = entities.map(entity => this.formatMarket(entity));
-      return this._markets;
     });
+
+    this._markets = markets.map(entity => this.formatMarket(entity));
+    return this._markets;
   }
 
-  getSecurityMarkets(securityId: number): Promise<SecurityMarket[]> {
+  async getSecurityMarkets(securityId: number): Promise<SecurityMarket[]> {
     const fields = [
       'Active_Trading_Indicator',
       'Country_Of_Quotation',
@@ -54,9 +48,9 @@ export class MarketService {
       'SecurityId'
     ];
 
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.SECURITY_MARKETS_URL,
-      options: {
+    const securityMarkets = await this.wsp.getHttp<SecurityMarketFromApi[]>({
+      endpoint: this._securityMarketsEndpoint,
+      params: {
         fields: fields,
         filters: [
           {
@@ -66,44 +60,33 @@ export class MarketService {
           }
         ]
       }
-    };
+    });
 
-    return this.wsp
-      .get(getWebRequest)
-      .then((entities: SecurityMarketFromApi[]) =>
-        entities.map(entity => this.formatSecurityMarket(entity))
-      );
+    return securityMarkets.map(securityMarket =>
+      this.formatSecurityMarket(securityMarket)
+    );
   }
 
-  postSecurityMarket(entityToSave: SecurityMarket): Promise<SecurityMarket> {
-    let requestBody = this.getSecurityMarketForServiceRequest(entityToSave);
+  async postSecurityMarket(entityToSave: SecurityMarket): Promise<SecurityMarket> {
+    const entity = await this.wsp.postHttp<SecurityMarketFromApi>({
+      endpoint: this._securityMarketsEndpoint,
+      body: this.getSecurityMarketForServiceRequest(entityToSave)
+    });
 
-    let postWebRequest: PostWebRequest = {
-      endPoint: this.SECURITY_MARKETS_URL,
-      payload: requestBody
-    };
-
-    return this.wsp
-      .post(postWebRequest)
-      .then((entity: SecurityMarketFromApi) =>
-        this.formatSecurityMarket(entity)
-      );
+    return this.formatSecurityMarket(entity);
   }
 
-  putSecurityMarket(entityToSave: SecurityMarket): Promise<SecurityMarket> {
-    let requestBody = this.getSecurityMarketForServiceRequest(entityToSave);
-    return this.wsp
-      .put({
-        endPoint: this.SECURITY_MARKETS_URL,
-        payload: requestBody
-      })
-      .then((entity: SecurityMarketFromApi) =>
-        this.formatSecurityMarket(entity)
-      );
+  async putSecurityMarket(entityToSave: SecurityMarket): Promise<SecurityMarket> {
+    const entity = await this.wsp.putHttp<SecurityMarketFromApi>({
+      endpoint: this._securityMarketsEndpoint,
+      body: this.getSecurityMarketForServiceRequest(entityToSave)
+    });
+
+    return this.formatSecurityMarket(entity);
   }
 
   private formatMarket(entity: MarketFromApi): Market {
-    let id = parseInt(entity.id);
+    const id = parseInt(entity.id, 10);
     return new Market(
       entity.country_of_quotation,
       !isNaN(id) ? id : null,
@@ -112,9 +95,9 @@ export class MarketService {
   }
 
   private formatSecurityMarket(entity: SecurityMarketFromApi): SecurityMarket {
-    let id = parseInt(entity.id),
-      marketId = parseInt(entity.marketid),
-      securityId = parseInt(entity.securityid);
+    const id = parseInt(entity.id, 10),
+      marketId = parseInt(entity.marketid, 10),
+      securityId = parseInt(entity.securityid, 10);
     return new SecurityMarket(
       entity.active_trading_indicator === 'True',
       entity.country_of_quotation,
@@ -129,7 +112,7 @@ export class MarketService {
   private getSecurityMarketForServiceRequest(
     entity: SecurityMarket
   ): SecurityMarketFromApi {
-    let entityForApi = {} as SecurityMarketFromApi,
+    const entityForApi = {} as SecurityMarketFromApi,
       {
         activeTradingIndicator,
         id,

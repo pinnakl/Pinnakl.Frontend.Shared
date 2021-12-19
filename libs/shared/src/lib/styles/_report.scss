@@ -34,12 +34,14 @@ footer.fixed {
   border-radius: 4px;
   min-height: 184px;
   background-color: #ffffff;
-  margin: 8px;
-  padding: 10px;
+  margin: 0;
+  padding: 1.5rem;
+  height: 100%;
 }
 
 .report-card-ul {
   list-style: none;
+  padding-left: 0;
 }
 
 .report-card-ul li a {

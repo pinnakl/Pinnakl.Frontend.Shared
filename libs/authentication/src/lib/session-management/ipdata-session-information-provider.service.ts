@@ -20,7 +20,7 @@ export class IpdataSessionInformationProvider
   private readonly _API_KEY =
     'b6fa06cbe7820e5ee7d23a491cfd0a2b1abeb0f9a2e0e2f1d2305dd3';
   private readonly _REQUEST_URL_TEMPLATE = 'https://api.ipdata.co?api-key=';
-  constructor(private _http: HttpClient) {}
+  constructor(private readonly _http: HttpClient) {}
 
   async get(): Promise<IpdataSessionInformation> {
     const url = `${this._REQUEST_URL_TEMPLATE}${this._API_KEY}`;

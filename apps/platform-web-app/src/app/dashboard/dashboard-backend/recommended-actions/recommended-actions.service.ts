@@ -1,12 +1,8 @@
 import { Injectable } from '@angular/core';
 
 import * as moment from 'moment';
-import { Observable } from 'rxjs';
-import { filter, map, tap } from 'rxjs/operators';
 
 import {
-  GetWebRequest,
-  SubscriptionResponse,
   UserService,
   WebServiceProvider
 } from '@pnkl-frontend/core';
@@ -15,19 +11,19 @@ import { RecommendedAction } from './recommended-action.model';
 
 @Injectable()
 export class RecommendedActionsService {
-  private readonly RESOURCE_URL = 'recommended_actions';
+  private readonly _recommendedActionsEndpoint = 'entities/recommended_actions';
   constructor(
-    private wsp: WebServiceProvider,
-    private userService: UserService
-  ) {}
+    private readonly wsp: WebServiceProvider,
+    private readonly userService: UserService
+  ) { }
 
   async get(): Promise<RecommendedAction[]> {
     const now = moment()
       .utc()
       .format('MM/DD/YYYY hh:mm:ss a');
-    let webRequestMessage: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: {
+    const recommendedActions = await this.wsp.getHttp<RecommendedActionFromApi[]>({
+      endpoint: this._recommendedActionsEndpoint,
+      params: {
         fields: [
           'id',
           'name',
@@ -59,35 +55,14 @@ export class RecommendedActionsService {
           }
         ]
       }
-    };
-    const recommendedActions = await this.wsp.get(webRequestMessage);
-    return recommendedActions.map(entity =>
-      this.formatRecommendedAction(entity)
-    );
-  }
-
-  subscribeToRecommendedActions(): Observable<
-    SubscriptionResponse<RecommendedAction>
-  > {
-    return this.wsp.subscribe(this.RESOURCE_URL).pipe(
-      filter(
-        (result: SubscriptionResponse<RecommendedActionFromApi>) =>
-          result.body.userid !== this.userService.getUser().id.toString()
-      ),
-      map((result: SubscriptionResponse<RecommendedActionFromApi>) => {
-        let response = new SubscriptionResponse<RecommendedAction>();
-        response.action = result.action;
-        response.body = this.formatRecommendedAction(result.body);
-        return response;
-      })
-    );
+    });
+    return recommendedActions.map(this.formatRecommendedAction);
   }
 
   async put(action: Partial<RecommendedAction>): Promise<RecommendedAction> {
-    let requestForAPI = this.getRecommendedActionForServiceRequest(action);
-    const result = await this.wsp.put({
-      endPoint: this.RESOURCE_URL,
-      payload: requestForAPI
+    const result = await this.wsp.putHttp<RecommendedActionFromApi>({
+      endpoint: this._recommendedActionsEndpoint,
+      body: this.getRecommendedActionForServiceRequest(action)
     });
     return this.formatRecommendedAction(result);
   }
@@ -95,15 +70,15 @@ export class RecommendedActionsService {
   private formatRecommendedAction(
     entityFromAPI: RecommendedActionFromApi
   ): RecommendedAction {
-    let supressDate = moment.utc(
+    const supressDate = moment.utc(
       entityFromAPI.actionsupressedat,
       'MM-DD-YYYY hh:mm:ss a'
     );
-    let timeFrameEnd = moment.utc(
+    const timeFrameEnd = moment.utc(
       entityFromAPI.timeframeend,
       'MM-DD-YYYY hh:mm:ss a'
     );
-    let timeFrameStart = moment.utc(
+    const timeFrameStart = moment.utc(
       entityFromAPI.timeframestart,
       'MM-DD-YYYY hh:mm:ss a'
     );
@@ -124,7 +99,7 @@ export class RecommendedActionsService {
   private getRecommendedActionForServiceRequest(
     entity: Partial<RecommendedAction>
   ): RecommendedActionFromApi {
-    let entityForApi = {} as RecommendedActionFromApi,
+    const entityForApi = {} as RecommendedActionFromApi,
       { id, actionSupressedAt, timeFrameEnd } = entity;
     if (actionSupressedAt !== undefined) {
       entityForApi.actionsupressedat = actionSupressedAt

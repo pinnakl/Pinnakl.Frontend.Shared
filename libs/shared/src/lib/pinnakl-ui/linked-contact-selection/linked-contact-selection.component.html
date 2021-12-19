@@ -1,0 +1,63 @@
+<form [formGroup]="form" novalidate>
+  <label class="mb-0">
+    {{label}} <span class="color-red pl-0-25" *ngIf="required">*</span>
+  </label>
+  <!-- <kendo-combobox
+    *ngIf="!multi"
+    formControlName="contact"
+    [textField]="'Name'"
+    [valueField]="'OrgContactLinkId'"
+    [valuePrimitive]="!objectModel"
+    [filterable]="true"
+    [clearButton]="true"
+    [data]="dropdownCollection"
+    [disabled]="disabled"
+    (filterChange)="filterDropdown($event)"
+    (valueChange)="dropdownValueChanged($event)"
+    #kendoComboBoxInstance="kendoComboBox"
+  >
+    <ng-template kendoComboBoxItemTemplate let-dataItem>
+      <ng-container 
+        *ngTemplateOutlet="comboTemplate; context:{ $implicit: dataItem }">
+      </ng-container>
+     </ng-template>
+  </kendo-combobox> -->
+  <kendo-multiselect
+    formControlName="contact"
+    [textField]="'Name'"
+    [valueField]="'ContactId'"
+    [filterable]="true"
+    [data]="dropdownCollection"
+    [placeholder]="'Search users'"
+    (valueChange)="handleValue($event)"
+    (filterChange)="filterDropdown($event)"
+  >
+  <ng-template kendoComboBoxItemTemplate let-dataItem>
+    <ng-container 
+      *ngTemplateOutlet="comboTemplate; context:{ $implicit: dataItem }">
+    </ng-container>
+  </ng-template>
+  </kendo-multiselect>
+
+  </form>
+
+
+
+  <ng-template #comboTemplate let-dataItem>
+    <div #item class="result-item" [ngStyle]="{'margin-top':  getParent(item, dataItem?.idx)}">
+      <div class="icon-container" [ngStyle]="{background: addAlpha(dataItem?.color)}">
+        <span [ngStyle]="{color: dataItem?.color}">{{getCurrentSymbol(dataItem?.Name)}}</span>
+      </div>
+      <div class="info-container">
+        <div class="title">
+          <span innerHTML="{{dataItem?.Name | highlight : searchText}}"></span>
+        </div>
+        <div class="sub-title">
+          <span> {{ dataItem?.OrganizationName }} </span>
+        </div>
+        <div class="email">
+          <span>{{dataItem?.Email}}</span>
+        </div>
+      </div>
+    </div>
+  </ng-template>

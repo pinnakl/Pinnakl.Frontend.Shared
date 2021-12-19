@@ -22,12 +22,12 @@ export class AllCurrenciesLoadedGuard implements CanActivate {
         if (loaded) {
           return;
         }
-        this.store.dispatch(new AttemptLoadCurrencies());
+        this.store.dispatch(AttemptLoadCurrencies());
       }),
       filter(loaded => loaded),
       take(1)
     );
   }
 
-  constructor(private store: Store<State>) {}
+  constructor(private readonly store: Store<State>) {}
 }

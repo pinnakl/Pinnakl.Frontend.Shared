@@ -3,9 +3,6 @@ import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 
 import {
-  GetWebRequest,
-  PostWebRequest,
-  PutWebRequest,
   WebServiceProvider
 } from '@pnkl-frontend/core';
 
@@ -14,52 +11,44 @@ import { BondCoupon } from '../../models/security';
 
 @Injectable()
 export class BondCouponService {
-  private readonly RESOURCE_URL = 'bond_coupons';
+  private readonly _bondCouponsEndpoint = 'entities/bond_coupons';
   private readonly DATE_FORMAT = 'MM/DD/YYYY';
-  constructor(private wsp: WebServiceProvider) {}
+  constructor(private readonly wsp: WebServiceProvider) {}
 
-  getCoupons(bondId: number): Promise<BondCoupon[]> {
-    let fields = ['id', 'bondid', 'coupon', 'enddate', 'startdate'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: {
-        fields,
+  async getCoupons(bondId: number): Promise<BondCoupon[]> {
+    const entities = await this.wsp.getHttp<BondCouponFromApi[]>({
+      endpoint: this._bondCouponsEndpoint,
+      params: {
+        fields: ['id', 'bondid', 'coupon', 'enddate', 'startdate'],
         filters: [{ key: 'bondid', type: 'EQ', value: [bondId.toString()] }]
       }
-    };
-    return this.wsp
-      .get(getWebRequest)
-      .then(entities => entities.map(entity => this.formatCoupon(entity)));
+    });
+
+    return entities.map(this.formatCoupon);
   }
 
-  post(entityToSave: BondCoupon): Promise<BondCoupon> {
-    let requestBody = this.getBondCouponForServiceRequest(entityToSave);
+  async post(entityToSave: BondCoupon): Promise<BondCoupon> {
+    const entity = await this.wsp.postHttp<BondCouponFromApi>({
+      endpoint: this._bondCouponsEndpoint,
+      body: this.getBondCouponForServiceRequest(entityToSave)
+    });
 
-    let postWebRequest: PostWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      payload: requestBody
-    };
-
-    return this.wsp
-      .post(postWebRequest)
-      .then((entity: BondCouponFromApi) => this.formatCoupon(entity));
+    return this.formatCoupon(entity);
   }
 
-  put(entityToSave: BondCoupon): Promise<BondCoupon> {
-    let requestBody = this.getBondCouponForServiceRequest(entityToSave);
+  async put(entityToSave: BondCoupon): Promise<BondCoupon> {
+    const entity = await this.wsp.putHttp<BondCouponFromApi>({
+      endpoint: this._bondCouponsEndpoint,
+      body: this.getBondCouponForServiceRequest(entityToSave)
+    });
 
-    let putWebRequest: PutWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      payload: requestBody
-    };
-
-    return this.wsp
-      .put(putWebRequest)
-      .then((entity: BondCouponFromApi) => this.formatCoupon(entity));
+    return this.formatCoupon(entity);
   }
 
-  delete(id: number): Promise<void> {
-    return this.wsp.delete({ endPoint: this.RESOURCE_URL, payload: { id } });
+  async delete(id: number): Promise<void> {
+    return this.wsp.deleteHttp({
+      endpoint: `${this._bondCouponsEndpoint}/${id}`
+    });
   }
 
   async saveMany(x: {
@@ -67,9 +56,9 @@ export class BondCouponService {
     delete: BondCoupon[];
     update: BondCoupon[];
   }): Promise<void> {
-    let addPromises = x.add.map(bondToAdd => this.post(bondToAdd));
-    let updatePromises = x.update.map(bondToUpdate => this.put(bondToUpdate));
-    let deletePromises = x.delete.map(bondToDelete =>
+    const addPromises = x.add.map(bondToAdd => this.post(bondToAdd));
+    const updatePromises = x.update.map(bondToUpdate => this.put(bondToUpdate));
+    const deletePromises = x.delete.map(bondToDelete =>
       this.delete(bondToDelete.id)
     );
     await Promise.all(
@@ -80,7 +69,7 @@ export class BondCouponService {
   private getBondCouponForServiceRequest(
     entity: BondCoupon
   ): BondCouponFromApi {
-    let entityForApi = {} as BondCouponFromApi,
+    const entityForApi = {} as BondCouponFromApi,
       { endDate, bondId, id, coupon, startDate } = entity;
     if (endDate !== undefined) {
       entityForApi.enddate =
@@ -106,12 +95,12 @@ export class BondCouponService {
   }
 
   private formatCoupon(entity: BondCouponFromApi): BondCoupon {
-    let coupon = parseFloat(entity.coupon),
+    const coupon = parseFloat(entity.coupon),
       endDateMoment = moment(entity.enddate, this.DATE_FORMAT),
       startDateMoment = moment(entity.startdate, this.DATE_FORMAT);
     return {
-      id: parseInt(entity.id),
-      bondId: parseInt(entity.bondid),
+      id: parseInt(entity.id, 10),
+      bondId: parseInt(entity.bondid, 10),
       coupon: !isNaN(coupon) ? coupon : null,
       endDate: endDateMoment.isValid() ? endDateMoment.toDate() : null,
       startDate: startDateMoment.isValid() ? startDateMoment.toDate() : null

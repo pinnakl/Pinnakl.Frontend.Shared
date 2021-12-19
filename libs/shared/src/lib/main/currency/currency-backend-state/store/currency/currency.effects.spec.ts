@@ -33,8 +33,8 @@ describe('CurrencyService', () => {
         }
       ]
     });
-    effects = TestBed.get(CurrencyEffects);
-    service = TestBed.get(OMSService);
+    effects = TestBed.inject(CurrencyEffects);
+    service = TestBed.inject(OMSService);
   });
 
   describe('load$', () => {

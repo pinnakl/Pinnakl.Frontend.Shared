@@ -1,0 +1,90 @@
+<section>
+  <!-- The header area -->
+  <div class="row margin0" *ngIf="isConfigurable">
+    <!-- Account Heading -->
+    <div class="col-md-4 account-names-left padding0">
+      <div class="row action_buttons margin0">
+        <div
+          class="col-md-12 account-left-side allocation_accounts"
+          [formGroup]="form"
+        >
+          <span class="input-check margin00">
+            <input
+              type="checkbox"
+              id="account_check_all"
+              name="acccheckbox"
+              formControlName="allAccountsSelected"
+            />
+            <label class="margin00" for="account_check_all">ALL</label>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Allocation column -->
+    <div class="col-md-8 padding0" *ngIf="type === 'allocation'">
+      <div class="row action_buttons margin0">
+        <div class="col-md-12 allocation_header">
+          <span class="allocation_text pull-left">ALLOCATION</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Capital ratios columns -->
+    <div class="col-md-8 padding0" *ngIf="type === 'capital_ratios'">
+      <div class="row action_buttons margin0">
+        <div class="col-md-12 ratios_header">
+          <span class="ratios_text pull-left">Ratios</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- The table area -->
+  <div class="row margin0" [formGroup]="form">
+    <div formArrayName="accountsFormArray" class="allocationFormArrayClass">
+      <!-- For each account -->
+      <div
+        *ngFor="let control of accountFormArray.controls; let controlIndex = index"
+        [formGroupName]="controlIndex"
+        class="row-container"
+      >
+        <div class="row margin0">
+          <!-- Account Name and Check Box -->
+          <div class="col-md-4 account-names-left padding0">
+            <div class="row _summarized">
+              <div class="account_text col-md-12 color_black">
+                <span class="input-check margin00">
+                  <input
+                    [style.display]="isConfigurable ? 'inline-block' : 'none'"
+                    type="checkbox"
+                    id="account_check"
+                    name="acccheckbox"
+                    formControlName="accountSelected"
+                  />
+                  <label class="margin00">{{control.controls['accountCode'].value | uppercase}}</label>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Account Quantity if type is allocation -->
+          <div class="col-md-8 padding0" *ngIf="type === 'allocation' || type === 'capital_ratios'">
+            <div class="row margin0 account_values">
+              <pinnakl-input
+                [disabled]="disabled"
+                [form]="control"
+                type="numeric"
+                [hideLabel]="true"
+                textalign="right"
+                class="quantity-input"
+                [showValidation]="false"
+                controlName="accountSelectedQuantity"
+              ></pinnakl-input>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

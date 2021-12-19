@@ -8,6 +8,8 @@ import { random } from 'lodash';
 })
 export class NameAvatarComponent implements OnInit {
   @Input() nameString: string;
+  @Input() width = '30px';
+  @Input() height = '30px';
   colors: string[] = [
     '#e57373',
     '#f06292',
@@ -49,7 +51,6 @@ export class NameAvatarComponent implements OnInit {
   avatarText: string;
   color: string;
   backgroundColor: string;
-  constructor() {}
 
   ngOnInit() {
     this.getColor(this.nameString);

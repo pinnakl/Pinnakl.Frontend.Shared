@@ -18,7 +18,7 @@ export class OnDemandPreloadService {
   private subject = new Subject<OnDemandPreloadOptions>();
   state = this.subject.asObservable();
 
-  constructor(private userService: UserService) {}
+  constructor(private readonly userService: UserService) {}
 
   startPreload(routePath: string): void {
     const message = new OnDemandPreloadOptions(routePath, true);

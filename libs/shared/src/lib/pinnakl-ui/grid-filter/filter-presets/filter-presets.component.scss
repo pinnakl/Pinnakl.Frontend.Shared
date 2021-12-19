@@ -1,0 +1,43 @@
+@import '../../../../../../../libs/shared/src/lib/styles/_components/colors';
+
+.filter-presets-modal-container {
+  .presets-modal-header {
+    font-size: 18px;
+    font-weight: 600;
+    padding-bottom: 20px;
+  }
+
+  .presets-modal-body {
+    ::ng-deep.presets-control {
+      position: relative;
+      margin-bottom: 10px;
+      .pnkl-input {
+        color: black;
+      }
+    }
+
+    .include-date-range {
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      .presets-control-label {
+        font-size: 14px;
+        font-weight: 600;
+      }
+    }
+  }
+  ::ng-deep {
+    input:checked + .slider {
+      background-color: $denim;
+    }
+
+    input:focus + .slider {
+      box-shadow: 0 0 1px $denim;
+    }
+  }
+  .presets-modal-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+}

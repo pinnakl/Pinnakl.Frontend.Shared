@@ -21,7 +21,7 @@ export class PnklTooltipComponent implements OnInit {
   @ViewChild('tooltipTarget', { static: true })
   tooltipTarget: ElementRef;
 
-  constructor(private pnklTooltipService: PnklTooltipService) {}
+  constructor(private readonly pnklTooltipService: PnklTooltipService) {}
 
   ngOnInit(): void {
     this.pnklTooltipService.show({

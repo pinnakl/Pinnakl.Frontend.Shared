@@ -1,0 +1,13 @@
+<form [formGroup]="parameterForm" class="col-md-12">
+  <div class="row mt-1" *ngFor="let parameter of parameters">
+    <div class="col-md-12">
+      <pinnakl-input
+        [controlName]="parameter.name"
+        [form]="parameterForm"
+        [inputClass]="parameter.type === 'date' ? 'datepicker-dark' : undefined"
+        [label]="parameter.caption"
+        [type]="parameter.type"
+      ></pinnakl-input>
+    </div>
+  </div>
+</form>

@@ -4,219 +4,205 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 
 import {
-  GetWebRequest,
-  PostWebRequest,
-  PutWebRequest,
   WebServiceProvider
 } from '@pnkl-frontend/core';
-import { CustomAttributeFromApi } from '../../models/security/custom-attribute-from-api.model';
-import { CustomAttributeListOptionFromApi } from '../../models/security/custom-attribute-list-option-from-api.model';
-import { CustomAttributeListOption } from '../../models/security/custom-attribute-list-option.model';
-import { CustomAttributeValueFromApi } from '../../models/security/custom-attribute-value-from-api.model';
-import { CustomAttributeValue } from '../../models/security/custom-attribute-value.model';
-import { CustomAttribute } from '../../models/security/custom-attribute.model';
+import { CustomAttributeFeature, CustomAttributeMappingTable } from '../../models';
+import { CustomAttributeFromApi } from '../../models/custom-attributes/custom-attribute-from-api.model';
+import { CustomAttributeListOptionFromApi } from '../../models/custom-attributes/custom-attribute-list-option-from-api.model';
+import { CustomAttributeListOption } from '../../models/custom-attributes/custom-attribute-list-option.model';
+import { CustomAttributeValueFromApi } from '../../models/custom-attributes/custom-attribute-value-from-api.model';
+import { CustomAttributeValue } from '../../models/custom-attributes/custom-attribute-value.model';
+import { CustomAttribute } from '../../models/custom-attributes/custom-attribute.model';
 
 @Injectable()
 export class CustomAttributesService {
-  private readonly CUSTOM_ATTRIBUTES_URL = 'security_custom_attributes';
-  private readonly CUSTOM_ATTRIBUTE_LIST_OPTIONS_URL =
-    'security_custom_attribute_list_options';
-  private readonly CUSTOM_ATTRIBUTE_VALUES_URL =
-    'security_custom_attribute_values';
-  constructor(private wsp: WebServiceProvider) {}
+  private readonly _securityCustomAttributesEndpoint = 'entities/security_custom_attributes';
+  private readonly _securityCustomAttributeListOptionsEndpoint =
+    'entities/security_custom_attribute_list_options';
+  private readonly _securityCustomAttributeValuesEndpoint =
+    'entities/security_custom_attribute_values';
+
+  constructor(private readonly wsp: WebServiceProvider) { }
 
   deleteCustomAttribute(id: number): Promise<void> {
-    return this.wsp.delete({
-      endPoint: this.CUSTOM_ATTRIBUTES_URL,
-      payload: {
-        id: id.toString()
-      }
+    return this.wsp.deleteHttp({
+      endpoint: `${this._securityCustomAttributesEndpoint}/${id}`
     });
   }
 
   deleteCustomAttributeListOption(id: number): Promise<void> {
-    return this.wsp.delete({
-      endPoint: this.CUSTOM_ATTRIBUTE_LIST_OPTIONS_URL,
-      payload: {
-        id: id.toString()
-      }
+    return this.wsp.deleteHttp({
+      endpoint: `${this._securityCustomAttributeListOptionsEndpoint}/${id}`
     });
   }
 
   deleteCustomAttributeValue(id: number): Promise<void> {
-    return this.wsp.delete({
-      endPoint: this.CUSTOM_ATTRIBUTE_VALUES_URL,
-      payload: {
-        id: id.toString()
-      }
+    return this.wsp.deleteHttp({
+      endpoint: `${this._securityCustomAttributeValuesEndpoint}/${id}`
     });
   }
 
-  getCustomAttributes(): Promise<CustomAttribute[]> {
-    return this.getCustomAttributesWithoutListOptions()
-      .then(customAttributes => {
-        const promises = _(customAttributes)
-          .filter({ type: 'List' })
-          .map(attribute =>
-            this.getCustomAtttributeListOptions(attribute.id).then(
-              listOptions =>
-                (attribute.listOptions = _.sortBy(listOptions, ['viewOrder']))
-            )
-          )
-          .value();
-        return Promise.all([customAttributes, Promise.all(promises)]);
-      })
-      .then(result => {
-        const [customAttributes] = result;
-        return customAttributes;
-      });
+  async getCustomAttributes(feature?: string): Promise<CustomAttribute[]> {
+    const customAttributes = await this.getCustomAttributesWithoutListOptions(feature);
+
+    const promises = _(customAttributes)
+      .filter({ type: 'List' })
+      .map(attribute =>
+        this.getCustomAttributeListOptions(attribute.id).then(
+          listOptions =>
+            (attribute.listOptions = _.sortBy(listOptions, ['viewOrder']))
+        )
+      )
+      .value();
+
+    const result = await Promise.all([customAttributes, Promise.all(promises)]);
+
+    const [customAttrs] = result;
+    return customAttrs;
   }
 
-  getCustomAttributesWithoutListOptions(): Promise<CustomAttribute[]> {
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.CUSTOM_ATTRIBUTES_URL
-    };
-    return this.wsp
-      .get(getWebRequest)
-      .then((entities: CustomAttributeFromApi[]) => {
-        return entities.map(entity => this.formatCustomAttribute(entity));
-      });
+  async getCustomAttributesWithoutListOptions(feature: string): Promise<CustomAttribute[]> {
+    const entities = await this.wsp.getHttp<CustomAttributeFromApi[]>({
+      endpoint: this._securityCustomAttributesEndpoint,
+      params: feature ? {
+        filters: [
+          {
+            key: 'Feature',
+            type: 'EQ',
+            value: [feature]
+          },
+        ]
+      } : {}
+    });
+
+    return entities.map(this.formatCustomAttribute);
   }
 
-  getCustomAttributeValuesForAttribute(
+  async getCustomAttributeValuesForAttribute(
     attributeId: number
   ): Promise<CustomAttributeValue[]> {
-    const fields = ['CustomAttributeId', 'Id', 'SecurityId', 'Type', 'Value'],
-      getWebRequest: GetWebRequest = {
-        endPoint: this.CUSTOM_ATTRIBUTE_VALUES_URL,
-        options: {
-          fields,
-          filters: [
-            {
-              key: 'CustomAttributeId',
-              type: 'EQ',
-              value: [attributeId.toString()]
-            }
-          ]
-        }
-      };
-    return this.wsp
-      .get(getWebRequest)
-      .then((entities: CustomAttributeValueFromApi[]) =>
-        entities.map(entity => this.formatCustomAttributeValue(entity))
-      );
+    const entities = await this.wsp.getHttp<CustomAttributeValueFromApi[]>({
+      endpoint: this._securityCustomAttributeValuesEndpoint,
+      params: {
+        fields: ['CustomAttributeId', 'Id', 'SecurityId', 'Type', 'Value'],
+        filters: [
+          {
+            key: 'CustomAttributeId',
+            type: 'EQ',
+            value: [attributeId.toString()]
+          }
+        ]
+      }
+    });
+
+    return entities.map(this.formatCustomAttributeValue);
   }
 
-  getCustomAttributeValuesForSecurity(
-    securityId: number
+  async getCustomAttributeValuesForFeature(
+    id: number,
+    feature: 'Investor' | 'Security' | 'Contact'
   ): Promise<CustomAttributeValue[]> {
-    const fields = ['CustomAttributeId', 'Id', 'SecurityId', 'Type', 'Value'],
-      getWebRequest: GetWebRequest = {
-        endPoint: this.CUSTOM_ATTRIBUTE_VALUES_URL,
-        options: {
-          fields,
-          filters: [
-            {
-              key: 'SecurityId',
-              type: 'EQ',
-              value: [securityId.toString()]
-            }
-          ]
-        }
-      };
-    return this.wsp
-      .get(getWebRequest)
-      .then((entities: CustomAttributeValueFromApi[]) =>
-        entities.map(entity => this.formatCustomAttributeValue(entity))
-      );
+    const entities = await this.wsp.getHttp<CustomAttributeValueFromApi[]>({
+      endpoint: this._securityCustomAttributeValuesEndpoint,
+      params: {
+        fields: ['CustomAttributeId', 'Id', `${feature}Id`, 'Type', 'Value'],
+        filters: [
+          {
+            key: `${feature}Id`,
+            type: 'EQ',
+            value: [id.toString()]
+          }
+        ]
+      }
+    });
+
+    return entities.map(this.formatCustomAttributeValue);
   }
 
-  postCustomAttribute(entityToSave: CustomAttribute): Promise<CustomAttribute> {
-    const requestBody = this.getCustomAttributeForServiceRequest(entityToSave);
-    const postWebRequest: PostWebRequest = {
-      endPoint: this.CUSTOM_ATTRIBUTES_URL,
-      payload: requestBody
-    };
-    return this.wsp
-      .post(postWebRequest)
-      .then(entity => this.formatCustomAttribute(entity));
+  async postCustomAttribute(
+    entityToSave: CustomAttribute,
+    feature: CustomAttributeFeature,
+    mappingTable: CustomAttributeMappingTable
+  ): Promise<CustomAttribute> {
+    const entity = await this.wsp.postHttp<CustomAttributeFromApi>({
+      endpoint: this._securityCustomAttributesEndpoint,
+      body: this.getCustomAttributeForServiceRequest(entityToSave, feature, mappingTable)
+    });
+
+    return this.formatCustomAttribute(entity);
   }
 
-  postCustomAttributeListOption(
+  async postCustomAttributeListOption(
     entityToSave: CustomAttributeListOption
   ): Promise<CustomAttributeListOption> {
-    const requestBody = this.getCustomAttributeListOptionForServiceRequest(
-      entityToSave
-    );
-    const postWebRequest: PostWebRequest = {
-      endPoint: this.CUSTOM_ATTRIBUTE_LIST_OPTIONS_URL,
-      payload: requestBody
-    };
-    return this.wsp
-      .post(postWebRequest)
-      .then(entity => this.formatCustomAttributeListOption(entity));
+    const entity = await this.wsp.postHttp<CustomAttributeListOptionFromApi>({
+      endpoint: this._securityCustomAttributeListOptionsEndpoint,
+      body: this.getCustomAttributeListOptionForServiceRequest(entityToSave)
+    });
+
+    return this.formatCustomAttributeListOption(entity);
   }
 
-  postCustomAttributeValue(
-    entityToSave: CustomAttributeValue
+  async postCustomAttributeValue(
+    entityToSave: CustomAttributeValue,
+    feature?: CustomAttributeFeature,
+    mappingTable?: CustomAttributeMappingTable
   ): Promise<CustomAttributeValue> {
-    const requestBody = this.getCustomAttributeValueForServiceRequest(
-      entityToSave
-    );
-    const postWebRequest: PostWebRequest = {
-      endPoint: this.CUSTOM_ATTRIBUTE_VALUES_URL,
-      payload: requestBody
-    };
-    return this.wsp
-      .post(postWebRequest)
-      .then(entity => this.formatCustomAttributeValue(entity));
+    const entity = await this.wsp.postHttp<CustomAttributeValueFromApi>({
+      endpoint: this._securityCustomAttributeValuesEndpoint,
+      body: this.getCustomAttributeValueForServiceRequest(
+        entityToSave,
+        feature === CustomAttributeFeature.ORGANIZATION ? 'Investor' : feature
+      )
+    });
+
+    return this.formatCustomAttributeValue(entity);
   }
 
-  putCustomAttribute(entityToSave: CustomAttribute): Promise<CustomAttribute> {
-    const requestBody = this.getCustomAttributeForServiceRequest(entityToSave);
-    const putWebRequest: PutWebRequest = {
-      endPoint: this.CUSTOM_ATTRIBUTES_URL,
-      payload: requestBody
-    };
-    return this.wsp
-      .put(putWebRequest)
-      .then(entity => this.formatCustomAttribute(entity));
+  async putCustomAttribute(
+    entityToSave: CustomAttribute,
+    feature: CustomAttributeFeature,
+    mappingTable: CustomAttributeMappingTable
+  ): Promise<CustomAttribute> {
+    const entity = await this.wsp.putHttp<CustomAttributeFromApi>({
+      endpoint: this._securityCustomAttributesEndpoint,
+      body: this.getCustomAttributeForServiceRequest(entityToSave, feature, mappingTable),
+    });
+
+    return this.formatCustomAttribute(entity);
   }
 
-  putCustomAttributeListOption(
+  async putCustomAttributeListOption(
     entityToSave: CustomAttributeListOption
   ): Promise<CustomAttributeListOption> {
-    const requestBody = this.getCustomAttributeListOptionForServiceRequest(
-      entityToSave
-    );
-    const putWebRequest: PutWebRequest = {
-      endPoint: this.CUSTOM_ATTRIBUTE_LIST_OPTIONS_URL,
-      payload: requestBody
-    };
-    return this.wsp
-      .put(putWebRequest)
-      .then(entity => this.formatCustomAttributeListOption(entity));
+    const entity = await this.wsp.putHttp<CustomAttributeListOptionFromApi>({
+      endpoint: this._securityCustomAttributeListOptionsEndpoint,
+      body: this.getCustomAttributeListOptionForServiceRequest(entityToSave)
+    });
+
+    return this.formatCustomAttributeListOption(entity);
   }
 
-  putCustomAttributeValue(
-    entityToSave: CustomAttributeValue
+  async putCustomAttributeValue(
+    entityToSave: CustomAttributeValue,
+    feature?: CustomAttributeFeature,
+    mappingTable?: CustomAttributeMappingTable
   ): Promise<CustomAttributeValue> {
-    const requestBody = this.getCustomAttributeValueForServiceRequest(
-      entityToSave
-    );
-    const putWebRequest: PutWebRequest = {
-      endPoint: this.CUSTOM_ATTRIBUTE_VALUES_URL,
-      payload: requestBody
-    };
-    return this.wsp
-      .put(putWebRequest)
-      .then(entity => this.formatCustomAttributeValue(entity));
+    const entity = await this.wsp.putHttp<CustomAttributeValueFromApi>({
+      endpoint: this._securityCustomAttributeValuesEndpoint,
+      body: this.getCustomAttributeValueForServiceRequest(
+        entityToSave,
+        feature === CustomAttributeFeature.ORGANIZATION ? 'Investor' : feature
+      )
+    });
+
+    return this.formatCustomAttributeValue(entity);
   }
 
-  private formatCustomAttribute(
+  public formatCustomAttribute(
     entity: CustomAttributeFromApi
   ): CustomAttribute {
-    const id = parseInt(entity.id);
+    const id = parseInt(entity.id, 10);
     return new CustomAttribute(
       !isNaN(id) ? id : null,
       entity.name,
@@ -224,12 +210,13 @@ export class CustomAttributesService {
     );
   }
 
-  private formatCustomAttributeListOption(
+  public formatCustomAttributeListOption(
     entity: CustomAttributeListOptionFromApi
   ): CustomAttributeListOption {
-    const customAttributeId = parseInt(entity.customattributeid),
-      id = parseInt(entity.id),
-      viewOrder = parseInt(entity.vieworder);
+    const id = parseInt(entity.id, 10);
+    const viewOrder = parseInt(entity.vieworder, 10);
+    const customAttributeId = parseInt(entity.customattributeid, 10);
+
     return new CustomAttributeListOption(
       !isNaN(customAttributeId) ? customAttributeId : null,
       !isNaN(id) ? id : null,
@@ -241,12 +228,12 @@ export class CustomAttributesService {
   private formatCustomAttributeValue(
     entity: CustomAttributeValueFromApi
   ): CustomAttributeValue {
-    let customAttributeId = parseInt(entity.customattributeid),
-      id = parseInt(entity.id),
-      securityId = parseInt(entity.securityid),
+    const customAttributeId = parseInt(entity.customattributeid, 10),
+      id = parseInt(entity.id, 10),
+      securityId = parseInt(entity.securityid, 10),
       type = entity.type,
-      value = entity.value,
-      parsedValue;
+      value = entity.value;
+    let parsedValue;
     switch (type) {
       case 'Number':
         const floatValue = parseFloat(value);
@@ -256,26 +243,29 @@ export class CustomAttributesService {
         const valueMoment = moment(value, 'MM/DD/YYYY');
         parsedValue = valueMoment.isValid() ? valueMoment.toDate() : null;
         break;
+      case 'Checkbox':
+        parsedValue = value === '1';
+        break;
       default:
         parsedValue = value;
     }
-    return new CustomAttributeValue(
-      !isNaN(customAttributeId) ? customAttributeId : null,
-      !isNaN(id) ? id : null,
-      !isNaN(securityId) ? securityId : null,
-      type,
-      parsedValue
-    );
+    return new CustomAttributeValue({
+      customAttributeId: !isNaN(customAttributeId) ? customAttributeId : null,
+      id: !isNaN(id) ? entity.id : null,
+      securityId: !isNaN(securityId) ? securityId : null,
+      type: type,
+      value: parsedValue
+    });
   }
 
-  private getCustomAtttributeListOptions(
+  private async getCustomAttributeListOptions(
     customAttributeId: number
   ): Promise<CustomAttributeListOption[]> {
-    const fields = ['CustomAttributeId', 'Id', 'ListOption', 'ViewOrder'],
-      getWebRequest: GetWebRequest = {
-        endPoint: this.CUSTOM_ATTRIBUTE_LIST_OPTIONS_URL,
-        options: {
-          fields,
+    const entities = await this.wsp
+      .getHttp<CustomAttributeListOptionFromApi[]>({
+        endpoint: this._securityCustomAttributeListOptionsEndpoint,
+        params: {
+          fields: ['CustomAttributeId', 'Id', 'ListOption', 'ViewOrder'],
           filters: [
             {
               key: 'CustomAttributeId',
@@ -284,16 +274,15 @@ export class CustomAttributesService {
             }
           ]
         }
-      };
-    return this.wsp
-      .get(getWebRequest)
-      .then((entities: CustomAttributeListOptionFromApi[]) =>
-        entities.map(entity => this.formatCustomAttributeListOption(entity))
-      );
+      });
+
+    return entities.map(this.formatCustomAttributeListOption);
   }
 
   private getCustomAttributeForServiceRequest(
-    entity: CustomAttribute
+    entity: CustomAttribute,
+    feature: CustomAttributeFeature,
+    mappingTable: CustomAttributeMappingTable
   ): CustomAttributeFromApi {
     const entityForApi = {} as CustomAttributeFromApi,
       { id, name, type } = entity;
@@ -306,6 +295,9 @@ export class CustomAttributesService {
     if (type !== undefined) {
       entityForApi.type = type;
     }
+    entityForApi.feature = feature;
+    entityForApi.mappingTable = mappingTable;
+
     return entityForApi;
   }
 
@@ -330,7 +322,8 @@ export class CustomAttributesService {
   }
 
   private getCustomAttributeValueForServiceRequest(
-    entity: CustomAttributeValue
+    entity: CustomAttributeValue,
+    feature: 'Investor' | 'Security' | 'Contact'
   ): CustomAttributeValueFromApi {
     const entityForApi = {} as CustomAttributeValueFromApi,
       { customAttributeId, id, securityId, type, value } = entity;
@@ -351,10 +344,14 @@ export class CustomAttributesService {
         case 'Number':
           entityForApi.value = value.toString();
           break;
+        case 'Checkbox':
+          entityForApi.value = value ? '1' : '0';
+          break;
         default:
-          entityForApi.value = <string>value;
+          entityForApi.value = typeof value === 'boolean' ? (+value).toString() : <string>value;
       }
     }
+    entityForApi[`${feature?.toLowerCase()}id`] = entity[`${feature?.toLowerCase()}Id`]?.toString();
     return entityForApi;
   }
 }

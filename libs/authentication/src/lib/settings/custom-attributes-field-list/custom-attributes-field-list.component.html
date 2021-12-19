@@ -1,0 +1,127 @@
+<div class="pnkl-page custom-attributes-container">
+    <div class="row m-0">
+      <div
+        class="col-md-12 col-md-custom1 p-0"
+      >
+        <!-- <div class="row pnkl-page-header investor-details-header-height">
+          <div class="col-md-12 full-width-padding-fix">
+            <div class="row">
+              <div class="col-md-3">
+                <h3 class="text-secondary">Custom Attributes</h3>
+              </div>
+            </div>
+          </div>
+        </div> -->
+        <div class="row m-0">
+          <div class="col-md-12 p-0">
+            <div class="row pb-0 dashboardCustomScrollbar">
+              <div class="col-md-12 p-0">
+                <div class="investor-component-card">
+                <h3 class="custom-attributes-header">Organizations</h3>
+                <div class="custom-attributes">
+                  <div class="custom-attributes-item row">
+                    <div class="custom-attributes-item-name col-md-4">Name</div>
+                    <div class="custom-attributes-item-type col-md-4">Type</div>
+                    <div class="custom-attributes-item-actions col-md-4">Actions</div>
+                    <hr>
+                  </div>
+                  <ng-container *ngFor="let attr of organizationCustomAttributes; index as index">
+                    <div class="custom-attributes-item row">
+                      <div class="custom-attributes-item-name col-md-4">{{ attr.name }}</div>
+                      <div class="custom-attributes-item-type col-md-4">{{ attr.type }}</div>
+                      <div class="custom-attributes-item-actions col-md-4">
+                        <button (click)="onEditCustomAttribute(attr, 'ORGANIZATION')">
+                          <i class="icon-pinnakl-edit-securities"></i>
+                        </button>
+                        <button #anchor (click)="onDeleteCustomAttribute(index, 'ORGANIZATION')">
+                          <i class="icon-pinnakl-trash-empty delete-icon"></i>
+                        </button>
+                        <confirm-action
+                        [anchor]="anchor"
+                        confirmationMessage="Are you sure you want to remove this field?"
+                        messageClass="col-md-8"
+                        (onCancelled)="confirmationOrganizationVisible[index] = false"
+                        (onConfirmed)="confirmationOrganizationVisible[index] = false; removeCustomAttribute(attr, index, 'ORGANIZATION')"
+                        [showConfirmation]="confirmationOrganizationVisible[index]"
+                        ></confirm-action>
+                      </div>
+                    </div>
+                    <hr>
+                  </ng-container>
+                </div>
+                <button class="btn btn-primary add-new" (click)="onAddNew('ORGANIZATION')">Add New</button>
+                </div>
+                <br>
+                <div class="investor-component-card">
+                  <h3 class="custom-attributes-header">Contacts</h3>
+                  <div class="custom-attributes">
+                    <div class="custom-attributes-item row">
+                      <div class="custom-attributes-item-name col-md-4">Name</div>
+                      <div class="custom-attributes-item-type col-md-4">Type</div>
+                      <div class="custom-attributes-item-actions col-md-4">Actions</div>
+                    </div>
+                    <hr>
+                    <ng-container *ngFor="let attr of contactCustomAttributes; index as index">
+                      <div class="custom-attributes-item row">
+                        <div class="custom-attributes-item-name col-md-4">{{ attr.name }}</div>
+                        <div class="custom-attributes-item-type col-md-4">{{ attr.type }}</div>
+                        <div class="custom-attributes-item-actions col-md-4">
+                          <button (click)="onEditCustomAttribute(attr, 'CONTACT')">
+                            <i class="icon-pinnakl-edit-securities"></i>
+                          </button>
+                          <button #anchor (click)="onDeleteCustomAttribute(index, 'CONTACT')">
+                            <i class="icon-pinnakl-trash-empty delete-icon"></i>
+                          </button>
+                          <confirm-action
+                          [anchor]="anchor"
+                          confirmationMessage="Are you sure you want to remove this field?"
+                          messageClass="col-md-8"
+                          (onCancelled)="confirmationContactVisible[index] = false"
+                          (onConfirmed)="confirmationContactVisible[index] = false; removeCustomAttribute(attr, index, 'CONTACT')"
+                          [showConfirmation]="confirmationContactVisible[index]"
+                          ></confirm-action>
+                        </div>
+                      </div>
+                      <hr>
+                    </ng-container>
+                  </div>
+                  <button class="btn btn-primary add-new" (click)="onAddNew('CONTACT')">Add New</button>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<pinnakl-modal
+  [hideDialog]="!showCustomAttributeModal"
+  [showCloseButton]="false"
+  [minWidth]="900"
+>
+  <div>
+    <div class="row modal-header">
+      <div class="col-md-8">
+        <h5 class="modal-title" id="exampleModalLabel">
+          {{ editMode ? 'Edit' : 'Add' }} Custom Attributes
+        </h5>
+      </div>
+      <div class="text-align-right col-md-4">
+        <button type="button" (click)="toggleManageAttributesModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+    <div class="modal-body container-fluid">
+      <pnkl-custom-attributes-field-creator
+        class="row"
+        [customAttribute]="selectedCustomAttribute"
+        [editMode]="editMode"
+        [setCustomAttributeFeature]="customAttributeFeatureName"
+        (customAttributesUpdated)="reloadAttributes()"
+      >
+      </pnkl-custom-attributes-field-creator>
+    </div>
+  </div>
+</pinnakl-modal>

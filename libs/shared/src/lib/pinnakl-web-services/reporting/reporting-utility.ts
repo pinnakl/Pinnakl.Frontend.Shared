@@ -1,5 +1,5 @@
+import { CustomAttribute } from '../../models';
 import { ReportColumn, ReportingColumn } from '../../models/reporting';
-import { CustomAttribute } from '../../models/security';
 
 export function getReportingColumnsFromCustomAttributes(
   customAttributes: CustomAttribute[]

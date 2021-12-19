@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import { Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -12,15 +12,13 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     }
   ]
 })
-export class PinnaklTimeInputComponent implements OnInit, ControlValueAccessor {
+export class PinnaklTimeInputComponent implements ControlValueAccessor {
   @Input() disableInput: boolean;
   @Input() format = 'HH:mm:ss';
   @Input() inputClass: string;
   onChange: Function;
   value: Date;
-  constructor() {}
 
-  ngOnInit(): void {}
   registerOnChange(fn): void {
     this.onChange = fn;
   }

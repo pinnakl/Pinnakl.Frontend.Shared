@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 
 import { interval, Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
-import { EventSourceService, UserService, WebServiceProvider } from '@pnkl-frontend/core';
+import { ServerSentEventsStreamService } from '@pnkl-frontend/core';
 import { environment } from '../../../../environments';
 import { DashboardMarketMacroStatFromApi } from './dashboard-market-macro-stat-from-api.model';
 import { DashboardMarketMacroStat } from './dashboard-market-macro-stat.model';
@@ -12,42 +12,28 @@ const USE_MOCK = !environment.production && false;
 
 @Injectable()
 export class DashboardMarketMacroStatService {
-  private readonly RESOURCE_URL = 'dashboard_market_macro_stats';
-  private readonly EVENT_TYPE = 'message';
-  private readonly EVENT_SOURCE_RESOURCE_URL = `${
-    environment.sseAppUrl
-  }MacroStatNotification/Subscribe`;
-
-  constructor(
-    private eventSourceService: EventSourceService,
-    private userService: UserService,
-    private wsp: WebServiceProvider
-  ) {}
+  constructor(private readonly _sse: ServerSentEventsStreamService) { }
 
   async getAll(): Promise<DashboardMarketMacroStat[]> {
-    const entitiesFromApi: DashboardMarketMacroStatFromApi[] = await this.wsp.get(
-      { endPoint: this.RESOURCE_URL }
-    );
+    // const entitiesFromApi: DashboardMarketMacroStatFromApi[] = await this.wsp.get(
+    //   { endPoint: this.RESOURCE_URL }
+    // );
     // const entities = entitiesFromApi.map(formatEntity);
-    const entities = mockDataFromApi.map(formatEntity);
-    return entities;
+    return mockDataFromApi.map(formatEntity);
   }
 
   subscribe(): Observable<DashboardMarketMacroStat[]> {
-    let sseUrl = `${this.EVENT_SOURCE_RESOURCE_URL}?usertoken=${
-      this.userService.getUser().token
-    }`;
     // TODO : Comment below line, only needed for prod sse testing
     // sseUrl =
     //   'https://server.pinnakl.com/PnklSSE/api/MacroStatNotification/Subscribe?usertoken=CDFA8EE56AD726CC73EF56005092D348';
     return USE_MOCK
       ? createMockStream()
-      : this.eventSourceService
-          .create<DashboardMarketMacroStatFromApi[]>({
-            eventType: this.EVENT_TYPE,
-            url: sseUrl
-          })
-          .pipe(map(x => x.map(formatEntity)));
+      : this._sse.subscribeToServerSentEvents<any[]>(environment.sseAppUrl, [], 'MacroStatNotification')
+        .pipe(map(x => x.map(formatEntity)));
+  }
+
+  unsubscribe(): void {
+    this._sse.unsubscribeToServerSentEvents(environment.sseAppUrl, [], 'MacroStatNotification');
   }
 }
 

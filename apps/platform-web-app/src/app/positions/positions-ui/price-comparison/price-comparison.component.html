@@ -1,0 +1,50 @@
+<div class="row">
+  <div class="col-md-12">
+    <p>Securities</p>
+    <kendo-multiselect
+      [virtual]="virtualSettings"
+      [data]="securities"
+      textField="ticker"
+      valueField="id"
+      (valueChange)="valueChange($event)"
+    >
+    </kendo-multiselect>
+  </div>
+</div>
+
+<kendo-chart>
+  <kendo-chart-legend
+    position="top"
+    orientation="horizontal"
+  ></kendo-chart-legend>
+  <kendo-chart-value-axis>
+    <kendo-chart-tooltip></kendo-chart-tooltip>
+    <kendo-chart-value-axis-item [title]="{ text: 'Price' }" name="priceAxis">
+      <kendo-chart-value-axis-item-labels [content]="formatPrices">
+      </kendo-chart-value-axis-item-labels>
+    </kendo-chart-value-axis-item>
+  </kendo-chart-value-axis>
+
+  <kendo-chart-category-axis>
+    <kendo-chart-category-axis-item
+      name="priceCategory"
+      [categories]="priceDates"
+    >
+      <kendo-chart-category-axis-item-labels [step]="priceStep">
+      </kendo-chart-category-axis-item-labels>
+    </kendo-chart-category-axis-item>
+  </kendo-chart-category-axis>
+
+  <kendo-chart-series>
+    <kendo-chart-series-item
+      *ngFor="let price of priceComparisonData"
+      type="line"
+      [markers]="{ visible: false }"
+      [data]="price.values"
+      [name]="price.key"
+      field="price"
+      categoryAxis="priceCategory"
+    >
+    </kendo-chart-series-item>
+  </kendo-chart-series>
+</kendo-chart>

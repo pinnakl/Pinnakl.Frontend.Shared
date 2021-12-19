@@ -1,4 +1,4 @@
-<div [@filterVisibleChanged]="filterVisible">
+<div [@filterVisibleChanged]="filterVisible" class="oms-grid-filter">
   <div class="row pnkl-page-header prospecting-header-height">
     <div class="col-md-12 full-width-padding-fix">
       <div class="row">
@@ -9,8 +9,8 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="row crm-prospecting-filter-body reporting-filter-height">
       <div class="col-md-12">
-        <div class="row">
-          <div class="col-md-12">
+        <div>
+          <div class="col-md-12" [class.presets-config]="shouldFilterHaveDateRangePresets">
             <div class="row mt-3" *ngFor="let parameter of parameters">
               <div class="col-md-12">
                 <pinnakl-input
@@ -26,8 +26,42 @@
               </div>
             </div>
           </div>
+          <ng-container *ngIf="shouldFilterHaveDateRangePresets">
+            <div class="radioGroup">
+              <span class="group-label">Previous:</span>
+              <form [formGroup]="omsDateFiltersForm">
+                <ng-container *ngFor="let item of previousFiltersControls">
+                  <span class="toggle-radio-btn">
+                    <input
+                      formControlName="filterDate"
+                      [id]="item.id"
+                      type="radio"
+                      [value]="item.value"
+                    />
+                    <label [for]="item.id">{{ item.name }}</label>
+                  </span>
+                </ng-container>
+              </form>
+            </div>
+            <div class="radioGroup">
+              <span class="group-label">To Date:</span>
+              <form [formGroup]="toDateFiltersForm">
+                <ng-container *ngFor="let item of toDateFiltersControls">
+                  <span class="toggle-radio-btn">
+                    <input
+                      formControlName="filterDate"
+                      [id]="item.id"
+                      type="radio"
+                      [value]="item.value"
+                    />
+                    <label [for]="item.id">{{ item.name }}</label>
+                  </span>
+                </ng-container>
+              </form>
+            </div>
+          </ng-container>
         </div>
-        <div pnklCustomScroll darkMode="true" class="row grid-filter-columns" *ngIf="columns && columns.length > 0">
+        <div pnklCustomScroll darkMode="true" class="oms-filter-preset row grid-filter-columns" *ngIf="columns && columns.length > 0">
           <div class="col-md-12">
             <div class="row mt-3">
               <div class="col-md-4 check-holder check-holder-empty mb-4">
@@ -86,7 +120,40 @@
             </div>
           </div>
         </div>
-        <div class="row mt-3">
+        <div *ngIf="shouldFilterHaveDateRangePresets">
+          <pinnakl-modal className="filter-presets-modal"
+                         [width]="400"
+                         [hideDialog]="isSavePresetsHide" (closeModal)="toggleModal()">
+            <filter-presets *ngIf="!isSavePresetsHide"
+                            (closeModal)="closeModalAndRefreshData()"
+                            [presetValues]="form.value"></filter-presets>
+          </pinnakl-modal>
+        </div>
+        <form [formGroup]="selectPresetForm" class="presets-list" *ngIf="shouldFilterHaveDateRangePresets && selectPresetForm && presets?.length">
+          <div class="presets-header">Filter Presets</div>
+          <div class="presets">
+            <span *ngFor="let preset of presets"
+                  class="toggle-radio-btn">
+            <input
+              type="radio"
+              formControlName="preset"
+              [id]="preset.id"
+              [value]="preset"
+            />
+            <label [for]="preset.id">{{preset.presetName}}
+              <div #presetAnchor class="remove-radio-btn" (click)="showPresetConfirmation($event, preset)"></div></label>
+              <confirm-action
+                [anchor]="presetAnchor"
+                confirmationMessage="Are you sure you want to delete the preset?"
+                (onCancelled)="preset.showDelete = false"
+                (onConfirmed)="deletePreset(preset)"
+                [showConfirmation]="preset.showDelete"
+              >
+              </confirm-action>
+          </span>
+          </div>
+        </form>
+        <div class="row mt-3 filter-actions">
           <div class="col-md-default-width">
             <button
               class="btn reset-background waves-effect text-uppercase"
@@ -97,6 +164,15 @@
             </button>
           </div>
           <div class="col-md-default-width flex-pull-right">
+            <button
+              *ngIf="shouldFilterHaveDateRangePresets"
+              class="btn presets-btn"
+              type="button"
+              (click)="toggleModal()"
+              [disabled]="!isDatesValid"
+            >
+              Save Preset
+            </button>
             <button
               class="btn btn-success waves-effect text-uppercase"
               type="submit"

@@ -10,7 +10,7 @@ import { AccountService } from '@pnkl-frontend/shared';
 @Component({
   selector: 'api-playground-home',
   templateUrl: './api-playground-home.component.html',
-  styleUrls: ['./api-playground-home.component.scss'],
+  styleUrls: ['./api-playground-home.component.scss']
 })
 export class ApiPlaygroundHomeComponent implements OnInit {
   count = 0;
@@ -24,8 +24,6 @@ export class ApiPlaygroundHomeComponent implements OnInit {
     private toastr: Toastr,
     private accountsService: AccountService
   ) {}
-
-  ngOnInit(): void {}
 
   async doSomething(): Promise<void> {
     this.accountsService.getAccounts().

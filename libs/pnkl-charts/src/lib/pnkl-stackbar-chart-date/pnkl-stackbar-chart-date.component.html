@@ -1,15 +1,22 @@
-<div class="mb-3 col-12 d-flex align-items-center justify-content-between flex-no-wrap">
-  <pnkl-line-chart-date-options
+<div class="col-12 d-flex align-items-center justify-content-between flex-no-wrap buttons-block-padding">
+  <pnkl-line-stockchart-date-options
     class="flex-grow-1"
     [selectionItems]="selectionItems"
     [(ngModel)]="options"
     (ngModelChange)="onOptionsChange()"
     [hideSelected]="hideSelected"
+    [hideDailyAndWeeklyOptions]="hideDailyAndWeeklyOptions"
+    [hideAllOptions]="hideAllOptions"
   >
-  </pnkl-line-chart-date-options>
+  </pnkl-line-stockchart-date-options>
 
-  <div class="d-flex align-items-end align-self-end">
-    <i class="icon-pinnakl-upload cursor-pointer" (click)="exportToExcel()"></i>
+  <div class="d-flex align-items-end align-self-end buttons-block mb-4">
+    <button class="btn switch-btn download-btn">
+      <i
+        class="icon-pinnakl-arrow-down download-icon cursor-pointer"
+        (click)="exportToExcel()"
+      ></i>
+    </button>
     <ng-content></ng-content>
   </div>
 </div>
@@ -25,7 +32,7 @@
       [data]="chartDataItems" [name]="item">
       <kendo-chart-series-item-tooltip>
         <ng-template let-value="value">
-          <em>{{ item }}</em> : {{ value | number }}
+          <em>{{ item }}</em> : {{ value | number: "1.0-0" }}
         </ng-template>
       </kendo-chart-series-item-tooltip>
     </kendo-chart-series-item>

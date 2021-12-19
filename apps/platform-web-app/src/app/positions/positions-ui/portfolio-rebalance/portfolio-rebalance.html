@@ -1,0 +1,138 @@
+<form
+  [formGroup]="portfolioRebalForm"
+  (ngSubmit)="showRebalanced(portfolioRebalForm)"
+  name="portfolioOptions"
+>
+  <ul class="filter-input-list">
+    <li>
+      <div class="row col-md-12">
+        <div class="col-md-7">
+          <pnkl-select
+            [required]="true"
+            [label]="'FUND'"
+            [options]="funds"
+            [modelProperty]="'id'"
+            [viewProperty]="'name'"
+            formControlName="fundsId"
+          ></pnkl-select>
+        </div>
+      </div>
+    </li>
+    <li>
+      <div class="row col-md-12" style="margin-top: 25px;">
+        <div class="col-md-7">
+          <pinnakl-input
+            controlName="date"
+            [form]="portfolioRebalForm"
+            label="DATE"
+            [required]="true"
+            type="date"
+          >
+          </pinnakl-input>
+        </div>
+      </div>
+    </li>
+    <li>
+      <div class="row col-md-12">
+        <div class="col-md-7">
+          <pnkl-select
+            [required]="true"
+            [label]="'BROKER'"
+            [options]="brokers"
+            [modelProperty]="'id'"
+            [viewProperty]="'brokerName'"
+            formControlName="brokersId"
+          ></pnkl-select>
+        </div>
+      </div>
+    </li>
+    <li>
+      <div class="row col-md-12">
+        <label class="col-md-3" style="margin-top: 28px;">
+          COMMISSION TYPE <span class="color-red">*</span>
+        </label>
+        <div class="row col-md-9">
+          <div class="flex-pull-left" style="margin-top: 20px;">
+            <span class="input-check">
+              <input
+                type="radio"
+                formControlName="commissionType"
+                [value]="'per share'"
+              />
+              <label>PER SHARE</label>
+            </span>
+
+            <span class="input-check">
+              <input
+                type="radio"
+                formControlName="commissionType"
+                [value]="'net'"
+              />
+              <label>NET</label>
+            </span>
+          </div>
+        </div>
+      </div>
+    </li>
+    <li>
+      <div class="row col-md-12" style="margin-top: 25px;">
+        <div class="col-md-7">
+          <pinnakl-input
+            controlName="commission"
+            [form]="portfolioRebalForm"
+            label="COMMISSION"
+            [required]="true"
+            type="numeric"
+          >
+          </pinnakl-input>
+        </div>
+      </div>
+    </li>
+  </ul>
+
+  <div class="flex-no-wrap" style="margin-top: 25px;">
+    <div class="col-12 light-bg">
+      <pinnakl-grid
+        [columnDefs]="columnDefs"
+        [rowData]="gridData"
+        [gridOptions]="gridOptions"
+        [headerHeight]="30"
+        [rowHeight]="30"
+        styleClass="portfolio-rebalance-grid"
+      >
+      </pinnakl-grid>
+    </div>
+  </div>
+
+  <div class="flex-no-wrap">
+    <div class="col-md-12 pt-5">
+      <div class="row">
+        <div class="flex-pull-left">
+          <button
+            type="button"
+            class="next-btn btn btn-lg btn-success text-uppercase"
+            (click)="goback()"
+          >
+            Back
+          </button>
+          <button
+            type="button"
+            class="next-btn btn btn-lg btn-success text-uppercase"
+            (click)="reset()"
+          >
+            Reset
+          </button>
+        </div>
+        <div class="flex-pull-right">
+          <button
+            type="submit"
+            class="next-btn btn btn-lg btn-success text-uppercase"
+            [disabled]="portfolioRebalForm.valid === false"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

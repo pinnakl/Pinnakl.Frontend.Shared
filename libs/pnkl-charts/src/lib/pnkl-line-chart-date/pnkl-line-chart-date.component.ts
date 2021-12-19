@@ -1,8 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 
-import { cloneDeep, groupBy, sortBy, uniq } from 'lodash';
+import { cloneDeep, sortBy, uniq } from 'lodash';
 import * as moment from 'moment';
-import * as XLSX from 'xlsx';
 
 interface Value {
   date: Date;
@@ -13,29 +12,119 @@ interface Options {
   selectedItems: string[];
 }
 
+interface ChartCustomStyles {
+  height?: string;
+}
+
 @Component({
   selector: 'pnkl-line-chart-date',
   templateUrl: './pnkl-line-chart-date.component.html',
   styleUrls: ['./pnkl-line-chart-date.component.scss']
 })
-export class PnklLineChartDateComponent implements OnInit {
-  @Input() hideSelected = false;
+export class PnklLineChartDateComponent implements OnInit, OnChanges {
+  private _styles: ChartCustomStyles;
+  @Input() fitToData = false;
+  @Input() showLegend = true;
+  @Input() colors = undefined;
+  @Input() customAxisFormat = '{0}';
+  @Input() defaultFrequency = 'Daily';
+  @Input() customCategoriesAxis = false;
+  @Input() minValue: undefined | number;
+  @Input() maxValue: undefined | number;
+  @Input() tooltipDatePipeFormat = 'mediumDate';
+  @Input() tooltipValueFormatter: (value: number) => string;
+
+  @Input() set customStyles(styles: ChartCustomStyles) {
+    this._styles = styles;
+  }
+  get customStyles() {
+    return this.transformInputStyles();
+  }
+
+  @Input() set keysToShow(keysToShow: string[]) {
+    this._keysToShow = keysToShow;
+    this.recreateOptions();
+  }
+
   @Input() set values(values: Value[]) {
     if (!values) {
       return;
     }
     this._values = cloneDeep(values);
+    this.recreateOptions();
+  }
+
+  chartDataItems: any = [];
+  selectionItems: string[] = [];
+  options: Options = { frequency: 'Daily', selectedItems: [] };
+  startMarket = new Date(
+    `${(new Date()).getMonth() + 1}/${(new Date()).getDate()}/${(new Date()).getFullYear()} 2:35:00 PM Z`
+  );
+
+  private _values: Value[] = [];
+  private _keysToShow: string[] = [];
+
+  ngOnInit(): void {
+    if (this.defaultFrequency !== 'Daily') {
+      this.options = { frequency: this.defaultFrequency, selectedItems: [...this.options.selectedItems] };
+    }
+    this.onOptionsChange();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.values || changes.keysToShow || changes.tooltipValueFormatter) {
+      this.onOptionsChange();
+    }
+  }
+
+  onOptionsChange(): void {
+    this.chartDataItems = <any>sortBy(this._values, [item => item.date]);
+    const hasMultipleLines = this.chartDataItems.length > 1;
+
+    if (this.fitToData) {
+      this.maxValue = undefined;
+      this.minValue = undefined;
+      if (!hasMultipleLines) {
+        this.selectionItems.forEach(itemKey => {
+          this.chartDataItems[0].data?.forEach(item => {
+            if (this.maxValue === undefined) {
+              this.maxValue = item[itemKey];
+            }
+            if (this.minValue === undefined) {
+              this.minValue = item[itemKey];
+            }
+            this.maxValue = Math.max(+item[itemKey], this.maxValue);
+            this.minValue = Math.min(+item[itemKey], this.minValue);
+          });
+        });
+      } else {
+        this.showLegend = true;
+      }
+      if (this.maxValue) {
+        this.maxValue += (this.maxValue - this.minValue) / 100 * 3;
+        this.minValue -= (this.maxValue - this.minValue) / 100 * 3;
+      }
+    } else {
+      this.maxValue = undefined;
+      this.minValue = undefined;
+    }
+  }
+
+  private recreateOptions(): void {
     this.selectionItems = [];
-    values.forEach(
+    this._values[0]['data'].forEach(
       dataObject =>
         (this.selectionItems = [
           ...this.selectionItems,
           ...Object.keys(dataObject ? dataObject : []).filter(
-            key => key !== 'date'
+            key => key !== 'date' && key !== 'key'
           )
         ])
     );
     this.selectionItems = uniq(this.selectionItems);
+    if (this._keysToShow.length !== 0) {
+      this.selectionItems = this._keysToShow;
+    }
 
     this.options = {
       ...this.options,
@@ -43,63 +132,10 @@ export class PnklLineChartDateComponent implements OnInit {
     };
   }
 
-  @Input() valuesType: 'currency' | 'number' = 'number';
-
-  chartDataItems: Value[] = [];
-  options: Options = { frequency: 'Daily', selectedItems: [] };
-  selectionItems: string[] = [];
-  valueFormat: string;
-
-  private _values: Value[] = [];
-
-  ngOnInit(): void {
-    this.valueFormat = this.valuesType === 'currency' ? 'c' : '{0:N2}';
-  }
-
-  exportToExcel(): void {
-    const formattedItems = this.chartDataItems.map(item => {
-      const formattedItem = {};
-      Object.keys(item)
-        .filter(key => key !== '_date_date')
-        .forEach(key => {
-          formattedItem[key.toUpperCase()] = item[key];
-        });
-      return formattedItem;
-    });
-    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(formattedItems);
-    ws['!cols'] = Object.keys(formattedItems).map(() => ({
-      wpx: 100
-    }));
-    if (formattedItems.length) {
-      Object.keys(formattedItems[0])
-        .filter((key, i) => i !== 0)
-        .forEach((key, i) => {
-          const column = String.fromCharCode(i + 2 + 64);
-          for (let j = 2; j <= formattedItems.length + 1; j++) {
-            ws[`${column}${j}`] = {
-              ...ws[`${column}${j}`],
-              z: '#,##0.00'
-            };
-          }
-        });
-    }
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, 'Export.xlsx');
-  }
-
-  onOptionsChange(): void {
-    const { frequency } = this.options;
-    const groups = groupBy(this._values, this.getGroupingFunction(frequency));
-    const groupedValues = Object.values(groups).map(
-      values => values[values.length - 1]
-    );
-    const groupedValuesSorted = sortBy(groupedValues, [item => item.date]);
-    this.chartDataItems = groupedValuesSorted;
-  }
-
   private getGroupingFunction(frequency: string): (value: Value) => string {
     switch (frequency) {
+      case 'Minutely':
+        return ({ date }: Value) => moment(date).format('HH:mm');
       case 'Daily':
         return ({ date }: Value) => moment(date).format('MM/DD/YYYY');
       case 'Weekly':
@@ -131,6 +167,12 @@ export class PnklLineChartDateComponent implements OnInit {
         throw new Error('Invalid frequency');
     }
   }
+
+  private transformInputStyles(): ChartCustomStyles {
+    return {
+      height: `${this._styles.height}px`
+    };
+  }
 }
 
 /*
@@ -139,5 +181,5 @@ Example -
     { date: new Date('01/01/2019'), english: 50, math: 89 },
     { date: new Date('02/01/2019'), english: 95, math: 80 }
   ];
-  <pnkl-line-chart-date [values]="values"></pnkl-line-chart-date>
+  <pnkl-line-stockchart-date [values]="values"></pnkl-line-stockchart-date>
 */

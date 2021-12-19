@@ -1,0 +1,23 @@
+<pinnakl-modal
+  className="new-style"
+  [showCloseButton]="true"
+  [minWidth]="375"
+  [hideDialog]="!saveAsModalShow"
+  (closeModal)="onClose.emit()"
+>
+  <div class="container-fluid">
+    <h3 class="row title">Save preset</h3>
+    <div class="justify-content-between mb-1 row-flex">
+      <div
+        class="row py-2 px-3 save-btn d-flex align-items-center justify-content-center current-preset"
+        [ngClass]="saveToCurrentDisabled ? 'save-btn-disabled' : ''"
+        (click)="saveToCurrent.emit()">
+        <div class="mr-1">Save to </div>
+        <div class="font-weight-bold" *ngIf="currentPreset?.name">{{currentPreset.name}}</div>
+      </div>
+      <div class="row ml-6 py-2 px-3 save-btn d-flex text-align-center" (click)="saveToNew.emit()">
+        Create new preset
+      </div>
+    </div>
+  </div>
+</pinnakl-modal>

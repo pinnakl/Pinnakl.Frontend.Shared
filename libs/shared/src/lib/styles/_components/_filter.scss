@@ -62,7 +62,7 @@ $filter-sibebar-bg: $ebony-clay;
   }
 }
 
-.filter-list {
+.filter-list, .active-tooltip {
   [data-tooltip] {
     &:before {
       content: attr(data-tooltip);
@@ -103,6 +103,7 @@ $filter-sibebar-bg: $ebony-clay;
     width: 100%;
   }
   > .filter-list-item {
+    cursor: pointer;
     display: inline-block;
     margin-right: 10px;
     @include media-breakpoint-down(md) {
@@ -113,6 +114,7 @@ $filter-sibebar-bg: $ebony-clay;
     }
     &.active {
       > a {
+        margin-right: 0;
         color: $color-success;
         border-color: $color-success;
         background: rgba($color-success, 0.2);
@@ -294,4 +296,16 @@ $filter-sibebar-bg: $ebony-clay;
 
 .m-t-minus-2 {
   margin-top: -2rem;
+}
+
+.done-status {
+  color: $partial-fill-status-text-color;
+}
+
+.pending-status {
+  color: $pending-status-text-color;
+}
+
+.error-status {
+  color: $rejected-status-text-color;
 }

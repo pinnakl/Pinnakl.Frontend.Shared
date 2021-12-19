@@ -11,8 +11,6 @@ export class ConfirmActionService {
     return this._showCalled.asObservable();
   }
 
-  constructor() {}
-
   confirm(): void {
     this._resolve(true);
   }

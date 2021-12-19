@@ -10,13 +10,18 @@ import {
   REQUEST_TIMEOUT_PERIOD as REQUEST_TIMEOUT_PERIOD_TOKEN
 } from './environment.tokens';
 import {
+  DeleteHttpRequest,
   DeleteWebRequest,
+  GetHttpRequest,
   GetWebRequest,
+  PostHttpRequest,
   PostManyWebRequest,
   PostWebRequest,
+  PutHttpRequest,
   PutWebRequest,
   SubscriptionResponse
 } from './models';
+import { PinnaklHttpService } from './pinnakl-http.service';
 
 import { PinnaklWebSocketService } from './pinnakl-web-socket.service';
 class PinnaklWebSocketResponse {
@@ -34,10 +39,11 @@ export class WebServiceProvider {
   }
 
   constructor(
-    private pnklWebSocketService: PinnaklWebSocketService,
-    @Inject(PRODUCTION) private DEV_MODE: boolean,
-    @Inject(REQUEST_TIMEOUT_PERIOD_TOKEN) private REQUEST_TIMEOUT_PERIOD: number
-  ) {}
+    private readonly pnklWebSocketService: PinnaklWebSocketService,
+    private readonly pnklHttpService: PinnaklHttpService,
+    @Inject(PRODUCTION) private readonly DEV_MODE: boolean,
+    @Inject(REQUEST_TIMEOUT_PERIOD_TOKEN) private readonly REQUEST_TIMEOUT_PERIOD: number
+  ) { }
   private _unauthorizedRequestHandler: () => Promise<void>;
 
   private static getActionFromUri(uri: string): 'DELETE' | 'NOTIFY' | 'POST' | 'PUT' {
@@ -53,82 +59,74 @@ export class WebServiceProvider {
     throw new Error('Invalid Action');
   }
 
-  authenticate({
+  async authenticate({
+    application,
+    password,
+    username,
+    userType
+  }: AuthenticationParameters): Promise<any> {
+    return this.pnklHttpService
+      .authenticate({ application, password, username, userType })
+      .then(response => {
+        if (this.DEV_MODE) {
+          // eslint-disable-next-line no-console
+          console.info(
+            `AUTHENTICATE Username:${username} Password:${password}`
+          );
+          console.log(response);
+        }
+        return response;
+      })
+      .catch(error => {
+        if (this.DEV_MODE) {
+          // eslint-disable-next-line no-console
+          console.info(
+            `AUTHENTICATE Username:${username} Password:${password}`
+          );
+          console.error(error);
+        }
+        throw error;
+      });
+  }
+
+  authenticateTwoFA({
     application,
     password,
     username
   }: AuthenticationParameters): Promise<any> {
-    return new Promise((resolve, reject) => {
-      let responseReceived = false;
-      setTimeout(() => {
-        if (responseReceived) {
-          return;
-        }
-        const errorMessage = `TIMEOUT: AUTHENTICATE Username:${username} Password:${password}`;
-        reject({
-          clientMessage: 'Operation timed out',
-          errorMessage
-        });
-        if (this.DEV_MODE) {
-          console.error(errorMessage);
-        }
-      }, this.REQUEST_TIMEOUT_PERIOD);
-      this.pnklWebSocketService
-        .authenticate({ application, password, username })
-        .then(response => {
-          resolve(response.body[0]);
-          responseReceived = true;
-          if (this.DEV_MODE) {
-            console.info(
-              `AUTHENTICATE Username:${username} Password:${password}`
-            );
-            console.log(response.body);
-          }
-        })
-        .catch(error => {
-          reject(error.body[0]);
-          responseReceived = true;
-          if (this.DEV_MODE) {
-            console.info(
-              `AUTHENTICATE Username:${username} Password:${password}`
-            );
-            console.error(error.body[0]);
-          }
-        });
-    });
+    return this.pnklHttpService
+      .authenticateTwoFA({ application, password, username });
+  }
+
+  qrSecret(username: string, password: string, userType: string, application = 'Desktop'): Promise<any> {
+    return this.pnklHttpService.getQrSecret(username, password, userType, application);
+  }
+
+  loginTwoFA(username: string, password: string, otp: string, token: string, userType: string, application: string): Promise<any> {
+    return this.pnklHttpService.loginTwoFA(username, password, otp, token, userType, application);
+  }
+
+  forgotPassword(email: string): Promise<any> {
+    return this.pnklHttpService.forgotPassword(email);
   }
 
   deAuthenticate(token: string): Promise<void> {
     return new Promise((resolve, reject) => {
-      let responseReceived = false;
-      setTimeout(() => {
-        if (responseReceived) {
-          return;
-        }
-        const errorMessage = `TIMEOUT: DE-AUTHENTICATE token: ${token}`;
-        reject({
-          clientMessage: 'Operation timed out',
-          errorMessage
-        });
-        if (this.DEV_MODE) {
-          console.error(errorMessage);
-        }
-      }, this.REQUEST_TIMEOUT_PERIOD);
-      this.pnklWebSocketService
+      this.pnklHttpService
         .deAuthenticate(token)
         .then(() => {
           resolve();
-          responseReceived = true;
           if (this.DEV_MODE) {
-            console.info(`DE-AUTHENTICATE token: ${token}`);
+            // eslint-disable-next-line no-console
+            console.info('DE-AUTHENTICATE');
           }
         })
         .catch(error => {
-          reject(error.body[0]);
-          responseReceived = true;
+          reject(error);
           if (this.DEV_MODE) {
-            console.info(`DE-AUTHENTICATE token: ${token}`);
-            console.error(error.body[0]);
+            // eslint-disable-next-line no-console
+            console.info('DE-AUTHENTICATE');
+            console.error(error);
           }
         });
     });
@@ -156,6 +154,7 @@ export class WebServiceProvider {
           resolve(response.body[0]);
           responseReceived = true;
           if (this.DEV_MODE) {
+            // eslint-disable-next-line no-console
             console.info(`DELETE ${deleteWebRequest.endPoint}`);
             console.log(response.body[0]);
           }
@@ -164,6 +163,7 @@ export class WebServiceProvider {
           reject(error.body[0]);
           responseReceived = true;
           if (this.DEV_MODE) {
+            // eslint-disable-next-line no-console
             console.info(`DELETE ${deleteWebRequest.endPoint}`);
             console.error(error.body[0]);
           }
@@ -171,7 +171,14 @@ export class WebServiceProvider {
     });
   }
 
-  get(getWebRequest: GetWebRequest, ignoreTimeout?: boolean): Promise<any> {
+  deleteHttp<T>(deleteHttpRequest: DeleteHttpRequest): Promise<T> {
+    return this.pnklHttpService.delete<T>(deleteHttpRequest);
+  }
+
+  get(
+    getWebRequest: GetWebRequest,
+    ignoreTimeout: boolean = false
+  ): Promise<any> {
     return new Promise((resolve, reject) => {
       let responseReceived = false;
       setTimeout(() => {
@@ -193,6 +200,7 @@ export class WebServiceProvider {
           resolve(response.body);
           responseReceived = true;
           if (this.DEV_MODE) {
+            // eslint-disable-next-line no-console
             console.info(`GET ${getWebRequest.endPoint}`);
             console.log(response.body);
           }
@@ -213,12 +221,17 @@ export class WebServiceProvider {
             reject(error.body[0]);
             responseReceived = true;
             if (this.DEV_MODE) {
+              // eslint-disable-next-line no-console
               console.info(`GET ${getWebRequest.endPoint}`);
               console.error(error.body[0]);
             }
           }
         });
     });
+  }
+
+  getHttp<T>(getHttpRequest: GetHttpRequest): Promise<T> {
+    return this.pnklHttpService.get<T>(getHttpRequest);
   }
 
   post(postWebRequest: PostWebRequest): Promise<any> {
@@ -243,6 +256,7 @@ export class WebServiceProvider {
           resolve(response.body[0]);
           responseReceived = true;
           if (this.DEV_MODE) {
+            // eslint-disable-next-line no-console
             console.info(`POST ${postWebRequest.endPoint}`);
             console.log(response.body[0]);
           }
@@ -251,11 +265,16 @@ export class WebServiceProvider {
           reject(error.body[0]);
           responseReceived = true;
           if (this.DEV_MODE) {
+            // eslint-disable-next-line no-console
             console.info(`POST ${postWebRequest.endPoint}`);
             console.error(error.body[0]);
           }
         });
     });
+  }
+
+  postHttp<T>(postHttpRequest: PostHttpRequest): Promise<T> {
+    return this.pnklHttpService.post<T>(postHttpRequest);
   }
 
   postMany(postManyWebRequest: PostManyWebRequest): Promise<any> {
@@ -280,6 +299,7 @@ export class WebServiceProvider {
           resolve(response.body[0]);
           responseReceived = true;
           if (this.DEV_MODE) {
+            // eslint-disable-next-line no-console
             console.info(`POST ${postManyWebRequest.endPoint}`);
             console.log(response.body[0]);
           }
@@ -288,6 +308,7 @@ export class WebServiceProvider {
           reject(error.body[0]);
           responseReceived = true;
           if (this.DEV_MODE) {
+            // eslint-disable-next-line no-console
             console.info(`POST ${postManyWebRequest.endPoint}`);
             console.error(error.body[0]);
           }
@@ -317,6 +338,7 @@ export class WebServiceProvider {
           resolve(response.body[0]);
           responseReceived = true;
           if (this.DEV_MODE) {
+            // eslint-disable-next-line no-console
             console.info(`PUT ${putWebRequest.endPoint}`);
             console.log(response.body[0]);
           }
@@ -325,6 +347,7 @@ export class WebServiceProvider {
           reject(error.body[0]);
           responseReceived = true;
           if (this.DEV_MODE) {
+            // eslint-disable-next-line no-console
             console.info(`PUT ${putWebRequest.endPoint}`);
             console.error(error.body[0]);
           }
@@ -332,22 +355,29 @@ export class WebServiceProvider {
     });
   }
 
-  subscribe(uri: string): Observable<SubscriptionResponse<object>> {
+  putHttp<T>(putHttpRequest: PutHttpRequest): Promise<T> {
+    return this.pnklHttpService.put<T>(putHttpRequest);
+  }
+
+  subscribe(uri: string): Observable<SubscriptionResponse<any>> {
     const wsObservable: Observable<PinnaklWebSocketResponse> = new Observable(
       (observer: Observer<PinnaklWebSocketResponse>) => {
         if (this.DEV_MODE) {
+          // eslint-disable-next-line no-console
           console.info(`SUB ${uri}`);
         }
         this.pnklWebSocketService.sub(uri);
         this.pnklWebSocketService.setNotify(result => {
           observer.next(result);
           if (this.DEV_MODE) {
+            // eslint-disable-next-line no-console
             console.info(uri);
             console.log(result.body);
           }
         });
         return () => {
           if (this.DEV_MODE) {
+            // eslint-disable-next-line no-console
             console.info(`UNSUB ${uri}`);
           }
           this.pnklWebSocketService.unsub(uri);
@@ -369,18 +399,21 @@ export class WebServiceProvider {
     const wsObservable: Observable<PinnaklWebSocketResponse> = new Observable(
       (observer: Observer<PinnaklWebSocketResponse>) => {
         if (this.DEV_MODE) {
+          // eslint-disable-next-line no-console
           console.info(`SUB ${uris}`);
         }
         this.pnklWebSocketService.subToMany(uris);
         this.pnklWebSocketService.setNotify(result => {
           observer.next(result);
           if (this.DEV_MODE) {
+            // eslint-disable-next-line no-console
             console.info(result.uri);
             console.log(result.body);
           }
         });
         return () => {
           if (this.DEV_MODE) {
+            // eslint-disable-next-line no-console
             console.info(`UNSUB ${uris}`);
           }
           this.pnklWebSocketService.unsubFromMany(uris);

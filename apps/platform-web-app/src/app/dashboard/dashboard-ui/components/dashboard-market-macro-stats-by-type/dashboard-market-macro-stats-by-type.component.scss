@@ -1,5 +1,8 @@
 .stat-change {
   color: #35bd64;
+  display: flex;
+  flex-wrap: nowrap;
+
   &.negative {
     color: #f74053;
   }
@@ -12,9 +15,11 @@
   background-color: white;
   padding: 0.5rem 1.5rem;
   margin-bottom: 1.5rem;
+
   &:last-child {
     margin-bottom: 0;
   }
+
   &.macro {
     background-color: transparent;
     border: solid 1px #bcc4cb;
@@ -30,6 +35,20 @@
 .stat-value {
   font-size: 16px;
   color: #7e8c9e;
+}
+
+@media screen and (max-width: 1600px) {
+  .stat-container {
+    padding: 0.5rem 1rem;
+  }
+  .stat-name {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .stat-value {
+    font-size: 14px;
+    color: #7e8c9e;
+  }
 }
 
 .stats-type {

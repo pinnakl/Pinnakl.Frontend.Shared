@@ -1,5 +1,7 @@
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import { Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { PinnaklDateType } from '../input-options.model';
+import { PinnaklDateInputHelper } from './pinnakl-date-input.helper';
 
 @Component({
   selector: 'pinnakl-date-input',
@@ -12,15 +14,16 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     }
   ]
 })
-export class PinnaklDateInputComponent implements OnInit, ControlValueAccessor {
+export class PinnaklDateInputComponent implements ControlValueAccessor {
   @Input() disableInput: boolean;
   @Input() dateOptions: { format: string };
   @Input() inputClass: string;
+  @Input() topView = 'month';
+  @Input() bottomView = 'month';
+  @Input() type: PinnaklDateType;
   onChange: Function;
   value: Date;
-  constructor() {}
-
-  ngOnInit(): void {}
+  helper = new PinnaklDateInputHelper();
 
   registerOnChange(fn): void {
     this.onChange = fn;
@@ -33,6 +36,6 @@ export class PinnaklDateInputComponent implements OnInit, ControlValueAccessor {
   registerOnTouched(fn): void {}
 
   valueChanged(body: any): void {
-    this.onChange(body);
+    this.onChange(this.helper.inputTypePreformation(body, this.type));
   }
 }

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { AbstractControl, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { InputOptions } from './input-options.model';
 
@@ -36,20 +36,23 @@ export class PinnaklInputComponent {
   dropdownOptions: {
     allowCustom?: boolean;
     isAsync?: boolean;
+    clearButton?: boolean;
     modelNormalizer?: (textObservable: Observable<string>) => Observable<any>;
     modelProperty?: string;
     objectModel?: boolean;
     viewProperty?: string;
   };
-  @Input() form: FormGroup;
+  @Input() form: FormGroup | AbstractControl;
   @Input() format: string;
   @Input() hideLabel = false;
   @Input() inputClass: string;
+  @Input() containerClass: string;
   @Input() showValidation = true;
   @Input() inputOptions: InputOptions;
   @Input() label: string;
   @Input() labelClass: string;
   @Output() placeDetailsReceived = new EventEmitter<Place>();
+  @Output() onFilterValueChange = new EventEmitter<string>();
   @Input()
   placeOptions: {
     placeType: string;
@@ -59,8 +62,11 @@ export class PinnaklInputComponent {
   @Input() required: boolean;
   @Input() textEditorHeight = 500;
   @Input() type: string;
+  @Input() placeholder = '';
   @Input() textalign = 'left';
   @Input() value = false;
+  @Input() topView = 'month';
+  @Input() bottomView = 'month';
   toggleStyle = { holder: '', switch: '' };
   dropdownFetchDataEmit(): void {
     this.dropdownFetchData.emit();
@@ -68,6 +74,10 @@ export class PinnaklInputComponent {
 
   dropdownValueChanged(changedDropdownModelValue: any): void {
     this.onDropdownValueChange.emit(changedDropdownModelValue);
+  }
+
+  filterValueChange(text: string) {
+    this.onFilterValueChange.emit(text);
   }
 
   setCheckboxStyle(): string {

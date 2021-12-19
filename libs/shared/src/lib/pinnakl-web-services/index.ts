@@ -18,3 +18,6 @@ export * from './reporting';
 export * from './security';
 export * from './trade.service';
 export * from './trade-allocation.service';
+export * from './positions-load-all-data.service';
+export * from './pricing-mock-data';
+export * from './pricing.service.stub';

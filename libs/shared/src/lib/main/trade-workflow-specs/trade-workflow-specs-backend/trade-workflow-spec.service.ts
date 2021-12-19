@@ -6,23 +6,22 @@ import { TradeWorkflowSpec } from './trade-workflow-spec.model';
 
 @Injectable()
 export class TradeWorkflowSpecService {
-  private readonly _FIELDS = [
-    'clientId',
-    'id',
-    'listedExecution',
-    'manualApproval',
-    'nonlistedFills',
-    'realTimePortfolio'
-  ];
-  private readonly _RESOURCE_URL = 'trade_workflow_specs';
+  private readonly _tradeWorkflowSpecsEndpoint = 'trade_workflow_specs';
 
-  constructor(private _wsp: WebServiceProvider) {}
+  constructor(private readonly _wsp: WebServiceProvider) {}
 
   async getAll(): Promise<TradeWorkflowSpec[]> {
-    const entitiesFromApi: TradeWorkflowSpecFromApi[] = await this._wsp.get({
-      endPoint: this._RESOURCE_URL,
-      options: {
-        fields: this._FIELDS
+    const entitiesFromApi: TradeWorkflowSpecFromApi[] = await this._wsp.getHttp<TradeWorkflowSpecFromApi[]>({
+      endpoint: this._tradeWorkflowSpecsEndpoint,
+      params: {
+        fields: [
+          'clientId',
+          'id',
+          'listedExecution',
+          'manualApproval',
+          'nonlistedFills',
+          'realTimePortfolio'
+        ]
       }
     });
     return _formatEntities(entitiesFromApi);
@@ -38,17 +37,21 @@ function _formatEntities(
 function _formatEntity({
   clientid,
   id,
+  calcaum,
   listedexecution,
   manualapproval,
   nonlistedfills,
-  realtimeportfolio
+  realtimeportfolio,
+  rebalancebpsadjvisible
 }: TradeWorkflowSpecFromApi): TradeWorkflowSpec {
   return {
     clientId: +clientid,
     id: +id,
+    calcAum: calcaum === 'True',
     listedExecution: listedexecution === 'True',
     manualApproval: manualapproval === 'True',
     nonlistedFills: nonlistedfills === 'True',
-    realTimePortfolio: realtimeportfolio === 'True'
+    realTimePortfolio: realtimeportfolio === 'True',
+    rebalanceBpsAdjVisible: rebalancebpsadjvisible === 'True'
   };
 }

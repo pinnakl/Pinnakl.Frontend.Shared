@@ -1,0 +1,35 @@
+<div class="configuration-lists-item">
+  <ul pnklCustomScroll darkMode="true" class="mt-3 configuration-lists" [style.height.px]="height">
+    <p class="text-uppercase">Current Set</p>
+    <a
+      (click)="removeAllColumns()"
+      class="text-uppercase icon-pinnakl-cancel cursor-pointer"
+      >Remove ALL</a
+    >
+    <li
+      [class.color-blue]="isImportantColumn(column)"
+      *ngFor="let column of selectedColumns"
+    >
+      {{ column.caption }}
+      <a
+        (click)="removeColumn(column)"
+        class="icon-pinnakl-cancel cancel-btn cursor-pointer"
+      ></a>
+    </li>
+  </ul>
+
+  <div class="row center-aligned-row">
+    <div class="col-md-11" #anchor>
+    <confirm-action
+      [anchor]="anchor"
+      confirmationMessage="Are you sure you want to remove this field? Removing it will disable action-detail pop up."
+      containerClass="positions-config-column-remove-confirmation"
+      messageClass="col-md-8"
+      (onCancelled)="confirmationVisible = false"
+      (onConfirmed)="confirmationVisible = false; removeImportantColumn()"
+      [showConfirmation]="confirmationVisible"
+    >
+    </confirm-action>
+    </div>
+  </div>
+</div>

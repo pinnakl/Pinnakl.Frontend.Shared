@@ -1,11 +1,10 @@
-import { Action } from '@ngrx/store';
+import { createAction } from '@ngrx/store';
 
 export enum ClearStoreActionTypes {
   ClearStore = '[Clear Store] Clears store'
 }
 
-export class ClearStore implements Action {
-  readonly type = ClearStoreActionTypes.ClearStore;
-}
 
-export type ClearStoreActions = ClearStore;
+export const ClearStore = createAction(
+  ClearStoreActionTypes.ClearStore
+);

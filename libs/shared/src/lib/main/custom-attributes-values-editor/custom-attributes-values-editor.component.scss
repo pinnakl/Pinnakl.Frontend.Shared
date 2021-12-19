@@ -1,0 +1,9 @@
+.attr-inputs-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    .input-class {
+        width: 25%;
+        margin-right: 20px;
+    }
+}

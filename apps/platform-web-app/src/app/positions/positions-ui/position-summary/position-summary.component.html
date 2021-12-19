@@ -1,0 +1,250 @@
+<div class="row">
+  <div class="col-md-9 side-border">
+    <div class="row MB12 MT30">
+      <div class="col-md-12"><h3>Position</h3></div>
+    </div>
+    <div class="row MB30">
+      <div class="col-md-3">
+        <div class="row">
+          <div
+            class="col-md-12"
+            *ngIf="totalPosition"
+          >
+            <h3>{{ totalPosition | number: '.0-1' }}</h3>
+          </div>
+        </div>
+        <div class="row positionSumKey"><div class="col-md-12">Total</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="row MB12 MT30">
+      <div class="col-md-12"><h3>Last Price</h3></div>
+    </div>
+    <div class="row MB30">
+      <div class="col-md-12">
+        <div class="row">
+          <div class="col-md-12" *ngIf="lastPrice || lastPrice === 0">
+            <h3>{{ lastPrice | number: '.0-2' }}</h3>
+          </div>
+        </div>
+        <div class="row positionSumKey">
+          <div class="col-md-12">{{ latestPricingDate }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row positionByAccount">
+  <div class="col-md-9 side-border">
+    <div class="row MB12 MT30">
+      <div class="col-md-12"><h3>Position by Account and Custodian</h3></div>
+    </div>
+    <div class="row MB30">
+      <div class="col-md-12">
+        <div class="row posSummaryRow">
+          <div class="col-md-1"></div>
+          <div
+            class="FB"
+            [ngClass]="{
+              'col-md-2':
+                custodianHeaderArr.length === 1 ||
+                custodianHeaderArr.length === 2,
+              'col-md-1':
+                custodianHeaderArr.length === 3 ||
+                custodianHeaderArr.length === 4 ||
+                custodianHeaderArr.length === 5 ||
+                custodianHeaderArr.length === 6
+            }"
+            *ngFor="let cust of custodianHeaderArr"
+          >
+            {{ cust.custodian }}
+          </div>
+          <div
+            class="col-md-2 FB right-align"
+            *ngIf="custodianHeaderArr && custodianHeaderArr.length > 1"
+          >
+            Total
+          </div>
+          <div class="col-md-2 FB right-align">Market Value</div>
+          <div class="col-md-2 FB right-align">% of AUM</div>
+        </div>
+        <div class="row posSummaryRow" *ngFor="let row of formattedPosSummary">
+          <div class="col-md-1 FB">{{ row.AccountCode | uppercase }}</div>
+          <div
+            [ngClass]="{
+              'col-md-2':
+                custodianHeaderArr.length === 1 ||
+                custodianHeaderArr.length === 2,
+              'col-md-1':
+                custodianHeaderArr.length === 3 ||
+                custodianHeaderArr.length === 4 ||
+                custodianHeaderArr.length === 5 ||
+                custodianHeaderArr.length === 6
+            }"
+            *ngFor="let custKey of custodianHeaderArr"
+          >
+            <div *ngFor="let custValue of row.custodians">
+              <div *ngIf="custValue.custodian === custKey.custodian">
+                {{ custValue.position | number: '.0-1' }}
+              </div>
+            </div>
+          </div>
+          <div
+            class="col-md-2 right-align"
+            *ngIf="custodianHeaderArr && custodianHeaderArr.length > 1"
+          >
+            {{ row.totalPosition | number: '.0-1' }}
+          </div>
+          <div class="col-md-2 right-align">
+            {{ row.marketValue | number: '.0-0' }}
+          </div>
+          <div class="col-md-2 right-align">
+            {{ row.aumPercent | number: '.2-2' }} %
+          </div>
+        </div>
+
+
+        <div style="padding-top:50px;">
+          <h3>
+            Shares Calculator
+          </h3>
+        </div>
+        <div class="row posSummaryRow">
+
+          <div class="col-md-2">
+            <pinnakl-input
+            type="numeric"
+            controlName="targetPct"
+            label="Target %"
+            [form]="sharesCalcForm"
+          >
+          </pinnakl-input>
+          </div>
+
+          <div class="col-md-2">
+
+            <pinnakl-input
+            type="numeric"
+            controlName="sharesCalc"
+            label="Shares"
+            [form]="sharesCalcForm"
+          >
+          </pinnakl-input>
+          </div>
+
+        <div class="col-md-2">
+          <button
+            class="btn btn-outline-secondary waves-effect"
+            type="button"
+            (click)="calcQuantity()"
+          >Calculate</button>
+        </div>
+
+        <div class="col-md-2">
+          <button
+            class="btn btn-primary waves-effect"
+            type="button"
+            (click)="openTrade()"
+          >Enter Ticket</button>
+        </div>
+
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="row MB12 MT30">
+      <div class="col-md-12"><h3>P&L</h3></div>
+      <div class="col-md-12">{{ latestPnlDate }}</div>
+    </div>
+    <div *ngFor="let pnlValue of pnlValues">
+      <div class="row MB30">
+        <div class="col-md-2">
+          <div class="row positionSumKey">
+            <div class="col-md-12">{{ pnlValue.accountCode }}</div>
+          </div>
+        </div>
+        <div class="col-md-5">
+          <div class="row">
+            <div
+              class="col-md-12"
+              *ngIf="pnlValue.mtdPnl || pnlValue.mtdPnl === 0"
+            >
+              <div class="FB">${{ pnlValue.mtdPnl | number: '.0-5' }}</div>
+            </div>
+          </div>
+          <div class="row positionSumKey">
+            <div class="col-md-12">MTD P&L</div>
+          </div>
+        </div>
+        <div class="col-md-5">
+          <div class="row">
+            <div class="col-md-8" *ngIf="pnlValue.mtdPct >= 0">
+              <div class="pnl_pos_text_color">
+                {{ pnlValue.mtdPct | number: '.2-2' }}%
+              </div>
+            </div>
+            <div class="col-md-8" *ngIf="pnlValue.mtdPct < 0">
+              <div class="pnl_neg_text_color">
+                {{ pnlValue.mtdPct | number: '.2-2' }}%
+              </div>
+            </div>
+          </div>
+          <div class="row positionSumKey">
+            <div class="col-md-12">MTD P&L %</div>
+          </div>
+        </div>
+        <div class="col-md-2"></div>
+        <div class="col-md-5">
+          <div class="row">
+            <div
+              class="col-md-12"
+              *ngIf="pnlValue.ytdPnl || pnlValue.ytdPnl === 0"
+            >
+              <div class="FB">${{ pnlValue.ytdPnl | number: '.0-5' }}</div>
+            </div>
+          </div>
+          <div class="row positionSumKey">
+            <div class="col-md-12">YTD P&L</div>
+          </div>
+        </div>
+        <div class="col-md-5">
+          <div class="row">
+            <div class="col-md-8" *ngIf="pnlValue.ytdPct >= 0">
+              <div class="pnl_pos_text_color">
+                {{ pnlValue.ytdPct | number: '.2-2' }}%
+              </div>
+            </div>
+            <div class="col-md-8" *ngIf="pnlValue.ytdPct < 0">
+              <div class="pnl_neg_text_color">
+                {{ pnlValue.ytdPct | number: '.2-2' }}%
+              </div>
+            </div>
+          </div>
+          <div class="row positionSumKey">
+            <div class="col-md-12">YTD P&L %</div>
+          </div>
+        </div>
+        <!--
+          <div class="col-md-3">
+                 <div class="row">
+                     <div class="col-md-12"
+                         *ngIf="pnlValue.itdPnl || pnlValue.itdPnl==0">
+                         <h3>${{pnlValue.itdPnl | number:'.0-1'}}</h3>
+                     </div>
+                 </div>
+                 <div class="row positionSumKey">
+                     <div class="col-md-12">
+                         ITD P&L
+                     </div>
+                 </div>
+             </div>
+        -->
+      </div>
+    </div>
+  </div>
+</div>

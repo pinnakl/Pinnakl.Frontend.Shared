@@ -1,53 +1,42 @@
-<div class="mb-3 col-12 d-flex align-items-center justify-content-between flex-no-wrap">
-  <pnkl-line-chart-date-options
-    class="flex-grow-1"
-    [selectionItems]="selectionItems"
-    [(ngModel)]="options"
-    (ngModelChange)="onOptionsChange()"
-    [hideSelected]="hideSelected"
-  >
-  </pnkl-line-chart-date-options>
-
-  <div class="d-flex align-items-end align-self-end">
-    <i class="icon-pinnakl-upload cursor-pointer" (click)="exportToExcel()"></i>
-    <ng-content></ng-content>
-  </div>
-</div>
-<kendo-stockchart>
+<kendo-chart [style]="customStyles">
   <kendo-chart-legend
+    [visible]="showLegend"
     position="bottom"
     orientation="horizontal"
   ></kendo-chart-legend>
-  <kendo-chart-tooltip [format]="valueFormat"></kendo-chart-tooltip>
   <kendo-chart-series>
     <kendo-chart-series-item
-      *ngFor="let item of options.selectedItems"
+      *ngFor="let item of chartDataItems"
       categoryField="date"
       type="line"
-      [data]="chartDataItems"
-      [field]="item"
-      [name]="item"
+      [data]="item.data"
+      [field]="options.selectedItems[0]"
+      [name]="item.name"
       [style]="'smooth'"
     >
+      <kendo-chart-series-item-tooltip>
+        <ng-template let-value="value" let-category="category">
+          {{
+            (
+              (category | date:tooltipDatePipeFormat) === '12:00 AM' ?
+                startMarket : category) | date:tooltipDatePipeFormat
+          }}
+          <b>{{ tooltipValueFormatter ? tooltipValueFormatter(value) : value }}</b>
+        </ng-template>
+      </kendo-chart-series-item-tooltip>
     </kendo-chart-series-item>
   </kendo-chart-series>
+  <kendo-chart-category-axis *ngIf="customCategoriesAxis">
+    <kendo-chart-category-axis-item
+      [maxDivisions]="20"
+      color="gray"
+    ></kendo-chart-category-axis-item>
+  </kendo-chart-category-axis>
   <kendo-chart-value-axis>
-    <kendo-chart-value-axis-item>
+    <kendo-chart-value-axis-item [min]="minValue" [max]="maxValue" color="gray">
       <kendo-chart-value-axis-item-labels
-        [format]="valueFormat"
+        [format]="customAxisFormat"
       ></kendo-chart-value-axis-item-labels>
     </kendo-chart-value-axis-item>
   </kendo-chart-value-axis>
-  <kendo-chart-navigator>
-    <kendo-chart-navigator-series>
-      <kendo-chart-navigator-series-item
-        *ngFor="let item of options.selectedItems"
-        type="area"
-        [data]="chartDataItems"
-        [field]="item"
-        categoryField="date"
-      >
-      </kendo-chart-navigator-series-item>
-    </kendo-chart-navigator-series>
-  </kendo-chart-navigator>
-</kendo-stockchart>
+</kendo-chart>

@@ -1,0 +1,17 @@
+<div class="bg-white p-4 rounded">
+  <h3>
+    {{ title }} <span><ng-content></ng-content></span>
+  </h3>
+  <pinnakl-grid
+    [gridHeight]="'220px'"
+    [deltaRowDataMode]="true"
+    [themeClass]="'pnkl-grid-theme'"
+    [columnDefs]="colDefs"
+    [headerHeight]="30"
+    [gridOptions]="gridOptions"
+    [getRowNodeId]="getRowNodeId"
+    [rowData]="rowData"
+    [rowHeight]="30"
+    styleClass="full-width"
+  ></pinnakl-grid>
+</div>

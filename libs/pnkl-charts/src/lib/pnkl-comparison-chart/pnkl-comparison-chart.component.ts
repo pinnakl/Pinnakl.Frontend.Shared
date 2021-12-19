@@ -1,5 +1,7 @@
 import { DecimalPipe } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+
+import { Dictionary, groupBy } from "lodash";
 
 import * as Highcharts from 'highcharts/highstock';
 import HC_exportData from 'highcharts/modules/export-data';
@@ -9,14 +11,13 @@ import * as XLSX from 'xlsx';
 HC_exporting(Highcharts);
 HC_exportData(Highcharts);
 
-(function(H) {
+(function (H) {
   if (XLSX && H.getOptions().exporting) {
-    (H.Chart.prototype as any).downloadXLSX = function() {
-      let xlsxRows = [],
-        rows;
-      rows = this.getDataRows(true);
+    (H.Chart.prototype as any).downloadXLSX = function () {
+      let xlsxRows = [];
+      const rows = this.getDataRows(true);
       xlsxRows = rows.slice(2).map(row => {
-        let formattedRow = {};
+        const formattedRow = {};
         formattedRow[rows[0][0]] = row[0];
         formattedRow[rows[0][1]] = row[1];
         formattedRow[rows[0][2]] = row[2];
@@ -29,8 +30,8 @@ HC_exportData(Highcharts);
       }));
       if (xlsxRows.length) {
         Object.keys(xlsxRows[0])
-          .filter((key, i) => i !== 0)
-          .forEach((key, i) => {
+          .filter((_, i) => i !== 0)
+          .forEach((_, i) => {
             const column = String.fromCharCode(i + 2 + 64);
             for (let j = 2; j <= xlsxRows.length + 1; j++) {
               ws[`${column}${j}`] = {
@@ -51,13 +52,13 @@ HC_exportData(Highcharts);
     // Add the menu item handler
     H.getOptions().exporting.menuItemDefinitions.downloadXLSX = {
       textKey: 'downloadXLSX',
-      onclick: function() {
+      onclick: function () {
         (this as any).downloadXLSX();
       }
     };
 
     // Replace the menu item
-    let menuItems = H.getOptions().exporting.buttons.contextButton.menuItems;
+    const menuItems = H.getOptions().exporting.buttons.contextButton.menuItems;
     menuItems[menuItems.indexOf('downloadXLS')] = 'downloadXLSX';
   }
 })(Highcharts);
@@ -69,16 +70,18 @@ import { PnklComparisonAxisData } from './pnkl-comparison-axis-data.model';
   templateUrl: './pnkl-comparison-chart.component.html',
   styleUrls: ['./pnkl-comparison-chart.component.scss']
 })
-export class PnklComparisonChartComponent implements OnInit {
+export class PnklComparisonChartComponent implements OnInit, OnChanges {
   @Input() leftAxisData: PnklComparisonAxisData[] = [];
   @Input() rightAxisData: PnklComparisonAxisData[] = [];
   @Input() leftAxisTitle: string;
   @Input() rightAxisTitle: string;
+  @Input() updateChart: boolean;
 
   showLeftAxisFlags = false;
   showRightAxisFlags = false;
 
   chartConstructor = 'stockChart';
+  //  Highcharts.Options should be used, but in that case objects are not incompatible :(
   chartOptions: any;
   highcharts = Highcharts;
   groupingUnits = [
@@ -89,14 +92,37 @@ export class PnklComparisonChartComponent implements OnInit {
     ['month', [1, 2, 3, 4, 6]]
   ];
 
-  constructor(private decimalPipe: DecimalPipe) {}
+  constructor(private readonly decimalPipe: DecimalPipe) { }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!changes.leftAxisData.firstChange) {
+      this.setChartOptions();
+    }
+  }
 
   ngOnInit(): void {
     setTimeout(() => this.setChartOptions(), 2000);
   }
 
-  private formatAxisData(data: PnklComparisonAxisData[]): number[][] {
+  private formatAxisData(data: PnklComparisonAxisData[], axis: "X" | "Y"): number[][] {
     if (data && data.length > 0) {
+      // For positions axis
+      if (axis === "Y") {
+        // Group data by date
+        const dictionary: Dictionary<PnklComparisonAxisData[]> = groupBy(data, "date");
+        const newValues: PnklComparisonAxisData[] = [];
+        // Go through dictionary and create a new collection based on key.
+        // Value should be accamulated, but not sure how flagQuantity should works.
+        for (const [key, axisValues] of Object.entries(dictionary)) {
+          newValues.push({
+            date: new Date(key),
+            value: axisValues.reduce((acc, val) => acc + val.value, 0),
+            flagQuantity: axisValues.reduce((acc, val) => acc + (val.flagQuantity ?? 0), 0) || null
+          });
+        }
+        return newValues.map(row => [row.date.getTime(), row.value]);
+      }
+      // For dates axis
       return data.map(row => [row.date.getTime(), row.value]);
     }
     return [];
@@ -152,14 +178,19 @@ export class PnklComparisonChartComponent implements OnInit {
         enabled: true
       },
       navigator: {
-        enabled: true
+        enabled: true,
+        adaptToUpdatedData: true
       },
       plotOptions: {
         series: {
           pointPadding: 0.05,
           groupPadding: 0,
           borderWidth: 0,
-          shadow: false
+          shadow: false,
+          dataGrouping: {
+            enabled: true,
+            approximation: "average"
+          }
         }
       },
       series: [
@@ -167,7 +198,7 @@ export class PnklComparisonChartComponent implements OnInit {
           type: 'column',
           name: this.leftAxisTitle,
           id: 'leftAxisSeries',
-          data: this.formatAxisData(this.leftAxisData),
+          data: this.formatAxisData(this.leftAxisData, "Y"),
           color: 'rgb(204, 168, 56)',
           dataGrouping: {
             units: this.groupingUnits
@@ -179,13 +210,14 @@ export class PnklComparisonChartComponent implements OnInit {
           name: this.rightAxisTitle,
           yAxis: 1,
           color: 'rgb(255, 99, 88)',
-          data: this.formatAxisData(this.rightAxisData),
+          data: this.formatAxisData(this.rightAxisData, "X"),
           // showInLegend: true,
           tooltip: {
             valuePrefix: '$'
           },
           dataGrouping: {
-            units: this.groupingUnits
+            units: this.groupingUnits,
+            enabled: true
           }
         },
         {

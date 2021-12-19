@@ -1,23 +1,20 @@
-<kendo-chart
-  class="pinnkal-donut-chart"
-  [seriesColors]="colorArray"
-  [transitions]="transitions"
-  (render)="onRender($event)"
->
-  <kendo-chart-series>
-    <ng-template kendoChartDonutCenterTemplate>
-      <h3 *ngIf="donutChartData" class="chart-percents">{{ percentCount | number:'1.0-0' }}%</h3>
-      <h3 *ngIf="!donutChartData" class="chart-percents">0%</h3>
-      <h4 class="chart-text">{{displayText}}</h4>
-    </ng-template>
-    <kendo-chart-series-item
-      type="donut"
-      [data]="donutChartData"
-      [field]="fieldName"
-      categoryField="kind"
-      [size]="10"
-      [holeSize]="55"
-    >
-    </kendo-chart-series-item>
-  </kendo-chart-series>
-</kendo-chart>
+<div class="container-chart">
+  <section class="chart-section">
+    <svg class="circle-chart" viewbox="0 0 33.83098862 33.83098862" width="34" height="34" xmlns="http://www.w3.org/2000/svg">
+      <circle class="circle-chart-background" stroke="#efefef" stroke-width="1"
+              fill="none" cx="16.9" cy="16.92" r="15" />
+      <circle class="circle-chart-color" stroke-width="2"
+      [attr.stroke]="color"
+      [ngStyle]="{'stroke-dasharray': 100, 'stroke-dashoffset': 100 - percentCount, 'stroke': color}"
+      fill="none" cx="17" cy="17.1" r="15.5" />
+      <g class="circle-chart-medium">
+        <text class="circle-chart-amount" y="13.5" alignment-baseline="central" text-anchor="middle" font-size="8">
+          {{ percentCount | number: '1.0-0' }}
+        </text>
+           <text class="circle-chart-percent" x="24" y="12.6" alignment-baseline="central" text-anchor="middle" font-size="5">%</text>
+        <text class="circle-chart-subline" x="17" y="20.5" alignment-baseline="central" text-anchor="middle" font-size="4.5">{{ displayText }}</text>
+      </g>
+    </svg>
+  </section>
+  <p class="total-sub-value">{{totalSubValue}}</p>
+</div>

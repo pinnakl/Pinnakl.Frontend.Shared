@@ -1,0 +1,64 @@
+:host {
+  position: relative;
+}
+.button-container-circle {
+  width: 36px;
+  height: 36px;
+  background-color: #168eff;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 1px;
+  padding-left: 2px;
+  margin-left: 10px;
+  cursor: pointer;
+  i {
+    transform: rotate(45deg);
+    font-size: 14px;
+    color: #ffffff;
+  }
+}
+
+.selected-menu {
+  position: absolute;
+  width: 174px;
+  height: 110px;
+  z-index: 3;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.15);
+  background-color: #ffffff;
+  padding: 3px 0;
+  right: -67px;
+  margin-top: 5px;
+  .menu-item {
+    padding: 12px 25px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    &:hover {
+      i {
+        color: #00aae8;
+      }
+    }
+    i {
+      font-size: 16px;
+      color: #8e9eb3;
+      margin-right: 9px;
+    }
+    span {
+      color: #23282d;
+      font-weight: 600;
+      padding-top: 5px;
+    }
+  }
+}
+
+.close-menu {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+}

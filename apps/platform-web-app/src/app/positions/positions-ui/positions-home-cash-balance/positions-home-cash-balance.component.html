@@ -1,0 +1,60 @@
+<div class="row bgColorWhite center-aligned-row wrapper">
+  <div class="title">
+    Cash balance (Prev Close)
+  </div>
+  <div class="row table-wrapper clear">
+    <div class="col-md-12 table-responsive-container clear">
+      <div class="table-responsive items-table">
+        <table class="table">
+          <thead>
+          <tr>
+            <th scope="col" class="first-col"></th>
+            <th scope="col" class="text-align-right" *ngIf="false">LMV</th>
+            <th scope="col" class="text-align-right" *ngIf="false">SMV</th>
+            <th scope="col" class="text-align-right">Amount</th>
+            <th scope="col" class="text-align-right" *ngIf="false">Total</th>
+            <th scope="col" class="text-align-right">Amount $</th>
+          </tr>
+          </thead>
+          <tbody>
+          <ng-container *ngFor="let cash of cashBalance">
+            <ng-container *ngIf="cash">
+              <tr>
+                <td scope="row" class="row-title">
+                  {{cash.title}}
+                </td>
+                <td scope="row" class="text-align-right" *ngIf="false">
+                  {{cash.sign}} {{cash.lmv | number: '1.0-0'}}
+                </td>
+                <td scope="row" class="text-align-right" *ngIf="false">
+                  {{cash.sign}} {{cash.smv | number: '1.0-0'}}
+                </td>
+                <td scope="row" class="text-align-right">
+                  {{cash.amount | number: '1.0-0'}}
+                </td>
+                <td scope="row" class="text-align-right" *ngIf="false">
+                  {{cash.sign}} {{cash.total | number: '1.0-0'}}
+                </td>
+                <td scope="row" class="text-align-right row-convert">
+                  <span *ngIf="cash.baseConvert < 0">-</span>
+                  $ {{abs(cash.baseConvert) | number: '1.0-0'}}
+                </td>
+              </tr>
+            </ng-container>
+          </ng-container>
+          <tr class="summary-row">
+            <td scope="row" class="row-title">
+              Total
+            </td>
+            <td scope="row" class="text-align-right"></td>
+            <td scope="row" class="text-align-right row-convert">
+              <span *ngIf="calcTotal() < 0">-</span>
+              $ {{ abs(calcTotal()) | number: '1.0-0' }}
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

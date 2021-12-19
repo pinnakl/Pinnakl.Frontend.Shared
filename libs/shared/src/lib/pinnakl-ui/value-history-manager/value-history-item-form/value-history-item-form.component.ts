@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -14,7 +14,7 @@ import { ValueHistoryManagerService } from '../value-history-manager.service';
   templateUrl: './value-history-item-form.component.html',
   styleUrls: ['./value-history-item-form.component.scss']
 })
-export class ValueHistoryItemFormComponent implements OnInit {
+export class ValueHistoryItemFormComponent {
   @Input() private set value(value: ValueHistoryItem) {
     this._existingValue = value;
     this.resetForm();
@@ -28,13 +28,11 @@ export class ValueHistoryItemFormComponent implements OnInit {
   submitted = false;
   private _existingValue: ValueHistoryItem;
   constructor(
-    private fb: FormBuilder,
-    private valueHistoryManagerService: ValueHistoryManagerService
+    private readonly fb: FormBuilder,
+    private readonly valueHistoryManagerService: ValueHistoryManagerService
   ) {
     this.createForm();
   }
-
-  ngOnInit(): void {}
 
   onSubmit(): void {
     this.submitted = true;

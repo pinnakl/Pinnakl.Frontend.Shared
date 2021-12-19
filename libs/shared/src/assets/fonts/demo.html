@@ -1,246 +1,160 @@
 <!DOCTYPE html>
 <html>
-  <head><!--[if lt IE 9]><script language="javascript" type="text/javascript" src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-    <meta charset="UTF-8"><style>/*
- * Bootstrap v2.2.1
- *
- * Copyright 2012 Twitter, Inc
- * Licensed under the Apache License v2.0
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Designed and built with all the love in the world @twitter by @mdo and @fat.
- */
-.clearfix {
-  *zoom: 1;
-}
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-.clearfix:after {
-  clear: both;
-}
-html {
-  font-size: 100%;
-  -webkit-text-size-adjust: 100%;
-  -ms-text-size-adjust: 100%;
-}
-a:focus {
-  outline: thin dotted #333;
-  outline: 5px auto -webkit-focus-ring-color;
-  outline-offset: -2px;
-}
-a:hover,
-a:active {
-  outline: 0;
-}
-button,
-input,
-select,
-textarea {
-  margin: 0;
-  font-size: 100%;
-  vertical-align: middle;
-}
-button,
-input {
-  *overflow: visible;
-  line-height: normal;
-}
-button::-moz-focus-inner,
-input::-moz-focus-inner {
-  padding: 0;
-  border: 0;
-}
-body {
-  margin: 0;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 14px;
-  line-height: 20px;
-  color: #333;
-  background-color: #fff;
-}
-a {
-  color: #08c;
-  text-decoration: none;
-}
-a:hover {
-  color: #005580;
-  text-decoration: underline;
-}
-.row {
-  margin-left: -20px;
-  *zoom: 1;
-}
-.row:before,
-.row:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-.row:after {
-  clear: both;
-}
-[class*="span"] {
-  float: left;
-  min-height: 1px;
-  margin-left: 20px;
-}
-.container,
-.navbar-static-top .container,
-.navbar-fixed-top .container,
-.navbar-fixed-bottom .container {
-  width: 940px;
-}
-.span12 {
-  width: 940px;
-}
-.span11 {
-  width: 860px;
-}
-.span10 {
-  width: 780px;
-}
-.span9 {
-  width: 700px;
-}
-.span8 {
-  width: 620px;
-}
-.span7 {
-  width: 540px;
-}
-.span6 {
-  width: 460px;
-}
-.span5 {
-  width: 380px;
-}
-.span4 {
-  width: 300px;
-}
-.span3 {
-  width: 220px;
-}
-.span2 {
-  width: 140px;
-}
-.span1 {
-  width: 60px;
-}
-[class*="span"].pull-right,
-.row-fluid [class*="span"].pull-right {
-  float: right;
-}
-.container {
-  margin-right: auto;
-  margin-left: auto;
-  *zoom: 1;
-}
-.container:before,
-.container:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-.container:after {
-  clear: both;
-}
-p {
-  margin: 0 0 10px;
-}
-.lead {
-  margin-bottom: 20px;
-  font-size: 21px;
-  font-weight: 200;
-  line-height: 30px;
-}
-small {
-  font-size: 85%;
-}
-h1 {
-  margin: 10px 0;
-  font-family: inherit;
-  font-weight: bold;
-  line-height: 20px;
-  color: inherit;
-  text-rendering: optimizelegibility;
-}
-h1 small {
-  font-weight: normal;
-  line-height: 1;
-  color: #999;
-}
-h1 {
-  line-height: 40px;
-}
-h1 {
-  font-size: 38.5px;
-}
-h1 small {
-  font-size: 24.5px;
-}
-body {
-  margin-top: 90px;
-}
-.header {
-  position: fixed;
-  top: 0;
-  left: 50%;
-  margin-left: -480px;
-  background-color: #fff;
-  border-bottom: 1px solid #ddd;
-  padding-top: 10px;
-  z-index: 10;
-}
-.footer {
-  color: #ddd;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 20px;
-}
-.footer a {
-  color: #ccc;
-  text-decoration: underline;
-}
-.the-icons {
-  font-size: 14px;
-  line-height: 24px;
-}
-.switch {
-  position: absolute;
-  right: 0;
-  bottom: 10px;
-  color: #666;
-}
-.switch input {
-  margin-right: 0.3em;
-}
-.codesOn .i-name {
-  display: none;
-}
-.codesOn .i-code {
-  display: inline;
-}
-.i-code {
-  display: none;
-}
-@font-face {
+  <head>
+  <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <meta charset="UTF-8">
+  <style>
+    html {
+      font-size: 100%;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+    a:focus {
+      outline: thin dotted #333;
+      outline: 5px auto -webkit-focus-ring-color;
+      outline-offset: -2px;
+    }
+    a:hover,
+    a:active {
+      outline: 0;
+    }
+    input {
+      margin: 0;
+      font-size: 100%;
+      vertical-align: middle;
+      *overflow: visible;
+      line-height: normal;
+    }
+    input::-moz-focus-inner {
+      padding: 0;
+      border: 0;
+    }
+    body {
+      margin: 0;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      line-height: 20px;
+      color: #333;
+      background-color: #fff;
+    }
+    a {
+      color: #08c;
+      text-decoration: none;
+    }
+    a:hover {
+      color: #005580;
+      text-decoration: underline;
+    }
+    .row {
+      margin-left: -20px;
+      *zoom: 1;
+    }
+    .row:before,
+    .row:after {
+      display: table;
+      content: "";
+      line-height: 0;
+    }
+    .row:after {
+      clear: both;
+    }
+    .span3 {
+      float: left;
+      min-height: 1px;
+      margin-left: 20px;
+      width: 220px;
+    }
+    .container {
+      width: 940px;
+      margin-right: auto;
+      margin-left: auto;
+      *zoom: 1;
+    }
+    .container:before,
+    .container:after {
+      display: table;
+      content: "";
+      line-height: 0;
+    }
+    .container:after {
+      clear: both;
+    }
+    small {
+      font-size: 85%;
+    }
+    h1 {
+      margin: 10px 0;
+      font-family: inherit;
+      font-weight: bold;
+      line-height: 20px;
+      color: inherit;
+      text-rendering: optimizelegibility;
+      line-height: 40px;
+      font-size: 38.5px;
+    }
+    h1 small {
+      font-weight: normal;
+      line-height: 1;
+      color: #999;
+      font-size: 24.5px;
+    }
+
+    body {
+      margin-top: 90px;
+    }
+    .header {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      margin-left: -480px;
+      background-color: #fff;
+      border-bottom: 1px solid #ddd;
+      padding-top: 10px;
+      z-index: 10;
+    }
+    .footer {
+      color: #ddd;
+      font-size: 12px;
+      text-align: center;
+      margin-top: 20px;
+    }
+    .footer a {
+      color: #ccc;
+      text-decoration: underline;
+    }
+    .the-icons {
+      font-size: 14px;
+      line-height: 24px;
+    }
+    .switch {
+      position: absolute;
+      right: 0;
+      bottom: 10px;
+      color: #666;
+    }
+    .switch input {
+      margin-right: 0.3em;
+    }
+    .codesOn .i-name {
+      display: none;
+    }
+    .codesOn .i-code {
+      display: inline;
+    }
+    .i-code {
+      display: none;
+    }
+    @font-face {
       font-family: 'fontello';
-      src: url('./font/fontello.eot?94568911');
-      src: url('./font/fontello.eot?94568911#iefix') format('embedded-opentype'),
-           url('./font/fontello.woff?94568911') format('woff'),
-           url('./font/fontello.ttf?94568911') format('truetype'),
-           url('./font/fontello.svg?94568911#fontello') format('svg');
+      src: url('../fonts/font/fontello.eot?36501310');
+      src: url('../fonts/font/fontello.eot?36501310#iefix') format('embedded-opentype'),
+           url('../fonts/font/fontello.woff?36501310') format('woff'),
+           url('../fonts/font/fontello.ttf?36501310') format('truetype'),
+           url('../fonts/font/fontello.svg?36501310#fontello') format('svg');
       font-weight: normal;
       font-style: normal;
     }
-     
-     
-    .demo-icon
-    {
+    .demo-icon {
       font-family: "fontello";
       font-style: normal;
       font-weight: normal;
@@ -274,8 +188,8 @@ body {
       /* Uncomment for 3D effect */
       /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
     }
-     </style>
-    <link rel="stylesheet" href="css/animation.css"><!--[if IE 7]><link rel="stylesheet" href="css/" + font.fontname + "-ie7.css"><![endif]-->
+    </style>
+    <link rel="stylesheet" href="../fonts/font/animation.css"><!--[if IE 7]><link rel="stylesheet" href="css/" + font.fontname + "-ie7.css"><![endif]-->
     <script>
       function toggleCodes(on) {
         var obj = document.getElementById('icons');
@@ -286,7 +200,6 @@ body {
           obj.className = obj.className.replace(' codesOn', '');
         }
       }
-      
     </script>
   </head>
   <body>
@@ -298,233 +211,2175 @@ body {
     </div>
     <div class="container" id="icons">
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe800"><i class="demo-icon icon-pinnakl-side-securities-active">&#xe800;</i> <span class="i-name">icon-pinnakl-side-securities-active</span><span class="i-code">0xe800</span></div>
-        <div class="the-icons span3" title="Code: 0xe801"><i class="demo-icon icon-pinnakl-trade-request-done">&#xe801;</i> <span class="i-name">icon-pinnakl-trade-request-done</span><span class="i-code">0xe801</span></div>
-        <div class="the-icons span3" title="Code: 0xe802"><i class="demo-icon icon-pinnakl-ok">&#xe802;</i> <span class="i-name">icon-pinnakl-ok</span><span class="i-code">0xe802</span></div>
-        <div class="the-icons span3" title="Code: 0xe803"><i class="demo-icon icon-pinnakl-ok-circle">&#xe803;</i> <span class="i-name">icon-pinnakl-ok-circle</span><span class="i-code">0xe803</span></div>
+        <div class="span3" title="Code: 0xe800">
+          <i class="demo-icon icon-pinnakl-side-securities-active">&#xe800;</i> <span class="i-name">icon-pinnakl-side-securities-active</span><span class="i-code">0xe800</span>
+        </div>
+        <div class="span3" title="Code: 0xe801">
+          <i class="demo-icon icon-pinnakl-trade-request-done">&#xe801;</i> <span class="i-name">icon-pinnakl-trade-request-done</span><span class="i-code">0xe801</span>
+        </div>
+        <div class="span3" title="Code: 0xe802">
+          <i class="demo-icon icon-pinnakl-ok">&#xe802;</i> <span class="i-name">icon-pinnakl-ok</span><span class="i-code">0xe802</span>
+        </div>
+        <div class="span3" title="Code: 0xe803">
+          <i class="demo-icon icon-pinnakl-ok-circle">&#xe803;</i> <span class="i-name">icon-pinnakl-ok-circle</span><span class="i-code">0xe803</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe804"><i class="demo-icon icon-pinnakl-attention-alt">&#xe804;</i> <span class="i-name">icon-pinnakl-attention-alt</span><span class="i-code">0xe804</span></div>
-        <div class="the-icons span3" title="Code: 0xe805"><i class="demo-icon icon-pinnakl-th-large">&#xe805;</i> <span class="i-name">icon-pinnakl-th-large</span><span class="i-code">0xe805</span></div>
-        <div class="the-icons span3" title="Code: 0xe806"><i class="demo-icon icon-pinnakl-exchange">&#xe806;</i> <span class="i-name">icon-pinnakl-exchange</span><span class="i-code">0xe806</span></div>
-        <div class="the-icons span3" title="Code: 0xe807"><i class="demo-icon icon-pinnakl-fire">&#xe807;</i> <span class="i-name">icon-pinnakl-fire</span><span class="i-code">0xe807</span></div>
+        <div class="span3" title="Code: 0xe804">
+          <i class="demo-icon icon-pinnakl-attention-alt">&#xe804;</i> <span class="i-name">icon-pinnakl-attention-alt</span><span class="i-code">0xe804</span>
+        </div>
+        <div class="span3" title="Code: 0xe805">
+          <i class="demo-icon icon-pinnakl-th-large">&#xe805;</i> <span class="i-name">icon-pinnakl-th-large</span><span class="i-code">0xe805</span>
+        </div>
+        <div class="span3" title="Code: 0xe806">
+          <i class="demo-icon icon-pinnakl-exchange">&#xe806;</i> <span class="i-name">icon-pinnakl-exchange</span><span class="i-code">0xe806</span>
+        </div>
+        <div class="span3" title="Code: 0xe807">
+          <i class="demo-icon icon-pinnakl-fire">&#xe807;</i> <span class="i-name">icon-pinnakl-fire</span><span class="i-code">0xe807</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe808"><i class="demo-icon icon-pinnakl-trash-empty">&#xe808;</i> <span class="i-name">icon-pinnakl-trash-empty</span><span class="i-code">0xe808</span></div>
-        <div class="the-icons span3" title="Code: 0xe809"><i class="demo-icon icon-pinnakl-user">&#xe809;</i> <span class="i-name">icon-pinnakl-user</span><span class="i-code">0xe809</span></div>
-        <div class="the-icons span3" title="Code: 0xe80a"><i class="demo-icon icon-pinnakl-note">&#xe80a;</i> <span class="i-name">icon-pinnakl-note</span><span class="i-code">0xe80a</span></div>
-        <div class="the-icons span3" title="Code: 0xe80b"><i class="demo-icon icon-pinnakl-bell">&#xe80b;</i> <span class="i-name">icon-pinnakl-bell</span><span class="i-code">0xe80b</span></div>
+        <div class="span3" title="Code: 0xe808">
+          <i class="demo-icon icon-pinnakl-trash-empty">&#xe808;</i> <span class="i-name">icon-pinnakl-trash-empty</span><span class="i-code">0xe808</span>
+        </div>
+        <div class="span3" title="Code: 0xe809">
+          <i class="demo-icon icon-pinnakl-user">&#xe809;</i> <span class="i-name">icon-pinnakl-user</span><span class="i-code">0xe809</span>
+        </div>
+        <div class="span3" title="Code: 0xe80a">
+          <i class="demo-icon icon-pinnakl-note">&#xe80a;</i> <span class="i-name">icon-pinnakl-note</span><span class="i-code">0xe80a</span>
+        </div>
+        <div class="span3" title="Code: 0xe80b">
+          <i class="demo-icon icon-pinnakl-bell">&#xe80b;</i> <span class="i-name">icon-pinnakl-bell</span><span class="i-code">0xe80b</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe80c"><i class="demo-icon icon-pinnakl-plus-circled">&#xe80c;</i> <span class="i-name">icon-pinnakl-plus-circled</span><span class="i-code">0xe80c</span></div>
-        <div class="the-icons span3" title="Code: 0xe80d"><i class="demo-icon icon-pinnakl-tasks">&#xe80d;</i> <span class="i-name">icon-pinnakl-tasks</span><span class="i-code">0xe80d</span></div>
-        <div class="the-icons span3" title="Code: 0xe80e"><i class="demo-icon icon-pinnakl-play">&#xe80e;</i> <span class="i-name">icon-pinnakl-play</span><span class="i-code">0xe80e</span></div>
-        <div class="the-icons span3" title="Code: 0xe80f"><i class="demo-icon icon-pinnakl-check">&#xe80f;</i> <span class="i-name">icon-pinnakl-check</span><span class="i-code">0xe80f</span></div>
+        <div class="span3" title="Code: 0xe80c">
+          <i class="demo-icon icon-pinnakl-plus-circled">&#xe80c;</i> <span class="i-name">icon-pinnakl-plus-circled</span><span class="i-code">0xe80c</span>
+        </div>
+        <div class="span3" title="Code: 0xe80d">
+          <i class="demo-icon icon-pinnakl-tasks">&#xe80d;</i> <span class="i-name">icon-pinnakl-tasks</span><span class="i-code">0xe80d</span>
+        </div>
+        <div class="span3" title="Code: 0xe80e">
+          <i class="demo-icon icon-pinnakl-play">&#xe80e;</i> <span class="i-name">icon-pinnakl-play</span><span class="i-code">0xe80e</span>
+        </div>
+        <div class="span3" title="Code: 0xe80f">
+          <i class="demo-icon icon-pinnakl-check">&#xe80f;</i> <span class="i-name">icon-pinnakl-check</span><span class="i-code">0xe80f</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe810"><i class="demo-icon icon-pinnakl-check-empty">&#xe810;</i> <span class="i-name">icon-pinnakl-check-empty</span><span class="i-code">0xe810</span></div>
-        <div class="the-icons span3" title="Code: 0xe811"><i class="demo-icon icon-pinnakl-ok-squared">&#xe811;</i> <span class="i-name">icon-pinnakl-ok-squared</span><span class="i-code">0xe811</span></div>
-        <div class="the-icons span3" title="Code: 0xe812"><i class="demo-icon icon-pinnakl-plus">&#xe812;</i> <span class="i-name">icon-pinnakl-plus</span><span class="i-code">0xe812</span></div>
-        <div class="the-icons span3" title="Code: 0xe813"><i class="demo-icon icon-pinnakl-upload">&#xe813;</i> <span class="i-name">icon-pinnakl-upload</span><span class="i-code">0xe813</span></div>
+        <div class="span3" title="Code: 0xe810">
+          <i class="demo-icon icon-pinnakl-check-empty">&#xe810;</i> <span class="i-name">icon-pinnakl-check-empty</span><span class="i-code">0xe810</span>
+        </div>
+        <div class="span3" title="Code: 0xe811">
+          <i class="demo-icon icon-pinnakl-ok-squared">&#xe811;</i> <span class="i-name">icon-pinnakl-ok-squared</span><span class="i-code">0xe811</span>
+        </div>
+        <div class="span3" title="Code: 0xe812">
+          <i class="demo-icon icon-pinnakl-plus">&#xe812;</i> <span class="i-name">icon-pinnakl-plus</span><span class="i-code">0xe812</span>
+        </div>
+        <div class="span3" title="Code: 0xe813">
+          <i class="demo-icon icon-pinnakl-upload">&#xe813;</i> <span class="i-name">icon-pinnakl-upload</span><span class="i-code">0xe813</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe814"><i class="demo-icon icon-pinnakl-filter">&#xe814;</i> <span class="i-name">icon-pinnakl-filter</span><span class="i-code">0xe814</span></div>
-        <div class="the-icons span3" title="Code: 0xe815"><i class="demo-icon icon-pinnakl-up-open-mini">&#xe815;</i> <span class="i-name">icon-pinnakl-up-open-mini</span><span class="i-code">0xe815</span></div>
-        <div class="the-icons span3" title="Code: 0xe816"><i class="demo-icon icon-pinnakl-right-open-mini">&#xe816;</i> <span class="i-name">icon-pinnakl-right-open-mini</span><span class="i-code">0xe816</span></div>
-        <div class="the-icons span3" title="Code: 0xe817"><i class="demo-icon icon-pinnakl-left-open-mini">&#xe817;</i> <span class="i-name">icon-pinnakl-left-open-mini</span><span class="i-code">0xe817</span></div>
+        <div class="span3" title="Code: 0xe814">
+          <i class="demo-icon icon-pinnakl-filter">&#xe814;</i> <span class="i-name">icon-pinnakl-filter</span><span class="i-code">0xe814</span>
+        </div>
+        <div class="span3" title="Code: 0xe815">
+          <i class="demo-icon icon-pinnakl-up-open-mini">&#xe815;</i> <span class="i-name">icon-pinnakl-up-open-mini</span><span class="i-code">0xe815</span>
+        </div>
+        <div class="span3" title="Code: 0xe816">
+          <i class="demo-icon icon-pinnakl-right-open-mini">&#xe816;</i> <span class="i-name">icon-pinnakl-right-open-mini</span><span class="i-code">0xe816</span>
+        </div>
+        <div class="span3" title="Code: 0xe817">
+          <i class="demo-icon icon-pinnakl-left-open-mini">&#xe817;</i> <span class="i-name">icon-pinnakl-left-open-mini</span><span class="i-code">0xe817</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe818"><i class="demo-icon icon-pinnakl-back-in-time">&#xe818;</i> <span class="i-name">icon-pinnakl-back-in-time</span><span class="i-code">0xe818</span></div>
-        <div class="the-icons span3" title="Code: 0xe819"><i class="demo-icon icon-pinnakl-clock">&#xe819;</i> <span class="i-name">icon-pinnakl-clock</span><span class="i-code">0xe819</span></div>
-        <div class="the-icons span3" title="Code: 0xe81a"><i class="demo-icon icon-pinnakl-search">&#xe81a;</i> <span class="i-name">icon-pinnakl-search</span><span class="i-code">0xe81a</span></div>
-        <div class="the-icons span3" title="Code: 0xe81b"><i class="demo-icon icon-pinnakl-cancel">&#xe81b;</i> <span class="i-name">icon-pinnakl-cancel</span><span class="i-code">0xe81b</span></div>
+        <div class="span3" title="Code: 0xe818">
+          <i class="demo-icon icon-pinnakl-back-in-time">&#xe818;</i> <span class="i-name">icon-pinnakl-back-in-time</span><span class="i-code">0xe818</span>
+        </div>
+        <div class="span3" title="Code: 0xe819">
+          <i class="demo-icon icon-pinnakl-clock">&#xe819;</i> <span class="i-name">icon-pinnakl-clock</span><span class="i-code">0xe819</span>
+        </div>
+        <div class="span3" title="Code: 0xe81a">
+          <i class="demo-icon icon-pinnakl-search">&#xe81a;</i> <span class="i-name">icon-pinnakl-search</span><span class="i-code">0xe81a</span>
+        </div>
+        <div class="span3" title="Code: 0xe81b">
+          <i class="demo-icon icon-pinnakl-cancel">&#xe81b;</i> <span class="i-name">icon-pinnakl-cancel</span><span class="i-code">0xe81b</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe81c"><i class="demo-icon icon-pinnakl-ok-1">&#xe81c;</i> <span class="i-name">icon-pinnakl-ok-1</span><span class="i-code">0xe81c</span></div>
-        <div class="the-icons span3" title="Code: 0xe81d"><i class="demo-icon icon-pinnakl-calendar">&#xe81d;</i> <span class="i-name">icon-pinnakl-calendar</span><span class="i-code">0xe81d</span></div>
-        <div class="the-icons span3" title="Code: 0xe81e"><i class="demo-icon icon-pinnakl-down-open">&#xe81e;</i> <span class="i-name">icon-pinnakl-down-open</span><span class="i-code">0xe81e</span></div>
-        <div class="the-icons span3" title="Code: 0xe81f"><i class="demo-icon icon-pinnakl-left-open">&#xe81f;</i> <span class="i-name">icon-pinnakl-left-open</span><span class="i-code">0xe81f</span></div>
+        <div class="span3" title="Code: 0xe81c">
+          <i class="demo-icon icon-pinnakl-ok-1">&#xe81c;</i> <span class="i-name">icon-pinnakl-ok-1</span><span class="i-code">0xe81c</span>
+        </div>
+        <div class="span3" title="Code: 0xe81d">
+          <i class="demo-icon icon-pinnakl-calendar">&#xe81d;</i> <span class="i-name">icon-pinnakl-calendar</span><span class="i-code">0xe81d</span>
+        </div>
+        <div class="span3" title="Code: 0xe81e">
+          <i class="demo-icon icon-pinnakl-down-open">&#xe81e;</i> <span class="i-name">icon-pinnakl-down-open</span><span class="i-code">0xe81e</span>
+        </div>
+        <div class="span3" title="Code: 0xe81f">
+          <i class="demo-icon icon-pinnakl-left-open">&#xe81f;</i> <span class="i-name">icon-pinnakl-left-open</span><span class="i-code">0xe81f</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe820"><i class="demo-icon icon-pinnakl-right-open">&#xe820;</i> <span class="i-name">icon-pinnakl-right-open</span><span class="i-code">0xe820</span></div>
-        <div class="the-icons span3" title="Code: 0xe821"><i class="demo-icon icon-pinnakl-up-open">&#xe821;</i> <span class="i-name">icon-pinnakl-up-open</span><span class="i-code">0xe821</span></div>
-        <div class="the-icons span3" title="Code: 0xe822"><i class="demo-icon icon-pinnakl-down-open-mini">&#xe822;</i> <span class="i-name">icon-pinnakl-down-open-mini</span><span class="i-code">0xe822</span></div>
-        <div class="the-icons span3" title="Code: 0xe823"><i class="demo-icon icon-pinnakl-cog">&#xe823;</i> <span class="i-name">icon-pinnakl-cog</span><span class="i-code">0xe823</span></div>
+        <div class="span3" title="Code: 0xe820">
+          <i class="demo-icon icon-pinnakl-right-open">&#xe820;</i> <span class="i-name">icon-pinnakl-right-open</span><span class="i-code">0xe820</span>
+        </div>
+        <div class="span3" title="Code: 0xe821">
+          <i class="demo-icon icon-pinnakl-up-open">&#xe821;</i> <span class="i-name">icon-pinnakl-up-open</span><span class="i-code">0xe821</span>
+        </div>
+        <div class="span3" title="Code: 0xe822">
+          <i class="demo-icon icon-pinnakl-down-open-mini">&#xe822;</i> <span class="i-name">icon-pinnakl-down-open-mini</span><span class="i-code">0xe822</span>
+        </div>
+        <div class="span3" title="Code: 0xe823">
+          <i class="demo-icon icon-pinnakl-cog">&#xe823;</i> <span class="i-name">icon-pinnakl-cog</span><span class="i-code">0xe823</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe824"><i class="demo-icon icon-pinnakl-bell-alt">&#xe824;</i> <span class="i-name">icon-pinnakl-bell-alt</span><span class="i-code">0xe824</span></div>
-        <div class="the-icons span3" title="Code: 0xe825"><i class="demo-icon icon-pinnakl-menu">&#xe825;</i> <span class="i-name">icon-pinnakl-menu</span><span class="i-code">0xe825</span></div>
-        <div class="the-icons span3" title="Code: 0xe826"><i class="demo-icon icon-pinnakl-task-history">&#xe826;</i> <span class="i-name">icon-pinnakl-task-history</span><span class="i-code">0xe826</span></div>
-        <div class="the-icons span3" title="Code: 0xe827"><i class="demo-icon icon-pinnakl-task-run-active">&#xe827;</i> <span class="i-name">icon-pinnakl-task-run-active</span><span class="i-code">0xe827</span></div>
+        <div class="span3" title="Code: 0xe824">
+          <i class="demo-icon icon-pinnakl-bell-alt">&#xe824;</i> <span class="i-name">icon-pinnakl-bell-alt</span><span class="i-code">0xe824</span>
+        </div>
+        <div class="span3" title="Code: 0xe825">
+          <i class="demo-icon icon-pinnakl-menu">&#xe825;</i> <span class="i-name">icon-pinnakl-menu</span><span class="i-code">0xe825</span>
+        </div>
+        <div class="span3" title="Code: 0xe826">
+          <i class="demo-icon icon-pinnakl-task-history">&#xe826;</i> <span class="i-name">icon-pinnakl-task-history</span><span class="i-code">0xe826</span>
+        </div>
+        <div class="span3" title="Code: 0xe827">
+          <i class="demo-icon icon-pinnakl-task-run-active">&#xe827;</i> <span class="i-name">icon-pinnakl-task-run-active</span><span class="i-code">0xe827</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe828"><i class="demo-icon icon-pinnakl-task-run">&#xe828;</i> <span class="i-name">icon-pinnakl-task-run</span><span class="i-code">0xe828</span></div>
-        <div class="the-icons span3" title="Code: 0xe829"><i class="demo-icon icon-pinnakl-field-arrow-panel">&#xe829;</i> <span class="i-name">icon-pinnakl-field-arrow-panel</span><span class="i-code">0xe829</span></div>
-        <div class="the-icons span3" title="Code: 0xe82a"><i class="demo-icon icon-pinnakl-edit-security">&#xe82a;</i> <span class="i-name">icon-pinnakl-edit-security</span><span class="i-code">0xe82a</span></div>
-        <div class="the-icons span3" title="Code: 0xe82b"><i class="demo-icon icon-pinnakl-task-time">&#xe82b;</i> <span class="i-name">icon-pinnakl-task-time</span><span class="i-code">0xe82b</span></div>
+        <div class="span3" title="Code: 0xe828">
+          <i class="demo-icon icon-pinnakl-task-run">&#xe828;</i> <span class="i-name">icon-pinnakl-task-run</span><span class="i-code">0xe828</span>
+        </div>
+        <div class="span3" title="Code: 0xe829">
+          <i class="demo-icon icon-pinnakl-field-arrow-panel">&#xe829;</i> <span class="i-name">icon-pinnakl-field-arrow-panel</span><span class="i-code">0xe829</span>
+        </div>
+        <div class="span3" title="Code: 0xe82a">
+          <i class="demo-icon icon-pinnakl-edit-security">&#xe82a;</i> <span class="i-name">icon-pinnakl-edit-security</span><span class="i-code">0xe82a</span>
+        </div>
+        <div class="span3" title="Code: 0xe82b">
+          <i class="demo-icon icon-pinnakl-task-time">&#xe82b;</i> <span class="i-name">icon-pinnakl-task-time</span><span class="i-code">0xe82b</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe82c"><i class="demo-icon icon-pinnakl-tasks-search">&#xe82c;</i> <span class="i-name">icon-pinnakl-tasks-search</span><span class="i-code">0xe82c</span></div>
-        <div class="the-icons span3" title="Code: 0xe82d"><i class="demo-icon icon-pinnakl-top-notifications">&#xe82d;</i> <span class="i-name">icon-pinnakl-top-notifications</span><span class="i-code">0xe82d</span></div>
-        <div class="the-icons span3" title="Code: 0xe82e"><i class="demo-icon icon-pinnakl-top-user">&#xe82e;</i> <span class="i-name">icon-pinnakl-top-user</span><span class="i-code">0xe82e</span></div>
-        <div class="the-icons span3" title="Code: 0xe82f"><i class="demo-icon icon-pinnakl-trades-approved">&#xe82f;</i> <span class="i-name">icon-pinnakl-trades-approved</span><span class="i-code">0xe82f</span></div>
+        <div class="span3" title="Code: 0xe82c">
+          <i class="demo-icon icon-pinnakl-tasks-search">&#xe82c;</i> <span class="i-name">icon-pinnakl-tasks-search</span><span class="i-code">0xe82c</span>
+        </div>
+        <div class="span3" title="Code: 0xe82d">
+          <i class="demo-icon icon-pinnakl-top-notifications">&#xe82d;</i> <span class="i-name">icon-pinnakl-top-notifications</span><span class="i-code">0xe82d</span>
+        </div>
+        <div class="span3" title="Code: 0xe82e">
+          <i class="demo-icon icon-pinnakl-top-user">&#xe82e;</i> <span class="i-name">icon-pinnakl-top-user</span><span class="i-code">0xe82e</span>
+        </div>
+        <div class="span3" title="Code: 0xe82f">
+          <i class="demo-icon icon-pinnakl-trades-approved">&#xe82f;</i> <span class="i-name">icon-pinnakl-trades-approved</span><span class="i-code">0xe82f</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe830"><i class="demo-icon icon-pinnakl-task-date">&#xe830;</i> <span class="i-name">icon-pinnakl-task-date</span><span class="i-code">0xe830</span></div>
-        <div class="the-icons span3" title="Code: 0xe831"><i class="demo-icon icon-pinnakl-section-done">&#xe831;</i> <span class="i-name">icon-pinnakl-section-done</span><span class="i-code">0xe831</span></div>
-        <div class="the-icons span3" title="Code: 0xe832"><i class="demo-icon icon-pinnakl-security-add-automatically">&#xe832;</i> <span class="i-name">icon-pinnakl-security-add-automatically</span><span class="i-code">0xe832</span></div>
-        <div class="the-icons span3" title="Code: 0xe833"><i class="demo-icon icon-pinnakl-side-crm">&#xe833;</i> <span class="i-name">icon-pinnakl-side-crm</span><span class="i-code">0xe833</span></div>
+        <div class="span3" title="Code: 0xe830">
+          <i class="demo-icon icon-pinnakl-task-date">&#xe830;</i> <span class="i-name">icon-pinnakl-task-date</span><span class="i-code">0xe830</span>
+        </div>
+        <div class="span3" title="Code: 0xe831">
+          <i class="demo-icon icon-pinnakl-section-done">&#xe831;</i> <span class="i-name">icon-pinnakl-section-done</span><span class="i-code">0xe831</span>
+        </div>
+        <div class="span3" title="Code: 0xe832">
+          <i class="demo-icon icon-pinnakl-security-add-automatically">&#xe832;</i> <span class="i-name">icon-pinnakl-security-add-automatically</span><span class="i-code">0xe832</span>
+        </div>
+        <div class="span3" title="Code: 0xe833">
+          <i class="demo-icon icon-pinnakl-side-crm">&#xe833;</i> <span class="i-name">icon-pinnakl-side-crm</span><span class="i-code">0xe833</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe834"><i class="demo-icon icon-pinnakl-side-pl">&#xe834;</i> <span class="i-name">icon-pinnakl-side-pl</span><span class="i-code">0xe834</span></div>
-        <div class="the-icons span3" title="Code: 0xe835"><i class="demo-icon icon-pinnakl-side-reports-active">&#xe835;</i> <span class="i-name">icon-pinnakl-side-reports-active</span><span class="i-code">0xe835</span></div>
-        <div class="the-icons span3" title="Code: 0xe836"><i class="demo-icon icon-pinnakl-side-reconciliation-active-svg">&#xe836;</i> <span class="i-name">icon-pinnakl-side-reconciliation-active-svg</span><span class="i-code">0xe836</span></div>
-        <div class="the-icons span3" title="Code: 0xe837"><i class="demo-icon icon-pinnakl-security-add-manually">&#xe837;</i> <span class="i-name">icon-pinnakl-security-add-manually</span><span class="i-code">0xe837</span></div>
+        <div class="span3" title="Code: 0xe834">
+          <i class="demo-icon icon-pinnakl-side-pl">&#xe834;</i> <span class="i-name">icon-pinnakl-side-pl</span><span class="i-code">0xe834</span>
+        </div>
+        <div class="span3" title="Code: 0xe835">
+          <i class="demo-icon icon-pinnakl-side-reports-active">&#xe835;</i> <span class="i-name">icon-pinnakl-side-reports-active</span><span class="i-code">0xe835</span>
+        </div>
+        <div class="span3" title="Code: 0xe836">
+          <i class="demo-icon icon-pinnakl-side-reconciliation-active-svg">&#xe836;</i> <span class="i-name">icon-pinnakl-side-reconciliation-active-svg</span><span class="i-code">0xe836</span>
+        </div>
+        <div class="span3" title="Code: 0xe837">
+          <i class="demo-icon icon-pinnakl-security-add-manually">&#xe837;</i> <span class="i-name">icon-pinnakl-security-add-manually</span><span class="i-code">0xe837</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe838"><i class="demo-icon icon-pinnakl-side-pricing-active">&#xe838;</i> <span class="i-name">icon-pinnakl-side-pricing-active</span><span class="i-code">0xe838</span></div>
-        <div class="the-icons span3" title="Code: 0xe839"><i class="demo-icon icon-pinnakl-settings">&#xe839;</i> <span class="i-name">icon-pinnakl-settings</span><span class="i-code">0xe839</span></div>
-        <div class="the-icons span3" title="Code: 0xe83a"><i class="demo-icon icon-pinnakl-filters-active">&#xe83a;</i> <span class="i-name">icon-pinnakl-filters-active</span><span class="i-code">0xe83a</span></div>
-        <div class="the-icons span3" title="Code: 0xe83b"><i class="demo-icon icon-pinnakl-field-arrow">&#xe83b;</i> <span class="i-name">icon-pinnakl-field-arrow</span><span class="i-code">0xe83b</span></div>
+        <div class="span3" title="Code: 0xe838">
+          <i class="demo-icon icon-pinnakl-side-pricing-active">&#xe838;</i> <span class="i-name">icon-pinnakl-side-pricing-active</span><span class="i-code">0xe838</span>
+        </div>
+        <div class="span3" title="Code: 0xe839">
+          <i class="demo-icon icon-pinnakl-settings">&#xe839;</i> <span class="i-name">icon-pinnakl-settings</span><span class="i-code">0xe839</span>
+        </div>
+        <div class="span3" title="Code: 0xe83a">
+          <i class="demo-icon icon-pinnakl-filters-active">&#xe83a;</i> <span class="i-name">icon-pinnakl-filters-active</span><span class="i-code">0xe83a</span>
+        </div>
+        <div class="span3" title="Code: 0xe83b">
+          <i class="demo-icon icon-pinnakl-field-arrow">&#xe83b;</i> <span class="i-name">icon-pinnakl-field-arrow</span><span class="i-code">0xe83b</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe83c"><i class="demo-icon icon-pinnakl-edit-securities">&#xe83c;</i> <span class="i-name">icon-pinnakl-edit-securities</span><span class="i-code">0xe83c</span></div>
-        <div class="the-icons span3" title="Code: 0xe83d"><i class="demo-icon icon-pinnakl-add-col">&#xe83d;</i> <span class="i-name">icon-pinnakl-add-col</span><span class="i-code">0xe83d</span></div>
-        <div class="the-icons span3" title="Code: 0xe83e"><i class="demo-icon icon-pinnakl-trades-requests">&#xe83e;</i> <span class="i-name">icon-pinnakl-trades-requests</span><span class="i-code">0xe83e</span></div>
-        <div class="the-icons span3" title="Code: 0xe83f"><i class="demo-icon icon-pinnakl-add-security">&#xe83f;</i> <span class="i-name">icon-pinnakl-add-security</span><span class="i-code">0xe83f</span></div>
+        <div class="span3" title="Code: 0xe83c">
+          <i class="demo-icon icon-pinnakl-edit-securities">&#xe83c;</i> <span class="i-name">icon-pinnakl-edit-securities</span><span class="i-code">0xe83c</span>
+        </div>
+        <div class="span3" title="Code: 0xe83d">
+          <i class="demo-icon icon-pinnakl-add-col">&#xe83d;</i> <span class="i-name">icon-pinnakl-add-col</span><span class="i-code">0xe83d</span>
+        </div>
+        <div class="span3" title="Code: 0xe83e">
+          <i class="demo-icon icon-pinnakl-trades-requests">&#xe83e;</i> <span class="i-name">icon-pinnakl-trades-requests</span><span class="i-code">0xe83e</span>
+        </div>
+        <div class="span3" title="Code: 0xe83f">
+          <i class="demo-icon icon-pinnakl-add-security">&#xe83f;</i> <span class="i-name">icon-pinnakl-add-security</span><span class="i-code">0xe83f</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe840"><i class="demo-icon icon-pinnakl-add">&#xe840;</i> <span class="i-name">icon-pinnakl-add</span><span class="i-code">0xe840</span></div>
-        <div class="the-icons span3" title="Code: 0xe841"><i class="demo-icon icon-pinnakl-close">&#xe841;</i> <span class="i-name">icon-pinnakl-close</span><span class="i-code">0xe841</span></div>
-        <div class="the-icons span3" title="Code: 0xe842"><i class="demo-icon icon-pinnakl-date-panel">&#xe842;</i> <span class="i-name">icon-pinnakl-date-panel</span><span class="i-code">0xe842</span></div>
-        <div class="the-icons span3" title="Code: 0xe843"><i class="demo-icon icon-pinnakl-search-security">&#xe843;</i> <span class="i-name">icon-pinnakl-search-security</span><span class="i-code">0xe843</span></div>
+        <div class="span3" title="Code: 0xe840">
+          <i class="demo-icon icon-pinnakl-add">&#xe840;</i> <span class="i-name">icon-pinnakl-add</span><span class="i-code">0xe840</span>
+        </div>
+        <div class="span3" title="Code: 0xe841">
+          <i class="demo-icon icon-pinnakl-close">&#xe841;</i> <span class="i-name">icon-pinnakl-close</span><span class="i-code">0xe841</span>
+        </div>
+        <div class="span3" title="Code: 0xe842">
+          <i class="demo-icon icon-pinnakl-date-panel">&#xe842;</i> <span class="i-name">icon-pinnakl-date-panel</span><span class="i-code">0xe842</span>
+        </div>
+        <div class="span3" title="Code: 0xe843">
+          <i class="demo-icon icon-pinnakl-search-security">&#xe843;</i> <span class="i-name">icon-pinnakl-search-security</span><span class="i-code">0xe843</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe844"><i class="demo-icon icon-pinnakl-side-crm-active">&#xe844;</i> <span class="i-name">icon-pinnakl-side-crm-active</span><span class="i-code">0xe844</span></div>
-        <div class="the-icons span3" title="Code: 0xe845"><i class="demo-icon icon-pinnakl-shadow-nav-active">&#xe845;</i> <span class="i-name">icon-pinnakl-shadow-nav-active</span><span class="i-code">0xe845</span></div>
-        <div class="the-icons span3" title="Code: 0xe846"><i class="demo-icon icon-pinnakl-side-dashboard-active">&#xe846;</i> <span class="i-name">icon-pinnakl-side-dashboard-active</span><span class="i-code">0xe846</span></div>
-        <div class="the-icons span3" title="Code: 0xe847"><i class="demo-icon icon-pinnakl-side-dashboard">&#xe847;</i> <span class="i-name">icon-pinnakl-side-dashboard</span><span class="i-code">0xe847</span></div>
+        <div class="span3" title="Code: 0xe844">
+          <i class="demo-icon icon-pinnakl-side-crm-active">&#xe844;</i> <span class="i-name">icon-pinnakl-side-crm-active</span><span class="i-code">0xe844</span>
+        </div>
+        <div class="span3" title="Code: 0xe845">
+          <i class="demo-icon icon-pinnakl-shadow-nav-active">&#xe845;</i> <span class="i-name">icon-pinnakl-shadow-nav-active</span><span class="i-code">0xe845</span>
+        </div>
+        <div class="span3" title="Code: 0xe846">
+          <i class="demo-icon icon-pinnakl-side-dashboard-active">&#xe846;</i> <span class="i-name">icon-pinnakl-side-dashboard-active</span><span class="i-code">0xe846</span>
+        </div>
+        <div class="span3" title="Code: 0xe847">
+          <i class="demo-icon icon-pinnakl-side-dashboard">&#xe847;</i> <span class="i-name">icon-pinnakl-side-dashboard</span><span class="i-code">0xe847</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe848"><i class="demo-icon icon-pinnakl-side-oms-active">&#xe848;</i> <span class="i-name">icon-pinnakl-side-oms-active</span><span class="i-code">0xe848</span></div>
-        <div class="the-icons span3" title="Code: 0xe849"><i class="demo-icon icon-pinnakl-side-oms">&#xe849;</i> <span class="i-name">icon-pinnakl-side-oms</span><span class="i-code">0xe849</span></div>
-        <div class="the-icons span3" title="Code: 0xe84a"><i class="demo-icon icon-pinnakl-side-pl-active">&#xe84a;</i> <span class="i-name">icon-pinnakl-side-pl-active</span><span class="i-code">0xe84a</span></div>
-        <div class="the-icons span3" title="Code: 0xe84b"><i class="demo-icon icon-pinnakl-side-reconciliation-svg">&#xe84b;</i> <span class="i-name">icon-pinnakl-side-reconciliation-svg</span><span class="i-code">0xe84b</span></div>
+        <div class="span3" title="Code: 0xe848">
+          <i class="demo-icon icon-pinnakl-side-oms-active">&#xe848;</i> <span class="i-name">icon-pinnakl-side-oms-active</span><span class="i-code">0xe848</span>
+        </div>
+        <div class="span3" title="Code: 0xe849">
+          <i class="demo-icon icon-pinnakl-side-oms">&#xe849;</i> <span class="i-name">icon-pinnakl-side-oms</span><span class="i-code">0xe849</span>
+        </div>
+        <div class="span3" title="Code: 0xe84a">
+          <i class="demo-icon icon-pinnakl-side-pl-active">&#xe84a;</i> <span class="i-name">icon-pinnakl-side-pl-active</span><span class="i-code">0xe84a</span>
+        </div>
+        <div class="span3" title="Code: 0xe84b">
+          <i class="demo-icon icon-pinnakl-side-reconciliation-svg">&#xe84b;</i> <span class="i-name">icon-pinnakl-side-reconciliation-svg</span><span class="i-code">0xe84b</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe84c"><i class="demo-icon icon-pinnakl-side-positions-active">&#xe84c;</i> <span class="i-name">icon-pinnakl-side-positions-active</span><span class="i-code">0xe84c</span></div>
-        <div class="the-icons span3" title="Code: 0xe84d"><i class="demo-icon icon-pinnakl-reporting-categ">&#xe84d;</i> <span class="i-name">icon-pinnakl-reporting-categ</span><span class="i-code">0xe84d</span></div>
-        <div class="the-icons span3" title="Code: 0xe84e"><i class="demo-icon icon-pinnakl-remove">&#xe84e;</i> <span class="i-name">icon-pinnakl-remove</span><span class="i-code">0xe84e</span></div>
-        <div class="the-icons span3" title="Code: 0xe84f"><i class="demo-icon icon-pinnakl-remove-col">&#xe84f;</i> <span class="i-name">icon-pinnakl-remove-col</span><span class="i-code">0xe84f</span></div>
+        <div class="span3" title="Code: 0xe84c">
+          <i class="demo-icon icon-pinnakl-side-positions-active">&#xe84c;</i> <span class="i-name">icon-pinnakl-side-positions-active</span><span class="i-code">0xe84c</span>
+        </div>
+        <div class="span3" title="Code: 0xe84d">
+          <i class="demo-icon icon-pinnakl-reporting-categ">&#xe84d;</i> <span class="i-name">icon-pinnakl-reporting-categ</span><span class="i-code">0xe84d</span>
+        </div>
+        <div class="span3" title="Code: 0xe84e">
+          <i class="demo-icon icon-pinnakl-remove">&#xe84e;</i> <span class="i-name">icon-pinnakl-remove</span><span class="i-code">0xe84e</span>
+        </div>
+        <div class="span3" title="Code: 0xe84f">
+          <i class="demo-icon icon-pinnakl-remove-col">&#xe84f;</i> <span class="i-name">icon-pinnakl-remove-col</span><span class="i-code">0xe84f</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe850"><i class="demo-icon icon-pinnakl-proceeds">&#xe850;</i> <span class="i-name">icon-pinnakl-proceeds</span><span class="i-code">0xe850</span></div>
-        <div class="the-icons span3" title="Code: 0xe851"><i class="demo-icon icon-pinnakl-export-active">&#xe851;</i> <span class="i-name">icon-pinnakl-export-active</span><span class="i-code">0xe851</span></div>
-        <div class="the-icons span3" title="Code: 0xe852"><i class="demo-icon icon-pinnakl-live-notifications">&#xe852;</i> <span class="i-name">icon-pinnakl-live-notifications</span><span class="i-code">0xe852</span></div>
-        <div class="the-icons span3" title="Code: 0xe853"><i class="demo-icon icon-pinnakl-table-action">&#xe853;</i> <span class="i-name">icon-pinnakl-table-action</span><span class="i-code">0xe853</span></div>
+        <div class="span3" title="Code: 0xe850">
+          <i class="demo-icon icon-pinnakl-proceeds">&#xe850;</i> <span class="i-name">icon-pinnakl-proceeds</span><span class="i-code">0xe850</span>
+        </div>
+        <div class="span3" title="Code: 0xe851">
+          <i class="demo-icon icon-pinnakl-export-active">&#xe851;</i> <span class="i-name">icon-pinnakl-export-active</span><span class="i-code">0xe851</span>
+        </div>
+        <div class="span3" title="Code: 0xe852">
+          <i class="demo-icon icon-pinnakl-live-notifications">&#xe852;</i> <span class="i-name">icon-pinnakl-live-notifications</span><span class="i-code">0xe852</span>
+        </div>
+        <div class="span3" title="Code: 0xe853">
+          <i class="demo-icon icon-pinnakl-table-action">&#xe853;</i> <span class="i-name">icon-pinnakl-table-action</span><span class="i-code">0xe853</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe854"><i class="demo-icon icon-pinnakl-export">&#xe854;</i> <span class="i-name">icon-pinnakl-export</span><span class="i-code">0xe854</span></div>
-        <div class="the-icons span3" title="Code: 0xe855"><i class="demo-icon icon-pinnakl-side-risk-active">&#xe855;</i> <span class="i-name">icon-pinnakl-side-risk-active</span><span class="i-code">0xe855</span></div>
-        <div class="the-icons span3" title="Code: 0xe856"><i class="demo-icon icon-pinnakl-risk-breaches">&#xe856;</i> <span class="i-name">icon-pinnakl-risk-breaches</span><span class="i-code">0xe856</span></div>
-        <div class="the-icons span3" title="Code: 0xe857"><i class="demo-icon icon-pinnakl-status-ok">&#xe857;</i> <span class="i-name">icon-pinnakl-status-ok</span><span class="i-code">0xe857</span></div>
+        <div class="span3" title="Code: 0xe854">
+          <i class="demo-icon icon-pinnakl-export">&#xe854;</i> <span class="i-name">icon-pinnakl-export</span><span class="i-code">0xe854</span>
+        </div>
+        <div class="span3" title="Code: 0xe855">
+          <i class="demo-icon icon-pinnakl-side-risk-active">&#xe855;</i> <span class="i-name">icon-pinnakl-side-risk-active</span><span class="i-code">0xe855</span>
+        </div>
+        <div class="span3" title="Code: 0xe856">
+          <i class="demo-icon icon-pinnakl-risk-breaches">&#xe856;</i> <span class="i-name">icon-pinnakl-risk-breaches</span><span class="i-code">0xe856</span>
+        </div>
+        <div class="span3" title="Code: 0xe857">
+          <i class="demo-icon icon-pinnakl-status-ok">&#xe857;</i> <span class="i-name">icon-pinnakl-status-ok</span><span class="i-code">0xe857</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe858"><i class="demo-icon icon-pinnakl-side-menu">&#xe858;</i> <span class="i-name">icon-pinnakl-side-menu</span><span class="i-code">0xe858</span></div>
-        <div class="the-icons span3" title="Code: 0xe859"><i class="demo-icon icon-pinnakl-task-status-error">&#xe859;</i> <span class="i-name">icon-pinnakl-task-status-error</span><span class="i-code">0xe859</span></div>
-        <div class="the-icons span3" title="Code: 0xe85a"><i class="demo-icon icon-pinnakl-table-add-doc">&#xe85a;</i> <span class="i-name">icon-pinnakl-table-add-doc</span><span class="i-code">0xe85a</span></div>
-        <div class="the-icons span3" title="Code: 0xe85b"><i class="demo-icon icon-pinnakl-table-delete">&#xe85b;</i> <span class="i-name">icon-pinnakl-table-delete</span><span class="i-code">0xe85b</span></div>
+        <div class="span3" title="Code: 0xe858">
+          <i class="demo-icon icon-pinnakl-side-menu">&#xe858;</i> <span class="i-name">icon-pinnakl-side-menu</span><span class="i-code">0xe858</span>
+        </div>
+        <div class="span3" title="Code: 0xe859">
+          <i class="demo-icon icon-pinnakl-task-status-error">&#xe859;</i> <span class="i-name">icon-pinnakl-task-status-error</span><span class="i-code">0xe859</span>
+        </div>
+        <div class="span3" title="Code: 0xe85a">
+          <i class="demo-icon icon-pinnakl-table-add-doc">&#xe85a;</i> <span class="i-name">icon-pinnakl-table-add-doc</span><span class="i-code">0xe85a</span>
+        </div>
+        <div class="span3" title="Code: 0xe85b">
+          <i class="demo-icon icon-pinnakl-table-delete">&#xe85b;</i> <span class="i-name">icon-pinnakl-table-delete</span><span class="i-code">0xe85b</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe85c"><i class="demo-icon icon-pinnakl-table-edit">&#xe85c;</i> <span class="i-name">icon-pinnakl-table-edit</span><span class="i-code">0xe85c</span></div>
-        <div class="the-icons span3" title="Code: 0xe85d"><i class="demo-icon icon-pinnakl-table-history">&#xe85d;</i> <span class="i-name">icon-pinnakl-table-history</span><span class="i-code">0xe85d</span></div>
-        <div class="the-icons span3" title="Code: 0xe85e"><i class="demo-icon icon-pinnakl-task-results-active">&#xe85e;</i> <span class="i-name">icon-pinnakl-task-results-active</span><span class="i-code">0xe85e</span></div>
-        <div class="the-icons span3" title="Code: 0xe85f"><i class="demo-icon icon-pinnakl-task-results">&#xe85f;</i> <span class="i-name">icon-pinnakl-task-results</span><span class="i-code">0xe85f</span></div>
+        <div class="span3" title="Code: 0xe85c">
+          <i class="demo-icon icon-pinnakl-table-edit">&#xe85c;</i> <span class="i-name">icon-pinnakl-table-edit</span><span class="i-code">0xe85c</span>
+        </div>
+        <div class="span3" title="Code: 0xe85d">
+          <i class="demo-icon icon-pinnakl-table-history">&#xe85d;</i> <span class="i-name">icon-pinnakl-table-history</span><span class="i-code">0xe85d</span>
+        </div>
+        <div class="span3" title="Code: 0xe85e">
+          <i class="demo-icon icon-pinnakl-task-results-active">&#xe85e;</i> <span class="i-name">icon-pinnakl-task-results-active</span><span class="i-code">0xe85e</span>
+        </div>
+        <div class="span3" title="Code: 0xe85f">
+          <i class="demo-icon icon-pinnakl-task-results">&#xe85f;</i> <span class="i-name">icon-pinnakl-task-results</span><span class="i-code">0xe85f</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe860"><i class="demo-icon icon-pinnakl-task-schedule">&#xe860;</i> <span class="i-name">icon-pinnakl-task-schedule</span><span class="i-code">0xe860</span></div>
-        <div class="the-icons span3" title="Code: 0xe861"><i class="demo-icon icon-pinnakl-risk-reviewed">&#xe861;</i> <span class="i-name">icon-pinnakl-risk-reviewed</span><span class="i-code">0xe861</span></div>
-        <div class="the-icons span3" title="Code: 0xe862"><i class="demo-icon icon-pinnakl-filters">&#xe862;</i> <span class="i-name">icon-pinnakl-filters</span><span class="i-code">0xe862</span></div>
-        <div class="the-icons span3" title="Code: 0xe863"><i class="demo-icon icon-pinnakl-lookup-col">&#xe863;</i> <span class="i-name">icon-pinnakl-lookup-col</span><span class="i-code">0xe863</span></div>
+        <div class="span3" title="Code: 0xe860">
+          <i class="demo-icon icon-pinnakl-task-schedule">&#xe860;</i> <span class="i-name">icon-pinnakl-task-schedule</span><span class="i-code">0xe860</span>
+        </div>
+        <div class="span3" title="Code: 0xe861">
+          <i class="demo-icon icon-pinnakl-risk-reviewed">&#xe861;</i> <span class="i-name">icon-pinnakl-risk-reviewed</span><span class="i-code">0xe861</span>
+        </div>
+        <div class="span3" title="Code: 0xe862">
+          <i class="demo-icon icon-pinnakl-filters">&#xe862;</i> <span class="i-name">icon-pinnakl-filters</span><span class="i-code">0xe862</span>
+        </div>
+        <div class="span3" title="Code: 0xe863">
+          <i class="demo-icon icon-pinnakl-lookup-col">&#xe863;</i> <span class="i-name">icon-pinnakl-lookup-col</span><span class="i-code">0xe863</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe864"><i class="demo-icon icon-pinnakl-or">&#xe864;</i> <span class="i-name">icon-pinnakl-or</span><span class="i-code">0xe864</span></div>
-        <div class="the-icons span3" title="Code: 0xe865"><i class="demo-icon icon-pinnakl-settings-active">&#xe865;</i> <span class="i-name">icon-pinnakl-settings-active</span><span class="i-code">0xe865</span></div>
-        <div class="the-icons span3" title="Code: 0xe866"><i class="demo-icon icon-pinnakl-side-positions">&#xe866;</i> <span class="i-name">icon-pinnakl-side-positions</span><span class="i-code">0xe866</span></div>
-        <div class="the-icons span3" title="Code: 0xe867"><i class="demo-icon icon-pinnakl-side-pricing">&#xe867;</i> <span class="i-name">icon-pinnakl-side-pricing</span><span class="i-code">0xe867</span></div>
+        <div class="span3" title="Code: 0xe864">
+          <i class="demo-icon icon-pinnakl-or">&#xe864;</i> <span class="i-name">icon-pinnakl-or</span><span class="i-code">0xe864</span>
+        </div>
+        <div class="span3" title="Code: 0xe865">
+          <i class="demo-icon icon-pinnakl-settings-active">&#xe865;</i> <span class="i-name">icon-pinnakl-settings-active</span><span class="i-code">0xe865</span>
+        </div>
+        <div class="span3" title="Code: 0xe866">
+          <i class="demo-icon icon-pinnakl-side-positions">&#xe866;</i> <span class="i-name">icon-pinnakl-side-positions</span><span class="i-code">0xe866</span>
+        </div>
+        <div class="span3" title="Code: 0xe867">
+          <i class="demo-icon icon-pinnakl-side-pricing">&#xe867;</i> <span class="i-name">icon-pinnakl-side-pricing</span><span class="i-code">0xe867</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe868"><i class="demo-icon icon-pinnakl-side-reports">&#xe868;</i> <span class="i-name">icon-pinnakl-side-reports</span><span class="i-code">0xe868</span></div>
-        <div class="the-icons span3" title="Code: 0xe869"><i class="demo-icon icon-pinnakl-side-risk">&#xe869;</i> <span class="i-name">icon-pinnakl-side-risk</span><span class="i-code">0xe869</span></div>
-        <div class="the-icons span3" title="Code: 0xe86a"><i class="demo-icon icon-pinnakl-side-securities">&#xe86a;</i> <span class="i-name">icon-pinnakl-side-securities</span><span class="i-code">0xe86a</span></div>
-        <div class="the-icons span3" title="Code: 0xe86b"><i class="demo-icon icon-pinnakl-side-shadow">&#xe86b;</i> <span class="i-name">icon-pinnakl-side-shadow</span><span class="i-code">0xe86b</span></div>
+        <div class="span3" title="Code: 0xe868">
+          <i class="demo-icon icon-pinnakl-side-reports">&#xe868;</i> <span class="i-name">icon-pinnakl-side-reports</span><span class="i-code">0xe868</span>
+        </div>
+        <div class="span3" title="Code: 0xe869">
+          <i class="demo-icon icon-pinnakl-side-risk">&#xe869;</i> <span class="i-name">icon-pinnakl-side-risk</span><span class="i-code">0xe869</span>
+        </div>
+        <div class="span3" title="Code: 0xe86a">
+          <i class="demo-icon icon-pinnakl-side-securities">&#xe86a;</i> <span class="i-name">icon-pinnakl-side-securities</span><span class="i-code">0xe86a</span>
+        </div>
+        <div class="span3" title="Code: 0xe86b">
+          <i class="demo-icon icon-pinnakl-side-shadow">&#xe86b;</i> <span class="i-name">icon-pinnakl-side-shadow</span><span class="i-code">0xe86b</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe86c"><i class="demo-icon icon-pinnakl-support">&#xe86c;</i> <span class="i-name">icon-pinnakl-support</span><span class="i-code">0xe86c</span></div>
-        <div class="the-icons span3" title="Code: 0xe86d"><i class="demo-icon icon-pinnakl-trade-request-edit">&#xe86d;</i> <span class="i-name">icon-pinnakl-trade-request-edit</span><span class="i-code">0xe86d</span></div>
-        <div class="the-icons span3" title="Code: 0xe86e"><i class="demo-icon icon-pinnakl-trade-request-editing">&#xe86e;</i> <span class="i-name">icon-pinnakl-trade-request-editing</span><span class="i-code">0xe86e</span></div>
-        <div class="the-icons span3" title="Code: 0xe86f"><i class="demo-icon icon-pinnakl-task-schedule-active">&#xe86f;</i> <span class="i-name">icon-pinnakl-task-schedule-active</span><span class="i-code">0xe86f</span></div>
+        <div class="span3" title="Code: 0xe86c">
+          <i class="demo-icon icon-pinnakl-support">&#xe86c;</i> <span class="i-name">icon-pinnakl-support</span><span class="i-code">0xe86c</span>
+        </div>
+        <div class="span3" title="Code: 0xe86d">
+          <i class="demo-icon icon-pinnakl-trade-request-edit">&#xe86d;</i> <span class="i-name">icon-pinnakl-trade-request-edit</span><span class="i-code">0xe86d</span>
+        </div>
+        <div class="span3" title="Code: 0xe86e">
+          <i class="demo-icon icon-pinnakl-trade-request-editing">&#xe86e;</i> <span class="i-name">icon-pinnakl-trade-request-editing</span><span class="i-code">0xe86e</span>
+        </div>
+        <div class="span3" title="Code: 0xe86f">
+          <i class="demo-icon icon-pinnakl-task-schedule-active">&#xe86f;</i> <span class="i-name">icon-pinnakl-task-schedule-active</span><span class="i-code">0xe86f</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe870"><i class="demo-icon icon-pinnakl-task-history-active">&#xe870;</i> <span class="i-name">icon-pinnakl-task-history-active</span><span class="i-code">0xe870</span></div>
-        <div class="the-icons span3" title="Code: 0xe871"><i class="demo-icon icon-pinnakl-mail-icon">&#xe871;</i> <span class="i-name">icon-pinnakl-mail-icon</span><span class="i-code">0xe871</span></div>
-        <div class="the-icons span3" title="Code: 0xe872"><i class="demo-icon icon-pinnakl-phone-icon">&#xe872;</i> <span class="i-name">icon-pinnakl-phone-icon</span><span class="i-code">0xe872</span></div>
-        <div class="the-icons span3" title="Code: 0xe873"><i class="demo-icon icon-pinnakl-top-score-null-flag-icon">&#xe873;</i> <span class="i-name">icon-pinnakl-top-score-null-flag-icon</span><span class="i-code">0xe873</span></div>
+        <div class="span3" title="Code: 0xe870">
+          <i class="demo-icon icon-pinnakl-task-history-active">&#xe870;</i> <span class="i-name">icon-pinnakl-task-history-active</span><span class="i-code">0xe870</span>
+        </div>
+        <div class="span3" title="Code: 0xe871">
+          <i class="demo-icon icon-pinnakl-mail-icon">&#xe871;</i> <span class="i-name">icon-pinnakl-mail-icon</span><span class="i-code">0xe871</span>
+        </div>
+        <div class="span3" title="Code: 0xe872">
+          <i class="demo-icon icon-pinnakl-phone-icon">&#xe872;</i> <span class="i-name">icon-pinnakl-phone-icon</span><span class="i-code">0xe872</span>
+        </div>
+        <div class="span3" title="Code: 0xe873">
+          <i class="demo-icon icon-pinnakl-top-score-null-flag-icon">&#xe873;</i> <span class="i-name">icon-pinnakl-top-score-null-flag-icon</span><span class="i-code">0xe873</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe874"><i class="demo-icon icon-pinnakl-account-active-summary-icon">&#xe874;</i> <span class="i-name">icon-pinnakl-account-active-summary-icon</span><span class="i-code">0xe874</span></div>
-        <div class="the-icons span3" title="Code: 0xe875"><i class="demo-icon icon-pinnakl-active-contact-null-icon">&#xe875;</i> <span class="i-name">icon-pinnakl-active-contact-null-icon</span><span class="i-code">0xe875</span></div>
-        <div class="the-icons span3" title="Code: 0xe876"><i class="demo-icon icon-pinnakl-activity-summary-graph-button">&#xe876;</i> <span class="i-name">icon-pinnakl-activity-summary-graph-button</span><span class="i-code">0xe876</span></div>
-        <div class="the-icons span3" title="Code: 0xe877"><i class="demo-icon icon-pinnakl-contact-count-icon">&#xe877;</i> <span class="i-name">icon-pinnakl-contact-count-icon</span><span class="i-code">0xe877</span></div>
+        <div class="span3" title="Code: 0xe874">
+          <i class="demo-icon icon-pinnakl-account-active-summary-icon">&#xe874;</i> <span class="i-name">icon-pinnakl-account-active-summary-icon</span><span class="i-code">0xe874</span>
+        </div>
+        <div class="span3" title="Code: 0xe875">
+          <i class="demo-icon icon-pinnakl-active-contact-null-icon">&#xe875;</i> <span class="i-name">icon-pinnakl-active-contact-null-icon</span><span class="i-code">0xe875</span>
+        </div>
+        <div class="span3" title="Code: 0xe876">
+          <i class="demo-icon icon-pinnakl-activity-summary-graph-button">&#xe876;</i> <span class="i-name">icon-pinnakl-activity-summary-graph-button</span><span class="i-code">0xe876</span>
+        </div>
+        <div class="span3" title="Code: 0xe877">
+          <i class="demo-icon icon-pinnakl-contact-count-icon">&#xe877;</i> <span class="i-name">icon-pinnakl-contact-count-icon</span><span class="i-code">0xe877</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe878"><i class="demo-icon icon-pinnakl-contact-distribution-count-icon">&#xe878;</i> <span class="i-name">icon-pinnakl-contact-distribution-count-icon</span><span class="i-code">0xe878</span></div>
-        <div class="the-icons span3" title="Code: 0xe879"><i class="demo-icon icon-pinnakl-investor-count-icon">&#xe879;</i> <span class="i-name">icon-pinnakl-investor-count-icon</span><span class="i-code">0xe879</span></div>
-        <div class="the-icons span3" title="Code: 0xe87a"><i class="demo-icon icon-pinnakl-shield-danger">&#xe87a;</i> <span class="i-name">icon-pinnakl-shield-danger</span><span class="i-code">0xe87a</span></div>
-        <div class="the-icons span3" title="Code: 0xe87b"><i class="demo-icon icon-pinnakl-globe">&#xe87b;</i> <span class="i-name">icon-pinnakl-globe</span><span class="i-code">0xe87b</span></div>
+        <div class="span3" title="Code: 0xe878">
+          <i class="demo-icon icon-pinnakl-contact-distribution-count-icon">&#xe878;</i> <span class="i-name">icon-pinnakl-contact-distribution-count-icon</span><span class="i-code">0xe878</span>
+        </div>
+        <div class="span3" title="Code: 0xe879">
+          <i class="demo-icon icon-pinnakl-investor-count-icon">&#xe879;</i> <span class="i-name">icon-pinnakl-investor-count-icon</span><span class="i-code">0xe879</span>
+        </div>
+        <div class="span3" title="Code: 0xe87a">
+          <i class="demo-icon icon-pinnakl-shield-danger">&#xe87a;</i> <span class="i-name">icon-pinnakl-shield-danger</span><span class="i-code">0xe87a</span>
+        </div>
+        <div class="span3" title="Code: 0xe87b">
+          <i class="demo-icon icon-pinnakl-globe">&#xe87b;</i> <span class="i-name">icon-pinnakl-globe</span><span class="i-code">0xe87b</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe87c"><i class="demo-icon icon-pinnakl-shield-success">&#xe87c;</i> <span class="i-name">icon-pinnakl-shield-success</span><span class="i-code">0xe87c</span></div>
-        <div class="the-icons span3" title="Code: 0xe87d"><i class="demo-icon icon-pinnakl-action-dismiss">&#xe87d;</i> <span class="i-name">icon-pinnakl-action-dismiss</span><span class="i-code">0xe87d</span></div>
-        <div class="the-icons span3" title="Code: 0xe87e"><i class="demo-icon icon-pinnakl-action-run">&#xe87e;</i> <span class="i-name">icon-pinnakl-action-run</span><span class="i-code">0xe87e</span></div>
-        <div class="the-icons span3" title="Code: 0xe87f"><i class="demo-icon icon-pinnakl-ai-icon">&#xe87f;</i> <span class="i-name">icon-pinnakl-ai-icon</span><span class="i-code">0xe87f</span></div>
+        <div class="span3" title="Code: 0xe87c">
+          <i class="demo-icon icon-pinnakl-shield-success">&#xe87c;</i> <span class="i-name">icon-pinnakl-shield-success</span><span class="i-code">0xe87c</span>
+        </div>
+        <div class="span3" title="Code: 0xe87d">
+          <i class="demo-icon icon-pinnakl-action-dismiss">&#xe87d;</i> <span class="i-name">icon-pinnakl-action-dismiss</span><span class="i-code">0xe87d</span>
+        </div>
+        <div class="span3" title="Code: 0xe87e">
+          <i class="demo-icon icon-pinnakl-action-run">&#xe87e;</i> <span class="i-name">icon-pinnakl-action-run</span><span class="i-code">0xe87e</span>
+        </div>
+        <div class="span3" title="Code: 0xe87f">
+          <i class="demo-icon icon-pinnakl-ai-icon">&#xe87f;</i> <span class="i-name">icon-pinnakl-ai-icon</span><span class="i-code">0xe87f</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe880"><i class="demo-icon icon-pinnakl-arrow-down">&#xe880;</i> <span class="i-name">icon-pinnakl-arrow-down</span><span class="i-code">0xe880</span></div>
-        <div class="the-icons span3" title="Code: 0xe881"><i class="demo-icon icon-pinnakl-arrow-up">&#xe881;</i> <span class="i-name">icon-pinnakl-arrow-up</span><span class="i-code">0xe881</span></div>
-        <div class="the-icons span3" title="Code: 0xe882"><i class="demo-icon icon-pinnakl-pie">&#xe882;</i> <span class="i-name">icon-pinnakl-pie</span><span class="i-code">0xe882</span></div>
-        <div class="the-icons span3" title="Code: 0xe883"><i class="demo-icon icon-pinnakl-flag">&#xe883;</i> <span class="i-name">icon-pinnakl-flag</span><span class="i-code">0xe883</span></div>
+        <div class="span3" title="Code: 0xe880">
+          <i class="demo-icon icon-pinnakl-arrow-down">&#xe880;</i> <span class="i-name">icon-pinnakl-arrow-down</span><span class="i-code">0xe880</span>
+        </div>
+        <div class="span3" title="Code: 0xe881">
+          <i class="demo-icon icon-pinnakl-arrow-up">&#xe881;</i> <span class="i-name">icon-pinnakl-arrow-up</span><span class="i-code">0xe881</span>
+        </div>
+        <div class="span3" title="Code: 0xe882">
+          <i class="demo-icon icon-pinnakl-pie">&#xe882;</i> <span class="i-name">icon-pinnakl-pie</span><span class="i-code">0xe882</span>
+        </div>
+        <div class="span3" title="Code: 0xe883">
+          <i class="demo-icon icon-pinnakl-flag">&#xe883;</i> <span class="i-name">icon-pinnakl-flag</span><span class="i-code">0xe883</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe884"><i class="demo-icon icon-pinnakl-trophy">&#xe884;</i> <span class="i-name">icon-pinnakl-trophy</span><span class="i-code">0xe884</span></div>
-        <div class="the-icons span3" title="Code: 0xe885"><i class="demo-icon icon-pinnakl-feed">&#xe885;</i> <span class="i-name">icon-pinnakl-feed</span><span class="i-code">0xe885</span></div>
-        <div class="the-icons span3" title="Code: 0xe886"><i class="demo-icon icon-pinnakl-up-dir">&#xe886;</i> <span class="i-name">icon-pinnakl-up-dir</span><span class="i-code">0xe886</span></div>
-        <div class="the-icons span3" title="Code: 0xe887"><i class="demo-icon icon-pinnakl-down-dir">&#xe887;</i> <span class="i-name">icon-pinnakl-down-dir</span><span class="i-code">0xe887</span></div>
+        <div class="span3" title="Code: 0xe884">
+          <i class="demo-icon icon-pinnakl-trophy">&#xe884;</i> <span class="i-name">icon-pinnakl-trophy</span><span class="i-code">0xe884</span>
+        </div>
+        <div class="span3" title="Code: 0xe885">
+          <i class="demo-icon icon-pinnakl-feed">&#xe885;</i> <span class="i-name">icon-pinnakl-feed</span><span class="i-code">0xe885</span>
+        </div>
+        <div class="span3" title="Code: 0xe886">
+          <i class="demo-icon icon-pinnakl-up-dir">&#xe886;</i> <span class="i-name">icon-pinnakl-up-dir</span><span class="i-code">0xe886</span>
+        </div>
+        <div class="span3" title="Code: 0xe887">
+          <i class="demo-icon icon-pinnakl-down-dir">&#xe887;</i> <span class="i-name">icon-pinnakl-down-dir</span><span class="i-code">0xe887</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe888"><i class="demo-icon icon-pinnakl-floppy">&#xe888;</i> <span class="i-name">icon-pinnakl-floppy</span><span class="i-code">0xe888</span></div>
-        <div class="the-icons span3" title="Code: 0xe889"><i class="demo-icon icon-pinnakl-mail">&#xe889;</i> <span class="i-name">icon-pinnakl-mail</span><span class="i-code">0xe889</span></div>
-        <div class="the-icons span3" title="Code: 0xe88a"><i class="demo-icon icon-pinnakl-note-1">&#xe88a;</i> <span class="i-name">icon-pinnakl-note-1</span><span class="i-code">0xe88a</span></div>
-        <div class="the-icons span3" title="Code: 0xe88b"><i class="demo-icon icon-pinnakl-users-outline">&#xe88b;</i> <span class="i-name">icon-pinnakl-users-outline</span><span class="i-code">0xe88b</span></div>
+        <div class="span3" title="Code: 0xe888">
+          <i class="demo-icon icon-pinnakl-floppy">&#xe888;</i> <span class="i-name">icon-pinnakl-floppy</span><span class="i-code">0xe888</span>
+        </div>
+        <div class="span3" title="Code: 0xe889">
+          <i class="demo-icon icon-pinnakl-mail">&#xe889;</i> <span class="i-name">icon-pinnakl-mail</span><span class="i-code">0xe889</span>
+        </div>
+        <div class="span3" title="Code: 0xe88a">
+          <i class="demo-icon icon-pinnakl-note-1">&#xe88a;</i> <span class="i-name">icon-pinnakl-note-1</span><span class="i-code">0xe88a</span>
+        </div>
+        <div class="span3" title="Code: 0xe88b">
+          <i class="demo-icon icon-pinnakl-users-outline">&#xe88b;</i> <span class="i-name">icon-pinnakl-users-outline</span><span class="i-code">0xe88b</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe88c"><i class="demo-icon icon-pinnakl-attention">&#xe88c;</i> <span class="i-name">icon-pinnakl-attention</span><span class="i-code">0xe88c</span></div>
-        <div class="the-icons span3" title="Code: 0xe88d"><i class="demo-icon icon-pinnakl-trash">&#xe88d;</i> <span class="i-name">icon-pinnakl-trash</span><span class="i-code">0xe88d</span></div>
-        <div class="the-icons span3" title="Code: 0xe88e"><i class="demo-icon icon-pinnakl-high">&#xe88e;</i> <span class="i-name">icon-pinnakl-high</span><span class="i-code">0xe88e</span></div>
-        <div class="the-icons span3" title="Code: 0xe88f"><i class="demo-icon icon-pinnakl-med">&#xe88f;</i> <span class="i-name">icon-pinnakl-med</span><span class="i-code">0xe88f</span></div>
+        <div class="span3" title="Code: 0xe88c">
+          <i class="demo-icon icon-pinnakl-attention">&#xe88c;</i> <span class="i-name">icon-pinnakl-attention</span><span class="i-code">0xe88c</span>
+        </div>
+        <div class="span3" title="Code: 0xe88d">
+          <i class="demo-icon icon-pinnakl-trash">&#xe88d;</i> <span class="i-name">icon-pinnakl-trash</span><span class="i-code">0xe88d</span>
+        </div>
+        <div class="span3" title="Code: 0xe88e">
+          <i class="demo-icon icon-pinnakl-high">&#xe88e;</i> <span class="i-name">icon-pinnakl-high</span><span class="i-code">0xe88e</span>
+        </div>
+        <div class="span3" title="Code: 0xe88f">
+          <i class="demo-icon icon-pinnakl-med">&#xe88f;</i> <span class="i-name">icon-pinnakl-med</span><span class="i-code">0xe88f</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xe890"><i class="demo-icon icon-pinnakl-dot-3">&#xe890;</i> <span class="i-name">icon-pinnakl-dot-3</span><span class="i-code">0xe890</span></div>
-        <div class="the-icons span3" title="Code: 0xe891"><i class="demo-icon icon-pinnakl-rebalance">&#xe891;</i> <span class="i-name">icon-pinnakl-rebalance</span><span class="i-code">0xe891</span></div>
-        <div class="the-icons span3" title="Code: 0xe892"><i class="demo-icon icon-pinnakl-bar">&#xe892;</i> <span class="i-name">icon-pinnakl-bar</span><span class="i-code">0xe892</span></div>
-        <div class="the-icons span3" title="Code: 0xe893"><i class="demo-icon icon-pinnakl-line">&#xe893;</i> <span class="i-name">icon-pinnakl-line</span><span class="i-code">0xe893</span></div>
+        <div class="span3" title="Code: 0xe890">
+          <i class="demo-icon icon-pinnakl-dot-3">&#xe890;</i> <span class="i-name">icon-pinnakl-dot-3</span><span class="i-code">0xe890</span>
+        </div>
+        <div class="span3" title="Code: 0xe891">
+          <i class="demo-icon icon-pinnakl-rebalance">&#xe891;</i> <span class="i-name">icon-pinnakl-rebalance</span><span class="i-code">0xe891</span>
+        </div>
+        <div class="span3" title="Code: 0xe892">
+          <i class="demo-icon icon-pinnakl-bar">&#xe892;</i> <span class="i-name">icon-pinnakl-bar</span><span class="i-code">0xe892</span>
+        </div>
+        <div class="span3" title="Code: 0xe893">
+          <i class="demo-icon icon-pinnakl-line">&#xe893;</i> <span class="i-name">icon-pinnakl-line</span><span class="i-code">0xe893</span>
+        </div>
       </div>
       <div class="row">
-        <div class="the-icons span3" title="Code: 0xf0ae"><i class="demo-icon icon-pinnakl-tasks-1">&#xf0ae;</i> <span class="i-name">icon-pinnakl-tasks-1</span><span class="i-code">0xf0ae</span></div>
-        <div class="the-icons span3" title="Code: 0xf0c5"><i class="demo-icon icon-pinnakl-docs">&#xf0c5;</i> <span class="i-name">icon-pinnakl-docs</span><span class="i-code">0xf0c5</span></div>
-        <div class="the-icons span3" title="Code: 0xf10c"><i class="demo-icon icon-pinnakl-circle-empty">&#xf10c;</i> <span class="i-name">icon-pinnakl-circle-empty</span><span class="i-code">0xf10c</span></div>
+        <div class="span3" title="Code: 0xe894">
+          <i class="demo-icon icon-pinnakl-th-large-1">&#xe894;</i> <span class="i-name">icon-pinnakl-th-large-1</span><span class="i-code">0xe894</span>
+        </div>
+        <div class="span3" title="Code: 0xe895">
+          <i class="demo-icon icon-pinnakl-exchange-1">&#xe895;</i> <span class="i-name">icon-pinnakl-exchange-1</span><span class="i-code">0xe895</span>
+        </div>
+        <div class="span3" title="Code: 0xe896">
+          <i class="demo-icon icon-pinnakl-fire-1">&#xe896;</i> <span class="i-name">icon-pinnakl-fire-1</span><span class="i-code">0xe896</span>
+        </div>
+        <div class="span3" title="Code: 0xe897">
+          <i class="demo-icon icon-pinnakl-trash-empty-1">&#xe897;</i> <span class="i-name">icon-pinnakl-trash-empty-1</span><span class="i-code">0xe897</span>
+        </div>
       </div>
-    </div>
-    <div class="container footer">Generated by <a href="http://fontello.com">fontello.com</a></div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe898">
+          <i class="demo-icon icon-pinnakl-user-1">&#xe898;</i> <span class="i-name">icon-pinnakl-user-1</span><span class="i-code">0xe898</span>
+        </div>
+        <div class="span3" title="Code: 0xe899">
+          <i class="demo-icon icon-pinnakl-note-2">&#xe899;</i> <span class="i-name">icon-pinnakl-note-2</span><span class="i-code">0xe899</span>
+        </div>
+        <div class="span3" title="Code: 0xe89a">
+          <i class="demo-icon icon-pinnakl-calendar-1">&#xe89a;</i> <span class="i-name">icon-pinnakl-calendar-1</span><span class="i-code">0xe89a</span>
+        </div>
+        <div class="span3" title="Code: 0xe89b">
+          <i class="demo-icon icon-pinnakl-down-open-1">&#xe89b;</i> <span class="i-name">icon-pinnakl-down-open-1</span><span class="i-code">0xe89b</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe89c">
+          <i class="demo-icon icon-pinnakl-left-open-1">&#xe89c;</i> <span class="i-name">icon-pinnakl-left-open-1</span><span class="i-code">0xe89c</span>
+        </div>
+        <div class="span3" title="Code: 0xe89d">
+          <i class="demo-icon icon-pinnakl-right-open-1">&#xe89d;</i> <span class="i-name">icon-pinnakl-right-open-1</span><span class="i-code">0xe89d</span>
+        </div>
+        <div class="span3" title="Code: 0xe89e">
+          <i class="demo-icon icon-pinnakl-up-open-1">&#xe89e;</i> <span class="i-name">icon-pinnakl-up-open-1</span><span class="i-code">0xe89e</span>
+        </div>
+        <div class="span3" title="Code: 0xe89f">
+          <i class="demo-icon icon-pinnakl-down-open-mini-1">&#xe89f;</i> <span class="i-name">icon-pinnakl-down-open-mini-1</span><span class="i-code">0xe89f</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe8a0">
+          <i class="demo-icon icon-pinnakl-side-reports-active-1">&#xe8a0;</i> <span class="i-name">icon-pinnakl-side-reports-active-1</span><span class="i-code">0xe8a0</span>
+        </div>
+        <div class="span3" title="Code: 0xe8a1">
+          <i class="demo-icon icon-pinnakl-side-reconciliation-active-svg-1">&#xe8a1;</i> <span class="i-name">icon-pinnakl-side-reconciliation-active-svg-1</span><span class="i-code">0xe8a1</span>
+        </div>
+        <div class="span3" title="Code: 0xe8a2">
+          <i class="demo-icon icon-pinnakl-security-add-manually-1">&#xe8a2;</i> <span class="i-name">icon-pinnakl-security-add-manually-1</span><span class="i-code">0xe8a2</span>
+        </div>
+        <div class="span3" title="Code: 0xe8a3">
+          <i class="demo-icon icon-pinnakl-side-pricing-active-1">&#xe8a3;</i> <span class="i-name">icon-pinnakl-side-pricing-active-1</span><span class="i-code">0xe8a3</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe8a4">
+          <i class="demo-icon icon-pinnakl-settings-1">&#xe8a4;</i> <span class="i-name">icon-pinnakl-settings-1</span><span class="i-code">0xe8a4</span>
+        </div>
+        <div class="span3" title="Code: 0xe8a5">
+          <i class="demo-icon icon-pinnakl-filters-active-1">&#xe8a5;</i> <span class="i-name">icon-pinnakl-filters-active-1</span><span class="i-code">0xe8a5</span>
+        </div>
+        <div class="span3" title="Code: 0xe8a6">
+          <i class="demo-icon icon-pinnakl-reporting-categ-1">&#xe8a6;</i> <span class="i-name">icon-pinnakl-reporting-categ-1</span><span class="i-code">0xe8a6</span>
+        </div>
+        <div class="span3" title="Code: 0xe8a7">
+          <i class="demo-icon icon-pinnakl-remove-1">&#xe8a7;</i> <span class="i-name">icon-pinnakl-remove-1</span><span class="i-code">0xe8a7</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe8a8">
+          <i class="demo-icon icon-pinnakl-remove-col-1">&#xe8a8;</i> <span class="i-name">icon-pinnakl-remove-col-1</span><span class="i-code">0xe8a8</span>
+        </div>
+        <div class="span3" title="Code: 0xe8a9">
+          <i class="demo-icon icon-pinnakl-proceeds-1">&#xe8a9;</i> <span class="i-name">icon-pinnakl-proceeds-1</span><span class="i-code">0xe8a9</span>
+        </div>
+        <div class="span3" title="Code: 0xe8aa">
+          <i class="demo-icon icon-pinnakl-export-active-1">&#xe8aa;</i> <span class="i-name">icon-pinnakl-export-active-1</span><span class="i-code">0xe8aa</span>
+        </div>
+        <div class="span3" title="Code: 0xe8ab">
+          <i class="demo-icon icon-pinnakl-live-notifications-1">&#xe8ab;</i> <span class="i-name">icon-pinnakl-live-notifications-1</span><span class="i-code">0xe8ab</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe8ac">
+          <i class="demo-icon icon-pinnakl-settings-active-1">&#xe8ac;</i> <span class="i-name">icon-pinnakl-settings-active-1</span><span class="i-code">0xe8ac</span>
+        </div>
+        <div class="span3" title="Code: 0xe8ad">
+          <i class="demo-icon icon-pinnakl-side-positions-1">&#xe8ad;</i> <span class="i-name">icon-pinnakl-side-positions-1</span><span class="i-code">0xe8ad</span>
+        </div>
+        <div class="span3" title="Code: 0xe8ae">
+          <i class="demo-icon icon-pinnakl-side-pricing-1">&#xe8ae;</i> <span class="i-name">icon-pinnakl-side-pricing-1</span><span class="i-code">0xe8ae</span>
+        </div>
+        <div class="span3" title="Code: 0xe8af">
+          <i class="demo-icon icon-pinnakl-side-reports-1">&#xe8af;</i> <span class="i-name">icon-pinnakl-side-reports-1</span><span class="i-code">0xe8af</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe8b0">
+          <i class="demo-icon icon-pinnakl-side-risk-1">&#xe8b0;</i> <span class="i-name">icon-pinnakl-side-risk-1</span><span class="i-code">0xe8b0</span>
+        </div>
+        <div class="span3" title="Code: 0xe8b1">
+          <i class="demo-icon icon-pinnakl-side-securities-1">&#xe8b1;</i> <span class="i-name">icon-pinnakl-side-securities-1</span><span class="i-code">0xe8b1</span>
+        </div>
+        <div class="span3" title="Code: 0xe8b2">
+          <i class="demo-icon icon-pinnakl-action-dismiss-1">&#xe8b2;</i> <span class="i-name">icon-pinnakl-action-dismiss-1</span><span class="i-code">0xe8b2</span>
+        </div>
+        <div class="span3" title="Code: 0xe8b3">
+          <i class="demo-icon icon-pinnakl-action-run-1">&#xe8b3;</i> <span class="i-name">icon-pinnakl-action-run-1</span><span class="i-code">0xe8b3</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe8b4">
+          <i class="demo-icon icon-pinnakl-ai-icon-1">&#xe8b4;</i> <span class="i-name">icon-pinnakl-ai-icon-1</span><span class="i-code">0xe8b4</span>
+        </div>
+        <div class="span3" title="Code: 0xe8b5">
+          <i class="demo-icon icon-pinnakl-arrow-down-1">&#xe8b5;</i> <span class="i-name">icon-pinnakl-arrow-down-1</span><span class="i-code">0xe8b5</span>
+        </div>
+        <div class="span3" title="Code: 0xe8b6">
+          <i class="demo-icon icon-pinnakl-arrow-up-1">&#xe8b6;</i> <span class="i-name">icon-pinnakl-arrow-up-1</span><span class="i-code">0xe8b6</span>
+        </div>
+        <div class="span3" title="Code: 0xe8b7">
+          <i class="demo-icon icon-pinnakl-pie-1">&#xe8b7;</i> <span class="i-name">icon-pinnakl-pie-1</span><span class="i-code">0xe8b7</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe8b8">
+          <i class="demo-icon icon-pinnakl-docs-1">&#xe8b8;</i> <span class="i-name">icon-pinnakl-docs-1</span><span class="i-code">0xe8b8</span>
+        </div>
+        <div class="span3" title="Code: 0xe8b9">
+          <i class="demo-icon icon-pinnakl-circle-empty-1">&#xe8b9;</i> <span class="i-name">icon-pinnakl-circle-empty-1</span><span class="i-code">0xe8b9</span>
+        </div>
+        <div class="span3" title="Code: 0xe8ba">
+          <i class="demo-icon icon-pinnakl-bell-1">&#xe8ba;</i> <span class="i-name">icon-pinnakl-bell-1</span><span class="i-code">0xe8ba</span>
+        </div>
+        <div class="span3" title="Code: 0xe8bb">
+          <i class="demo-icon icon-pinnakl-plus-circled-1">&#xe8bb;</i> <span class="i-name">icon-pinnakl-plus-circled-1</span><span class="i-code">0xe8bb</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe8bc">
+          <i class="demo-icon icon-pinnakl-tasks-2">&#xe8bc;</i> <span class="i-name">icon-pinnakl-tasks-2</span><span class="i-code">0xe8bc</span>
+        </div>
+        <div class="span3" title="Code: 0xe8bd">
+          <i class="demo-icon icon-pinnakl-play-1">&#xe8bd;</i> <span class="i-name">icon-pinnakl-play-1</span><span class="i-code">0xe8bd</span>
+        </div>
+        <div class="span3" title="Code: 0xe8be">
+          <i class="demo-icon icon-pinnakl-check-1">&#xe8be;</i> <span class="i-name">icon-pinnakl-check-1</span><span class="i-code">0xe8be</span>
+        </div>
+        <div class="span3" title="Code: 0xe8bf">
+          <i class="demo-icon icon-pinnakl-check-empty-1">&#xe8bf;</i> <span class="i-name">icon-pinnakl-check-empty-1</span><span class="i-code">0xe8bf</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe8c0">
+          <i class="demo-icon icon-pinnakl-ok-squared-1">&#xe8c0;</i> <span class="i-name">icon-pinnakl-ok-squared-1</span><span class="i-code">0xe8c0</span>
+        </div>
+        <div class="span3" title="Code: 0xe8c1">
+          <i class="demo-icon icon-pinnakl-plus-1">&#xe8c1;</i> <span class="i-name">icon-pinnakl-plus-1</span><span class="i-code">0xe8c1</span>
+        </div>
+        <div class="span3" title="Code: 0xe8c2">
+          <i class="demo-icon icon-pinnakl-upload-1">&#xe8c2;</i> <span class="i-name">icon-pinnakl-upload-1</span><span class="i-code">0xe8c2</span>
+        </div>
+        <div class="span3" title="Code: 0xe8c3">
+          <i class="demo-icon icon-pinnakl-filter-1">&#xe8c3;</i> <span class="i-name">icon-pinnakl-filter-1</span><span class="i-code">0xe8c3</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe8c4">
+          <i class="demo-icon icon-pinnakl-up-open-mini-1">&#xe8c4;</i> <span class="i-name">icon-pinnakl-up-open-mini-1</span><span class="i-code">0xe8c4</span>
+        </div>
+        <div class="span3" title="Code: 0xe8c5">
+          <i class="demo-icon icon-pinnakl-right-open-mini-1">&#xe8c5;</i> <span class="i-name">icon-pinnakl-right-open-mini-1</span><span class="i-code">0xe8c5</span>
+        </div>
+        <div class="span3" title="Code: 0xe8c6">
+          <i class="demo-icon icon-pinnakl-left-open-mini-1">&#xe8c6;</i> <span class="i-name">icon-pinnakl-left-open-mini-1</span><span class="i-code">0xe8c6</span>
+        </div>
+        <div class="span3" title="Code: 0xe8c7">
+          <i class="demo-icon icon-pinnakl-back-in-time-1">&#xe8c7;</i> <span class="i-name">icon-pinnakl-back-in-time-1</span><span class="i-code">0xe8c7</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe8c8">
+          <i class="demo-icon icon-pinnakl-clock-1">&#xe8c8;</i> <span class="i-name">icon-pinnakl-clock-1</span><span class="i-code">0xe8c8</span>
+        </div>
+        <div class="span3" title="Code: 0xe8c9">
+          <i class="demo-icon icon-pinnakl-search-1">&#xe8c9;</i> <span class="i-name">icon-pinnakl-search-1</span><span class="i-code">0xe8c9</span>
+        </div>
+        <div class="span3" title="Code: 0xe8ca">
+          <i class="demo-icon icon-pinnakl-cancel-1">&#xe8ca;</i> <span class="i-name">icon-pinnakl-cancel-1</span><span class="i-code">0xe8ca</span>
+        </div>
+        <div class="span3" title="Code: 0xe8cb">
+          <i class="demo-icon icon-pinnakl-ok-2">&#xe8cb;</i> <span class="i-name">icon-pinnakl-ok-2</span><span class="i-code">0xe8cb</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe8cc">
+          <i class="demo-icon icon-pinnakl-cog-1">&#xe8cc;</i> <span class="i-name">icon-pinnakl-cog-1</span><span class="i-code">0xe8cc</span>
+        </div>
+        <div class="span3" title="Code: 0xe8cd">
+          <i class="demo-icon icon-pinnakl-bell-alt-1">&#xe8cd;</i> <span class="i-name">icon-pinnakl-bell-alt-1</span><span class="i-code">0xe8cd</span>
+        </div>
+        <div class="span3" title="Code: 0xe8ce">
+          <i class="demo-icon icon-pinnakl-menu-1">&#xe8ce;</i> <span class="i-name">icon-pinnakl-menu-1</span><span class="i-code">0xe8ce</span>
+        </div>
+        <div class="span3" title="Code: 0xe8cf">
+          <i class="demo-icon icon-pinnakl-task-history-1">&#xe8cf;</i> <span class="i-name">icon-pinnakl-task-history-1</span><span class="i-code">0xe8cf</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe8d0">
+          <i class="demo-icon icon-pinnakl-task-run-active-1">&#xe8d0;</i> <span class="i-name">icon-pinnakl-task-run-active-1</span><span class="i-code">0xe8d0</span>
+        </div>
+        <div class="span3" title="Code: 0xe8d1">
+          <i class="demo-icon icon-pinnakl-task-run-1">&#xe8d1;</i> <span class="i-name">icon-pinnakl-task-run-1</span><span class="i-code">0xe8d1</span>
+        </div>
+        <div class="span3" title="Code: 0xe8d2">
+          <i class="demo-icon icon-pinnakl-field-arrow-panel-1">&#xe8d2;</i> <span class="i-name">icon-pinnakl-field-arrow-panel-1</span><span class="i-code">0xe8d2</span>
+        </div>
+        <div class="span3" title="Code: 0xe8d3">
+          <i class="demo-icon icon-pinnakl-edit-security-1">&#xe8d3;</i> <span class="i-name">icon-pinnakl-edit-security-1</span><span class="i-code">0xe8d3</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe8d4">
+          <i class="demo-icon icon-pinnakl-task-time-1">&#xe8d4;</i> <span class="i-name">icon-pinnakl-task-time-1</span><span class="i-code">0xe8d4</span>
+        </div>
+        <div class="span3" title="Code: 0xe8d5">
+          <i class="demo-icon icon-pinnakl-tasks-search-1">&#xe8d5;</i> <span class="i-name">icon-pinnakl-tasks-search-1</span><span class="i-code">0xe8d5</span>
+        </div>
+        <div class="span3" title="Code: 0xe8d6">
+          <i class="demo-icon icon-pinnakl-top-notifications-1">&#xe8d6;</i> <span class="i-name">icon-pinnakl-top-notifications-1</span><span class="i-code">0xe8d6</span>
+        </div>
+        <div class="span3" title="Code: 0xe8d7">
+          <i class="demo-icon icon-pinnakl-top-user-1">&#xe8d7;</i> <span class="i-name">icon-pinnakl-top-user-1</span><span class="i-code">0xe8d7</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe8d8">
+          <i class="demo-icon icon-pinnakl-trades-approved-1">&#xe8d8;</i> <span class="i-name">icon-pinnakl-trades-approved-1</span><span class="i-code">0xe8d8</span>
+        </div>
+        <div class="span3" title="Code: 0xe8d9">
+          <i class="demo-icon icon-pinnakl-task-date-1">&#xe8d9;</i> <span class="i-name">icon-pinnakl-task-date-1</span><span class="i-code">0xe8d9</span>
+        </div>
+        <div class="span3" title="Code: 0xe8da">
+          <i class="demo-icon icon-pinnakl-section-done-1">&#xe8da;</i> <span class="i-name">icon-pinnakl-section-done-1</span><span class="i-code">0xe8da</span>
+        </div>
+        <div class="span3" title="Code: 0xe8db">
+          <i class="demo-icon icon-pinnakl-security-add-automatically-1">&#xe8db;</i> <span class="i-name">icon-pinnakl-security-add-automatically-1</span><span class="i-code">0xe8db</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe8dc">
+          <i class="demo-icon icon-pinnakl-side-crm-1">&#xe8dc;</i> <span class="i-name">icon-pinnakl-side-crm-1</span><span class="i-code">0xe8dc</span>
+        </div>
+        <div class="span3" title="Code: 0xe8dd">
+          <i class="demo-icon icon-pinnakl-side-pl-1">&#xe8dd;</i> <span class="i-name">icon-pinnakl-side-pl-1</span><span class="i-code">0xe8dd</span>
+        </div>
+        <div class="span3" title="Code: 0xe8de">
+          <i class="demo-icon icon-pinnakl-field-arrow-1">&#xe8de;</i> <span class="i-name">icon-pinnakl-field-arrow-1</span><span class="i-code">0xe8de</span>
+        </div>
+        <div class="span3" title="Code: 0xe8df">
+          <i class="demo-icon icon-pinnakl-edit-securities-1">&#xe8df;</i> <span class="i-name">icon-pinnakl-edit-securities-1</span><span class="i-code">0xe8df</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe8e0">
+          <i class="demo-icon icon-pinnakl-add-col-1">&#xe8e0;</i> <span class="i-name">icon-pinnakl-add-col-1</span><span class="i-code">0xe8e0</span>
+        </div>
+        <div class="span3" title="Code: 0xe8e1">
+          <i class="demo-icon icon-pinnakl-trades-requests-1">&#xe8e1;</i> <span class="i-name">icon-pinnakl-trades-requests-1</span><span class="i-code">0xe8e1</span>
+        </div>
+        <div class="span3" title="Code: 0xe8e2">
+          <i class="demo-icon icon-pinnakl-add-security-1">&#xe8e2;</i> <span class="i-name">icon-pinnakl-add-security-1</span><span class="i-code">0xe8e2</span>
+        </div>
+        <div class="span3" title="Code: 0xe8e3">
+          <i class="demo-icon icon-pinnakl-add-1">&#xe8e3;</i> <span class="i-name">icon-pinnakl-add-1</span><span class="i-code">0xe8e3</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe8e4">
+          <i class="demo-icon icon-pinnakl-close-1">&#xe8e4;</i> <span class="i-name">icon-pinnakl-close-1</span><span class="i-code">0xe8e4</span>
+        </div>
+        <div class="span3" title="Code: 0xe8e5">
+          <i class="demo-icon icon-pinnakl-date-panel-1">&#xe8e5;</i> <span class="i-name">icon-pinnakl-date-panel-1</span><span class="i-code">0xe8e5</span>
+        </div>
+        <div class="span3" title="Code: 0xe8e6">
+          <i class="demo-icon icon-pinnakl-search-security-1">&#xe8e6;</i> <span class="i-name">icon-pinnakl-search-security-1</span><span class="i-code">0xe8e6</span>
+        </div>
+        <div class="span3" title="Code: 0xe8e7">
+          <i class="demo-icon icon-pinnakl-side-crm-active-1">&#xe8e7;</i> <span class="i-name">icon-pinnakl-side-crm-active-1</span><span class="i-code">0xe8e7</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe8e8">
+          <i class="demo-icon icon-pinnakl-shadow-nav-active-1">&#xe8e8;</i> <span class="i-name">icon-pinnakl-shadow-nav-active-1</span><span class="i-code">0xe8e8</span>
+        </div>
+        <div class="span3" title="Code: 0xe8e9">
+          <i class="demo-icon icon-pinnakl-side-dashboard-active-1">&#xe8e9;</i> <span class="i-name">icon-pinnakl-side-dashboard-active-1</span><span class="i-code">0xe8e9</span>
+        </div>
+        <div class="span3" title="Code: 0xe8ea">
+          <i class="demo-icon icon-pinnakl-side-dashboard-1">&#xe8ea;</i> <span class="i-name">icon-pinnakl-side-dashboard-1</span><span class="i-code">0xe8ea</span>
+        </div>
+        <div class="span3" title="Code: 0xe8eb">
+          <i class="demo-icon icon-pinnakl-side-oms-active-1">&#xe8eb;</i> <span class="i-name">icon-pinnakl-side-oms-active-1</span><span class="i-code">0xe8eb</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe8ec">
+          <i class="demo-icon icon-pinnakl-side-oms-1">&#xe8ec;</i> <span class="i-name">icon-pinnakl-side-oms-1</span><span class="i-code">0xe8ec</span>
+        </div>
+        <div class="span3" title="Code: 0xe8ed">
+          <i class="demo-icon icon-pinnakl-side-pl-active-1">&#xe8ed;</i> <span class="i-name">icon-pinnakl-side-pl-active-1</span><span class="i-code">0xe8ed</span>
+        </div>
+        <div class="span3" title="Code: 0xe8ee">
+          <i class="demo-icon icon-pinnakl-side-reconciliation-svg-1">&#xe8ee;</i> <span class="i-name">icon-pinnakl-side-reconciliation-svg-1</span><span class="i-code">0xe8ee</span>
+        </div>
+        <div class="span3" title="Code: 0xe8ef">
+          <i class="demo-icon icon-pinnakl-side-positions-active-1">&#xe8ef;</i> <span class="i-name">icon-pinnakl-side-positions-active-1</span><span class="i-code">0xe8ef</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe8f0">
+          <i class="demo-icon icon-pinnakl-table-action-1">&#xe8f0;</i> <span class="i-name">icon-pinnakl-table-action-1</span><span class="i-code">0xe8f0</span>
+        </div>
+        <div class="span3" title="Code: 0xe8f1">
+          <i class="demo-icon icon-pinnakl-export-1">&#xe8f1;</i> <span class="i-name">icon-pinnakl-export-1</span><span class="i-code">0xe8f1</span>
+        </div>
+        <div class="span3" title="Code: 0xe8f2">
+          <i class="demo-icon icon-pinnakl-side-risk-active-1">&#xe8f2;</i> <span class="i-name">icon-pinnakl-side-risk-active-1</span><span class="i-code">0xe8f2</span>
+        </div>
+        <div class="span3" title="Code: 0xe8f3">
+          <i class="demo-icon icon-pinnakl-risk-breaches-1">&#xe8f3;</i> <span class="i-name">icon-pinnakl-risk-breaches-1</span><span class="i-code">0xe8f3</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe8f4">
+          <i class="demo-icon icon-pinnakl-status-ok-1">&#xe8f4;</i> <span class="i-name">icon-pinnakl-status-ok-1</span><span class="i-code">0xe8f4</span>
+        </div>
+        <div class="span3" title="Code: 0xe8f5">
+          <i class="demo-icon icon-pinnakl-side-menu-1">&#xe8f5;</i> <span class="i-name">icon-pinnakl-side-menu-1</span><span class="i-code">0xe8f5</span>
+        </div>
+        <div class="span3" title="Code: 0xe8f6">
+          <i class="demo-icon icon-pinnakl-task-status-error-1">&#xe8f6;</i> <span class="i-name">icon-pinnakl-task-status-error-1</span><span class="i-code">0xe8f6</span>
+        </div>
+        <div class="span3" title="Code: 0xe8f7">
+          <i class="demo-icon icon-pinnakl-table-add-doc-1">&#xe8f7;</i> <span class="i-name">icon-pinnakl-table-add-doc-1</span><span class="i-code">0xe8f7</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe8f8">
+          <i class="demo-icon icon-pinnakl-table-delete-1">&#xe8f8;</i> <span class="i-name">icon-pinnakl-table-delete-1</span><span class="i-code">0xe8f8</span>
+        </div>
+        <div class="span3" title="Code: 0xe8f9">
+          <i class="demo-icon icon-pinnakl-table-edit-1">&#xe8f9;</i> <span class="i-name">icon-pinnakl-table-edit-1</span><span class="i-code">0xe8f9</span>
+        </div>
+        <div class="span3" title="Code: 0xe8fa">
+          <i class="demo-icon icon-pinnakl-table-history-1">&#xe8fa;</i> <span class="i-name">icon-pinnakl-table-history-1</span><span class="i-code">0xe8fa</span>
+        </div>
+        <div class="span3" title="Code: 0xe8fb">
+          <i class="demo-icon icon-pinnakl-task-results-active-1">&#xe8fb;</i> <span class="i-name">icon-pinnakl-task-results-active-1</span><span class="i-code">0xe8fb</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe8fc">
+          <i class="demo-icon icon-pinnakl-task-results-1">&#xe8fc;</i> <span class="i-name">icon-pinnakl-task-results-1</span><span class="i-code">0xe8fc</span>
+        </div>
+        <div class="span3" title="Code: 0xe8fd">
+          <i class="demo-icon icon-pinnakl-task-schedule-1">&#xe8fd;</i> <span class="i-name">icon-pinnakl-task-schedule-1</span><span class="i-code">0xe8fd</span>
+        </div>
+        <div class="span3" title="Code: 0xe8fe">
+          <i class="demo-icon icon-pinnakl-risk-reviewed-1">&#xe8fe;</i> <span class="i-name">icon-pinnakl-risk-reviewed-1</span><span class="i-code">0xe8fe</span>
+        </div>
+        <div class="span3" title="Code: 0xe8ff">
+          <i class="demo-icon icon-pinnakl-filters-1">&#xe8ff;</i> <span class="i-name">icon-pinnakl-filters-1</span><span class="i-code">0xe8ff</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe900">
+          <i class="demo-icon icon-pinnakl-lookup-col-1">&#xe900;</i> <span class="i-name">icon-pinnakl-lookup-col-1</span><span class="i-code">0xe900</span>
+        </div>
+        <div class="span3" title="Code: 0xe901">
+          <i class="demo-icon icon-pinnakl-or-1">&#xe901;</i> <span class="i-name">icon-pinnakl-or-1</span><span class="i-code">0xe901</span>
+        </div>
+        <div class="span3" title="Code: 0xe902">
+          <i class="demo-icon icon-pinnakl-side-shadow-1">&#xe902;</i> <span class="i-name">icon-pinnakl-side-shadow-1</span><span class="i-code">0xe902</span>
+        </div>
+        <div class="span3" title="Code: 0xe903">
+          <i class="demo-icon icon-pinnakl-support-1">&#xe903;</i> <span class="i-name">icon-pinnakl-support-1</span><span class="i-code">0xe903</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe904">
+          <i class="demo-icon icon-pinnakl-trade-request-edit-1">&#xe904;</i> <span class="i-name">icon-pinnakl-trade-request-edit-1</span><span class="i-code">0xe904</span>
+        </div>
+        <div class="span3" title="Code: 0xe905">
+          <i class="demo-icon icon-pinnakl-trade-request-editing-1">&#xe905;</i> <span class="i-name">icon-pinnakl-trade-request-editing-1</span><span class="i-code">0xe905</span>
+        </div>
+        <div class="span3" title="Code: 0xe906">
+          <i class="demo-icon icon-pinnakl-task-schedule-active-1">&#xe906;</i> <span class="i-name">icon-pinnakl-task-schedule-active-1</span><span class="i-code">0xe906</span>
+        </div>
+        <div class="span3" title="Code: 0xe907">
+          <i class="demo-icon icon-pinnakl-task-history-active-1">&#xe907;</i> <span class="i-name">icon-pinnakl-task-history-active-1</span><span class="i-code">0xe907</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe908">
+          <i class="demo-icon icon-pinnakl-mail-icon-1">&#xe908;</i> <span class="i-name">icon-pinnakl-mail-icon-1</span><span class="i-code">0xe908</span>
+        </div>
+        <div class="span3" title="Code: 0xe909">
+          <i class="demo-icon icon-pinnakl-phone-icon-1">&#xe909;</i> <span class="i-name">icon-pinnakl-phone-icon-1</span><span class="i-code">0xe909</span>
+        </div>
+        <div class="span3" title="Code: 0xe90a">
+          <i class="demo-icon icon-pinnakl-top-score-null-flag-icon-1">&#xe90a;</i> <span class="i-name">icon-pinnakl-top-score-null-flag-icon-1</span><span class="i-code">0xe90a</span>
+        </div>
+        <div class="span3" title="Code: 0xe90b">
+          <i class="demo-icon icon-pinnakl-account-active-summary-icon-1">&#xe90b;</i> <span class="i-name">icon-pinnakl-account-active-summary-icon-1</span><span class="i-code">0xe90b</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe90c">
+          <i class="demo-icon icon-pinnakl-active-contact-null-icon-1">&#xe90c;</i> <span class="i-name">icon-pinnakl-active-contact-null-icon-1</span><span class="i-code">0xe90c</span>
+        </div>
+        <div class="span3" title="Code: 0xe90d">
+          <i class="demo-icon icon-pinnakl-activity-summary-graph-button-1">&#xe90d;</i> <span class="i-name">icon-pinnakl-activity-summary-graph-button-1</span><span class="i-code">0xe90d</span>
+        </div>
+        <div class="span3" title="Code: 0xe90e">
+          <i class="demo-icon icon-pinnakl-contact-count-icon-1">&#xe90e;</i> <span class="i-name">icon-pinnakl-contact-count-icon-1</span><span class="i-code">0xe90e</span>
+        </div>
+        <div class="span3" title="Code: 0xe90f">
+          <i class="demo-icon icon-pinnakl-contact-distribution-count-icon-1">&#xe90f;</i> <span class="i-name">icon-pinnakl-contact-distribution-count-icon-1</span><span class="i-code">0xe90f</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe910">
+          <i class="demo-icon icon-pinnakl-investor-count-icon-1">&#xe910;</i> <span class="i-name">icon-pinnakl-investor-count-icon-1</span><span class="i-code">0xe910</span>
+        </div>
+        <div class="span3" title="Code: 0xe911">
+          <i class="demo-icon icon-pinnakl-shield-danger-1">&#xe911;</i> <span class="i-name">icon-pinnakl-shield-danger-1</span><span class="i-code">0xe911</span>
+        </div>
+        <div class="span3" title="Code: 0xe912">
+          <i class="demo-icon icon-pinnakl-globe-1">&#xe912;</i> <span class="i-name">icon-pinnakl-globe-1</span><span class="i-code">0xe912</span>
+        </div>
+        <div class="span3" title="Code: 0xe913">
+          <i class="demo-icon icon-pinnakl-shield-success-1">&#xe913;</i> <span class="i-name">icon-pinnakl-shield-success-1</span><span class="i-code">0xe913</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe914">
+          <i class="demo-icon icon-pinnakl-flag-1">&#xe914;</i> <span class="i-name">icon-pinnakl-flag-1</span><span class="i-code">0xe914</span>
+        </div>
+        <div class="span3" title="Code: 0xe915">
+          <i class="demo-icon icon-pinnakl-trophy-1">&#xe915;</i> <span class="i-name">icon-pinnakl-trophy-1</span><span class="i-code">0xe915</span>
+        </div>
+        <div class="span3" title="Code: 0xe916">
+          <i class="demo-icon icon-pinnakl-feed-1">&#xe916;</i> <span class="i-name">icon-pinnakl-feed-1</span><span class="i-code">0xe916</span>
+        </div>
+        <div class="span3" title="Code: 0xe917">
+          <i class="demo-icon icon-pinnakl-up-dir-1">&#xe917;</i> <span class="i-name">icon-pinnakl-up-dir-1</span><span class="i-code">0xe917</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe918">
+          <i class="demo-icon icon-pinnakl-down-dir-1">&#xe918;</i> <span class="i-name">icon-pinnakl-down-dir-1</span><span class="i-code">0xe918</span>
+        </div>
+        <div class="span3" title="Code: 0xe919">
+          <i class="demo-icon icon-pinnakl-floppy-1">&#xe919;</i> <span class="i-name">icon-pinnakl-floppy-1</span><span class="i-code">0xe919</span>
+        </div>
+        <div class="span3" title="Code: 0xe91a">
+          <i class="demo-icon icon-pinnakl-mail-1">&#xe91a;</i> <span class="i-name">icon-pinnakl-mail-1</span><span class="i-code">0xe91a</span>
+        </div>
+        <div class="span3" title="Code: 0xe91b">
+          <i class="demo-icon icon-pinnakl-note-3">&#xe91b;</i> <span class="i-name">icon-pinnakl-note-3</span><span class="i-code">0xe91b</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe91c">
+          <i class="demo-icon icon-pinnakl-users-outline-1">&#xe91c;</i> <span class="i-name">icon-pinnakl-users-outline-1</span><span class="i-code">0xe91c</span>
+        </div>
+        <div class="span3" title="Code: 0xe91d">
+          <i class="demo-icon icon-pinnakl-attention-1">&#xe91d;</i> <span class="i-name">icon-pinnakl-attention-1</span><span class="i-code">0xe91d</span>
+        </div>
+        <div class="span3" title="Code: 0xe91e">
+          <i class="demo-icon icon-pinnakl-trash-1">&#xe91e;</i> <span class="i-name">icon-pinnakl-trash-1</span><span class="i-code">0xe91e</span>
+        </div>
+        <div class="span3" title="Code: 0xe91f">
+          <i class="demo-icon icon-pinnakl-high-1">&#xe91f;</i> <span class="i-name">icon-pinnakl-high-1</span><span class="i-code">0xe91f</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe920">
+          <i class="demo-icon icon-pinnakl-med-1">&#xe920;</i> <span class="i-name">icon-pinnakl-med-1</span><span class="i-code">0xe920</span>
+        </div>
+        <div class="span3" title="Code: 0xe921">
+          <i class="demo-icon icon-pinnakl-dot-1">&#xe921;</i> <span class="i-name">icon-pinnakl-dot-1</span><span class="i-code">0xe921</span>
+        </div>
+        <div class="span3" title="Code: 0xe922">
+          <i class="demo-icon icon-pinnakl-deal-icon">&#xe922;</i> <span class="i-name">icon-pinnakl-deal-icon</span><span class="i-code">0xe922</span>
+        </div>
+        <div class="span3" title="Code: 0xe923">
+          <i class="demo-icon icon-pinnakl-organization-icon">&#xe923;</i> <span class="i-name">icon-pinnakl-organization-icon</span><span class="i-code">0xe923</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe924">
+          <i class="demo-icon icon-pinnakl-all-icon">&#xe924;</i> <span class="i-name">icon-pinnakl-all-icon</span><span class="i-code">0xe924</span>
+        </div>
+        <div class="span3" title="Code: 0xe925">
+          <i class="demo-icon icon-pinnakl-rebalance-1">&#xe925;</i> <span class="i-name">icon-pinnakl-rebalance-1</span><span class="i-code">0xe925</span>
+        </div>
+        <div class="span3" title="Code: 0xe926">
+          <i class="demo-icon icon-pinnakl-bar-1">&#xe926;</i> <span class="i-name">icon-pinnakl-bar-1</span><span class="i-code">0xe926</span>
+        </div>
+        <div class="span3" title="Code: 0xe927">
+          <i class="demo-icon icon-pinnakl-line-1">&#xe927;</i> <span class="i-name">icon-pinnakl-line-1</span><span class="i-code">0xe927</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe928">
+          <i class="demo-icon icon-pinnakl-tasks-3">&#xe928;</i> <span class="i-name">icon-pinnakl-tasks-3</span><span class="i-code">0xe928</span>
+        </div>
+        <div class="span3" title="Code: 0xe929">
+          <i class="demo-icon icon-pinnakl-side-securities-active-1">&#xe929;</i> <span class="i-name">icon-pinnakl-side-securities-active-1</span><span class="i-code">0xe929</span>
+        </div>
+        <div class="span3" title="Code: 0xe92a">
+          <i class="demo-icon icon-pinnakl-trade-request-done-1">&#xe92a;</i> <span class="i-name">icon-pinnakl-trade-request-done-1</span><span class="i-code">0xe92a</span>
+        </div>
+        <div class="span3" title="Code: 0xe92b">
+          <i class="demo-icon icon-pinnakl-ok-3">&#xe92b;</i> <span class="i-name">icon-pinnakl-ok-3</span><span class="i-code">0xe92b</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe92c">
+          <i class="demo-icon icon-pinnakl-ok-circle-1">&#xe92c;</i> <span class="i-name">icon-pinnakl-ok-circle-1</span><span class="i-code">0xe92c</span>
+        </div>
+        <div class="span3" title="Code: 0xe92d">
+          <i class="demo-icon icon-pinnakl-attention-alt-1">&#xe92d;</i> <span class="i-name">icon-pinnakl-attention-alt-1</span><span class="i-code">0xe92d</span>
+        </div>
+        <div class="span3" title="Code: 0xe92e">
+          <i class="demo-icon icon-pinnakl-reporting-categ-2">&#xe92e;</i> <span class="i-name">icon-pinnakl-reporting-categ-2</span><span class="i-code">0xe92e</span>
+        </div>
+        <div class="span3" title="Code: 0xe92f">
+          <i class="demo-icon icon-pinnakl-remove-2">&#xe92f;</i> <span class="i-name">icon-pinnakl-remove-2</span><span class="i-code">0xe92f</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe930">
+          <i class="demo-icon icon-pinnakl-remove-col-2">&#xe930;</i> <span class="i-name">icon-pinnakl-remove-col-2</span><span class="i-code">0xe930</span>
+        </div>
+        <div class="span3" title="Code: 0xe931">
+          <i class="demo-icon icon-pinnakl-proceeds-2">&#xe931;</i> <span class="i-name">icon-pinnakl-proceeds-2</span><span class="i-code">0xe931</span>
+        </div>
+        <div class="span3" title="Code: 0xe932">
+          <i class="demo-icon icon-pinnakl-export-active-2">&#xe932;</i> <span class="i-name">icon-pinnakl-export-active-2</span><span class="i-code">0xe932</span>
+        </div>
+        <div class="span3" title="Code: 0xe933">
+          <i class="demo-icon icon-pinnakl-live-notifications-2">&#xe933;</i> <span class="i-name">icon-pinnakl-live-notifications-2</span><span class="i-code">0xe933</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe934">
+          <i class="demo-icon icon-pinnakl-settings-active-2">&#xe934;</i> <span class="i-name">icon-pinnakl-settings-active-2</span><span class="i-code">0xe934</span>
+        </div>
+        <div class="span3" title="Code: 0xe935">
+          <i class="demo-icon icon-pinnakl-side-positions-2">&#xe935;</i> <span class="i-name">icon-pinnakl-side-positions-2</span><span class="i-code">0xe935</span>
+        </div>
+        <div class="span3" title="Code: 0xe936">
+          <i class="demo-icon icon-pinnakl-side-pricing-2">&#xe936;</i> <span class="i-name">icon-pinnakl-side-pricing-2</span><span class="i-code">0xe936</span>
+        </div>
+        <div class="span3" title="Code: 0xe937">
+          <i class="demo-icon icon-pinnakl-side-reports-2">&#xe937;</i> <span class="i-name">icon-pinnakl-side-reports-2</span><span class="i-code">0xe937</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe938">
+          <i class="demo-icon icon-pinnakl-side-risk-2">&#xe938;</i> <span class="i-name">icon-pinnakl-side-risk-2</span><span class="i-code">0xe938</span>
+        </div>
+        <div class="span3" title="Code: 0xe939">
+          <i class="demo-icon icon-pinnakl-side-securities-2">&#xe939;</i> <span class="i-name">icon-pinnakl-side-securities-2</span><span class="i-code">0xe939</span>
+        </div>
+        <div class="span3" title="Code: 0xe93a">
+          <i class="demo-icon icon-pinnakl-action-dismiss-2">&#xe93a;</i> <span class="i-name">icon-pinnakl-action-dismiss-2</span><span class="i-code">0xe93a</span>
+        </div>
+        <div class="span3" title="Code: 0xe93b">
+          <i class="demo-icon icon-pinnakl-action-run-2">&#xe93b;</i> <span class="i-name">icon-pinnakl-action-run-2</span><span class="i-code">0xe93b</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe93c">
+          <i class="demo-icon icon-pinnakl-ai-icon-2">&#xe93c;</i> <span class="i-name">icon-pinnakl-ai-icon-2</span><span class="i-code">0xe93c</span>
+        </div>
+        <div class="span3" title="Code: 0xe93d">
+          <i class="demo-icon icon-pinnakl-arrow-down-2">&#xe93d;</i> <span class="i-name">icon-pinnakl-arrow-down-2</span><span class="i-code">0xe93d</span>
+        </div>
+        <div class="span3" title="Code: 0xe93e">
+          <i class="demo-icon icon-pinnakl-arrow-up-2">&#xe93e;</i> <span class="i-name">icon-pinnakl-arrow-up-2</span><span class="i-code">0xe93e</span>
+        </div>
+        <div class="span3" title="Code: 0xe93f">
+          <i class="demo-icon icon-pinnakl-pie-2">&#xe93f;</i> <span class="i-name">icon-pinnakl-pie-2</span><span class="i-code">0xe93f</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe940">
+          <i class="demo-icon icon-pinnakl-bell-2">&#xe940;</i> <span class="i-name">icon-pinnakl-bell-2</span><span class="i-code">0xe940</span>
+        </div>
+        <div class="span3" title="Code: 0xe941">
+          <i class="demo-icon icon-pinnakl-plus-circled-2">&#xe941;</i> <span class="i-name">icon-pinnakl-plus-circled-2</span><span class="i-code">0xe941</span>
+        </div>
+        <div class="span3" title="Code: 0xe942">
+          <i class="demo-icon icon-pinnakl-tasks-4">&#xe942;</i> <span class="i-name">icon-pinnakl-tasks-4</span><span class="i-code">0xe942</span>
+        </div>
+        <div class="span3" title="Code: 0xe943">
+          <i class="demo-icon icon-pinnakl-play-2">&#xe943;</i> <span class="i-name">icon-pinnakl-play-2</span><span class="i-code">0xe943</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe944">
+          <i class="demo-icon icon-pinnakl-check-2">&#xe944;</i> <span class="i-name">icon-pinnakl-check-2</span><span class="i-code">0xe944</span>
+        </div>
+        <div class="span3" title="Code: 0xe945">
+          <i class="demo-icon icon-pinnakl-check-empty-2">&#xe945;</i> <span class="i-name">icon-pinnakl-check-empty-2</span><span class="i-code">0xe945</span>
+        </div>
+        <div class="span3" title="Code: 0xe946">
+          <i class="demo-icon icon-pinnakl-ok-squared-2">&#xe946;</i> <span class="i-name">icon-pinnakl-ok-squared-2</span><span class="i-code">0xe946</span>
+        </div>
+        <div class="span3" title="Code: 0xe947">
+          <i class="demo-icon icon-pinnakl-plus-2">&#xe947;</i> <span class="i-name">icon-pinnakl-plus-2</span><span class="i-code">0xe947</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe948">
+          <i class="demo-icon icon-pinnakl-upload-2">&#xe948;</i> <span class="i-name">icon-pinnakl-upload-2</span><span class="i-code">0xe948</span>
+        </div>
+        <div class="span3" title="Code: 0xe949">
+          <i class="demo-icon icon-pinnakl-filter-2">&#xe949;</i> <span class="i-name">icon-pinnakl-filter-2</span><span class="i-code">0xe949</span>
+        </div>
+        <div class="span3" title="Code: 0xe94a">
+          <i class="demo-icon icon-pinnakl-up-open-mini-2">&#xe94a;</i> <span class="i-name">icon-pinnakl-up-open-mini-2</span><span class="i-code">0xe94a</span>
+        </div>
+        <div class="span3" title="Code: 0xe94b">
+          <i class="demo-icon icon-pinnakl-right-open-mini-2">&#xe94b;</i> <span class="i-name">icon-pinnakl-right-open-mini-2</span><span class="i-code">0xe94b</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe94c">
+          <i class="demo-icon icon-pinnakl-left-open-mini-2">&#xe94c;</i> <span class="i-name">icon-pinnakl-left-open-mini-2</span><span class="i-code">0xe94c</span>
+        </div>
+        <div class="span3" title="Code: 0xe94d">
+          <i class="demo-icon icon-pinnakl-back-in-time-2">&#xe94d;</i> <span class="i-name">icon-pinnakl-back-in-time-2</span><span class="i-code">0xe94d</span>
+        </div>
+        <div class="span3" title="Code: 0xe94e">
+          <i class="demo-icon icon-pinnakl-clock-2">&#xe94e;</i> <span class="i-name">icon-pinnakl-clock-2</span><span class="i-code">0xe94e</span>
+        </div>
+        <div class="span3" title="Code: 0xe94f">
+          <i class="demo-icon icon-pinnakl-search-2">&#xe94f;</i> <span class="i-name">icon-pinnakl-search-2</span><span class="i-code">0xe94f</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe950">
+          <i class="demo-icon icon-pinnakl-cancel-2">&#xe950;</i> <span class="i-name">icon-pinnakl-cancel-2</span><span class="i-code">0xe950</span>
+        </div>
+        <div class="span3" title="Code: 0xe951">
+          <i class="demo-icon icon-pinnakl-ok-4">&#xe951;</i> <span class="i-name">icon-pinnakl-ok-4</span><span class="i-code">0xe951</span>
+        </div>
+        <div class="span3" title="Code: 0xe952">
+          <i class="demo-icon icon-pinnakl-cog-2">&#xe952;</i> <span class="i-name">icon-pinnakl-cog-2</span><span class="i-code">0xe952</span>
+        </div>
+        <div class="span3" title="Code: 0xe953">
+          <i class="demo-icon icon-pinnakl-bell-alt-2">&#xe953;</i> <span class="i-name">icon-pinnakl-bell-alt-2</span><span class="i-code">0xe953</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe954">
+          <i class="demo-icon icon-pinnakl-menu-2">&#xe954;</i> <span class="i-name">icon-pinnakl-menu-2</span><span class="i-code">0xe954</span>
+        </div>
+        <div class="span3" title="Code: 0xe955">
+          <i class="demo-icon icon-pinnakl-task-history-2">&#xe955;</i> <span class="i-name">icon-pinnakl-task-history-2</span><span class="i-code">0xe955</span>
+        </div>
+        <div class="span3" title="Code: 0xe956">
+          <i class="demo-icon icon-pinnakl-task-run-active-2">&#xe956;</i> <span class="i-name">icon-pinnakl-task-run-active-2</span><span class="i-code">0xe956</span>
+        </div>
+        <div class="span3" title="Code: 0xe957">
+          <i class="demo-icon icon-pinnakl-task-run-2">&#xe957;</i> <span class="i-name">icon-pinnakl-task-run-2</span><span class="i-code">0xe957</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe958">
+          <i class="demo-icon icon-pinnakl-field-arrow-panel-2">&#xe958;</i> <span class="i-name">icon-pinnakl-field-arrow-panel-2</span><span class="i-code">0xe958</span>
+        </div>
+        <div class="span3" title="Code: 0xe959">
+          <i class="demo-icon icon-pinnakl-edit-security-2">&#xe959;</i> <span class="i-name">icon-pinnakl-edit-security-2</span><span class="i-code">0xe959</span>
+        </div>
+        <div class="span3" title="Code: 0xe95a">
+          <i class="demo-icon icon-pinnakl-task-time-2">&#xe95a;</i> <span class="i-name">icon-pinnakl-task-time-2</span><span class="i-code">0xe95a</span>
+        </div>
+        <div class="span3" title="Code: 0xe95b">
+          <i class="demo-icon icon-pinnakl-tasks-search-2">&#xe95b;</i> <span class="i-name">icon-pinnakl-tasks-search-2</span><span class="i-code">0xe95b</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe95c">
+          <i class="demo-icon icon-pinnakl-top-notifications-2">&#xe95c;</i> <span class="i-name">icon-pinnakl-top-notifications-2</span><span class="i-code">0xe95c</span>
+        </div>
+        <div class="span3" title="Code: 0xe95d">
+          <i class="demo-icon icon-pinnakl-top-user-2">&#xe95d;</i> <span class="i-name">icon-pinnakl-top-user-2</span><span class="i-code">0xe95d</span>
+        </div>
+        <div class="span3" title="Code: 0xe95e">
+          <i class="demo-icon icon-pinnakl-trades-approved-2">&#xe95e;</i> <span class="i-name">icon-pinnakl-trades-approved-2</span><span class="i-code">0xe95e</span>
+        </div>
+        <div class="span3" title="Code: 0xe95f">
+          <i class="demo-icon icon-pinnakl-task-date-2">&#xe95f;</i> <span class="i-name">icon-pinnakl-task-date-2</span><span class="i-code">0xe95f</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe960">
+          <i class="demo-icon icon-pinnakl-section-done-2">&#xe960;</i> <span class="i-name">icon-pinnakl-section-done-2</span><span class="i-code">0xe960</span>
+        </div>
+        <div class="span3" title="Code: 0xe961">
+          <i class="demo-icon icon-pinnakl-security-add-automatically-2">&#xe961;</i> <span class="i-name">icon-pinnakl-security-add-automatically-2</span><span class="i-code">0xe961</span>
+        </div>
+        <div class="span3" title="Code: 0xe962">
+          <i class="demo-icon icon-pinnakl-side-crm-2">&#xe962;</i> <span class="i-name">icon-pinnakl-side-crm-2</span><span class="i-code">0xe962</span>
+        </div>
+        <div class="span3" title="Code: 0xe963">
+          <i class="demo-icon icon-pinnakl-side-pl-2">&#xe963;</i> <span class="i-name">icon-pinnakl-side-pl-2</span><span class="i-code">0xe963</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe964">
+          <i class="demo-icon icon-pinnakl-field-arrow-2">&#xe964;</i> <span class="i-name">icon-pinnakl-field-arrow-2</span><span class="i-code">0xe964</span>
+        </div>
+        <div class="span3" title="Code: 0xe965">
+          <i class="demo-icon icon-pinnakl-edit-securities-2">&#xe965;</i> <span class="i-name">icon-pinnakl-edit-securities-2</span><span class="i-code">0xe965</span>
+        </div>
+        <div class="span3" title="Code: 0xe966">
+          <i class="demo-icon icon-pinnakl-add-col-2">&#xe966;</i> <span class="i-name">icon-pinnakl-add-col-2</span><span class="i-code">0xe966</span>
+        </div>
+        <div class="span3" title="Code: 0xe967">
+          <i class="demo-icon icon-pinnakl-trades-requests-2">&#xe967;</i> <span class="i-name">icon-pinnakl-trades-requests-2</span><span class="i-code">0xe967</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe968">
+          <i class="demo-icon icon-pinnakl-add-security-2">&#xe968;</i> <span class="i-name">icon-pinnakl-add-security-2</span><span class="i-code">0xe968</span>
+        </div>
+        <div class="span3" title="Code: 0xe969">
+          <i class="demo-icon icon-pinnakl-add-2">&#xe969;</i> <span class="i-name">icon-pinnakl-add-2</span><span class="i-code">0xe969</span>
+        </div>
+        <div class="span3" title="Code: 0xe96a">
+          <i class="demo-icon icon-pinnakl-close-2">&#xe96a;</i> <span class="i-name">icon-pinnakl-close-2</span><span class="i-code">0xe96a</span>
+        </div>
+        <div class="span3" title="Code: 0xe96b">
+          <i class="demo-icon icon-pinnakl-date-panel-2">&#xe96b;</i> <span class="i-name">icon-pinnakl-date-panel-2</span><span class="i-code">0xe96b</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe96c">
+          <i class="demo-icon icon-pinnakl-search-security-2">&#xe96c;</i> <span class="i-name">icon-pinnakl-search-security-2</span><span class="i-code">0xe96c</span>
+        </div>
+        <div class="span3" title="Code: 0xe96d">
+          <i class="demo-icon icon-pinnakl-side-crm-active-2">&#xe96d;</i> <span class="i-name">icon-pinnakl-side-crm-active-2</span><span class="i-code">0xe96d</span>
+        </div>
+        <div class="span3" title="Code: 0xe96e">
+          <i class="demo-icon icon-pinnakl-shadow-nav-active-2">&#xe96e;</i> <span class="i-name">icon-pinnakl-shadow-nav-active-2</span><span class="i-code">0xe96e</span>
+        </div>
+        <div class="span3" title="Code: 0xe96f">
+          <i class="demo-icon icon-pinnakl-side-dashboard-active-2">&#xe96f;</i> <span class="i-name">icon-pinnakl-side-dashboard-active-2</span><span class="i-code">0xe96f</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe970">
+          <i class="demo-icon icon-pinnakl-side-dashboard-2">&#xe970;</i> <span class="i-name">icon-pinnakl-side-dashboard-2</span><span class="i-code">0xe970</span>
+        </div>
+        <div class="span3" title="Code: 0xe971">
+          <i class="demo-icon icon-pinnakl-side-oms-active-2">&#xe971;</i> <span class="i-name">icon-pinnakl-side-oms-active-2</span><span class="i-code">0xe971</span>
+        </div>
+        <div class="span3" title="Code: 0xe972">
+          <i class="demo-icon icon-pinnakl-side-oms-2">&#xe972;</i> <span class="i-name">icon-pinnakl-side-oms-2</span><span class="i-code">0xe972</span>
+        </div>
+        <div class="span3" title="Code: 0xe973">
+          <i class="demo-icon icon-pinnakl-side-pl-active-2">&#xe973;</i> <span class="i-name">icon-pinnakl-side-pl-active-2</span><span class="i-code">0xe973</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe974">
+          <i class="demo-icon icon-pinnakl-side-reconciliation-svg-2">&#xe974;</i> <span class="i-name">icon-pinnakl-side-reconciliation-svg-2</span><span class="i-code">0xe974</span>
+        </div>
+        <div class="span3" title="Code: 0xe975">
+          <i class="demo-icon icon-pinnakl-side-positions-active-2">&#xe975;</i> <span class="i-name">icon-pinnakl-side-positions-active-2</span><span class="i-code">0xe975</span>
+        </div>
+        <div class="span3" title="Code: 0xe976">
+          <i class="demo-icon icon-pinnakl-table-action-2">&#xe976;</i> <span class="i-name">icon-pinnakl-table-action-2</span><span class="i-code">0xe976</span>
+        </div>
+        <div class="span3" title="Code: 0xe977">
+          <i class="demo-icon icon-pinnakl-export-2">&#xe977;</i> <span class="i-name">icon-pinnakl-export-2</span><span class="i-code">0xe977</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe978">
+          <i class="demo-icon icon-pinnakl-side-risk-active-2">&#xe978;</i> <span class="i-name">icon-pinnakl-side-risk-active-2</span><span class="i-code">0xe978</span>
+        </div>
+        <div class="span3" title="Code: 0xe979">
+          <i class="demo-icon icon-pinnakl-risk-breaches-2">&#xe979;</i> <span class="i-name">icon-pinnakl-risk-breaches-2</span><span class="i-code">0xe979</span>
+        </div>
+        <div class="span3" title="Code: 0xe97a">
+          <i class="demo-icon icon-pinnakl-status-ok-2">&#xe97a;</i> <span class="i-name">icon-pinnakl-status-ok-2</span><span class="i-code">0xe97a</span>
+        </div>
+        <div class="span3" title="Code: 0xe97b">
+          <i class="demo-icon icon-pinnakl-side-menu-2">&#xe97b;</i> <span class="i-name">icon-pinnakl-side-menu-2</span><span class="i-code">0xe97b</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe97c">
+          <i class="demo-icon icon-pinnakl-task-status-error-2">&#xe97c;</i> <span class="i-name">icon-pinnakl-task-status-error-2</span><span class="i-code">0xe97c</span>
+        </div>
+        <div class="span3" title="Code: 0xe97d">
+          <i class="demo-icon icon-pinnakl-table-add-doc-2">&#xe97d;</i> <span class="i-name">icon-pinnakl-table-add-doc-2</span><span class="i-code">0xe97d</span>
+        </div>
+        <div class="span3" title="Code: 0xe97e">
+          <i class="demo-icon icon-pinnakl-table-delete-2">&#xe97e;</i> <span class="i-name">icon-pinnakl-table-delete-2</span><span class="i-code">0xe97e</span>
+        </div>
+        <div class="span3" title="Code: 0xe97f">
+          <i class="demo-icon icon-pinnakl-table-edit-2">&#xe97f;</i> <span class="i-name">icon-pinnakl-table-edit-2</span><span class="i-code">0xe97f</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe980">
+          <i class="demo-icon icon-pinnakl-table-history-2">&#xe980;</i> <span class="i-name">icon-pinnakl-table-history-2</span><span class="i-code">0xe980</span>
+        </div>
+        <div class="span3" title="Code: 0xe981">
+          <i class="demo-icon icon-pinnakl-task-results-active-2">&#xe981;</i> <span class="i-name">icon-pinnakl-task-results-active-2</span><span class="i-code">0xe981</span>
+        </div>
+        <div class="span3" title="Code: 0xe982">
+          <i class="demo-icon icon-pinnakl-task-results-2">&#xe982;</i> <span class="i-name">icon-pinnakl-task-results-2</span><span class="i-code">0xe982</span>
+        </div>
+        <div class="span3" title="Code: 0xe983">
+          <i class="demo-icon icon-pinnakl-task-schedule-2">&#xe983;</i> <span class="i-name">icon-pinnakl-task-schedule-2</span><span class="i-code">0xe983</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe984">
+          <i class="demo-icon icon-pinnakl-risk-reviewed-2">&#xe984;</i> <span class="i-name">icon-pinnakl-risk-reviewed-2</span><span class="i-code">0xe984</span>
+        </div>
+        <div class="span3" title="Code: 0xe985">
+          <i class="demo-icon icon-pinnakl-filters-2">&#xe985;</i> <span class="i-name">icon-pinnakl-filters-2</span><span class="i-code">0xe985</span>
+        </div>
+        <div class="span3" title="Code: 0xe986">
+          <i class="demo-icon icon-pinnakl-lookup-col-2">&#xe986;</i> <span class="i-name">icon-pinnakl-lookup-col-2</span><span class="i-code">0xe986</span>
+        </div>
+        <div class="span3" title="Code: 0xe987">
+          <i class="demo-icon icon-pinnakl-or-2">&#xe987;</i> <span class="i-name">icon-pinnakl-or-2</span><span class="i-code">0xe987</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe988">
+          <i class="demo-icon icon-pinnakl-side-shadow-2">&#xe988;</i> <span class="i-name">icon-pinnakl-side-shadow-2</span><span class="i-code">0xe988</span>
+        </div>
+        <div class="span3" title="Code: 0xe989">
+          <i class="demo-icon icon-pinnakl-support-2">&#xe989;</i> <span class="i-name">icon-pinnakl-support-2</span><span class="i-code">0xe989</span>
+        </div>
+        <div class="span3" title="Code: 0xe98a">
+          <i class="demo-icon icon-pinnakl-trade-request-edit-2">&#xe98a;</i> <span class="i-name">icon-pinnakl-trade-request-edit-2</span><span class="i-code">0xe98a</span>
+        </div>
+        <div class="span3" title="Code: 0xe98b">
+          <i class="demo-icon icon-pinnakl-trade-request-editing-2">&#xe98b;</i> <span class="i-name">icon-pinnakl-trade-request-editing-2</span><span class="i-code">0xe98b</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe98c">
+          <i class="demo-icon icon-pinnakl-task-schedule-active-2">&#xe98c;</i> <span class="i-name">icon-pinnakl-task-schedule-active-2</span><span class="i-code">0xe98c</span>
+        </div>
+        <div class="span3" title="Code: 0xe98d">
+          <i class="demo-icon icon-pinnakl-task-history-active-2">&#xe98d;</i> <span class="i-name">icon-pinnakl-task-history-active-2</span><span class="i-code">0xe98d</span>
+        </div>
+        <div class="span3" title="Code: 0xe98e">
+          <i class="demo-icon icon-pinnakl-mail-icon-2">&#xe98e;</i> <span class="i-name">icon-pinnakl-mail-icon-2</span><span class="i-code">0xe98e</span>
+        </div>
+        <div class="span3" title="Code: 0xe98f">
+          <i class="demo-icon icon-pinnakl-phone-icon-2">&#xe98f;</i> <span class="i-name">icon-pinnakl-phone-icon-2</span><span class="i-code">0xe98f</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe990">
+          <i class="demo-icon icon-pinnakl-top-score-null-flag-icon-2">&#xe990;</i> <span class="i-name">icon-pinnakl-top-score-null-flag-icon-2</span><span class="i-code">0xe990</span>
+        </div>
+        <div class="span3" title="Code: 0xe991">
+          <i class="demo-icon icon-pinnakl-account-active-summary-icon-2">&#xe991;</i> <span class="i-name">icon-pinnakl-account-active-summary-icon-2</span><span class="i-code">0xe991</span>
+        </div>
+        <div class="span3" title="Code: 0xe992">
+          <i class="demo-icon icon-pinnakl-active-contact-null-icon-2">&#xe992;</i> <span class="i-name">icon-pinnakl-active-contact-null-icon-2</span><span class="i-code">0xe992</span>
+        </div>
+        <div class="span3" title="Code: 0xe993">
+          <i class="demo-icon icon-pinnakl-activity-summary-graph-button-2">&#xe993;</i> <span class="i-name">icon-pinnakl-activity-summary-graph-button-2</span><span class="i-code">0xe993</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe994">
+          <i class="demo-icon icon-pinnakl-contact-count-icon-2">&#xe994;</i> <span class="i-name">icon-pinnakl-contact-count-icon-2</span><span class="i-code">0xe994</span>
+        </div>
+        <div class="span3" title="Code: 0xe995">
+          <i class="demo-icon icon-pinnakl-contact-distribution-count-icon-2">&#xe995;</i> <span class="i-name">icon-pinnakl-contact-distribution-count-icon-2</span><span class="i-code">0xe995</span>
+        </div>
+        <div class="span3" title="Code: 0xe996">
+          <i class="demo-icon icon-pinnakl-investor-count-icon-2">&#xe996;</i> <span class="i-name">icon-pinnakl-investor-count-icon-2</span><span class="i-code">0xe996</span>
+        </div>
+        <div class="span3" title="Code: 0xe997">
+          <i class="demo-icon icon-pinnakl-shield-danger-2">&#xe997;</i> <span class="i-name">icon-pinnakl-shield-danger-2</span><span class="i-code">0xe997</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe998">
+          <i class="demo-icon icon-pinnakl-globe-2">&#xe998;</i> <span class="i-name">icon-pinnakl-globe-2</span><span class="i-code">0xe998</span>
+        </div>
+        <div class="span3" title="Code: 0xe999">
+          <i class="demo-icon icon-pinnakl-shield-success-2">&#xe999;</i> <span class="i-name">icon-pinnakl-shield-success-2</span><span class="i-code">0xe999</span>
+        </div>
+        <div class="span3" title="Code: 0xe99a">
+          <i class="demo-icon icon-pinnakl-flag-2">&#xe99a;</i> <span class="i-name">icon-pinnakl-flag-2</span><span class="i-code">0xe99a</span>
+        </div>
+        <div class="span3" title="Code: 0xe99b">
+          <i class="demo-icon icon-pinnakl-trophy-2">&#xe99b;</i> <span class="i-name">icon-pinnakl-trophy-2</span><span class="i-code">0xe99b</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe99c">
+          <i class="demo-icon icon-pinnakl-feed-2">&#xe99c;</i> <span class="i-name">icon-pinnakl-feed-2</span><span class="i-code">0xe99c</span>
+        </div>
+        <div class="span3" title="Code: 0xe99d">
+          <i class="demo-icon icon-pinnakl-up-dir-2">&#xe99d;</i> <span class="i-name">icon-pinnakl-up-dir-2</span><span class="i-code">0xe99d</span>
+        </div>
+        <div class="span3" title="Code: 0xe99e">
+          <i class="demo-icon icon-pinnakl-down-dir-2">&#xe99e;</i> <span class="i-name">icon-pinnakl-down-dir-2</span><span class="i-code">0xe99e</span>
+        </div>
+        <div class="span3" title="Code: 0xe99f">
+          <i class="demo-icon icon-pinnakl-floppy-2">&#xe99f;</i> <span class="i-name">icon-pinnakl-floppy-2</span><span class="i-code">0xe99f</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe9a0">
+          <i class="demo-icon icon-pinnakl-mail-2">&#xe9a0;</i> <span class="i-name">icon-pinnakl-mail-2</span><span class="i-code">0xe9a0</span>
+        </div>
+        <div class="span3" title="Code: 0xe9a1">
+          <i class="demo-icon icon-pinnakl-note-4">&#xe9a1;</i> <span class="i-name">icon-pinnakl-note-4</span><span class="i-code">0xe9a1</span>
+        </div>
+        <div class="span3" title="Code: 0xe9a2">
+          <i class="demo-icon icon-pinnakl-users-outline-2">&#xe9a2;</i> <span class="i-name">icon-pinnakl-users-outline-2</span><span class="i-code">0xe9a2</span>
+        </div>
+        <div class="span3" title="Code: 0xe9a3">
+          <i class="demo-icon icon-pinnakl-attention-2">&#xe9a3;</i> <span class="i-name">icon-pinnakl-attention-2</span><span class="i-code">0xe9a3</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe9a4">
+          <i class="demo-icon icon-pinnakl-trash-2">&#xe9a4;</i> <span class="i-name">icon-pinnakl-trash-2</span><span class="i-code">0xe9a4</span>
+        </div>
+        <div class="span3" title="Code: 0xe9a5">
+          <i class="demo-icon icon-pinnakl-high-2">&#xe9a5;</i> <span class="i-name">icon-pinnakl-high-2</span><span class="i-code">0xe9a5</span>
+        </div>
+        <div class="span3" title="Code: 0xe9a6">
+          <i class="demo-icon icon-pinnakl-med-2">&#xe9a6;</i> <span class="i-name">icon-pinnakl-med-2</span><span class="i-code">0xe9a6</span>
+        </div>
+        <div class="span3" title="Code: 0xe9a7">
+          <i class="demo-icon icon-pinnakl-dot-2">&#xe9a7;</i> <span class="i-name">icon-pinnakl-dot-2</span><span class="i-code">0xe9a7</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe9a8">
+          <i class="demo-icon icon-pinnakl-rebalance-2">&#xe9a8;</i> <span class="i-name">icon-pinnakl-rebalance-2</span><span class="i-code">0xe9a8</span>
+        </div>
+        <div class="span3" title="Code: 0xe9a9">
+          <i class="demo-icon icon-pinnakl-bar-2">&#xe9a9;</i> <span class="i-name">icon-pinnakl-bar-2</span><span class="i-code">0xe9a9</span>
+        </div>
+        <div class="span3" title="Code: 0xe9aa">
+          <i class="demo-icon icon-pinnakl-deal-icon-1">&#xe9aa;</i> <span class="i-name">icon-pinnakl-deal-icon-1</span><span class="i-code">0xe9aa</span>
+        </div>
+        <div class="span3" title="Code: 0xe9ab">
+          <i class="demo-icon icon-pinnakl-organization-icon-1">&#xe9ab;</i> <span class="i-name">icon-pinnakl-organization-icon-1</span><span class="i-code">0xe9ab</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe9ac">
+          <i class="demo-icon icon-pinnakl-all-icon-1">&#xe9ac;</i> <span class="i-name">icon-pinnakl-all-icon-1</span><span class="i-code">0xe9ac</span>
+        </div>
+        <div class="span3" title="Code: 0xe9ad">
+          <i class="demo-icon icon-pinnakl-line-2">&#xe9ad;</i> <span class="i-name">icon-pinnakl-line-2</span><span class="i-code">0xe9ad</span>
+        </div>
+        <div class="span3" title="Code: 0xe9ae">
+          <i class="demo-icon icon-pinnakl-side-securities-active-2">&#xe9ae;</i> <span class="i-name">icon-pinnakl-side-securities-active-2</span><span class="i-code">0xe9ae</span>
+        </div>
+        <div class="span3" title="Code: 0xe9af">
+          <i class="demo-icon icon-pinnakl-trade-request-done-2">&#xe9af;</i> <span class="i-name">icon-pinnakl-trade-request-done-2</span><span class="i-code">0xe9af</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe9b0">
+          <i class="demo-icon icon-pinnakl-ok-5">&#xe9b0;</i> <span class="i-name">icon-pinnakl-ok-5</span><span class="i-code">0xe9b0</span>
+        </div>
+        <div class="span3" title="Code: 0xe9b1">
+          <i class="demo-icon icon-pinnakl-ok-circle-2">&#xe9b1;</i> <span class="i-name">icon-pinnakl-ok-circle-2</span><span class="i-code">0xe9b1</span>
+        </div>
+        <div class="span3" title="Code: 0xe9b2">
+          <i class="demo-icon icon-pinnakl-attention-alt-2">&#xe9b2;</i> <span class="i-name">icon-pinnakl-attention-alt-2</span><span class="i-code">0xe9b2</span>
+        </div>
+        <div class="span3" title="Code: 0xe9b3">
+          <i class="demo-icon icon-pinnakl-tasks-5">&#xe9b3;</i> <span class="i-name">icon-pinnakl-tasks-5</span><span class="i-code">0xe9b3</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe9b4">
+          <i class="demo-icon icon-pinnakl-tasks-6">&#xe9b4;</i> <span class="i-name">icon-pinnakl-tasks-6</span><span class="i-code">0xe9b4</span>
+        </div>
+        <div class="span3" title="Code: 0xe9b5">
+          <i class="demo-icon icon-pinnakl-docs-2">&#xe9b5;</i> <span class="i-name">icon-pinnakl-docs-2</span><span class="i-code">0xe9b5</span>
+        </div>
+        <div class="span3" title="Code: 0xe9b6">
+          <i class="demo-icon icon-pinnakl-docs-3">&#xe9b6;</i> <span class="i-name">icon-pinnakl-docs-3</span><span class="i-code">0xe9b6</span>
+        </div>
+        <div class="span3" title="Code: 0xe9b7">
+          <i class="demo-icon icon-pinnakl-circle-empty-2">&#xe9b7;</i> <span class="i-name">icon-pinnakl-circle-empty-2</span><span class="i-code">0xe9b7</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe9b8">
+          <i class="demo-icon icon-pinnakl-circle-empty-3">&#xe9b8;</i> <span class="i-name">icon-pinnakl-circle-empty-3</span><span class="i-code">0xe9b8</span>
+        </div>
+        <div class="span3" title="Code: 0xe9b9">
+          <i class="demo-icon icon-pinnakl-tasks-7">&#xe9b9;</i> <span class="i-name">icon-pinnakl-tasks-7</span><span class="i-code">0xe9b9</span>
+        </div>
+        <div class="span3" title="Code: 0xe9ba">
+          <i class="demo-icon icon-pinnakl-play-3">&#xe9ba;</i> <span class="i-name">icon-pinnakl-play-3</span><span class="i-code">0xe9ba</span>
+        </div>
+        <div class="span3" title="Code: 0xe9bb">
+          <i class="demo-icon icon-pinnakl-check-3">&#xe9bb;</i> <span class="i-name">icon-pinnakl-check-3</span><span class="i-code">0xe9bb</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe9bc">
+          <i class="demo-icon icon-pinnakl-check-empty-3">&#xe9bc;</i> <span class="i-name">icon-pinnakl-check-empty-3</span><span class="i-code">0xe9bc</span>
+        </div>
+        <div class="span3" title="Code: 0xe9bd">
+          <i class="demo-icon icon-pinnakl-ok-squared-3">&#xe9bd;</i> <span class="i-name">icon-pinnakl-ok-squared-3</span><span class="i-code">0xe9bd</span>
+        </div>
+        <div class="span3" title="Code: 0xe9be">
+          <i class="demo-icon icon-pinnakl-plus-3">&#xe9be;</i> <span class="i-name">icon-pinnakl-plus-3</span><span class="i-code">0xe9be</span>
+        </div>
+        <div class="span3" title="Code: 0xe9bf">
+          <i class="demo-icon icon-pinnakl-upload-3">&#xe9bf;</i> <span class="i-name">icon-pinnakl-upload-3</span><span class="i-code">0xe9bf</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe9c0">
+          <i class="demo-icon icon-pinnakl-filter-3">&#xe9c0;</i> <span class="i-name">icon-pinnakl-filter-3</span><span class="i-code">0xe9c0</span>
+        </div>
+        <div class="span3" title="Code: 0xe9c1">
+          <i class="demo-icon icon-pinnakl-up-open-mini-3">&#xe9c1;</i> <span class="i-name">icon-pinnakl-up-open-mini-3</span><span class="i-code">0xe9c1</span>
+        </div>
+        <div class="span3" title="Code: 0xe9c2">
+          <i class="demo-icon icon-pinnakl-right-open-mini-3">&#xe9c2;</i> <span class="i-name">icon-pinnakl-right-open-mini-3</span><span class="i-code">0xe9c2</span>
+        </div>
+        <div class="span3" title="Code: 0xe9c3">
+          <i class="demo-icon icon-pinnakl-left-open-mini-3">&#xe9c3;</i> <span class="i-name">icon-pinnakl-left-open-mini-3</span><span class="i-code">0xe9c3</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe9c4">
+          <i class="demo-icon icon-pinnakl-back-in-time-3">&#xe9c4;</i> <span class="i-name">icon-pinnakl-back-in-time-3</span><span class="i-code">0xe9c4</span>
+        </div>
+        <div class="span3" title="Code: 0xe9c5">
+          <i class="demo-icon icon-pinnakl-clock-3">&#xe9c5;</i> <span class="i-name">icon-pinnakl-clock-3</span><span class="i-code">0xe9c5</span>
+        </div>
+        <div class="span3" title="Code: 0xe9c6">
+          <i class="demo-icon icon-pinnakl-search-3">&#xe9c6;</i> <span class="i-name">icon-pinnakl-search-3</span><span class="i-code">0xe9c6</span>
+        </div>
+        <div class="span3" title="Code: 0xe9c7">
+          <i class="demo-icon icon-pinnakl-cancel-3">&#xe9c7;</i> <span class="i-name">icon-pinnakl-cancel-3</span><span class="i-code">0xe9c7</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe9c8">
+          <i class="demo-icon icon-pinnakl-ok-6">&#xe9c8;</i> <span class="i-name">icon-pinnakl-ok-6</span><span class="i-code">0xe9c8</span>
+        </div>
+        <div class="span3" title="Code: 0xe9c9">
+          <i class="demo-icon icon-pinnakl-calendar-2">&#xe9c9;</i> <span class="i-name">icon-pinnakl-calendar-2</span><span class="i-code">0xe9c9</span>
+        </div>
+        <div class="span3" title="Code: 0xe9ca">
+          <i class="demo-icon icon-pinnakl-down-open-2">&#xe9ca;</i> <span class="i-name">icon-pinnakl-down-open-2</span><span class="i-code">0xe9ca</span>
+        </div>
+        <div class="span3" title="Code: 0xe9cb">
+          <i class="demo-icon icon-pinnakl-left-open-2">&#xe9cb;</i> <span class="i-name">icon-pinnakl-left-open-2</span><span class="i-code">0xe9cb</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe9cc">
+          <i class="demo-icon icon-pinnakl-right-open-2">&#xe9cc;</i> <span class="i-name">icon-pinnakl-right-open-2</span><span class="i-code">0xe9cc</span>
+        </div>
+        <div class="span3" title="Code: 0xe9cd">
+          <i class="demo-icon icon-pinnakl-up-open-2">&#xe9cd;</i> <span class="i-name">icon-pinnakl-up-open-2</span><span class="i-code">0xe9cd</span>
+        </div>
+        <div class="span3" title="Code: 0xe9ce">
+          <i class="demo-icon icon-pinnakl-down-open-mini-2">&#xe9ce;</i> <span class="i-name">icon-pinnakl-down-open-mini-2</span><span class="i-code">0xe9ce</span>
+        </div>
+        <div class="span3" title="Code: 0xe9cf">
+          <i class="demo-icon icon-pinnakl-cog-3">&#xe9cf;</i> <span class="i-name">icon-pinnakl-cog-3</span><span class="i-code">0xe9cf</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe9d0">
+          <i class="demo-icon icon-pinnakl-bell-alt-3">&#xe9d0;</i> <span class="i-name">icon-pinnakl-bell-alt-3</span><span class="i-code">0xe9d0</span>
+        </div>
+        <div class="span3" title="Code: 0xe9d1">
+          <i class="demo-icon icon-pinnakl-menu-3">&#xe9d1;</i> <span class="i-name">icon-pinnakl-menu-3</span><span class="i-code">0xe9d1</span>
+        </div>
+        <div class="span3" title="Code: 0xe9d2">
+          <i class="demo-icon icon-pinnakl-task-history-3">&#xe9d2;</i> <span class="i-name">icon-pinnakl-task-history-3</span><span class="i-code">0xe9d2</span>
+        </div>
+        <div class="span3" title="Code: 0xe9d3">
+          <i class="demo-icon icon-pinnakl-task-run-active-3">&#xe9d3;</i> <span class="i-name">icon-pinnakl-task-run-active-3</span><span class="i-code">0xe9d3</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe9d4">
+          <i class="demo-icon icon-pinnakl-task-run-3">&#xe9d4;</i> <span class="i-name">icon-pinnakl-task-run-3</span><span class="i-code">0xe9d4</span>
+        </div>
+        <div class="span3" title="Code: 0xe9d5">
+          <i class="demo-icon icon-pinnakl-field-arrow-panel-3">&#xe9d5;</i> <span class="i-name">icon-pinnakl-field-arrow-panel-3</span><span class="i-code">0xe9d5</span>
+        </div>
+        <div class="span3" title="Code: 0xe9d6">
+          <i class="demo-icon icon-pinnakl-edit-security-3">&#xe9d6;</i> <span class="i-name">icon-pinnakl-edit-security-3</span><span class="i-code">0xe9d6</span>
+        </div>
+        <div class="span3" title="Code: 0xe9d7">
+          <i class="demo-icon icon-pinnakl-task-time-3">&#xe9d7;</i> <span class="i-name">icon-pinnakl-task-time-3</span><span class="i-code">0xe9d7</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe9d8">
+          <i class="demo-icon icon-pinnakl-tasks-search-3">&#xe9d8;</i> <span class="i-name">icon-pinnakl-tasks-search-3</span><span class="i-code">0xe9d8</span>
+        </div>
+        <div class="span3" title="Code: 0xe9d9">
+          <i class="demo-icon icon-pinnakl-top-notifications-3">&#xe9d9;</i> <span class="i-name">icon-pinnakl-top-notifications-3</span><span class="i-code">0xe9d9</span>
+        </div>
+        <div class="span3" title="Code: 0xe9da">
+          <i class="demo-icon icon-pinnakl-top-user-3">&#xe9da;</i> <span class="i-name">icon-pinnakl-top-user-3</span><span class="i-code">0xe9da</span>
+        </div>
+        <div class="span3" title="Code: 0xe9db">
+          <i class="demo-icon icon-pinnakl-trades-approved-3">&#xe9db;</i> <span class="i-name">icon-pinnakl-trades-approved-3</span><span class="i-code">0xe9db</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe9dc">
+          <i class="demo-icon icon-pinnakl-task-date-3">&#xe9dc;</i> <span class="i-name">icon-pinnakl-task-date-3</span><span class="i-code">0xe9dc</span>
+        </div>
+        <div class="span3" title="Code: 0xe9dd">
+          <i class="demo-icon icon-pinnakl-section-done-3">&#xe9dd;</i> <span class="i-name">icon-pinnakl-section-done-3</span><span class="i-code">0xe9dd</span>
+        </div>
+        <div class="span3" title="Code: 0xe9de">
+          <i class="demo-icon icon-pinnakl-security-add-automatically-3">&#xe9de;</i> <span class="i-name">icon-pinnakl-security-add-automatically-3</span><span class="i-code">0xe9de</span>
+        </div>
+        <div class="span3" title="Code: 0xe9df">
+          <i class="demo-icon icon-pinnakl-side-crm-3">&#xe9df;</i> <span class="i-name">icon-pinnakl-side-crm-3</span><span class="i-code">0xe9df</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe9e0">
+          <i class="demo-icon icon-pinnakl-side-pl-3">&#xe9e0;</i> <span class="i-name">icon-pinnakl-side-pl-3</span><span class="i-code">0xe9e0</span>
+        </div>
+        <div class="span3" title="Code: 0xe9e1">
+          <i class="demo-icon icon-pinnakl-side-reports-active-2">&#xe9e1;</i> <span class="i-name">icon-pinnakl-side-reports-active-2</span><span class="i-code">0xe9e1</span>
+        </div>
+        <div class="span3" title="Code: 0xe9e2">
+          <i class="demo-icon icon-pinnakl-side-reconciliation-active-svg-2">&#xe9e2;</i> <span class="i-name">icon-pinnakl-side-reconciliation-active-svg-2</span><span class="i-code">0xe9e2</span>
+        </div>
+        <div class="span3" title="Code: 0xe9e3">
+          <i class="demo-icon icon-pinnakl-security-add-manually-2">&#xe9e3;</i> <span class="i-name">icon-pinnakl-security-add-manually-2</span><span class="i-code">0xe9e3</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe9e4">
+          <i class="demo-icon icon-pinnakl-side-pricing-active-2">&#xe9e4;</i> <span class="i-name">icon-pinnakl-side-pricing-active-2</span><span class="i-code">0xe9e4</span>
+        </div>
+        <div class="span3" title="Code: 0xe9e5">
+          <i class="demo-icon icon-pinnakl-settings-2">&#xe9e5;</i> <span class="i-name">icon-pinnakl-settings-2</span><span class="i-code">0xe9e5</span>
+        </div>
+        <div class="span3" title="Code: 0xe9e6">
+          <i class="demo-icon icon-pinnakl-filters-active-2">&#xe9e6;</i> <span class="i-name">icon-pinnakl-filters-active-2</span><span class="i-code">0xe9e6</span>
+        </div>
+        <div class="span3" title="Code: 0xe9e7">
+          <i class="demo-icon icon-pinnakl-field-arrow-3">&#xe9e7;</i> <span class="i-name">icon-pinnakl-field-arrow-3</span><span class="i-code">0xe9e7</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe9e8">
+          <i class="demo-icon icon-pinnakl-edit-securities-3">&#xe9e8;</i> <span class="i-name">icon-pinnakl-edit-securities-3</span><span class="i-code">0xe9e8</span>
+        </div>
+        <div class="span3" title="Code: 0xe9e9">
+          <i class="demo-icon icon-pinnakl-add-col-3">&#xe9e9;</i> <span class="i-name">icon-pinnakl-add-col-3</span><span class="i-code">0xe9e9</span>
+        </div>
+        <div class="span3" title="Code: 0xe9ea">
+          <i class="demo-icon icon-pinnakl-trades-requests-3">&#xe9ea;</i> <span class="i-name">icon-pinnakl-trades-requests-3</span><span class="i-code">0xe9ea</span>
+        </div>
+        <div class="span3" title="Code: 0xe9eb">
+          <i class="demo-icon icon-pinnakl-add-security-3">&#xe9eb;</i> <span class="i-name">icon-pinnakl-add-security-3</span><span class="i-code">0xe9eb</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe9ec">
+          <i class="demo-icon icon-pinnakl-add-3">&#xe9ec;</i> <span class="i-name">icon-pinnakl-add-3</span><span class="i-code">0xe9ec</span>
+        </div>
+        <div class="span3" title="Code: 0xe9ed">
+          <i class="demo-icon icon-pinnakl-close-3">&#xe9ed;</i> <span class="i-name">icon-pinnakl-close-3</span><span class="i-code">0xe9ed</span>
+        </div>
+        <div class="span3" title="Code: 0xe9ee">
+          <i class="demo-icon icon-pinnakl-date-panel-3">&#xe9ee;</i> <span class="i-name">icon-pinnakl-date-panel-3</span><span class="i-code">0xe9ee</span>
+        </div>
+        <div class="span3" title="Code: 0xe9ef">
+          <i class="demo-icon icon-pinnakl-search-security-3">&#xe9ef;</i> <span class="i-name">icon-pinnakl-search-security-3</span><span class="i-code">0xe9ef</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe9f0">
+          <i class="demo-icon icon-pinnakl-side-crm-active-3">&#xe9f0;</i> <span class="i-name">icon-pinnakl-side-crm-active-3</span><span class="i-code">0xe9f0</span>
+        </div>
+        <div class="span3" title="Code: 0xe9f1">
+          <i class="demo-icon icon-pinnakl-shadow-nav-active-3">&#xe9f1;</i> <span class="i-name">icon-pinnakl-shadow-nav-active-3</span><span class="i-code">0xe9f1</span>
+        </div>
+        <div class="span3" title="Code: 0xe9f2">
+          <i class="demo-icon icon-pinnakl-side-dashboard-active-3">&#xe9f2;</i> <span class="i-name">icon-pinnakl-side-dashboard-active-3</span><span class="i-code">0xe9f2</span>
+        </div>
+        <div class="span3" title="Code: 0xe9f3">
+          <i class="demo-icon icon-pinnakl-side-dashboard-3">&#xe9f3;</i> <span class="i-name">icon-pinnakl-side-dashboard-3</span><span class="i-code">0xe9f3</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe9f4">
+          <i class="demo-icon icon-pinnakl-side-oms-active-3">&#xe9f4;</i> <span class="i-name">icon-pinnakl-side-oms-active-3</span><span class="i-code">0xe9f4</span>
+        </div>
+        <div class="span3" title="Code: 0xe9f5">
+          <i class="demo-icon icon-pinnakl-side-oms-3">&#xe9f5;</i> <span class="i-name">icon-pinnakl-side-oms-3</span><span class="i-code">0xe9f5</span>
+        </div>
+        <div class="span3" title="Code: 0xe9f6">
+          <i class="demo-icon icon-pinnakl-side-pl-active-3">&#xe9f6;</i> <span class="i-name">icon-pinnakl-side-pl-active-3</span><span class="i-code">0xe9f6</span>
+        </div>
+        <div class="span3" title="Code: 0xe9f7">
+          <i class="demo-icon icon-pinnakl-side-reconciliation-svg-3">&#xe9f7;</i> <span class="i-name">icon-pinnakl-side-reconciliation-svg-3</span><span class="i-code">0xe9f7</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe9f8">
+          <i class="demo-icon icon-pinnakl-side-positions-active-3">&#xe9f8;</i> <span class="i-name">icon-pinnakl-side-positions-active-3</span><span class="i-code">0xe9f8</span>
+        </div>
+        <div class="span3" title="Code: 0xe9f9">
+          <i class="demo-icon icon-pinnakl-reporting-categ-3">&#xe9f9;</i> <span class="i-name">icon-pinnakl-reporting-categ-3</span><span class="i-code">0xe9f9</span>
+        </div>
+        <div class="span3" title="Code: 0xe9fa">
+          <i class="demo-icon icon-pinnakl-remove-3">&#xe9fa;</i> <span class="i-name">icon-pinnakl-remove-3</span><span class="i-code">0xe9fa</span>
+        </div>
+        <div class="span3" title="Code: 0xe9fb">
+          <i class="demo-icon icon-pinnakl-remove-col-3">&#xe9fb;</i> <span class="i-name">icon-pinnakl-remove-col-3</span><span class="i-code">0xe9fb</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xe9fc">
+          <i class="demo-icon icon-pinnakl-proceeds-3">&#xe9fc;</i> <span class="i-name">icon-pinnakl-proceeds-3</span><span class="i-code">0xe9fc</span>
+        </div>
+        <div class="span3" title="Code: 0xe9fd">
+          <i class="demo-icon icon-pinnakl-export-active-3">&#xe9fd;</i> <span class="i-name">icon-pinnakl-export-active-3</span><span class="i-code">0xe9fd</span>
+        </div>
+        <div class="span3" title="Code: 0xe9fe">
+          <i class="demo-icon icon-pinnakl-live-notifications-3">&#xe9fe;</i> <span class="i-name">icon-pinnakl-live-notifications-3</span><span class="i-code">0xe9fe</span>
+        </div>
+        <div class="span3" title="Code: 0xe9ff">
+          <i class="demo-icon icon-pinnakl-table-action-3">&#xe9ff;</i> <span class="i-name">icon-pinnakl-table-action-3</span><span class="i-code">0xe9ff</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xea00">
+          <i class="demo-icon icon-pinnakl-export-3">&#xea00;</i> <span class="i-name">icon-pinnakl-export-3</span><span class="i-code">0xea00</span>
+        </div>
+        <div class="span3" title="Code: 0xea01">
+          <i class="demo-icon icon-pinnakl-side-risk-active-3">&#xea01;</i> <span class="i-name">icon-pinnakl-side-risk-active-3</span><span class="i-code">0xea01</span>
+        </div>
+        <div class="span3" title="Code: 0xea02">
+          <i class="demo-icon icon-pinnakl-risk-breaches-3">&#xea02;</i> <span class="i-name">icon-pinnakl-risk-breaches-3</span><span class="i-code">0xea02</span>
+        </div>
+        <div class="span3" title="Code: 0xea03">
+          <i class="demo-icon icon-pinnakl-status-ok-3">&#xea03;</i> <span class="i-name">icon-pinnakl-status-ok-3</span><span class="i-code">0xea03</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xea04">
+          <i class="demo-icon icon-pinnakl-side-menu-3">&#xea04;</i> <span class="i-name">icon-pinnakl-side-menu-3</span><span class="i-code">0xea04</span>
+        </div>
+        <div class="span3" title="Code: 0xea05">
+          <i class="demo-icon icon-pinnakl-task-status-error-3">&#xea05;</i> <span class="i-name">icon-pinnakl-task-status-error-3</span><span class="i-code">0xea05</span>
+        </div>
+        <div class="span3" title="Code: 0xea06">
+          <i class="demo-icon icon-pinnakl-table-add-doc-3">&#xea06;</i> <span class="i-name">icon-pinnakl-table-add-doc-3</span><span class="i-code">0xea06</span>
+        </div>
+        <div class="span3" title="Code: 0xea07">
+          <i class="demo-icon icon-pinnakl-table-delete-3">&#xea07;</i> <span class="i-name">icon-pinnakl-table-delete-3</span><span class="i-code">0xea07</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xea08">
+          <i class="demo-icon icon-pinnakl-table-edit-3">&#xea08;</i> <span class="i-name">icon-pinnakl-table-edit-3</span><span class="i-code">0xea08</span>
+        </div>
+        <div class="span3" title="Code: 0xea09">
+          <i class="demo-icon icon-pinnakl-table-history-3">&#xea09;</i> <span class="i-name">icon-pinnakl-table-history-3</span><span class="i-code">0xea09</span>
+        </div>
+        <div class="span3" title="Code: 0xea0a">
+          <i class="demo-icon icon-pinnakl-task-results-active-3">&#xea0a;</i> <span class="i-name">icon-pinnakl-task-results-active-3</span><span class="i-code">0xea0a</span>
+        </div>
+        <div class="span3" title="Code: 0xea0b">
+          <i class="demo-icon icon-pinnakl-task-results-3">&#xea0b;</i> <span class="i-name">icon-pinnakl-task-results-3</span><span class="i-code">0xea0b</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xea0c">
+          <i class="demo-icon icon-pinnakl-task-schedule-3">&#xea0c;</i> <span class="i-name">icon-pinnakl-task-schedule-3</span><span class="i-code">0xea0c</span>
+        </div>
+        <div class="span3" title="Code: 0xea0d">
+          <i class="demo-icon icon-pinnakl-risk-reviewed-3">&#xea0d;</i> <span class="i-name">icon-pinnakl-risk-reviewed-3</span><span class="i-code">0xea0d</span>
+        </div>
+        <div class="span3" title="Code: 0xea0e">
+          <i class="demo-icon icon-pinnakl-filters-3">&#xea0e;</i> <span class="i-name">icon-pinnakl-filters-3</span><span class="i-code">0xea0e</span>
+        </div>
+        <div class="span3" title="Code: 0xea0f">
+          <i class="demo-icon icon-pinnakl-lookup-col-3">&#xea0f;</i> <span class="i-name">icon-pinnakl-lookup-col-3</span><span class="i-code">0xea0f</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xea10">
+          <i class="demo-icon icon-pinnakl-or-3">&#xea10;</i> <span class="i-name">icon-pinnakl-or-3</span><span class="i-code">0xea10</span>
+        </div>
+        <div class="span3" title="Code: 0xea11">
+          <i class="demo-icon icon-pinnakl-settings-active-3">&#xea11;</i> <span class="i-name">icon-pinnakl-settings-active-3</span><span class="i-code">0xea11</span>
+        </div>
+        <div class="span3" title="Code: 0xea12">
+          <i class="demo-icon icon-pinnakl-side-positions-3">&#xea12;</i> <span class="i-name">icon-pinnakl-side-positions-3</span><span class="i-code">0xea12</span>
+        </div>
+        <div class="span3" title="Code: 0xea13">
+          <i class="demo-icon icon-pinnakl-side-pricing-3">&#xea13;</i> <span class="i-name">icon-pinnakl-side-pricing-3</span><span class="i-code">0xea13</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xea14">
+          <i class="demo-icon icon-pinnakl-side-reports-3">&#xea14;</i> <span class="i-name">icon-pinnakl-side-reports-3</span><span class="i-code">0xea14</span>
+        </div>
+        <div class="span3" title="Code: 0xea15">
+          <i class="demo-icon icon-pinnakl-side-risk-3">&#xea15;</i> <span class="i-name">icon-pinnakl-side-risk-3</span><span class="i-code">0xea15</span>
+        </div>
+        <div class="span3" title="Code: 0xea16">
+          <i class="demo-icon icon-pinnakl-side-securities-3">&#xea16;</i> <span class="i-name">icon-pinnakl-side-securities-3</span><span class="i-code">0xea16</span>
+        </div>
+        <div class="span3" title="Code: 0xea17">
+          <i class="demo-icon icon-pinnakl-side-shadow-3">&#xea17;</i> <span class="i-name">icon-pinnakl-side-shadow-3</span><span class="i-code">0xea17</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xea18">
+          <i class="demo-icon icon-pinnakl-support-3">&#xea18;</i> <span class="i-name">icon-pinnakl-support-3</span><span class="i-code">0xea18</span>
+        </div>
+        <div class="span3" title="Code: 0xea19">
+          <i class="demo-icon icon-pinnakl-trade-request-edit-3">&#xea19;</i> <span class="i-name">icon-pinnakl-trade-request-edit-3</span><span class="i-code">0xea19</span>
+        </div>
+        <div class="span3" title="Code: 0xea1a">
+          <i class="demo-icon icon-pinnakl-trade-request-editing-3">&#xea1a;</i> <span class="i-name">icon-pinnakl-trade-request-editing-3</span><span class="i-code">0xea1a</span>
+        </div>
+        <div class="span3" title="Code: 0xea1b">
+          <i class="demo-icon icon-pinnakl-task-schedule-active-3">&#xea1b;</i> <span class="i-name">icon-pinnakl-task-schedule-active-3</span><span class="i-code">0xea1b</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xea1c">
+          <i class="demo-icon icon-pinnakl-task-history-active-3">&#xea1c;</i> <span class="i-name">icon-pinnakl-task-history-active-3</span><span class="i-code">0xea1c</span>
+        </div>
+        <div class="span3" title="Code: 0xea1d">
+          <i class="demo-icon icon-pinnakl-mail-icon-3">&#xea1d;</i> <span class="i-name">icon-pinnakl-mail-icon-3</span><span class="i-code">0xea1d</span>
+        </div>
+        <div class="span3" title="Code: 0xea1e">
+          <i class="demo-icon icon-pinnakl-phone-icon-3">&#xea1e;</i> <span class="i-name">icon-pinnakl-phone-icon-3</span><span class="i-code">0xea1e</span>
+        </div>
+        <div class="span3" title="Code: 0xea1f">
+          <i class="demo-icon icon-pinnakl-top-score-null-flag-icon-3">&#xea1f;</i> <span class="i-name">icon-pinnakl-top-score-null-flag-icon-3</span><span class="i-code">0xea1f</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xea20">
+          <i class="demo-icon icon-pinnakl-account-active-summary-icon-3">&#xea20;</i> <span class="i-name">icon-pinnakl-account-active-summary-icon-3</span><span class="i-code">0xea20</span>
+        </div>
+        <div class="span3" title="Code: 0xea21">
+          <i class="demo-icon icon-pinnakl-active-contact-null-icon-3">&#xea21;</i> <span class="i-name">icon-pinnakl-active-contact-null-icon-3</span><span class="i-code">0xea21</span>
+        </div>
+        <div class="span3" title="Code: 0xea22">
+          <i class="demo-icon icon-pinnakl-activity-summary-graph-button-3">&#xea22;</i> <span class="i-name">icon-pinnakl-activity-summary-graph-button-3</span><span class="i-code">0xea22</span>
+        </div>
+        <div class="span3" title="Code: 0xea23">
+          <i class="demo-icon icon-pinnakl-contact-count-icon-3">&#xea23;</i> <span class="i-name">icon-pinnakl-contact-count-icon-3</span><span class="i-code">0xea23</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xea24">
+          <i class="demo-icon icon-pinnakl-contact-distribution-count-icon-3">&#xea24;</i> <span class="i-name">icon-pinnakl-contact-distribution-count-icon-3</span><span class="i-code">0xea24</span>
+        </div>
+        <div class="span3" title="Code: 0xea25">
+          <i class="demo-icon icon-pinnakl-investor-count-icon-3">&#xea25;</i> <span class="i-name">icon-pinnakl-investor-count-icon-3</span><span class="i-code">0xea25</span>
+        </div>
+        <div class="span3" title="Code: 0xea26">
+          <i class="demo-icon icon-pinnakl-shield-danger-3">&#xea26;</i> <span class="i-name">icon-pinnakl-shield-danger-3</span><span class="i-code">0xea26</span>
+        </div>
+        <div class="span3" title="Code: 0xea27">
+          <i class="demo-icon icon-pinnakl-globe-3">&#xea27;</i> <span class="i-name">icon-pinnakl-globe-3</span><span class="i-code">0xea27</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xea28">
+          <i class="demo-icon icon-pinnakl-shield-success-3">&#xea28;</i> <span class="i-name">icon-pinnakl-shield-success-3</span><span class="i-code">0xea28</span>
+        </div>
+        <div class="span3" title="Code: 0xea29">
+          <i class="demo-icon icon-pinnakl-action-dismiss-3">&#xea29;</i> <span class="i-name">icon-pinnakl-action-dismiss-3</span><span class="i-code">0xea29</span>
+        </div>
+        <div class="span3" title="Code: 0xea2a">
+          <i class="demo-icon icon-pinnakl-action-run-3">&#xea2a;</i> <span class="i-name">icon-pinnakl-action-run-3</span><span class="i-code">0xea2a</span>
+        </div>
+        <div class="span3" title="Code: 0xea2b">
+          <i class="demo-icon icon-pinnakl-ai-icon-3">&#xea2b;</i> <span class="i-name">icon-pinnakl-ai-icon-3</span><span class="i-code">0xea2b</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xea2c">
+          <i class="demo-icon icon-pinnakl-arrow-down-3">&#xea2c;</i> <span class="i-name">icon-pinnakl-arrow-down-3</span><span class="i-code">0xea2c</span>
+        </div>
+        <div class="span3" title="Code: 0xea2d">
+          <i class="demo-icon icon-pinnakl-arrow-up-3">&#xea2d;</i> <span class="i-name">icon-pinnakl-arrow-up-3</span><span class="i-code">0xea2d</span>
+        </div>
+        <div class="span3" title="Code: 0xea2e">
+          <i class="demo-icon icon-pinnakl-pie-3">&#xea2e;</i> <span class="i-name">icon-pinnakl-pie-3</span><span class="i-code">0xea2e</span>
+        </div>
+        <div class="span3" title="Code: 0xea2f">
+          <i class="demo-icon icon-pinnakl-flag-3">&#xea2f;</i> <span class="i-name">icon-pinnakl-flag-3</span><span class="i-code">0xea2f</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xea30">
+          <i class="demo-icon icon-pinnakl-trophy-3">&#xea30;</i> <span class="i-name">icon-pinnakl-trophy-3</span><span class="i-code">0xea30</span>
+        </div>
+        <div class="span3" title="Code: 0xea31">
+          <i class="demo-icon icon-pinnakl-feed-3">&#xea31;</i> <span class="i-name">icon-pinnakl-feed-3</span><span class="i-code">0xea31</span>
+        </div>
+        <div class="span3" title="Code: 0xea32">
+          <i class="demo-icon icon-pinnakl-up-dir-3">&#xea32;</i> <span class="i-name">icon-pinnakl-up-dir-3</span><span class="i-code">0xea32</span>
+        </div>
+        <div class="span3" title="Code: 0xea33">
+          <i class="demo-icon icon-pinnakl-down-dir-3">&#xea33;</i> <span class="i-name">icon-pinnakl-down-dir-3</span><span class="i-code">0xea33</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xea34">
+          <i class="demo-icon icon-pinnakl-floppy-3">&#xea34;</i> <span class="i-name">icon-pinnakl-floppy-3</span><span class="i-code">0xea34</span>
+        </div>
+        <div class="span3" title="Code: 0xea35">
+          <i class="demo-icon icon-pinnakl-mail-3">&#xea35;</i> <span class="i-name">icon-pinnakl-mail-3</span><span class="i-code">0xea35</span>
+        </div>
+        <div class="span3" title="Code: 0xea36">
+          <i class="demo-icon icon-pinnakl-note-5">&#xea36;</i> <span class="i-name">icon-pinnakl-note-5</span><span class="i-code">0xea36</span>
+        </div>
+        <div class="span3" title="Code: 0xea37">
+          <i class="demo-icon icon-pinnakl-users-outline-3">&#xea37;</i> <span class="i-name">icon-pinnakl-users-outline-3</span><span class="i-code">0xea37</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xea38">
+          <i class="demo-icon icon-pinnakl-attention-3">&#xea38;</i> <span class="i-name">icon-pinnakl-attention-3</span><span class="i-code">0xea38</span>
+        </div>
+        <div class="span3" title="Code: 0xea39">
+          <i class="demo-icon icon-pinnakl-trash-3">&#xea39;</i> <span class="i-name">icon-pinnakl-trash-3</span><span class="i-code">0xea39</span>
+        </div>
+        <div class="span3" title="Code: 0xea3a">
+          <i class="demo-icon icon-pinnakl-high-3">&#xea3a;</i> <span class="i-name">icon-pinnakl-high-3</span><span class="i-code">0xea3a</span>
+        </div>
+        <div class="span3" title="Code: 0xea3b">
+          <i class="demo-icon icon-pinnakl-med-3">&#xea3b;</i> <span class="i-name">icon-pinnakl-med-3</span><span class="i-code">0xea3b</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xea3c">
+          <i class="demo-icon icon-pinnakl-dot-4">&#xea3c;</i> <span class="i-name">icon-pinnakl-dot-4</span><span class="i-code">0xea3c</span>
+        </div>
+        <div class="span3" title="Code: 0xea3d">
+          <i class="demo-icon icon-pinnakl-rebalance-3">&#xea3d;</i> <span class="i-name">icon-pinnakl-rebalance-3</span><span class="i-code">0xea3d</span>
+        </div>
+        <div class="span3" title="Code: 0xea3e">
+          <i class="demo-icon icon-pinnakl-bar-3">&#xea3e;</i> <span class="i-name">icon-pinnakl-bar-3</span><span class="i-code">0xea3e</span>
+        </div>
+        <div class="span3" title="Code: 0xea3f">
+          <i class="demo-icon icon-pinnakl-line-3">&#xea3f;</i> <span class="i-name">icon-pinnakl-line-3</span><span class="i-code">0xea3f</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xea40">
+          <i class="demo-icon icon-pinnakl-th-large-2">&#xea40;</i> <span class="i-name">icon-pinnakl-th-large-2</span><span class="i-code">0xea40</span>
+        </div>
+        <div class="span3" title="Code: 0xea41">
+          <i class="demo-icon icon-pinnakl-exchange-2">&#xea41;</i> <span class="i-name">icon-pinnakl-exchange-2</span><span class="i-code">0xea41</span>
+        </div>
+        <div class="span3" title="Code: 0xea42">
+          <i class="demo-icon icon-pinnakl-fire-2">&#xea42;</i> <span class="i-name">icon-pinnakl-fire-2</span><span class="i-code">0xea42</span>
+        </div>
+        <div class="span3" title="Code: 0xea43">
+          <i class="demo-icon icon-pinnakl-trash-empty-2">&#xea43;</i> <span class="i-name">icon-pinnakl-trash-empty-2</span><span class="i-code">0xea43</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xea44">
+          <i class="demo-icon icon-pinnakl-user-2">&#xea44;</i> <span class="i-name">icon-pinnakl-user-2</span><span class="i-code">0xea44</span>
+        </div>
+        <div class="span3" title="Code: 0xea45">
+          <i class="demo-icon icon-pinnakl-note-6">&#xea45;</i> <span class="i-name">icon-pinnakl-note-6</span><span class="i-code">0xea45</span>
+        </div>
+        <div class="span3" title="Code: 0xea46">
+          <i class="demo-icon icon-pinnakl-calendar-3">&#xea46;</i> <span class="i-name">icon-pinnakl-calendar-3</span><span class="i-code">0xea46</span>
+        </div>
+        <div class="span3" title="Code: 0xea47">
+          <i class="demo-icon icon-pinnakl-down-open-3">&#xea47;</i> <span class="i-name">icon-pinnakl-down-open-3</span><span class="i-code">0xea47</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xea48">
+          <i class="demo-icon icon-pinnakl-left-open-3">&#xea48;</i> <span class="i-name">icon-pinnakl-left-open-3</span><span class="i-code">0xea48</span>
+        </div>
+        <div class="span3" title="Code: 0xea49">
+          <i class="demo-icon icon-pinnakl-right-open-3">&#xea49;</i> <span class="i-name">icon-pinnakl-right-open-3</span><span class="i-code">0xea49</span>
+        </div>
+        <div class="span3" title="Code: 0xea4a">
+          <i class="demo-icon icon-pinnakl-up-open-3">&#xea4a;</i> <span class="i-name">icon-pinnakl-up-open-3</span><span class="i-code">0xea4a</span>
+        </div>
+        <div class="span3" title="Code: 0xea4b">
+          <i class="demo-icon icon-pinnakl-down-open-mini-3">&#xea4b;</i> <span class="i-name">icon-pinnakl-down-open-mini-3</span><span class="i-code">0xea4b</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xea4c">
+          <i class="demo-icon icon-pinnakl-side-reports-active-3">&#xea4c;</i> <span class="i-name">icon-pinnakl-side-reports-active-3</span><span class="i-code">0xea4c</span>
+        </div>
+        <div class="span3" title="Code: 0xea4d">
+          <i class="demo-icon icon-pinnakl-side-reconciliation-active-svg-3">&#xea4d;</i> <span class="i-name">icon-pinnakl-side-reconciliation-active-svg-3</span><span class="i-code">0xea4d</span>
+        </div>
+        <div class="span3" title="Code: 0xea4e">
+          <i class="demo-icon icon-pinnakl-security-add-manually-3">&#xea4e;</i> <span class="i-name">icon-pinnakl-security-add-manually-3</span><span class="i-code">0xea4e</span>
+        </div>
+        <div class="span3" title="Code: 0xea4f">
+          <i class="demo-icon icon-pinnakl-side-pricing-active-3">&#xea4f;</i> <span class="i-name">icon-pinnakl-side-pricing-active-3</span><span class="i-code">0xea4f</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xea50">
+          <i class="demo-icon icon-pinnakl-settings-3">&#xea50;</i> <span class="i-name">icon-pinnakl-settings-3</span><span class="i-code">0xea50</span>
+        </div>
+        <div class="span3" title="Code: 0xea51">
+          <i class="demo-icon icon-pinnakl-filters-active-3">&#xea51;</i> <span class="i-name">icon-pinnakl-filters-active-3</span><span class="i-code">0xea51</span>
+        </div>
+        <div class="span3" title="Code: 0xea52">
+          <i class="demo-icon icon-pinnakl-side-securities-active-3">&#xea52;</i> <span class="i-name">icon-pinnakl-side-securities-active-3</span><span class="i-code">0xea52</span>
+        </div>
+        <div class="span3" title="Code: 0xea53">
+          <i class="demo-icon icon-pinnakl-trade-request-done-3">&#xea53;</i> <span class="i-name">icon-pinnakl-trade-request-done-3</span><span class="i-code">0xea53</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xea54">
+          <i class="demo-icon icon-pinnakl-ok-7">&#xea54;</i> <span class="i-name">icon-pinnakl-ok-7</span><span class="i-code">0xea54</span>
+        </div>
+        <div class="span3" title="Code: 0xea55">
+          <i class="demo-icon icon-pinnakl-ok-circle-3">&#xea55;</i> <span class="i-name">icon-pinnakl-ok-circle-3</span><span class="i-code">0xea55</span>
+        </div>
+        <div class="span3" title="Code: 0xea56">
+          <i class="demo-icon icon-pinnakl-history">&#xea56;</i> <span class="i-name">icon-pinnakl-history</span><span class="i-code">0xea56</span>
+        </div>
+        <div class="span3" title="Code: 0xea57">
+          <i class="demo-icon icon-pinnakl-attention-alt-3">&#xea57;</i> <span class="i-name">icon-pinnakl-attention-alt-3</span><span class="i-code">0xea57</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xea58">
+          <i class="demo-icon icon-pinnakl-th-large-3">&#xea58;</i> <span class="i-name">icon-pinnakl-th-large-3</span><span class="i-code">0xea58</span>
+        </div>
+        <div class="span3" title="Code: 0xea59">
+          <i class="demo-icon icon-pinnakl-exchange-3">&#xea59;</i> <span class="i-name">icon-pinnakl-exchange-3</span><span class="i-code">0xea59</span>
+        </div>
+        <div class="span3" title="Code: 0xea5a">
+          <i class="demo-icon icon-pinnakl-fire-3">&#xea5a;</i> <span class="i-name">icon-pinnakl-fire-3</span><span class="i-code">0xea5a</span>
+        </div>
+        <div class="span3" title="Code: 0xea5b">
+          <i class="demo-icon icon-pinnakl-trash-empty-3">&#xea5b;</i> <span class="i-name">icon-pinnakl-trash-empty-3</span><span class="i-code">0xea5b</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xea5c">
+          <i class="demo-icon icon-pinnakl-user-3">&#xea5c;</i> <span class="i-name">icon-pinnakl-user-3</span><span class="i-code">0xea5c</span>
+        </div>
+        <div class="span3" title="Code: 0xea5d">
+          <i class="demo-icon icon-pinnakl-note-7">&#xea5d;</i> <span class="i-name">icon-pinnakl-note-7</span><span class="i-code">0xea5d</span>
+        </div>
+        <div class="span3" title="Code: 0xea5e">
+          <i class="demo-icon icon-pinnakl-bell-3">&#xea5e;</i> <span class="i-name">icon-pinnakl-bell-3</span><span class="i-code">0xea5e</span>
+        </div>
+        <div class="span3" title="Code: 0xea5f">
+          <i class="demo-icon icon-pinnakl-plus-circled-3">&#xea5f;</i> <span class="i-name">icon-pinnakl-plus-circled-3</span><span class="i-code">0xea5f</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xea60">
+          <i class="demo-icon icon-pinnakl-qr">&#xea60;</i> <span class="i-name">icon-pinnakl-qr</span><span class="i-code">0xea60</span>
+        </div>
+        <div class="span3" title="Code: 0xea61">
+          <i class="demo-icon icon-pinnakl-mobile">&#xea61;</i> <span class="i-name">icon-pinnakl-mobile</span><span class="i-code">0xea61</span>
+        </div>
+        <div class="span3" title="Code: 0xea62">
+          <i class="demo-icon icon-pinnakl-email">&#xea62;</i> <span class="i-name">icon-pinnakl-email</span><span class="i-code">0xea62</span>
+        </div>
+        <div class="span3" title="Code: 0xea63">
+          <i class="demo-icon icon-pinnakl-partial-allocation">&#xea63;</i> <span class="i-name">icon-pinnakl-partial-allocation</span><span class="i-code">0xea63</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xea64">
+          <i class="demo-icon icon-pinnakl-portal">&#xea64;</i> <span class="i-name">icon-pinnakl-portal</span><span class="i-code">0xea64</span>
+        </div>
+        <div class="span3" title="Code: 0xea65">
+          <i class="demo-icon icon-pinnakl-download">&#xea65;</i> <span class="i-name">icon-pinnakl-download</span><span class="i-code">0xea65</span>
+        </div>
+        <div class="span3" title="Code: 0xea66">
+          <i class="demo-icon icon-pinnakl-edit-login-security">&#xea66;</i> <span class="i-name">icon-pinnakl-edit-login-security</span><span class="i-code">0xea66</span>
+        </div>
+        <div class="span3" title="Code: 0xea67">
+          <i class="demo-icon icon-pinnakl-document">&#xea67;</i> <span class="i-name">icon-pinnakl-document</span><span class="i-code">0xea67</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="span3" title="Code: 0xea68">
+          <i class="demo-icon icon-pinnakl-exls">&#xea68;</i> <span class="i-name">icon-pinnakl-exls</span><span class="i-code">0xea68</span>
+        </div>
+        <div class="span3" title="Code: 0xf0ae">
+          <i class="demo-icon icon-pinnakl-tasks-1">&#xf0ae;</i> <span class="i-name">icon-pinnakl-tasks-1</span><span class="i-code">0xf0ae</span>
+        </div>
+        <div class="span3" title="Code: 0xf0c5">
+          <i class="demo-icon icon-pinnakl-docs">&#xf0c5;</i> <span class="i-name">icon-pinnakl-docs</span><span class="i-code">0xf0c5</span>
+        </div>
+        <div class="span3" title="Code: 0xf10c">
+          <i class="demo-icon icon-pinnakl-circle-empty">&#xf10c;</i> <span class="i-name">icon-pinnakl-circle-empty</span><span class="i-code">0xf10c</span>
+        </div>
+      </div>
+    <div class="container footer">Generated by <a href="https://fontello.com">fontello.com</a></div>
   </body>
 </html>

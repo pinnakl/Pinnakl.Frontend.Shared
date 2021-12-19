@@ -1,5 +1,5 @@
 import { Update } from '@ngrx/entity';
-import { Action } from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
 
 import { UserScreenSetting } from '../../user-screen-settings-backend';
 
@@ -15,71 +15,46 @@ export enum UserScreenSettingActionTypes {
   UpdateUserScreenSettingFailed = '[UserScreenSetting] Update UserScreenSetting Failed'
 }
 
-export class AddUserScreenSetting implements Action {
-  readonly type = UserScreenSettingActionTypes.AddUserScreenSetting;
+export const AddUserScreenSetting = createAction(
+  UserScreenSettingActionTypes.AddUserScreenSetting,
+  props<{ userScreenSetting: UserScreenSetting }>()
+);
 
-  constructor(public payload: { userScreenSetting: UserScreenSetting }) {}
-}
+export const AddUserScreenSettingFailed = createAction(
+  UserScreenSettingActionTypes.AddUserScreenSettingFailed,
+  props<{ error: any }>()
+);
 
-export class AddUserScreenSettingFailed implements Action {
-  readonly type = UserScreenSettingActionTypes.AddUserScreenSettingFailed;
+export const AttemptAddUserScreenSetting = createAction(
+  UserScreenSettingActionTypes.AttemptAddUserScreenSettings,
+  props<{ userScreenSetting: Partial<UserScreenSetting> }>()
+);
 
-  constructor(public payload: { error: any }) {}
-}
+export const AttemptLoadUserScreenSettings = createAction(
+  UserScreenSettingActionTypes.AttemptLoadUserScreenSettings
+);
 
-export class AttemptAddUserScreenSetting implements Action {
-  readonly type = UserScreenSettingActionTypes.AttemptAddUserScreenSettings;
+export const AttemptUpdateUserScreenSetting = createAction(
+  UserScreenSettingActionTypes.AttemptUpdateUserScreenSettings,
+  props<{ userScreenSetting: Partial<UserScreenSetting> }>()
+);
 
-  constructor(
-    public payload: { userScreenSetting: Partial<UserScreenSetting> }
-  ) {}
-}
+export const LoadUserScreenSettings = createAction(
+  UserScreenSettingActionTypes.LoadUserScreenSettings,
+  props<{ userScreenSettings: UserScreenSetting[] }>()
+);
 
-export class AttemptLoadUserScreenSettings implements Action {
-  readonly type = UserScreenSettingActionTypes.AttemptLoadUserScreenSettings;
-}
+export const LoadUserScreenSettingsFailed = createAction(
+  UserScreenSettingActionTypes.LoadUserScreenSettingsFailed,
+  props<{ error: any }>()
+);
 
-export class AttemptUpdateUserScreenSetting implements Action {
-  readonly type = UserScreenSettingActionTypes.AttemptUpdateUserScreenSettings;
+export const UpdateUserScreenSetting = createAction(
+  UserScreenSettingActionTypes.UpdateUserScreenSetting,
+  props<{ userScreenSetting: Update<UserScreenSetting> }>()
+);
 
-  constructor(
-    public payload: { userScreenSetting: Partial<UserScreenSetting> }
-  ) {}
-}
-
-export class LoadUserScreenSettings implements Action {
-  readonly type = UserScreenSettingActionTypes.LoadUserScreenSettings;
-
-  constructor(public payload: { userScreenSettings: UserScreenSetting[] }) {}
-}
-
-export class LoadUserScreenSettingsFailed implements Action {
-  readonly type = UserScreenSettingActionTypes.LoadUserScreenSettingsFailed;
-
-  constructor(public payload: { error: any }) {}
-}
-
-export class UpdateUserScreenSetting implements Action {
-  readonly type = UserScreenSettingActionTypes.UpdateUserScreenSetting;
-
-  constructor(
-    public payload: { userScreenSetting: Update<UserScreenSetting> }
-  ) {}
-}
-
-export class UpdateUserScreenSettingFailed implements Action {
-  readonly type = UserScreenSettingActionTypes.UpdateUserScreenSettingFailed;
-
-  constructor(public payload: { error: any }) {}
-}
-
-export type UserScreenSettingActions =
-  | AddUserScreenSetting
-  | AddUserScreenSettingFailed
-  | AttemptAddUserScreenSetting
-  | AttemptLoadUserScreenSettings
-  | AttemptUpdateUserScreenSetting
-  | LoadUserScreenSettings
-  | LoadUserScreenSettingsFailed
-  | UpdateUserScreenSetting
-  | UpdateUserScreenSettingFailed;
+export const UpdateUserScreenSettingFailed = createAction(
+  UserScreenSettingActionTypes.UpdateUserScreenSettingFailed,
+  props<{ error: any }>()
+);

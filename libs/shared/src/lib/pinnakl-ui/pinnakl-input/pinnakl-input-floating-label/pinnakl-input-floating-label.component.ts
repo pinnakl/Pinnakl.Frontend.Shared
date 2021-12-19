@@ -33,6 +33,7 @@ export class PinnaklInputFloatingLabelComponent
   @Input() required: boolean;
   labelAlignCss = '';
   @Input() type: string;
+  @Input() placeholder = '';
   @ViewChild('inputElement', { static: true }) inputElement: ElementRef;
 
   value: any;
@@ -46,7 +47,7 @@ export class PinnaklInputFloatingLabelComponent
 
   writeValue(value: any): void {
     this.value = value;
-    if (value) {
+    if (value || value === 0) {
       this.applyActiveCss = true;
       this.labelAlignCss = this.inputInActive;
     }
@@ -62,7 +63,7 @@ export class PinnaklInputFloatingLabelComponent
   }
 
   ngOnInit(): void {
-    if (this.value) {
+    if (this.value || this.value === 0) {
       this.applyActiveCss = true;
       this.labelAlignCss = this.inputInActive;
     }
@@ -70,7 +71,7 @@ export class PinnaklInputFloatingLabelComponent
 
   inputFocusedOut(): void {
     if (this.inputOptions && this.inputOptions.floatingLabel) {
-      if (this.value) {
+      if (this.value || this.value === 0) {
         this.applyActiveCss = true;
         this.labelAlignCss = this.inputInActive;
       } else {

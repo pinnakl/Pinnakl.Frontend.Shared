@@ -1,0 +1,161 @@
+@import '../../../../../../libs/shared/src/lib/styles/_components/_colors.scss';
+@import '../../../../../../libs/shared/src/lib/styles/_components/_mixins.scss';
+@import '../../../../../../libs/shared/src/lib/styles/_components/_variables.scss';
+
+.access-control {
+  @include toggle-radios(100px);
+  position: relative;
+
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .selected-users {
+    position: absolute;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 324px;
+    height: 48px; 
+    border: solid 1px #c3c7cd;
+    border-radius: 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+    &-amount {
+      font-size: 14px;
+      font-weight: normal;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: normal;
+      letter-spacing: normal;
+      color: #23282d;
+    }
+
+    &-edit {
+      font-size: 14px;
+      font-weight: 600;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: normal;
+      letter-spacing: normal;
+      text-align: right;
+      color: #168eff;
+    }
+  }
+
+  .access-message {
+    margin-bottom: 20px;
+  }
+
+  .container-with-message {
+    height: calc(100% - 40px);
+  }
+
+  .form-controls-container {
+    max-height: 100%;
+    height: 100%;
+    overflow: auto;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .access-form-actions {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+  }
+
+  .access-control-option {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom: 1px solid #e8e9ea;
+    padding: 7px 0;
+
+    &:first-child {
+      padding-top: 0;
+    }
+
+    &:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .user-info-container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .select-user {
+        width: 40px;
+        margin: -22px -10px 0 0;
+      }
+      .name-avatar {
+        width: 32px;
+        height: 23px;
+      }
+      .user-name {
+        font-size: 14px;
+        margin-left: 10px;
+        display: flex;
+        flex-direction: column;
+        .authtype {
+          color: #617083;
+        }
+        .icon {
+          margin-left: 7px;
+          color: #168eff;
+        }
+      }
+    }
+
+    .user-controls {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .login-security {
+        margin-right: 10px;
+        svg {
+          width: 20px;
+          height: 20px;
+          color: #909eb4;
+        }
+      }
+
+      .radioGroup {
+        height: 31px;
+      }
+
+      .toggle-control {
+        user-select: none;
+        height: 20px;
+        margin-right: 20px;
+      }
+
+      .disabled-toggle {
+        opacity: 0.4;
+      }
+    }
+  }
+
+  ::ng-deep {
+    input:checked + .slider {
+      background-color: #168eff;
+    }
+
+    input:focus + .slider {
+      box-shadow: 0 0 1px #168eff;
+    }
+  }
+}

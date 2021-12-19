@@ -1,7 +1,6 @@
 import { Component, forwardRef, Input, OnInit } from '@angular/core';
 import {
   ControlValueAccessor,
-  FormBuilder,
   FormControl,
   FormGroup,
   NG_VALUE_ACCESSOR
@@ -42,8 +41,6 @@ export class EntitySelectorComponent implements ControlValueAccessor, OnInit {
   @Input() showEntityTypeSelector: boolean;
   private propagateChange: any = () => {};
 
-  constructor(private formBuilder: FormBuilder) {}
-
   ngOnInit(): void {
     this.allEntities = JSON.parse(JSON.stringify(this.entities));
     if (this.filter) {
@@ -56,7 +53,7 @@ export class EntitySelectorComponent implements ControlValueAccessor, OnInit {
       } as any);
     }
     this.dropdownEntities = this.allEntities;
-    let entityId = new FormControl(),
+    const entityId = new FormControl(),
       entityType = new FormControl();
     entityId.valueChanges.subscribe(this.onValueChanged.bind(this));
     entityType.valueChanges.subscribe(this.entityTypeChanged.bind(this));
@@ -80,6 +77,11 @@ export class EntitySelectorComponent implements ControlValueAccessor, OnInit {
       'entityType',
       entityType
     ]);
+    if (this.dropdownEntities.length === 1) {
+      this.form.patchValue({ entityId: this.dropdownEntities[0].id });
+    } else {
+      this.form.patchValue({ entityId: undefined });
+    }
   }
 
   writeValue(value: ClientConnectivity): void {

@@ -1,8 +1,8 @@
 import {
   Component,
-  ElementRef,
   EventEmitter,
   Input,
+  OnInit,
   Output
 } from '@angular/core';
 import {
@@ -21,23 +21,29 @@ import { PinnaklColDef } from '../pinnakl-col-def.model';
   selector: 'pinnakl-grid',
   templateUrl: './pinnakl-grid.component.html'
 })
-export class PinnaklGridComponent {
+export class PinnaklGridComponent implements OnInit {
   @Input() autoGroupColumnDef: any;
   @Input() columnDefs: PinnaklColDef[];
+  @Input() defaultColDefs: PinnaklColDef;
   @Input() gridHeight: string;
+  @Input() deltaRowDataMode: any;
   @Input() gridOptions: GridOptions;
   @Input() groupIncludeFooter: boolean;
   @Input() groupMultiAutoColumn: boolean;
   @Input() headerHeight: number;
   @Input() leftOverSpaceRatioThreshold = 0.35;
   @Input() pinnedBottomRowData: any[];
+  @Input() getRowNodeId: (data: any) => string;
   @Input() rowData: any[];
   @Input() rowGroupPanelShow: string;
   @Input() rowHeight: number;
   @Input() rowSelection: string;
   @Input() searchText = '';
   @Input() styleClass: string;
-
+  @Input() themeClass = 'ag-theme-fresh';
+  @Input() frameworkComponents;
+  @Input() defaultSortState;
+  @Input() autoResizeColumn = true;
   @Output() private columnMoved = new EventEmitter<
     { name: string; viewOrder: number }[]
   >();
@@ -48,14 +54,24 @@ export class PinnaklGridComponent {
     { name: string; sortAscending: boolean; sortOrder: number }[]
   >();
   @Output() rowClicked: EventEmitter<any> = new EventEmitter<any>();
+  @Output() cellClicked: EventEmitter<any> = new EventEmitter<any>();
+
   @Output() rowSelectionChanged: EventEmitter<any> = new EventEmitter<any>();
 
   private readonly agGridPanelClass = 'ag-root-wrapper-body';
   private bodyScrollTriggerTime: Date;
   private gridApi: GridApi;
   private gridColumnApi: ColumnApi;
+  public defaultColDef: PinnaklColDef;
 
-  constructor(private grid: ElementRef) {}
+  ngOnInit() {
+    this.defaultColDef = <PinnaklColDef>{
+      filter: true,
+      resizable: true,
+      sortable: true,
+      ...this.defaultColDefs
+    };
+  }
 
   bodyScrollHandler(): void {
     this.bodyScrollTriggerTime = new Date();
@@ -81,21 +97,28 @@ export class PinnaklGridComponent {
     }
   }
 
-  onGridReady(): void {
-    this.gridApi = this.gridOptions.api;
-    this.gridColumnApi = this.gridOptions.columnApi;
-    this.gridApi.expandAll();
+  onGridReady(params): void {
+    this.gridApi = params?.api;
+    this.gridColumnApi = params?.columnApi;
+    this.gridApi?.expandAll();
+    if (this.defaultSortState) {
+      this.setDefaultSorting();
+    }
   }
 
   onRowDataChange(): void {
     if (!this.gridApi) {
       return;
     }
-    this.gridApi.resetRowHeights();
+    this.gridApi?.resetRowHeights();
   }
 
   onRowClicked(event: any): void {
     this.rowClicked.emit(event);
+  }
+
+  onCellClicked(event: any): void {
+    this.cellClicked.emit(event);
   }
 
   sortHandler({ api }: SortChangedEvent): void {
@@ -111,8 +134,15 @@ export class PinnaklGridComponent {
     this.gridApi.resetRowHeights();
   }
 
+  setDefaultSorting() {
+    this.gridColumnApi.applyColumnState({
+      state: this.defaultSortState,
+      defaultState: { sort: null },
+    });
+  }
+
   sortGroupsAndSetVisibility(event: ColumnRowGroupChangedEvent): void {
-    let { api, columnApi, columns: groupColumns } = event,
+    const { api, columnApi, columns: groupColumns } = event,
       allColumns = columnApi.getAllColumns();
     const newGroupOrders = groupColumns.map((c, i) => ({
       name: c.getColId(),
@@ -153,7 +183,7 @@ export class PinnaklGridComponent {
   }
 
   private customResizeColumns(): void {
-    if (!this.gridApi || !this.gridColumnApi) {
+    if (!this.gridApi || !this.gridColumnApi || !this.autoResizeColumn) {
       return;
     }
     const allColumnIds = this.gridColumnApi

@@ -20,7 +20,6 @@ export class TradeRequestLog {
     public settleDate: Date,
     public tradeDate: Date,
     public tranType: string,
-    public trsIndicator: Boolean,
     public userId: number
   ) {}
 }

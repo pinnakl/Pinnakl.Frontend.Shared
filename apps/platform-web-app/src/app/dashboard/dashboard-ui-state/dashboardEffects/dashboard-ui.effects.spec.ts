@@ -3,12 +3,12 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Observable, of } from 'rxjs';
 
 import { PinnaklSpinner } from '@pnkl-frontend/core';
+import { Utility } from '@pnkl-frontend/shared';
 import {
   AttemptLoadActivitySummary,
   AttemptLoadDashboardBackend,
   LoadActivitySummary
-} from '../../dashboard-backend-state/store/dashboard';
-import { Utility } from '@pnkl-frontend/shared';
+} from '../../dashboard-backend-state/store/dashboard/dashboard-backend.actions';
 import { DashboardUiEffects } from './dashboard-ui.effects';
 
 import * as moment from 'moment';
@@ -17,6 +17,7 @@ describe('DashboardUi Effects Tests - ', () => {
   let actions$: Observable<any>;
   let effects: DashboardUiEffects;
   let spinner: PinnaklSpinner;
+  // tslint:disable-next-line:prefer-const
   let utility: Utility;
 
   beforeEach(() => {
@@ -36,7 +37,7 @@ describe('DashboardUi Effects Tests - ', () => {
       ]
     });
 
-    effects = TestBed.get(DashboardUiEffects);
+    effects = TestBed.inject(DashboardUiEffects);
   });
 
   const activitySummaryData = {

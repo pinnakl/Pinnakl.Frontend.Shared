@@ -3,7 +3,6 @@ export interface ReconciliationPositionFromApi {
   comment: string;
   extdescription: string;
   extpos: string;
-  exttrsindicator: string;
   id: string;
   id1: string;
   id2: string;
@@ -12,7 +11,6 @@ export interface ReconciliationPositionFromApi {
   pnkldescription: string;
   pnklpos: string;
   pnklsecid: string;
-  pnkltrsindicator: string;
   resulttype: string;
   username: string;
 }

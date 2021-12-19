@@ -1,0 +1,32 @@
+<div class="close-button">
+  <pnkl-modal-close-btn (click)="closeModal()"></pnkl-modal-close-btn>
+</div>
+
+<form [formGroup]="searchForm">
+  <input type="search" placeholder="Type to search" formControlName="searchField">
+</form>
+
+
+<pnkl-tab-selector [tabList]="tabList" (itemSelected)="itemSelected($event)">
+  <ng-container tab-content="">
+    <ng-template [ngIf]="isLoading" [ngIfElse]="mainContent">
+      <div class="search-info-text">Loading...</div>
+      <div class="pnkl-infinity-loader"></div>
+    </ng-template>
+    <ng-template #mainContent>
+      <ng-template [ngIf]="searchFieldIsEmpty()" [ngIfElse]="filteredLsit">
+        <div class="search-info-text">Nothing to display, start typing...</div>
+      </ng-template>
+      <ng-template #filteredLsit>
+        <ng-container *ngIf="securityList.length === 0">
+          <div class="search-info-text">No data was found for the combination of search text and selected filter ;(</div>
+        </ng-container>
+        <ng-container *ngIf="securityList.length > 0">
+          <div class="security-items-wrapper">
+            <pnkl-security-items [items]="securityList" [searchText]="searchForm.controls.searchField.value" (itemClicked)="itemClicked($event)"></pnkl-security-items>
+          </div>
+        </ng-container>
+      </ng-template>
+    </ng-template>
+  </ng-container>
+</pnkl-tab-selector>

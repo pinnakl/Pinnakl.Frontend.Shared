@@ -1,0 +1,119 @@
+<form
+  class="col-md-12"
+  [class.ng-submitted]="submitted"
+  [formGroup]="form"
+  (ngSubmit)="saveAttribute()"
+  novalidate
+>
+  <div class="row my-3">
+    <div class="col-md-4">
+      <pinnakl-input
+        controlName="selectedAttribute"
+        [dropdownOptions]="{ objectModel: true, viewProperty: 'name' }"
+        [dropdownSource]="customAttributes"
+        [form]="form"
+        label="SELECT ATTRIBUTE"
+        type="dropdown"
+      >
+      </pinnakl-input>
+    </div>
+    <div class="col-md-default-width mt-4">
+      <i
+        class="icon-pinnakl-edit-securities color-primary cursor-pointer"
+        (click)="editAttribute()"
+      ></i>
+    </div>
+    <div class="col-md-default-width mt-4">
+      <i
+        #anchor
+        class="icon-pinnakl-trash-empty color-red cursor-pointer"
+        (click)="showDeleteConfirmation()"
+      ></i>
+    </div>
+    <confirm-action
+      [anchor]="anchor"
+      confirmationMessage="This will delete the attribute information from ALL securities. Please confirm."
+      (onCancelled)="hideConfirmation()"
+      (onConfirmed)="deleteAttribute()"
+      [showConfirmation]="confirmationVisible"
+    >
+    </confirm-action>
+  </div>
+  <div class="row mb-3">
+    <div class="col-md-12">
+      <h3>{{ editMode ? 'Edit' : 'Add' }} Attribute</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-3">
+          <pinnakl-input
+            controlName="name"
+            [form]="form"
+            label="NAME"
+            [required]="true"
+            type="text"
+          >
+          </pinnakl-input>
+        </div>
+        <div class="col-md-2">
+          <pinnakl-input
+            controlName="type"
+            [disabled]="editMode"
+            [dropdownSource]="attributeTypes"
+            [form]="form"
+            label="TYPE"
+            [required]="true"
+            type="dropdown"
+          >
+          </pinnakl-input>
+        </div>
+        <div class="col-md-3" *ngIf="form.value.type === 'List'">
+          <label class="mb-0"> NEW LIST OPTION </label>
+          <input
+            type="text"
+            class="pnkl-input"
+            placeholder="Type the option and press Tab"
+            formControlName="listOption"
+            (blur)="addListOption($event, form.value.listOption)"
+          />
+        </div>
+        <div class="col-md-default-width">
+          <button type="submit" class="btn btn-success mt-3">SAVE</button>
+        </div>
+        <div class="col-md-default-width">
+          <button
+            type="button"
+            class="btn btn-secondary mt-3"
+            (click)="resetForm()"
+          >
+            CANCEL
+          </button>
+        </div>
+      </div>
+      <div *ngIf="form.value.type === 'List'" class="row">
+        <div class="col-md-12">
+          <label class=""> LIST OPTIONS </label>
+          <kendo-sortable
+            activeItemClass="color-regent-grey"
+            class="row mb-3 custom-attribute-list-options"
+            [kendoSortableBinding]="listOptions"
+            [animation]="true"
+            [navigatable]="true"
+            itemClass="col-auto"
+          >
+            <ng-template let-item="item">
+              <div class="border-default px-3">
+                <span>{{ item.listOption }}</span>
+                <span (click)="removeListOption(item)">
+                  <i class="cursor-pointer icon-pinnakl-cancel ml-3"></i>
+                </span>
+              </div>
+            </ng-template>
+          </kendo-sortable>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

@@ -1,0 +1,64 @@
+<div class="row bgColorWhite center-aligned-row wrapper">
+  <div class="title">
+    Day over day <span class="triangle">&#9651;</span>
+  </div>
+  <div class="row table-wrapper clear">
+    <div class="col-md-12 table-responsive-container clear">
+      <div class="table-responsive items-table">
+        <table class="table">
+          <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col" class="text-align-right padding-right-85">Yesterday</th>
+            <th scope="col" class="text-align-right padding-right-85">Change</th>
+            <th scope="col" class="text-align-right padding-right-85">Today</th>
+          </tr>
+          </thead>
+          <tbody>
+          <ng-container *ngFor="let marketValue of marketValueSummary">
+            <ng-container *ngIf="marketValue && marketValue.name !== 'Cash'">
+              <tr>
+                <td scope="row" class="row-title">
+                  {{marketValue.name}}
+                </td>
+                <td scope="row" class="text-align-right padding-right-85">
+                  <span *ngIf="marketValue.yesterday < 0">-</span>
+                  $ {{abs(marketValue.yesterday) | number: '1.0-0'}}
+                </td>
+                <td scope="row"
+                    class="text-align-right padding-right-85"
+                    [ngClass]="(marketValue.today - marketValue.yesterday >= 0) ? 'green-text' : 'red-text'">
+                  <span *ngIf="(marketValue.today - marketValue.yesterday > 0)">+</span>
+                  <span *ngIf="(marketValue.today - marketValue.yesterday < 0)">-</span>
+                  $ {{abs(marketValue.today - marketValue.yesterday) | number: '1.0-0'}}
+                </td>
+                <td scope="row" class="text-align-right padding-right-85 row-today">
+                  <span *ngIf="marketValue.today < 0">-</span>
+                  $ {{abs(marketValue.today) | number: '1.0-0'}}<i
+                    class="icon-pinnakl-arrow-up green-arrow"
+                    *ngIf="(marketValue.today - marketValue.yesterday >= 0)"
+                  ></i><i
+                    class="icon-pinnakl-arrow-down red-arrow"
+                    *ngIf="(marketValue.today - marketValue.yesterday < 0)"
+                  ></i>
+                </td>
+              </tr>
+            </ng-container>
+          </ng-container>
+          <tr class="summary-row">
+            <td scope="row" class="row-title">
+              Net liq
+            </td>
+            <td scope="row" class="text-align-right padding-right-85"></td>
+            <td scope="row" class="text-align-right padding-right-85"></td>
+            <td scope="row" class="text-align-right padding-right-85 row-today last-cell">
+              <span *ngIf="calcNetLiq() < 0">-</span>
+              $ {{ abs(calcNetLiq()) | number: '1.0-0' }}
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

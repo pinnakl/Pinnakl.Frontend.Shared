@@ -11,3 +11,5 @@ export * from './contacts-validation-errors/contacts-validation-errors.component
 export * from './pinnakl-col-def.model';
 export * from './pinnakl-grid/pinnakl-grid.component';
 export * from './pinnakl-grid.module';
+export * from './cell-renderer-trantype-tag.component';
+export * from './cell-renderer-circle-percent.component';

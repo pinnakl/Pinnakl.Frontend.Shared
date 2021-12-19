@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
 
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Observable } from 'rxjs';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatMap } from 'rxjs/operators';
 
 import { PositionsPnlDataFieldsService } from '../../positions-pnl-data-fields-backend';
 import {
-  AttemptLoadPositionsPnlDataFields,
   LoadPositionsPnlDataFields,
   LoadPositionsPnlDataFieldsFailed,
   PositionsPnlDataFieldsActionTypes
@@ -15,24 +13,19 @@ import {
 @Injectable()
 export class PositionsPnlDataFieldsEffects {
   constructor(
-    private _actions$: Actions,
-    private _positionsPnlDataFieldsService: PositionsPnlDataFieldsService
-  ) {}
+    private readonly _actions$: Actions,
+    private readonly _positionsPnlDataFieldsService: PositionsPnlDataFieldsService
+  ) { }
 
-  @Effect()
-  load$: Observable<
-    LoadPositionsPnlDataFields | LoadPositionsPnlDataFieldsFailed
-  > = this._actions$.pipe(
-    ofType<AttemptLoadPositionsPnlDataFields>(
-      PositionsPnlDataFieldsActionTypes.AttemptLoadPositionsPnlDataFields
-    ),
+  load$ = createEffect(() => this._actions$.pipe(
+    ofType(PositionsPnlDataFieldsActionTypes.AttemptLoadPositionsPnlDataFields),
     concatMap(async () => {
       try {
         const positionsPnlDataFields = await this._positionsPnlDataFieldsService.getAll();
-        return new LoadPositionsPnlDataFields({ positionsPnlDataFields });
+        return LoadPositionsPnlDataFields({ positionsPnlDataFields });
       } catch (error) {
-        return new LoadPositionsPnlDataFieldsFailed({ error });
+        return LoadPositionsPnlDataFieldsFailed({ error });
       }
     })
-  );
+  ));
 }

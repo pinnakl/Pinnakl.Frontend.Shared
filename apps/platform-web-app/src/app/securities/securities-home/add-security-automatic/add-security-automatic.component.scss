@@ -1,0 +1,61 @@
+@import '../../../../../../../libs/shared/src/lib/styles/_components/variables';
+@import '../../../../../../../libs/shared/src/lib/styles/_components/mixins';
+
+.assets-type-list {
+  li {
+    margin-right: 15px;
+  }
+}
+.security-add-image {
+  vertical-align: middle;
+  height: 10rem;
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+}
+
+.add-security-container {
+  max-width: 700px;
+}
+
+.toggle-radio-btn {
+  width: 75px;
+  display: flex;
+  align-items: center;
+  label {
+    margin: 0 15px 0 5px;
+  }
+}
+
+.identifier {
+  position: relative;
+  .identifier-error {
+    color: red;
+    position: absolute;
+    bottom: -3px;
+    font-size: 13px;
+  }
+}
+
+
+.add-security-automatic {
+  .cusips {
+    .h5 {
+      margin-left: -15px;
+      margin-bottom: 0;
+    }
+
+    .toggle-radio-btn {
+      label {
+        font-size: 13px;
+        color: black;
+        line-height: 1px;
+      }
+    }
+
+    .cusips-container {
+      display: flex;
+      flex-direction: row;
+      gap: 15px;
+    }
+  }
+}

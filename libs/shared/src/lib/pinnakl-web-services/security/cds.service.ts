@@ -2,40 +2,35 @@ import { Injectable } from '@angular/core';
 
 import * as moment from 'moment';
 
-import { GetWebRequest, PostWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
+import { WebServiceProvider } from '@pnkl-frontend/core';
 import { CdsFromApi } from '../../models/security/cds-from-api.model';
 import { Cds } from '../../models/security/cds.model';
 
 @Injectable()
 export class CdsService {
-  private readonly RESOURCE_URL = 'cds';
-  constructor(private wsp: WebServiceProvider) {}
+  private readonly _creditdefaultswapsEndpoint = 'entities/cds';
+  constructor(private readonly wsp: WebServiceProvider) {}
 
-  postCds(entityToSave: Cds): Promise<Cds> {
-    let requestBody = this.getCdsForServiceRequest(entityToSave);
+  async postCds(entityToSave: Cds): Promise<Cds> {
+    const entity = await this.wsp.postHttp<CdsFromApi>({
+      endpoint: this._creditdefaultswapsEndpoint,
+      body: this.getCdsForServiceRequest(entityToSave)
+    });
 
-    let postWebRequest: PostWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      payload: requestBody
-    };
-
-    return this.wsp
-      .post(postWebRequest)
-      .then((entity: CdsFromApi) => this.formatCds(entity));
+    return this.formatCds(entity);
   }
 
-  putCds(entityToSave: Cds): Promise<Cds> {
-    let requestBody = this.getCdsForServiceRequest(entityToSave);
-    return this.wsp
-      .put({
-        endPoint: this.RESOURCE_URL,
-        payload: requestBody
-      })
-      .then((entity: CdsFromApi) => this.formatCds(entity));
+  async putCds(entityToSave: Cds): Promise<Cds> {
+    const entity = await this.wsp.putHttp<CdsFromApi>({
+      endpoint: this._creditdefaultswapsEndpoint,
+      body: this.getCdsForServiceRequest(entityToSave)
+    });
+
+    return this.formatCds(entity);
   }
 
-  getCdsFromSecurityId(securityId: number): Promise<Cds> {
-    let fields = [
+  async getCdsFromSecurityId(securityId: number): Promise<Cds> {
+    const fields = [
       'Id',
       'SecurityId',
       'Spread',
@@ -47,9 +42,9 @@ export class CdsService {
       'FirstPaymentDate',
       'underlyingidentifier'
     ];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: {
+    const creditdefaultswaps = await this.wsp.getHttp<CdsFromApi[]>({
+      endpoint: this._creditdefaultswapsEndpoint,
+      params: {
         fields: fields,
         filters: [
           {
@@ -59,15 +54,15 @@ export class CdsService {
           }
         ]
       }
-    };
-
-    return this.wsp.get(getWebRequest).then((entities: CdsFromApi[]) => {
-      return entities.length === 0 ? null : this.formatCds(entities[0]);
     });
+
+    return creditdefaultswaps.length === 0
+      ? null
+      : this.formatCds(creditdefaultswaps[0]);
   }
 
   private getCdsForServiceRequest(entity: Cds): CdsFromApi {
-    let entityForApi = {} as CdsFromApi;
+    const entityForApi = {} as CdsFromApi;
     if (entity.businessDayConvention !== undefined) {
       entityForApi.businessdayconvention =
         entity.businessDayConvention !== null
@@ -132,7 +127,7 @@ export class CdsService {
   }
 
   private formatCds(entity: CdsFromApi): Cds {
-    let firstpaymentdate = moment(entity.firstpaymentdate, 'MM/DD/YYYY'),
+    const firstpaymentdate = moment(entity.firstpaymentdate, 'MM/DD/YYYY'),
       terminationdate = moment(entity.terminationdate, 'MM/DD/YYYY');
 
     return new Cds(
@@ -140,12 +135,10 @@ export class CdsService {
       entity.businessdays,
       firstpaymentdate.isValid() ? firstpaymentdate.toDate() : null,
       entity.fixedratedaycount,
-      !isNaN(parseInt(entity.id)) ? parseInt(entity.id) : null,
-      !isNaN(parseInt(entity.paymentfrequency))
-        ? parseInt(entity.paymentfrequency)
-        : null,
-      !isNaN(parseInt(entity.securityid)) ? parseInt(entity.securityid) : null,
-      !isNaN(parseInt(entity.spread)) ? parseInt(entity.spread) : null,
+      !isNaN(parseInt(entity.id, 10)) ? parseInt(entity.id, 10) : null,
+      !isNaN(parseInt(entity.paymentfrequency, 10)) ? parseInt(entity.paymentfrequency, 10) : null,
+      !isNaN(parseInt(entity.securityid, 10)) ? parseInt(entity.securityid, 10) : null,
+      !isNaN(parseInt(entity.spread, 10)) ? parseInt(entity.spread, 10) : null,
       terminationdate.isValid() ? terminationdate.toDate() : null,
       entity.underlyingidentifier
     );

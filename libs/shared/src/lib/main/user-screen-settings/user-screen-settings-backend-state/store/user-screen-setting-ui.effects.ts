@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { first, tap } from 'rxjs/operators';
 
 import { PinnaklSpinner, Toastr } from '@pnkl-frontend/core';
-import { Utility } from '../../../../services/utility.service';
+import { Utility } from '../../../../services';
 import {
   AddUserScreenSetting,
   AddUserScreenSettingFailed,
+  AttemptAddUserScreenSetting,
   UpdateUserScreenSetting,
   UpdateUserScreenSettingFailed,
   UserScreenSettingActionTypes
@@ -16,57 +17,51 @@ import {
 @Injectable()
 export class UserScreenSettingUiEffects {
   constructor(
-    private actions$: Actions,
-    private spinner: PinnaklSpinner,
-    private toastr: Toastr,
-    private utility: Utility
-  ) {}
+    private readonly actions$: Actions,
+    private readonly spinner: PinnaklSpinner,
+    private readonly toastr: Toastr,
+    private readonly utility: Utility
+  ) { }
 
-  @Effect({ dispatch: false })
-  add$ = this.actions$.pipe(
-    ofType(UserScreenSettingActionTypes.AttemptAddUserScreenSettings),
+  add$ = createEffect(() => this.actions$.pipe(
+    ofType(AttemptAddUserScreenSetting),
     tap(() => {
       this.spinner.spin();
       this.actions$
         .pipe(
-          ofType<AddUserScreenSetting | AddUserScreenSettingFailed>(
-            UserScreenSettingActionTypes.AddUserScreenSetting,
-            UserScreenSettingActionTypes.AddUserScreenSettingFailed
+          ofType(
+            AddUserScreenSetting,
+            AddUserScreenSettingFailed
           ),
           first()
         )
-        .subscribe(({ payload, type }) => {
-          if (type === UserScreenSettingActionTypes.AddUserScreenSetting) {
+        .subscribe((v) => {
+          if (v.type === UserScreenSettingActionTypes.AddUserScreenSetting) {
             this.spinner.stop();
             this.toastr.success('Saved successfully');
           } else {
-            this.utility.showError((<any>payload).error);
+            this.utility.showError((<any>v).error);
           }
         });
     })
-  );
+  ), { dispatch: false });
 
-  @Effect({ dispatch: false })
-  update$ = this.actions$.pipe(
+  update$ = createEffect(() => this.actions$.pipe(
     ofType(UserScreenSettingActionTypes.AttemptUpdateUserScreenSettings),
     tap(() => {
       this.spinner.spin();
-      this.actions$
-        .pipe(
-          ofType<UpdateUserScreenSetting | UpdateUserScreenSettingFailed>(
-            UserScreenSettingActionTypes.UpdateUserScreenSetting,
-            UserScreenSettingActionTypes.UpdateUserScreenSettingFailed
-          ),
-          first()
-        )
-        .subscribe(({ payload, type }) => {
-          if (type === UserScreenSettingActionTypes.UpdateUserScreenSetting) {
+      this.actions$.pipe(
+        ofType(UpdateUserScreenSetting, UpdateUserScreenSettingFailed),
+        first()
+      )
+        .subscribe((v) => {
+          if (v.type === UserScreenSettingActionTypes.UpdateUserScreenSetting) {
             this.spinner.stop();
             this.toastr.success('Saved successfully');
           } else {
-            this.utility.showError((<any>payload).error);
+            this.utility.showError((<any>v).error);
           }
         });
     })
-  );
+  ), { dispatch: false });
 }

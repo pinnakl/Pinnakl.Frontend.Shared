@@ -1,0 +1,72 @@
+<kendo-grid
+  class="trade-history-table"
+  [data]="gridView"
+  [sortable]="{ mode: 'single' }"
+  [groupable]="true"
+  [sort]="sort"
+  [style.height.%]="100"
+  [group]="groups"
+  (groupChange)="groupChange($event)"
+  (sortChange)="sortChange($event)"
+>
+  <ng-template kendoGridToolbarTemplate>
+    <div class="history-table-toolbar">
+      <div class="header-modal">
+        <div class="container-with-radio">
+          <pinnakl-input
+            controlName="underlying"
+            [form]="historyForm"
+            type="boolean"
+            checkBoxStyle="toggle"
+            label="Show all trades in underlying"
+          >
+          </pinnakl-input>
+        </div>
+        <button class="export-container" type="button" kendoGridExcelCommand>
+          <i class="icon-pinnakl-exls"></i>
+          <span>Export to Excel</span>
+        </button>
+      </div>
+    </div>
+  </ng-template>
+  <kendo-grid-column field="tradedate" title="Trade Date" width="70"></kendo-grid-column>
+  <kendo-grid-column field="ticker"
+                     title="Ticker"
+                     width="100"></kendo-grid-column>
+  <kendo-grid-column field="trantype" title="Tran" width="40">
+    <ng-template kendoGridCellTemplate let-dataItem>
+      {{ dataItem.trantype }}
+    </ng-template>
+  </kendo-grid-column>
+  <kendo-grid-column
+    class="align-number"
+    field="quantity"
+    title="Quantity"
+    width="70"
+    format="{0:n}"
+  >
+  </kendo-grid-column>
+  <kendo-grid-column class="align-number" field="price" title="Price" width="70" format="{0:c3}">
+  </kendo-grid-column>
+  <kendo-grid-column field="currency" title="Currency" width="70">
+  </kendo-grid-column>
+  <kendo-grid-column
+    class="align-number"
+    field="commissionpershare"
+    title="Comm Per Share"
+    width="80"
+    format="{0:n2}"
+  >
+  </kendo-grid-column>
+  <kendo-grid-column
+    class="align-number"
+    field="netmoneylocal"
+    title="Net Money"
+    width="80"
+    format="{0:c2}"
+  >
+  </kendo-grid-column>
+  <kendo-grid-column field="brokername" title="Broker Name" width="200">
+  </kendo-grid-column>
+  <kendo-grid-excel fileName="trade-history.xlsx"></kendo-grid-excel>
+</kendo-grid>

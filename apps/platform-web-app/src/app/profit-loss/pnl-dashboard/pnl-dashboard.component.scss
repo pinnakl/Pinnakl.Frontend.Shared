@@ -1,0 +1,14 @@
+.calculated-timeseries {
+  padding: 25px 15px;
+}
+.positive-arrow:before,
+.negative-arrow:before {
+  font-size: 12px;
+  font-weight: bold;
+}
+.positive-arrow:before {
+  color: #18d06b;
+}
+.negative-arrow:before {
+  color: #ff4949;
+}

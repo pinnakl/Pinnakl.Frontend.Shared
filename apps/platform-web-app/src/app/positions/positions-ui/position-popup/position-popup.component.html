@@ -1,0 +1,356 @@
+<!-- <pinnakl-modal
+  *ngIf="!hidePositionEditModal"
+  [hideDialog]="hidePositionEditModal"
+  (closeModal)="closePositionEditModal()"
+  [minWidth]="420"
+  [height]="340"
+>
+  <div class="modal-body">
+    <form
+      novalidate
+      [formGroup]="form"
+      (ngSubmit)="showPositionPopup(form)"
+      [class.ng-submitted]="submitted"
+      class="container-fluid"
+      name="positionEditForm"
+    >
+      <div class="row mt-3">
+        <div class="col-md-12">
+          <security-selector
+            formControlName="securityId"
+            [objectModel]="true"
+            [required]="true"
+            [selectionStyle]="'PinnaklSecuritySelector'"
+          >
+          </security-selector>
+        </div>
+      </div>
+      <div class="row">
+        <div class="pt-4 col-md-12">
+          <button
+            type="submit"
+            class="next-btn btn btn-lg btn-success text-uppercase"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</pinnakl-modal> -->
+<!-- 
+<pinnakl-modal [hideDialog]="hidePortfolioMenuModal" [showCloseButton]="false">
+  <div class="edit-security-modal-content">
+    <div class="container-fluid">
+      <div class="holder">
+        <div class="row">
+          <div class="col-12 col-md-10 col-sm-10 mobile-mb">
+            <h2 align="center">Portfolio Rebalancing</h2>
+          </div>
+          <div class="col-md-2">
+            <a
+              href="javascript:void(0)"
+              (click)="closePortMenuModal()"
+              class="icon-pinnakl-cancel btn-task-history-close btn-close-icon"
+            ></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <form
+        novalidate
+        [formGroup]="portfolioMenuForm"
+        (ngSubmit)="showAdjustPopup(portfolioMenuForm)"
+        [class.ng-submitted]="submitted"
+        class="container-fluid"
+        name="portfolioMenu"
+      >
+        <div class="col-md-12">
+          <span class="input-check" align="center">
+            <input type="radio" formControlName="selectedType" [value]="true" />
+            <label>Sub Account Rebalancing</label>
+          </span>
+        </div>
+        <div class="col-md-12">
+          <span class="input-check" align="center">
+            <input
+              type="radio"
+              formControlName="selectedType"
+              [value]="false"
+            />
+            <label>Cash Investment / Divestment</label>
+          </span>
+        </div>
+        <div>
+          <div align="center" class="col-md-12 pt-4">
+            <button
+              type="submit"
+              [disabled]="portfolioMenuForm.valid === false"
+              class="next-btn btn btn-lg btn-success text-uppercase"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</pinnakl-modal> -->
+
+<pinnakl-modal
+  *ngIf="!hidePositionModal"
+  [showCloseButton]="false"
+  [width]="1200"
+  [height]="625"
+  [hideDialog]="hidePositionModal"
+  [draggable]="true"
+  (closeModal)="closePositionModal()"
+>
+<ng-container draggable>
+  <div>
+    <div class="modal-body padding0">
+      <section class="section-padding section-white">
+        <div class="container-fluid">
+          <div class="holder">
+            <div class="row">
+              <div class="col-12 col-md-11 col-sm-10 mobile-mb account-header">
+                <h2>{{ securityDescription }}</h2>
+                <div class="account-selector">
+                  <pinnakl-input
+                    controlName="account"
+                    [dropdownSource]="accounts"
+                    [dropdownOptions]="{
+                      objectModel: true,
+                      viewProperty: 'accountCode'
+                    }"
+                    [form]="accountForm"
+                    label="Account"
+                    type="dropdown"
+                  >
+                  </pinnakl-input>
+                </div>
+              </div>
+              <div class="col-md-default-width flex-pull-right">
+                <!-- <a
+                  href="javascript:void(0)"
+                  (click)="closePositionModal()"
+                  class="icon-pinnakl-cancel btn-task-history-close btn-close-icon"
+                ></a> -->
+              </div>
+            </div>
+          </div>
+
+          <ul
+            *ngIf="tabs && tabs.length > 0"
+            class="nav nav-tabs negative-margin"
+          >
+            <li *ngFor="let tab of tabs" [ngClass]="{ active: tabActive === tab.name }">
+              <a href="javascript:;" (click)="activateTab(tab.name)">{{
+                tab.caption
+              }}</a>
+            </li>
+          </ul>
+
+          <div *ngIf="tabs && tabs.length > 0" class="tab-content">
+            <div class="tab-pane" [ngClass]="{ active: true }">
+              <div class="display-none" [ngClass]="{ 'display-block': tabActive === 'positionSummaryTab'}">
+                <position-summary
+                  *ngIf="positionSummaryTab && modalOpen"
+                  [posDate]="formattedPosDate()"
+                  [accounts]="accounts"
+                  [securityId]="secId"
+                ></position-summary>
+              </div>
+              <div class="display-none trade-history-container" [ngClass]="{'display-block': tabActive === 'tradeHistoryTab'}"
+              >
+                <trade-history
+                  *ngIf="tradeHistoryTab && modalOpen"
+                  [secId]="secId"
+                  [underlyingSecId]="underlyingSecId"
+                ></trade-history>
+              </div>
+              <div class="display-none"[ngClass]="{'display-block': tabActive === 'positionVsPriceTab'}">
+                <position-vs-price
+                  *ngIf="positionVsPriceTab && modalOpen"
+                  [securityId]="secId"
+                ></position-vs-price>
+              </div>
+              <div class="display-none" [ngClass]="{'display-block': tabActive === 'priceComparisonTab'}">
+                <price-comparison
+                  *ngIf="priceComparisonTab && modalOpen"
+                  [securityId]="secId"
+                  [securities]="securities"
+                ></price-comparison>
+              </div>
+
+              <!-- <div class="display-none" [ngClass]="{'display-block': tabActive === 'positionMoveTab'}">
+                <div *ngIf="positionMoveTab && modalOpen"></div>
+              </div>
+              <div class="display-none" [ngClass]="{ 'display-block': tabActive === 'pAndLTab' }">
+                <div *ngIf="pAndLTab && modalOpen"></div>
+              </div> -->
+
+
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</ng-container>
+
+</pinnakl-modal>
+
+<!-- <pinnakl-modal
+  [hideDialog]="hidePortfolioRebalModal"
+  [showCloseButton]="false"
+  [minWidth]="650"
+>
+  <div>
+    <div class="modal-body padding0">
+      <section class="section-padding section-white">
+        <div class="holder">
+          <div class="row">
+            <div class="col-12 col-md-11 col-sm-10 mobile-mb">
+              <h2 align="center">Portfolio Rebalance</h2>
+            </div>
+            <div class="col-md-default-width flex-pull-right">
+              <a
+                (click)="closePortOptionsModal()"
+                class="icon-pinnakl-cancel btn-task-history-close btn-close-icon"
+              ></a>
+            </div>
+          </div>
+        </div>
+        <div class="container-fluid">
+          <portfolio-rebalance
+            [accounts]="accounts"
+            [funds]="funds"
+            [brokers]="brokers"
+            (rebalanceRequest)="getRebalanced($event)"
+            (gobackRequest)="goback($event.id)"
+            #rebalanceComp
+          ></portfolio-rebalance>
+        </div>
+      </section>
+    </div>
+  </div>
+</pinnakl-modal>
+
+<pinnakl-modal
+  [hideDialog]="hidePortfolioIvDvModal"
+  [showCloseButton]="false"
+  [minWidth]="700"
+>
+  <div>
+    <div class="modal-body padding0">
+      <section class="section-padding section-white">
+        <div class="container-fluid">
+          <div class="holder">
+            <div class="row">
+              <div class="col-12 col-md-11 col-sm-10 mobile-mb">
+                <h2 align="center">Investment / Divestment</h2>
+              </div>
+              <div class="col-md-default-width flex-pull-right">
+                <a
+                  (click)="closePortOptionsModal()"
+                  class="icon-pinnakl-cancel btn-task-history-close btn-close-icon"
+                ></a>
+              </div>
+            </div>
+          </div>
+          <div class="container-fluid">
+            <invest-divest
+              [funds]="funds"
+              [brokers]="brokers"
+              (rebalanceRequest)="getRebalanced($event)"
+              (gobackRequest)="goback($event.id)"
+              #IvDvComp
+            ></invest-divest>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</pinnakl-modal> -->
+
+<pinnakl-modal [showCloseButton]="false" [hideDialog]="hideRebalancedModal">
+  <div>
+    <div class="modal-body padding0">
+      <section class="section-padding section-white">
+        <div class="holder">
+          <div class="row">
+            <div class="col-12 col-md-11 col-sm-10 mobile-mb">
+              <h2 align="center">Portfolio Rebalancing</h2>
+            </div>
+            <div class="col-md-1 flex-pull-right" style="padding-left: 28px;">
+              <a
+                (click)="closeRebalancedModal()"
+                class="icon-pinnakl-cancel btn-task-history-close btn-close-icon"
+              ></a>
+            </div>
+          </div>
+        </div>
+        <div class="container-fluid">
+          <div class="row flex-no-wrap">
+            <div class="col-12 light-bg">
+              <pinnakl-grid
+                [autoGroupColumnDef]="autoGroupColumnDef"
+                [columnDefs]="rebalancedDefs"
+                [gridOptions]="rebalancedGridOptions"
+                [headerHeight]="30"
+                [rowData]="rebalancedData"
+                [rowHeight]="30"
+                styleClass="portfolio-rebalancing-grid"
+              >
+              </pinnakl-grid>
+            </div>
+          </div>
+          <div class="flex-no-wrap">
+            <div class="col-12 pt-4">
+              <div class="row">
+                <div class="flex-pull-left">
+                  <button
+                    type="button"
+                    id="rebalancedback"
+                    class="next-btn btn btn-lg btn-success text-uppercase"
+                    (click)="goback($event.srcElement.id)"
+                  >
+                    Back
+                  </button>
+
+                  <button
+                    type="button"
+                    id="rebalancedreset"
+                    class="next-btn btn btn-lg btn-success text-uppercase"
+                    (click)="reset()"
+                  >
+                    Reset
+                  </button>
+                </div>
+
+                <div class="flex-pull-right">
+                  <button
+                    type="button"
+                    class="next-btn btn btn-lg btn-success text-uppercase flex-pull-right"
+                  >
+                    Pre-Trade Validation
+                  </button>
+
+                  <button
+                    type="button"
+                    class="next-btn btn btn-lg btn-success text-uppercase"
+                    (click)="closeRebalancedModal()"
+                  >
+                    Execute
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</pinnakl-modal>

@@ -41,7 +41,7 @@ export class PnklTreeMapComponent implements OnDestroy, OnInit, OnChanges {
   levels: any[];
   updateFlag = true;
 
-  constructor(private pnklTreeMapService: PnklTreeMapService) {}
+  constructor(private readonly pnklTreeMapService: PnklTreeMapService) {}
 
   ngOnChanges(changes: any): void {
     if (changes.title) {
@@ -67,7 +67,7 @@ export class PnklTreeMapComponent implements OnDestroy, OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    let subscriptionInterval = setInterval(() => {
+    const subscriptionInterval = setInterval(() => {
       if (
         this.highcharts.charts &&
         this.highcharts.charts.find(chartItem => !!chartItem)
@@ -86,9 +86,10 @@ export class PnklTreeMapComponent implements OnDestroy, OnInit, OnChanges {
 
   private setTreeMapData(value: any[]): void {
     this._data = value;
-    this.highcharts.charts
-      .find(chartItem => !!chartItem)
-      .series[0].setData(
+    if (Array.isArray(value) && value.length) {
+      this.highcharts.charts
+        .find(chartItem => !!chartItem)
+        .series[0].setData(
         this.pnklTreeMapService.getFormattedTreeMapData(
           this.categoryName,
           this.categoryValuesField,
@@ -101,6 +102,7 @@ export class PnklTreeMapComponent implements OnDestroy, OnInit, OnChanges {
         null,
         true
       );
+    }
   }
 
   private setOptions(): void {

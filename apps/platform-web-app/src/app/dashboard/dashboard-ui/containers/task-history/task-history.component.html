@@ -1,113 +1,108 @@
-<div
-  [@tasksVisibleChanged]="taskHistoryVisible"
-  class="h-100 slider-left-border background-color-white"
->
-  <div class="task-history-main container-fluid">
-    <div class="row">
-      <div class="col-md-default-width flex-pull-right">
-        <a
-          class="icon-pinnakl-cancel btn-task-history-close btn-close-icon cursor-pointer"
-          (click)="closeTaskHistory()"
-        ></a>
+<div class="task-history-main container-fluid">
+  <div class="row">
+    <div class="col-md-default-width flex-pull-right">
+      <a
+        class="icon-pinnakl-cancel btn-task-history-close btn-close-icon cursor-pointer"
+        (click)="closeTaskHistory()"
+      ></a>
+    </div>
+  </div>
+  <form
+    class="taskHistoryFormClass"
+    [formGroup]="form"
+    (ngSubmit)="getTaskHistory()"
+    [class.ng-submitted]="submitted"
+  >
+    <div class="row task-history-row">
+      <div class="col-md-12"><h3>Task History</h3></div>
+    </div>
+    <div class="row task-history-row row-border">
+      <div class="col-md-12">
+        <h4 class="MB12">Input</h4>
+        <div class="accordion-centered-holder accordion-task-history">
+          <p
+            class="accordion-stats task-history-stats"
+            *ngFor="let row of inputParams"
+          >
+            <small>{{ row.value.toUpperCase() }}</small>
+            {{ getReadableProperty(row.name) }}
+          </p>
+        </div>
       </div>
     </div>
-    <form
-      class="taskHistoryFormClass"
-      [formGroup]="form"
-      (ngSubmit)="getTaskHistory()"
-      [class.ng-submitted]="submitted"
-    >
-      <div class="row task-history-row">
-        <div class="col-md-12"><h3>Task History</h3></div>
-      </div>
-      <div class="row task-history-row row-border">
-        <div class="col-md-12">
-          <h4 class="MB12">Input</h4>
-          <div class="accordion-centered-holder accordion-task-history">
-            <p
-              class="accordion-stats task-history-stats"
-              *ngFor="let row of inputParams"
-            >
-              <small>{{ row.value.toUpperCase() }}</small>
-              {{ getReadableProperty(row.name) }}
-            </p>
+    <div class="row task-history-row row-border">
+      <div class="col-md-12">
+        <h4 class="MB12">Output</h4>
+        <div class="task-history-sub-heading">PARAMS</div>
+        <div
+          class="accordion-centered-holder accordion-task-history"
+          *ngIf="!failureParams"
+        >
+          <p
+            class="accordion-stats task-history-stats"
+            *ngFor="let row of outputParams"
+          >
+            <small>{{ row.value.toUpperCase() }}</small>
+            {{ getReadableProperty(row.name) }}
+          </p>
+        </div>
+        <div
+          class="accordion-centered-holder accordion-task-history"
+          *ngIf="failureParams"
+        >
+          {{ failureParams }}
+        </div>
+        <div class="task-history-sub-heading">FILES</div>
+        <div class="row task-history-files-row">
+          <div class="col-md-12" *ngFor="let file of clientFiles">
+            <a class="cursor-pointer" (click)="downloadFile(file)">{{
+              file.fileName
+            }}</a>
           </div>
         </div>
       </div>
-      <div class="row task-history-row row-border">
-        <div class="col-md-12">
-          <h4 class="MB12">Output</h4>
-          <div class="task-history-sub-heading">PARAMS</div>
-          <div
-            class="accordion-centered-holder accordion-task-history"
-            *ngIf="!failureParams"
-          >
-            <p
-              class="accordion-stats task-history-stats"
-              *ngFor="let row of outputParams"
-            >
-              <small>{{ row.value.toUpperCase() }}</small>
-              {{ getReadableProperty(row.name) }}
-            </p>
-          </div>
-          <div
-            class="accordion-centered-holder accordion-task-history"
-            *ngIf="failureParams"
-          >
-            {{ failureParams }}
-          </div>
-          <div class="task-history-sub-heading">FILES</div>
-          <div class="row task-history-files-row">
-            <div class="col-md-12" *ngFor="let file of clientFiles">
-              <a class="cursor-pointer" (click)="downloadFile(file)">{{
-                file.fileName
-              }}</a>
-            </div>
-          </div>
-        </div>
+    </div>
+    <div class="row task-history-row">
+      <div class="col-md-4">
+        <pinnakl-input
+          controlName="startDate"
+          [form]="form"
+          label="START DATE"
+          [required]="true"
+          type="date"
+        >
+        </pinnakl-input>
       </div>
-      <div class="row task-history-row">
-        <div class="col-md-4">
-          <pinnakl-input
-            controlName="startDate"
-            [form]="form"
-            label="START DATE"
-            [required]="true"
-            type="date"
-          >
-          </pinnakl-input>
-        </div>
-        <div class="col-md-4">
-          <pinnakl-input
-            controlName="endDate"
-            [form]="form"
-            label="END DATE"
-            [required]="true"
-            type="date"
-          >
-          </pinnakl-input>
-        </div>
-        <div class="col-md-4">
-          <button type="submit" class="btn btn-lg btn-success text-uppercase">
-            apply
-          </button>
-        </div>
+      <div class="col-md-4">
+        <pinnakl-input
+          controlName="endDate"
+          [form]="form"
+          label="END DATE"
+          [required]="true"
+          type="date"
+        >
+        </pinnakl-input>
       </div>
-      <div class="row task-history-row">
-        <div class="col-md-12">
-          <pinnakl-grid
-            [columnDefs]="columnDefs"
-            [rowData]="rowData"
-            [rowSelection]="'single'"
-            (rowClicked)="onRowClicked($event)"
-            [gridOptions]="gridOptions"
-            [headerHeight]="30"
-            [rowHeight]="30"
-            styleClass="task-history-grid"
-          >
-          </pinnakl-grid>
-        </div>
+      <div class="col-md-4">
+        <button type="submit" class="btn btn-lg btn-success text-uppercase">
+          apply
+        </button>
       </div>
-    </form>
-  </div>
+    </div>
+    <div class="row task-history-row">
+      <div class="col-md-12">
+        <pinnakl-grid
+          [columnDefs]="columnDefs"
+          [rowData]="rowData"
+          [rowSelection]="'single'"
+          (rowClicked)="onRowClicked($event)"
+          [gridOptions]="gridOptions"
+          [headerHeight]="30"
+          [rowHeight]="30"
+          styleClass="task-history-grid"
+        >
+        </pinnakl-grid>
+      </div>
+    </div>
+  </form>
 </div>

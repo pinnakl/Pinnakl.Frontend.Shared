@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 
-import { GetWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
+import { WebServiceProvider } from '@pnkl-frontend/core';
+import { Option } from '../../models/security';
 import { OptionFromApi } from '../../models/security/option-from-api.model';
-import { Option } from '../../models/security/option.model';
 
 @Injectable()
 export class OptionService {
-  private readonly RESOURCE_URL = 'options';
+  private readonly _optionsEndpoint = 'entities/options';
 
-  constructor(private wsp: WebServiceProvider) {}
+  constructor(private readonly wsp: WebServiceProvider) { }
 
-  getOptionFromSecurityId(securityId: number): Promise<Option> {
-    let fields = [
+  async getOptionFromSecurityId(securityId: number): Promise<Option> {
+    const fields = [
       'Contract_Size',
       'Id',
       'Maturity',
@@ -23,9 +23,9 @@ export class OptionService {
       'UnderlyingSecurityId'
     ];
 
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: {
+    const options = await this.wsp.getHttp<OptionFromApi[]>({
+      endpoint: this._optionsEndpoint,
+      params: {
         fields: fields,
         filters: [
           {
@@ -35,45 +35,37 @@ export class OptionService {
           }
         ]
       }
-    };
-
-    return this.wsp
-      .get(getWebRequest)
-      .then((entities: OptionFromApi[]) =>
-        entities.length === 0 ? null : this.formatOption(entities[0])
-      );
+    });
+    return options.length === 0 ? null : this.formatOption(options[0]);
   }
 
-  postOption(entityToSave: Option): Promise<Option> {
-    let requestBody = this.getOptionForServiceRequest(entityToSave);
+  async postOption(entityToSave: Option): Promise<Option> {
+    const entity = await this.wsp.postHttp<OptionFromApi>({
+      endpoint: this._optionsEndpoint,
+      body: this.getOptionForServiceRequest(entityToSave)
+    });
 
-    return this.wsp
-      .post({
-        endPoint: this.RESOURCE_URL,
-        payload: requestBody
-      })
-      .then((entity: OptionFromApi) => this.formatOption(entity));
+    return this.formatOption(entity);
   }
 
-  putOption(entityToSave: Option): Promise<Option> {
-    let requestBody = this.getOptionForServiceRequest(entityToSave);
-    return this.wsp
-      .put({
-        endPoint: this.RESOURCE_URL,
-        payload: requestBody
-      })
-      .then((entity: OptionFromApi) => this.formatOption(entity));
+  async putOption(entityToSave: Option): Promise<Option> {
+    const entity = await this.wsp.putHttp<OptionFromApi>({
+      endpoint: this._optionsEndpoint,
+      body: this.getOptionForServiceRequest(entityToSave)
+    });
+
+    return this.formatOption(entity);
   }
 
   private formatOption(entity: OptionFromApi): Option {
-    let contractSize = parseInt(entity.contract_size),
-      id = parseInt(entity.id),
+    const contractSize = parseInt(entity.contract_size, 10),
+      id = parseInt(entity.id, 10),
       maturityMoment = moment(entity.maturity, 'MM/DD/YYYY'),
       optionType = entity.option_type,
       putCallIndiactor = entity.put_call_indicator,
-      securityId = parseInt(entity.securityid),
+      securityId = parseInt(entity.securityid, 10),
       strike = parseFloat(entity.strike),
-      underLyingSecurityId = parseInt(entity.underlyingsecurityid);
+      underLyingSecurityId = parseInt(entity.underlyingsecurityid, 10);
     return new Option(
       !isNaN(contractSize) ? contractSize : null,
       !isNaN(id) ? id : null,
@@ -87,7 +79,7 @@ export class OptionService {
   }
 
   private getOptionForServiceRequest(entitiy: Option): OptionFromApi {
-    let entityForApi = {} as OptionFromApi,
+    const entityForApi = {} as OptionFromApi,
       {
         contractSize,
         id,

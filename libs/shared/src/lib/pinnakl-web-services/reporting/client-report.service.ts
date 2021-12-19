@@ -1,31 +1,29 @@
 import { Injectable } from '@angular/core';
 
-import { GetWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
+import { WebServiceProvider } from '@pnkl-frontend/core';
+import { ClientReport } from '../../models/reporting';
 import { ClientReportFromApi } from '../../models/reporting/client-report-from-api.model';
-import { ClientReport } from '../../models/reporting/client-report.model';
 
 @Injectable()
 export class ClientReportService {
-  private readonly RESOURCE_URL = '/client_reports';
+  private readonly _clientReportsEndpoint = 'entities/client_reports';
 
-  constructor(private wsp: WebServiceProvider) {}
+  constructor(private readonly wsp: WebServiceProvider) {}
 
   getClientReports(): Promise<ClientReport[]> {
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL
-    };
     return this.wsp
-      .get(getWebRequest)
-      .then((reports: ClientReportFromApi[]) =>
-        reports.map(report => this.formatClientReport(report))
-      );
+      .getHttp<ClientReportFromApi[]>({
+        endpoint: this._clientReportsEndpoint
+      })
+      .then(reports => reports.map(report => this.formatClientReport(report)));
   }
 
-  getClientReportId(clientReportName: string): Promise<any> {
-    let fields = ['Id'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: 'clientreports',
-      options: {
+  async getClientReportId(clientReportName: string): Promise<any> {
+    const fields = ['Id'];
+
+    const clientReports = await this.wsp.getHttp<any[]>({
+      endpoint: 'entities/clientreports',
+      params: {
         fields: fields,
         filters: [
           {
@@ -35,19 +33,13 @@ export class ClientReportService {
           }
         ]
       }
-    };
-    return this.wsp.get(getWebRequest).then(result => {
-      if (result.length > 0) {
-        return parseInt(result[0].id);
-      } else {
-        return null;
-      }
     });
+    return clientReports.length > 0 ? +clientReports[0].id : null;
   }
 
   private formatClientReport(report: ClientReportFromApi): ClientReport {
-    let id = parseInt(report.id),
-      reportId = parseInt(report.reportid);
+    const id = parseInt(report.id, 10),
+      reportId = parseInt(report.reportid, 10);
     return new ClientReport(
       !isNaN(id) ? id : null,
       report.isinternal === 'True',

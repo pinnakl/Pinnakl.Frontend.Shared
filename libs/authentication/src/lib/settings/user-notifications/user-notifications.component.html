@@ -1,0 +1,54 @@
+<div class="user-notifications" *ngIf="userNotifications.length; else noNotificationsFound">
+  <form [formGroup]="userNotificationsForm" (ngSubmit)="onSubmit()">
+    <div>
+      <div class="notification-option" *ngFor="let notificationTopic of userNotifications">
+        <div class="user-notification-label">
+          {{ notificationTopic.topicDescription }}
+        </div>
+        <div class="">
+          <pinnakl-input
+            [controlName]="notificationTopic.topicName"
+            [form]="userNotificationsForm"
+            type="boolean"
+            checkBoxStyle="toggle"
+          >
+          </pinnakl-input>
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-between m-0 p-0">
+      <div>
+        <button
+          #anchor
+          class="btn btn-security btn-cancel"
+          [disabled]="!userNotificationsForm.dirty"
+          (click)="showFormCancelConfirmation()"
+          type="button"
+        >
+          CANCEL
+        </button>
+        <confirm-action
+          [anchor]="anchor"
+          confirmationMessage="Are you sure you want to reset the form?"
+          (onCancelled)="cancelReset()"
+          (onConfirmed)="resetForm()"
+          [showConfirmation]="cancelConfirmationVisible"
+        >
+        </confirm-action>
+      </div>
+      <div>
+        <button
+          [disabled]="!userNotificationsForm.dirty"
+          class="btn btn-security btn-save"
+          type="submit">
+          SAVE
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+<ng-template #noNotificationsFound>
+  <div *ngIf="!isLoading">
+    You are not subscribed to any topics in Pinnakl. Please reach out to Pinnakl support.
+  </div>
+</ng-template>

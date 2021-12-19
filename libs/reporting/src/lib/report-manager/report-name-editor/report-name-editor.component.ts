@@ -25,7 +25,7 @@ export class ReportNameEditorComponent implements OnInit {
 
   private _reportName = '';
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private readonly fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({

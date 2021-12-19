@@ -8,7 +8,6 @@ export class AdminIdentifier {
     public endDate: Date,
     public id: number,
     public pinnaklSecurityId: number,
-    public startDate: Date,
-    public trsIndicator: boolean
+    public startDate: Date
   ) {}
 }

@@ -1,0 +1,16 @@
+<div [hidden]="securitiesHelper.currentTab !== 'securityInformation'">
+  <cds-information
+    [asset]="cds"
+    [currencies]="currencies"
+    [manualSecuritySource]="manualSecuritySource"
+    [organizations]="organizations"
+    [sectorOptions]="sectorOptions"
+    [security]="security"
+    [securityTypes]="securityTypes"
+    [paymentFrequencyOptions]="paymentFrequencyOptions"
+    [businessDaysOptions]="businessDaysOptions"
+    [businessDayConvention]="businessDayConvention"
+    [fixedRateDayCount]="fixedRateDayCount"
+  >
+  </cds-information>
+</div>

@@ -28,12 +28,12 @@ export class ManagerReportsComponent implements OnInit {
   private managerReportsReportOptions: ManagerReportsReportOptions;
 
   constructor(
-    private activatedRoute: ActivatedRoute,
-    private fb: FormBuilder,
-    private pinnaklSpinner: PinnaklSpinner,
-    private reportingService: ReportingService,
-    private utility: Utility
-  ) {}
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly fb: FormBuilder,
+    private readonly pinnaklSpinner: PinnaklSpinner,
+    private readonly reportingService: ReportingService,
+    private readonly utility: Utility
+  ) { }
 
   exportReport(date: Date, excel: boolean, report: string): void {
     const params = this.getReportParameters(date, report),

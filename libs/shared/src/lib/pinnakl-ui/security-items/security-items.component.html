@@ -1,0 +1,4 @@
+<ng-container *ngFor="let dataItem of items">
+  <pnkl-security-item [dataItem]="dataItem" [searchText]="searchText" (itemSelected)="itemSelected($event)"></pnkl-security-item>
+  <hr class="border-only">
+</ng-container>

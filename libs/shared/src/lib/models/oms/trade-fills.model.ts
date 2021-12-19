@@ -3,6 +3,8 @@ export class ExecutionReport {
     public id: number,
     public pnklPlacementId: number,
     public orderStatus: string,
+    public execType: string,
+    public msgType: string,
     public orderQty: number,
     public orderPrice: number,
     public asOf: Date,
@@ -10,7 +12,7 @@ export class ExecutionReport {
     public cumQty: number,
     public leftQty: number,
     public avgPrc: number,
-    public fillPrc: number
+    public lastPrc: number
   ) {}
 }
 
@@ -19,13 +21,15 @@ export class ExecutionReportFromApi {
     public Id: string,
     public PnklPlacementId: string,
     public pnklorigplacementid: string,
+    public MsgType: string,
     public Status: string,
+    public ExecType: string,
     public OrderQty: string,
     public Timestamp: string,
     public LastQty: string,
     public CumQty: string,
     public LeftQty: string,
     public AvgPrc: string,
-    public FillPrc: string
+    public LastPrc: string
   ) {}
 }

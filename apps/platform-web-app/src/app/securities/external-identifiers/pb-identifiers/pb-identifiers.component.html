@@ -1,0 +1,69 @@
+<div class="row mb-3">
+  <div class="col-md-12"><b>PB IDENTIFIERS</b></div>
+</div>
+<div *ngIf="identifiers?.length > 0" class="row">
+  <div class="col-md-3">
+    <table class="table table-bordered">
+      <thead>
+        <th>ID TYPE</th>
+        <th>ID</th>
+        <th>ACTION</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let identifier of identifiers">
+          <td class="text-uppercase">
+            {{ getCustodianCode(identifier.custodianId) }}
+          </td>
+          <td>{{ identifier.externalIdentifier }}</td>
+          <td>
+            <i
+              class="icon-pinnakl-trash-empty color-red cursor-pointer"
+              (click)="deleteIdentifier(identifier)"
+            ></i>
+            <i
+              class="icon-pinnakl-edit-securities cursor-pointer"
+              (click)="editIdentifier(identifier)"
+            ></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<form
+  class="row"
+  [class.ng-submitted]="submitted"
+  [formGroup]="form"
+  (ngSubmit)="saveIdentifier()"
+  novalidate
+>
+  <div class="col-md-1">
+    <pinnakl-input
+      class="text-uppercase"
+      controlName="custodianId"
+      [dropdownSource]="entities"
+      [dropdownOptions]="{
+        modelProperty: 'custodianId',
+        viewProperty: 'entity'
+      }"
+      [form]="form"
+      label="ID TYPE"
+      [required]="true"
+      type="dropdown"
+    >
+    </pinnakl-input>
+  </div>
+  <div class="col-md-1">
+    <pinnakl-input
+      controlName="externalIdentifier"
+      [form]="form"
+      label="ID"
+      [required]="true"
+      type="text"
+    >
+    </pinnakl-input>
+  </div>
+  <div class="col-md-1 identifier-save-button">
+    <button type="submit" class="btn btn-success">SAVE</button>
+  </div>
+</form>

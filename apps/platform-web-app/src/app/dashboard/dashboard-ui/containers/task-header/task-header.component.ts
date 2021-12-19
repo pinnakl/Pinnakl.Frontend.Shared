@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TaskObject } from '../../../shared/task-object.model';
 
 import { animate, style, transition, trigger } from '@angular/animations';
+
 @Component({
   selector: 'task-header',
   templateUrl: './task-header.component.html',
@@ -15,7 +16,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
     ])
   ]
 })
-export class TaskHeaderComponent implements OnInit {
+export class TaskHeaderComponent {
   @Output() operationSelected = new EventEmitter<string>();
   @Input() task: TaskObject;
 
@@ -28,7 +29,4 @@ export class TaskHeaderComponent implements OnInit {
     event.stopPropagation();
     this.operationSelected.emit(tabName);
   }
-  constructor() {}
-
-  ngOnInit() {}
 }

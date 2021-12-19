@@ -1,8 +1,8 @@
 <div [formGroup]="form">
   <kendo-combobox
-    [allowCustom]="dropdownOptions?.allowCustom ? true : false"
+    [allowCustom]="!!dropdownOptions?.allowCustom"
     (blur)="dropdownBlurred(kendoComboBoxInstance)"
-    [clearButton]="true"
+    [clearButton]="clearButton"
     [data]="dropdownCollection"
     [attr.disabled]="disabled ? true : undefined"
     [filterable]="true"
@@ -28,6 +28,7 @@
         ? dropdownOptions.modelNormalizer
         : defaultModelNormalizer
     "
+    [value]="defaultValue"
     [disabled]="disabled"
     #kendoComboBoxInstance="kendoComboBox"
   >

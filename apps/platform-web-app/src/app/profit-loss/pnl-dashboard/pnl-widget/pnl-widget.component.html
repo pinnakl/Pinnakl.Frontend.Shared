@@ -1,0 +1,60 @@
+<div class="bg-white rounded p-3 h-100 widget-container">
+  <div class="d-flex justify-content-between">
+    <h3>P&L by {{ pnlWidgetInfo.fieldName }}</h3>
+    <i
+      (click)="onCloseClick()"
+      class="icon-pinnakl-close text-secondary cursor-pointer"
+    ></i>
+  </div>
+  <div *ngIf="selectedView === 'grid'" class="inner-container">
+    <pinnakl-grid
+      class="w-100"
+      [themeClass]="'pnkl-default-theme'"
+      [columnDefs]="colDefs"
+      [headerHeight]="30"
+      [rowData]="pnlWidgetInfo.widgetData"
+      [rowHeight]="30"
+      [gridHeight]="'200px'"
+      [gridOptions]="gridOptions"
+    >
+    </pinnakl-grid>
+  </div>
+  <!-- <div>
+    <div><label>Size</label><input type="number" [(ngModel)]="size" /></div>
+    <div>
+      <label>Hole Size</label><input type="number" [(ngModel)]="holeSize" />
+    </div>
+  </div> -->
+  <div *ngIf="selectedView === 'pie'" #chartContainer class="inner-container">
+    <kendo-chart
+      [seriesColors]="seriesColors"
+      #kendoChartInstance="kendoChart"
+      (render)="kendoChartInstance.resize()"
+    >
+      <kendo-chart-legend [visible]="false"></kendo-chart-legend>
+      <kendo-chart-series>
+        <kendo-chart-series-item
+          type="donut"
+          [data]="pnlWidgetInfo.widgetData"
+          field="pnl"
+          categoryField="fieldValue"
+          [autoFit]="true"
+          [margin]="0"
+          [padding]="0"
+          [holeSize]="chartContainer.offsetWidth / 3"
+        >
+          <kendo-chart-series-item-tooltip>
+            <ng-template let-value="value" let-category="category">
+              <em>{{ category }}</em> : {{ value | number }}
+            </ng-template>
+          </kendo-chart-series-item-tooltip>
+        </kendo-chart-series-item>
+      </kendo-chart-series>
+    </kendo-chart>
+  </div>
+  <div class="text-center">
+    <pnl-widget-view-selector
+      [(ngModel)]="selectedView"
+    ></pnl-widget-view-selector>
+  </div>
+</div>

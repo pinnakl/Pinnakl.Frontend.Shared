@@ -1,50 +1,39 @@
 import { Injectable } from '@angular/core';
 
-import { GetWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
-import { Account } from '../models/account.model';
+import { WebServiceProvider } from '@pnkl-frontend/core';
+import { Account } from '../models';
 import { AdminAccountFromApi } from '../models/admin-account-from-api.model';
-import { AdminAccount } from '../models/admin-account.model';
+import { AdminAccount } from '../models';
 import { AdminFromApi } from '../models/admin-from-api.model';
 import { Admin } from '../models/admin.model';
 
 @Injectable()
 export class AccountService {
-  private readonly ADMINS_URL = 'admins';
-  private readonly ADMIN_ACCOUNTS_URL = 'admin_accounts';
-  private readonly ACCOUNTS_URL = 'accounts';
+  private readonly ADMINS_URL = 'entities/admins';
+  private readonly ADMIN_ACCOUNTS_URL = 'entities/admin_accounts';
+  private readonly ACCOUNTS_URL = 'entities/accounts';
   private _accounts: Account[];
   constructor(private wsp: WebServiceProvider) {}
 
   getAdmins(): Promise<Admin[]> {
-    let fields = ['Code', 'Id', 'Name'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.ADMINS_URL,
-      options: {
-        fields: fields
-      }
-    };
-
     return this.wsp
-      .get(getWebRequest)
-      .then((entities: AdminFromApi[]) =>
-        entities.map(entity => this.formatAdmin(entity))
-      );
+      .getHttp<AdminFromApi[]>({
+        endpoint: this.ADMINS_URL,
+        params: {
+          fields: ['Code', 'Id', 'Name']
+        }
+      })
+      .then(entities => entities.map(this.formatAdmin));
   }
 
   getAdminAccounts(): Promise<AdminAccount[]> {
-    let fields = ['Id', 'AccountId', 'AccountCode', 'AdminId', 'AdminCode'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.ADMIN_ACCOUNTS_URL,
-      options: {
-        fields: fields
-      }
-    };
-
     return this.wsp
-      .get(getWebRequest)
-      .then((adminAccounts: AdminAccountFromApi[]) =>
-        adminAccounts.map(adminAccount => this.formatAdminAccount(adminAccount))
-      );
+      .getHttp<AdminAccountFromApi[]>({
+        endpoint: this.ADMIN_ACCOUNTS_URL,
+        params: {
+          fields: ['Id', 'AccountId', 'AccountCode', 'AdminId', 'AdminCode']
+        }
+      }).then(adminAccounts => adminAccounts.map(this.formatAdminAccount));
   }
 
   private formatAdmin(entity: AdminFromApi): Admin {
@@ -70,32 +59,28 @@ export class AccountService {
       return Promise.resolve(this._accounts);
     }
 
-    let fields = [
-      'AccountCode',
-      'AccountNum',
-      'Name',
-      'IsPrimaryForReturns',
-      'OrderOfImportance'
-    ];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.ACCOUNTS_URL,
-      options: {
-        fields: fields
+    return this.wsp.getHttp<any[]>({
+      endpoint: this.ACCOUNTS_URL,
+      params: {
+        fields: [
+          'AccountCode',
+          'AccountNum',
+          'Name',
+          'IsPrimaryForReturns',
+          'OrderOfImportance'
+        ]
       }
-    };
+    }).then(accounts => accounts.map(this.formatAccount));
+  }
 
-    return this.wsp.get(getWebRequest).then(accounts => {
-      this._accounts = accounts.map(x => {
-        return new Account(
-          x.id,
-          x.accountcode,
-          x.accountnum,
-          x.name,
-          x.isprimaryforreturns === 'True' ? true : false,
-          x.orderofimportance
-        );
-      });
-      return this._accounts;
-    });
+  public formatAccount(item: any): Account {
+    return new Account(
+      item.id,
+      item.accountcode,
+      item.accountnum,
+      item.name,
+      item.isprimaryforreturns === 'True',
+      item.orderofimportance
+    );
   }
 }

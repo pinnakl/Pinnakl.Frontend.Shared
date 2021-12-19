@@ -1,0 +1,52 @@
+<div
+  [@filterVisibleChanged]="filterVisible"
+  class="col-md-4 positions-slide-right"
+>
+  <div class="row pnkl-page-header prospecting-header-height">
+    <div class="col-md-12 full-width-padding-fix">
+      <div class="row">
+        <div class="col-md-12"><h3 class="text-secondary">Filter</h3></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row crm-prospecting-filter-body reporting-filter-height">
+    <div class="col-md-12">
+      <div class="m-3">
+        <button
+          *ngIf="showListedSecuritiesButton"
+          class="btn btn-primary waves-effect text-uppercase"
+          (click)="applyDefault()"
+        >
+          VIEW LISTED SECURITIES
+        </button>
+      </div>
+      <report-parameter
+        *ngIf="(realtimePortfolioOn$ | async) === false"
+        class="row mt-3"
+        [parameters]="parameters$ | async"
+        (onParameterUpdate)="onParameterChange($event)"
+      ></report-parameter>
+      <filter-column
+        [columnsList]="columns$ | async"
+        [suppressSelection]="suppressSelection"
+        (onColumnUpdate)="onColumnsChange($event)"
+      ></filter-column>
+      <div class="row m-3 justify-content-between">
+        <button
+          class="btn reset-background waves-effect text-uppercase"
+          type="button"
+          (click)="onReset()"
+        >
+          Reset
+        </button>
+        <button
+          class="btn btn-success waves-effect text-uppercase"
+          (click)="onApply()"
+        >
+          Apply
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

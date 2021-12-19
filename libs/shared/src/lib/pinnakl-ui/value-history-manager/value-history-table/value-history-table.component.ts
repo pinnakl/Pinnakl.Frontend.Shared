@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { ValueHistoryItem } from '../value-history-item.model';
 
@@ -7,11 +7,8 @@ import { ValueHistoryItem } from '../value-history-item.model';
   templateUrl: './value-history-table.component.html',
   styleUrls: ['./value-history-table.component.scss']
 })
-export class ValueHistoryTableComponent implements OnInit {
+export class ValueHistoryTableComponent {
   @Input() valueHistoryItems: ValueHistoryItem[] = [];
   @Output() onDelete = new EventEmitter<ValueHistoryItem>();
   @Output() onEdit = new EventEmitter<ValueHistoryItem>();
-  constructor() {}
-
-  ngOnInit(): void {}
 }

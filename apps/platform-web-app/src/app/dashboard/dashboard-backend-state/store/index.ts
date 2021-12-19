@@ -8,13 +8,6 @@ import * as fromDashboardMarketMacroStat from './dashboard-market-macro-stat';
 import * as fromDashboardBackend from './dashboard/dashboard-backend.reducer';
 import * as fromRecommendedActions from './recommended-actions/recommended-actions.reducer';
 
-export {
-  AttemptLoadDashboardMarketMacroStats,
-  DashboardMarketMacroStatEffects,
-  SubscribeToDashboardMarketMacroStats,
-  UnsubscribeFromDashboardMarketMacroStats
-} from './dashboard-market-macro-stat';
-
 export interface State {
   dashboardBackend: fromDashboardBackend.State;
   dashboardMarketMacroStat: fromDashboardMarketMacroStat.State;
@@ -47,6 +40,16 @@ export const selectDashboardPnl = createSelector(
 export const selectDashboardActions = createSelector(
   selectDashboardBackendState,
   fromDashboardBackend.selectActions
+);
+
+export const selectDashboardFulfilledTasks = createSelector(
+  selectDashboardBackendState,
+  fromDashboardBackend.selectFulfilledTasks
+);
+
+export const selectDashboardClientConnectivity = createSelector(
+  selectDashboardBackendState,
+  fromDashboardBackend.selectClientConnectivity
 );
 
 export const selectDashboardAlerts = createSelector(

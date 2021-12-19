@@ -17,7 +17,7 @@
         !form.controls[controlName].errors.required
       "
     >
-      <div *ngFor="let obj of (form.controls[controlName].errors | keys)">
+      <div *ngFor="let obj of form.controls[controlName].errors | keys">
         <div *ngIf="obj.value.errorMessage">{{ obj.value.errorMessage }}</div>
         <div *ngIf="!obj.value.errorMessage" [ngSwitch]="obj.key">
           <div *ngSwitchCase="'min'">MIN VALUE IS {{ obj.value.min }}</div>

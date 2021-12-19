@@ -1,37 +1,45 @@
 import { Injectable } from '@angular/core';
-import { TradeAllocation } from './../models/oms/trade-allocation.model';
+import { TradeAllocation } from '../models/oms';
 
 // Third party libs
-import * as _ from 'lodash';
 import * as moment from 'moment';
 
 // Models
-import {
-  DeleteWebRequest,
-  GetWebRequest,
-  PostWebRequest,
-  PutWebRequest,
-  WebServiceProvider
-} from '@pnkl-frontend/core';
+import { GetHttpRequest, WebServiceProvider } from '@pnkl-frontend/core';
 import { PbAccountFromApi } from '../models/pb-account-from-api.model';
-import { PBAccount, PBSubAccount } from '../models/pb-account.model';
+import { PBAccount, PBSubAccount } from '../models';
 
 // Services
 
 @Injectable()
 export class TradeAllocationService {
-  private readonly RESOURCE_URL = 'pbaccounts';
-  private readonly TRADE_ALLOCATIONS_API_URL = 'trade_allocations';
-  private readonly SUB_ACCOUNTS_RESOURCE_URL = 'pb_sub_accounts';
-  private readonly SUGGESTED_ALLOCATIONS_API_URL =
-    'trade_allocations_suggested';
-  constructor(private wsp: WebServiceProvider) {}
+  private readonly _pbaccountsEndpoint = 'entities/pbaccounts';
+  private readonly _tradeRequestsEndpoint = 'entities/trade_requests';
+  private readonly _tradeAllocationsOMSEndpoint =
+    'entities/trade_allocation_oms';
+  private readonly _pbSubAccountsEndpoint = 'entities/pb_sub_accounts';
+  private readonly _tradeAllocationsEndpoint = 'entities/trade_allocations';
+  private readonly _tradeAllocationsSuggestedEndpoint =
+    'entities/trade_allocations_suggested';
+  private readonly Max_Integer = 2147483647;
 
-  getPBAccountsByAccountType(
+  constructor(private readonly wsp: WebServiceProvider) {}
+
+  async getPBAccountsByAccountType(
     accountTypes?: string,
     accountIds?: number[]
   ): Promise<PBAccount[]> {
     const filters = [];
+    const fields = [
+      'id',
+      'accountid',
+      'accountcode',
+      'accounttype',
+      'custodianid',
+      'custodiancode',
+      'custodianaccountnum',
+      'custodianname'
+    ];
     if (accountTypes !== undefined) {
       filters.push({
         key: 'accounttype',
@@ -48,46 +56,33 @@ export class TradeAllocationService {
       });
     }
 
-    const fields = [
-      'id',
-      'accountid',
-      'accountcode',
-      'accounttype',
-      'custodianid',
-      'custodiancode',
-      'custodianaccountnum',
-      'custodianname'
-    ];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: {
+    const getWebRequest: GetHttpRequest = {
+      endpoint: this._pbaccountsEndpoint,
+      params: {
         fields: fields
       }
     };
 
     if (filters.length > 0) {
-      getWebRequest.options['filters'] = filters;
+      getWebRequest.params['filters'] = filters;
     }
 
-    return this.wsp
-      .get(getWebRequest)
-      .then((adminAccounts: PbAccountFromApi[]) =>
-        adminAccounts.map(adminAccount => this.formatPbAccount(adminAccount))
-      );
+    const adminAccounts = await this.wsp.getHttp<PbAccountFromApi[]>(
+      getWebRequest
+    );
+
+    return adminAccounts.map(this.formatPbAccount);
   }
 
-  private formatPbAccount(account: PbAccountFromApi): PBAccount {
-    let accountId = parseInt(account.accountid),
-      custodianAccountNumber = parseInt(account.custodianaccountnum),
-      custodianId = parseInt(account.custodianid),
-      id = parseInt(account.id);
+  public formatPbAccount(account: PbAccountFromApi): PBAccount {
+    const accountId = +account.accountid,
+      custodianId = +account.custodianid,
+      id = +account.id;
     return {
       accountCode: account.accountcode,
       accountId: !isNaN(accountId) ? accountId : null,
       accountType: account.accounttype,
-      custodianAccountNumber: !isNaN(custodianAccountNumber)
-        ? custodianAccountNumber
-        : null,
+      custodianAccountNumber: account.custodianaccountnum,
       custodianCode: account.custodiancode,
       custodianId: !isNaN(custodianId) ? custodianId : null,
       custodianName: account.custodianname,
@@ -95,54 +90,48 @@ export class TradeAllocationService {
     };
   }
 
-  getSubAccounts(): Promise<PBSubAccount[]> {
-    const fields = ['id', 'custodiancode', 'accountid', 'pbaccountid', 'code'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.SUB_ACCOUNTS_RESOURCE_URL,
-      options: {
-        fields: fields
+  async getSubAccounts(): Promise<PBSubAccount[]> {
+    const subaccounts = await this.wsp.getHttp<any[]>({
+      endpoint: this._pbSubAccountsEndpoint,
+      params: {
+        fields: ['id', 'custodiancode', 'accountid', 'pbaccountid', 'code']
       }
-    };
+    });
 
-    return this.wsp
-      .get(getWebRequest)
-      .then(subaccounts =>
-        subaccounts.map(
-          subaccount =>
-            new PBSubAccount(
-              +subaccount.id,
-              +subaccount.accountid,
-              subaccount.custodiancode,
-              +subaccount.pbaccountid,
-              subaccount.code
-            )
+    return subaccounts.map(
+      subaccount =>
+        new PBSubAccount(
+          +subaccount.id,
+          +subaccount.accountid,
+          subaccount.custodiancode,
+          +subaccount.pbaccountid,
+          subaccount.code
         )
-      );
+    );
   }
-  savePBAccounts(
+
+  async savePBAccounts(
     accountId: number,
     accountType: string,
     custodianId: number,
     custodianAccountNum: number,
     activeIndicator: boolean
   ): Promise<PBAccount> {
-    const postWebRequest: PostWebRequest = {
-      endPoint: 'pbaccounts',
-      payload: {
+    const result = await this.wsp.postHttp<PbAccountFromApi>({
+      endpoint: this._pbaccountsEndpoint,
+      body: {
         accountid: accountId,
         accounttype: accountType,
         custodianid: custodianId,
         custodianaccountnum: custodianAccountNum,
         active_indicator: activeIndicator
       }
-    };
+    });
 
-    return this.wsp
-      .post(postWebRequest)
-      .then(result => this.formatPbAccount(result));
+    return this.formatPbAccount(result);
   }
 
-  updatePBAccounts(
+  async updatePBAccounts(
     id: number,
     accountId: number,
     accountType: string,
@@ -150,9 +139,9 @@ export class TradeAllocationService {
     custodianAccountNum: number,
     activeIndicator: boolean
   ): Promise<PBAccount> {
-    const postWebRequest: PostWebRequest = {
-      endPoint: 'pbaccounts',
-      payload: {
+    const result = await this.wsp.putHttp<PbAccountFromApi>({
+      endpoint: this._pbaccountsEndpoint,
+      body: {
         id: id,
         accountid: accountId,
         accounttype: accountType,
@@ -160,35 +149,30 @@ export class TradeAllocationService {
         custodianaccountnum: custodianAccountNum,
         active_indicator: activeIndicator
       }
-    };
+    });
 
-    return this.wsp
-      .put(postWebRequest)
-      .then(result => this.formatPbAccount(result));
+    return this.formatPbAccount(result);
   }
 
-  deletePBAccounts(id: number): Promise<any> {
-    const deleteWebRequest: DeleteWebRequest = {
-      endPoint: 'pbaccounts',
-      payload: {
-        id: id.toString()
-      }
-    };
-    return this.wsp.delete(deleteWebRequest);
+  async deletePBAccounts(id: number): Promise<any> {
+    return this.wsp.deleteHttp({
+      endpoint: `${this._pbaccountsEndpoint}/${id}`
+    });
   }
 
-  getAllocations(
+  async getAllocations(
     tradeDate: Date,
     securityId: number,
     tranType: string,
     quantity: number,
     allocationType: string,
     hierarchyType: string,
-    accountsStr: string
-  ): any {
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.SUGGESTED_ALLOCATIONS_API_URL,
-      options: {
+    accountsStr: string,
+    minIncrement: number
+  ): Promise<any> {
+    const getWebRequest: GetHttpRequest = {
+      endpoint: this._tradeAllocationsSuggestedEndpoint,
+      params: {
         filters: [
           {
             key: 'tradedate',
@@ -224,14 +208,22 @@ export class TradeAllocationService {
             key: 'hierarchynamesinallocation',
             type: 'EQ',
             value: [accountsStr]
+          },
+          {
+            key: 'minincrement',
+            type: 'EQ',
+            value: [minIncrement.toString()]
           }
         ]
       }
     };
-    return this.wsp.get(getWebRequest);
+
+    return this.wsp.getHttp(getWebRequest);
   }
 
-  getActualAllocations(tradeRequestId: number): Promise<TradeAllocation[]> {
+  async getActualAllocations(
+    tradeRequestId: number
+  ): Promise<TradeAllocation[]> {
     if (tradeRequestId) {
       const fields = [
         'id',
@@ -241,9 +233,10 @@ export class TradeAllocationService {
         'quantity',
         'subaccountid'
       ];
-      const getWebRequest: GetWebRequest = {
-        endPoint: 'trade_allocations',
-        options: {
+
+      const result = await this.wsp.getHttp<any[]>({
+        endpoint: this._tradeAllocationsEndpoint,
+        params: {
           fields: fields,
           filters: [
             {
@@ -253,81 +246,85 @@ export class TradeAllocationService {
             }
           ]
         }
-      };
-
-      return this.wsp.get(getWebRequest).then(result => {
-        return result.map(o => {
-          return {
-            id: +o['id'],
-            tradeId: +o['traderequestid'],
-            accountId: +o['accountid'],
-            custodianId: +o['custodianid'],
-            quantity: +o['quantity'],
-            subAccountId: +o['subaccountid']
-          };
-        });
       });
+
+      return result.map(o => ({
+        id: +o['id'],
+        tradeId: +o['traderequestid'],
+        accountId: +o['accountid'],
+        custodianId: +o['custodianid'],
+        quantity: +o['quantity'],
+        subAccountId: +o['subaccountid']
+      }));
     }
   }
 
-  deleteAllocationsFromTradeRequestId(tradeRequestId: number): Promise<any> {
-    if (tradeRequestId) {
-      return this.getActualAllocations(tradeRequestId).then(
-        (allocations: TradeAllocation[]) => {
-          return this.deleteAllocationList(allocations);
-        }
-      );
-    }
+  async deleteAllocationsFromTradeRequestId(
+    tradeRequestId: number
+  ): Promise<any> {
+    return this.wsp.deleteHttp({
+      endpoint: `${this._tradeAllocationsOMSEndpoint}/${tradeRequestId}`
+    });
   }
 
-  deleteAllocationList(tradeAllocationArr: TradeAllocation[]): Promise<any> {
-    let delPromsise = this.deleteAllocation(tradeAllocationArr[0]);
-
-    for (let i = 1; i < tradeAllocationArr.length; i++) {
-      delPromsise = delPromsise.then(result => {
-        this.deleteAllocation(tradeAllocationArr[i]);
-      });
-    }
-    return delPromsise;
-  }
-
-  saveFolder(tradeRequestId: number, customAttribId: number): Promise<any> {
-    const putWebRequest: PutWebRequest = {
-      endPoint: 'TRADE_REQUESTS',
-      payload: {
-        id: tradeRequestId,
-        customAttribId: customAttribId
+  async saveFolder(
+    tradeRequestId: number,
+    customAttribId: number
+  ): Promise<any> {
+    return this.wsp.putHttp({
+      endpoint: this._tradeRequestsEndpoint,
+      body: {
+        id: tradeRequestId.toString(),
+        customAttribId: customAttribId.toString()
       }
-    };
-
-    return this.wsp.put(putWebRequest);
+    });
   }
 
-  deleteAllocation(tradeAllocation: TradeAllocation): Promise<any> {
-    const deleteWebRequest: DeleteWebRequest = {
-      endPoint: this.TRADE_ALLOCATIONS_API_URL,
-      payload: {
-        id: tradeAllocation.id
-      }
-    };
-
-    return this.wsp.delete(deleteWebRequest);
+  async deleteAllocation(tradeAllocation: TradeAllocation): Promise<any> {
+    return this.wsp.deleteHttp({
+      endpoint: `${this._tradeAllocationsEndpoint}/${tradeAllocation.id}`
+    });
   }
 
-  saveAllocation(tradeAllocation: TradeAllocation): Promise<any> {
-    const postWebRequest: PostWebRequest = {
-      endPoint: this.TRADE_ALLOCATIONS_API_URL,
-      payload: {
-        tradeId: tradeAllocation.tradeId,
-        accountId: tradeAllocation.accountId,
-        custodianId: tradeAllocation.custodianId,
-        quantity: tradeAllocation.quantity
-      }
+  async saveAllocation(tradeAllocation: TradeAllocation): Promise<any> {
+    const payload = {
+      tradeId: tradeAllocation.tradeId.toString(),
+      accountId: tradeAllocation.accountId.toString(),
+      custodianId: tradeAllocation.custodianId.toString(),
+      quantity: tradeAllocation.quantity.toString()
     };
 
     if (tradeAllocation.subAccountId) {
-      postWebRequest.payload['subAccountId'] = tradeAllocation.subAccountId;
+      payload['subAccountId'] = tradeAllocation.subAccountId.toString();
     }
-    return this.wsp.post(postWebRequest);
+
+    return this.wsp.postHttp({
+      endpoint: this._tradeAllocationsEndpoint,
+      body: payload
+    });
+  }
+
+  getPositions(
+    secId: number,
+    maxTradeRequestId: number = this.Max_Integer
+  ): Promise<any> {
+    return this.wsp.getHttp({
+      endpoint: 'entities/positions',
+      params: {
+        fields: [],
+        filters: [
+          {
+            key: 'securityid',
+            type: 'EQ',
+            value: [secId.toString()]
+          },
+          {
+            key: 'maxTradeRequestId',
+            type: 'EQ',
+            value: [maxTradeRequestId.toString()]
+          }
+        ]
+      }
+    });
   }
 }

@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { AlreadyLoggedInGuard } from './login/already-logged-in.guard';
-import { LoginComponent } from './login/login.component';
+import { AlreadyLoggedInGuard, LoginComponent } from './login';
 
 const routes: Routes = [
   {

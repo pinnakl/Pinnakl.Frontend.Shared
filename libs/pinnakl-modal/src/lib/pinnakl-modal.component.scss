@@ -1,0 +1,24 @@
+@import '../../../shared/src/lib/styles/_components/colors';
+
+.new-style {
+  ::ng-deep.k-widget {
+    border-radius: 10px;
+
+    .title {
+      font-size: 18px;
+      font-weight: bold;
+      color: $shark;
+    }
+  }
+}
+.b-r-1 {
+  ::ng-deep.k-dialog {
+    border-radius: 12px;
+  }
+}
+::ng-deep.k-window {
+  position: fixed !important;
+  .k-window-titlebar {
+    background-color: #ffffff;
+  }
+}

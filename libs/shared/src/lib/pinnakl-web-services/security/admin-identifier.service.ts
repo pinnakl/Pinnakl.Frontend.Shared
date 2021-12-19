@@ -2,24 +2,23 @@ import { Injectable } from '@angular/core';
 
 import * as moment from 'moment';
 
-import { GetWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
+import { WebServiceProvider } from '@pnkl-frontend/core';
+import { AdminIdentifier } from '../../models/security';
 import { AdminIdentifierFromApi } from '../../models/security/admin-identifier-from-api.model';
-import { AdminIdentifier } from '../../models/security/admin-identifier.model';
 
 @Injectable()
 export class AdminIdentifierService {
-  private readonly RESOURCE_URL = 'admin_identifiers';
+  private readonly _adminIdentifiersEndpoint = 'entities/admin_identifiers';
 
-  constructor(private wsp: WebServiceProvider) {}
+  constructor(private readonly wsp: WebServiceProvider) {}
 
   deleteIdentifier(id: number): Promise<void> {
-    return this.wsp.delete({
-      endPoint: this.RESOURCE_URL,
-      payload: { id }
+    return this.wsp.deleteHttp({
+      endpoint: `${this._adminIdentifiersEndpoint}/${id}`
     });
   }
 
-  getIdentifiers(securityId: number): Promise<AdminIdentifier[]> {
+  async getIdentifiers(securityId: number): Promise<AdminIdentifier[]> {
     const fields = [
       'Id',
       'AccountCode',
@@ -29,12 +28,11 @@ export class AdminIdentifierService {
       'AdminSecId',
       'EndDate',
       'PnklSecId',
-      'StartDate',
-      'TrsIndicator'
+      'StartDate'
     ];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: {
+    const identifiers = await this.wsp.getHttp<AdminIdentifierFromApi[]>({
+      endpoint: this._adminIdentifiersEndpoint,
+      params: {
         fields,
         filters: [
           {
@@ -44,24 +42,20 @@ export class AdminIdentifierService {
           }
         ]
       }
-    };
-    return this.wsp
-      .get(getWebRequest)
-      .then((identifiers: AdminIdentifierFromApi[]) =>
-        identifiers.map(identifier => this.formatIdentifier(identifier))
-      );
+    });
+
+    return identifiers.map(this.formatIdentifier);
   }
 
-  getIdentifiersForReconciliation(
+  async getIdentifiersForReconciliation(
     accountId: number,
     adminId: number,
     securityId: number
   ): Promise<AdminIdentifier[]> {
-    const fields = ['AdminSecId', 'Id'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: {
-        fields,
+    const identifiers = await this.wsp.getHttp<AdminIdentifierFromApi[]>({
+      endpoint: this._adminIdentifiersEndpoint,
+      params: {
+        fields: ['AdminSecId', 'Id'],
         filters: [
           {
             key: 'AccountId',
@@ -80,32 +74,33 @@ export class AdminIdentifierService {
           }
         ]
       }
-    };
-    return this.wsp
-      .get(getWebRequest)
-      .then((identifiers: AdminIdentifierFromApi[]) =>
-        identifiers.map(identifier => this.formatIdentifier(identifier))
-      );
+    });
+
+    return identifiers.map(this.formatIdentifier);
   }
 
-  postIdentifier(entityToSave: AdminIdentifier): Promise<AdminIdentifier> {
-    let requestBody = this.getIdentifierForServiceRequest(entityToSave);
-    return this.wsp
-      .post({ endPoint: this.RESOURCE_URL, payload: requestBody })
-      .then((entity: AdminIdentifierFromApi) => this.formatIdentifier(entity));
+  async postIdentifier(entityToSave: AdminIdentifier): Promise<AdminIdentifier> {
+    const entity = await this.wsp.postHttp<AdminIdentifierFromApi>({
+      endpoint: this._adminIdentifiersEndpoint,
+      body: this.getIdentifierForServiceRequest(entityToSave)
+    });
+
+    return this.formatIdentifier(entity);
   }
 
-  putIdentifier(entityToSave: AdminIdentifier): Promise<AdminIdentifier> {
-    let requestBody = this.getIdentifierForServiceRequest(entityToSave);
-    return this.wsp
-      .put({ endPoint: this.RESOURCE_URL, payload: requestBody })
-      .then((entity: AdminIdentifierFromApi) => this.formatIdentifier(entity));
+  async putIdentifier(entityToSave: AdminIdentifier): Promise<AdminIdentifier> {
+    const entity = await this.wsp.putHttp<AdminIdentifierFromApi>({
+      endpoint: this._adminIdentifiersEndpoint,
+      body: this.getIdentifierForServiceRequest(entityToSave)
+    });
+
+    return this.formatIdentifier(entity);
   }
 
   private formatIdentifier(
     identifier: AdminIdentifierFromApi
   ): AdminIdentifier {
-    let accountId = parseInt(identifier.accountid),
+    const accountId = parseInt(identifier.accountid),
       adminId = parseInt(identifier.adminid),
       endDateMoment = moment(identifier.enddate, 'MM/DD/YYYY'),
       id = parseInt(identifier.id),
@@ -120,15 +115,14 @@ export class AdminIdentifierService {
       endDateMoment.isValid() ? endDateMoment.toDate() : null,
       !isNaN(id) ? id : null,
       !isNaN(pinnaklSecurityId) ? pinnaklSecurityId : null,
-      startDateMoment.isValid() ? startDateMoment.toDate() : null,
-      identifier.trsindicator === 'True'
+      startDateMoment.isValid() ? startDateMoment.toDate() : null
     );
   }
 
   private getIdentifierForServiceRequest(
     adminIdentifier: AdminIdentifier
   ): AdminIdentifierFromApi {
-    let identifier = {} as AdminIdentifierFromApi,
+    const identifier = {} as AdminIdentifierFromApi,
       {
         accountId,
         adminId,
@@ -136,8 +130,7 @@ export class AdminIdentifierService {
         endDate,
         id,
         pinnaklSecurityId,
-        startDate,
-        trsIndicator
+        startDate
       } = adminIdentifier;
     if (accountId !== undefined) {
       identifier.accountid = accountId.toString();
@@ -161,9 +154,6 @@ export class AdminIdentifierService {
     if (startDate !== undefined) {
       identifier.startdate =
         startDate === null ? 'null' : moment(startDate).format('MM/DD/YYYY');
-    }
-    if (trsIndicator !== undefined) {
-      identifier.trsindicator = trsIndicator ? '1' : '0';
     }
     return identifier;
   }

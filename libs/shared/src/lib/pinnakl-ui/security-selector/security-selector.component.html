@@ -1,6 +1,6 @@
 <form [formGroup]="form" novalidate>
   <label class="mb-0">
-    SECURITY <span class="color-red pl-0-25" *ngIf="required">*</span>
+    {{label}} <span class="color-red pl-0-25" *ngIf="required">*</span>
   </label>
   <kendo-combobox
     formControlName="security"
@@ -18,23 +18,49 @@
     #kendoComboBoxInstance="kendoComboBox"
   >
     <ng-template kendoComboBoxItemTemplate let-dataItem>
-      <div class="row">
-        <div class="col-md-default-width text-uppercase">
-          <kbd>{{ dataItem.assetType }}</kbd>
-        </div>
-        <div
-          *ngIf="dataItem.ticker"
-          class="col-md-default-width text-uppercase"
-        >
-          <kbd>{{ dataItem.ticker }}</kbd>
-        </div>
-        <div *ngIf="dataItem.cusip" class="col-md-default-width text-uppercase">
-          <kbd>{{ dataItem.cusip }}</kbd>
-        </div>
-        <div class="col-md-default-width text-uppercase">
-          {{ dataItem.description }}
-        </div>
-      </div>
-    </ng-template>
+        <ng-container *ngIf="selectionStyle === 'Kendo'; else newView">
+          <div class="col-md-default-width text-uppercase">
+            <kbd>{{ dataItem.assetType }}</kbd>
+          </div>
+          <div
+            *ngIf="dataItem.ticker"
+            class="col-md-default-width text-uppercase"
+          >
+            <kbd>{{ dataItem.ticker }}</kbd>
+          </div>
+          <div *ngIf="dataItem.cusip" class="col-md-default-width text-uppercase">
+            <kbd>{{ dataItem.cusip }}</kbd>
+          </div>
+          <div class="col-md-default-width text-uppercase">
+            {{ dataItem.description }}
+          </div>
+        </ng-container>
+        <ng-template #newView>
+          <div class="container-security-item">
+            <div class="left-container">
+              <div class="icon-container" [ngStyle]="{background: addAlpha(dataItem?.color)}">
+                <span [ngStyle]="{color: dataItem?.color}"> {{getCurrentSymbol(dataItem.ticker)}}</span>
+              </div>
+              <div class="info-container">
+                <div class="title">
+                  <span *ngIf="dataItem?.assetType !== 'option'" innerHTML="{{ dataItem.description | highlight : searchText }}"></span>
+                  <span class="dot" *ngIf="dataItem.ticker && dataItem?.assetType !== 'option'"></span>
+                  <span innerHTML="{{ dataItem.ticker | highlight : searchText }}"></span>
+                </div>
+                <div class="sub-title">
+                  <span class="assettype">{{dataItem?.assetType}}</span>
+                  <span>{{ dataItem?.cusip }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="right-container">
+              <div class="amount-container" *ngIf="+dataItem?.position !== 0">
+                <i class="custom-icon-top-chart" *ngIf="+dataItem?.position > 0"></i>
+                <i class="custom-icon-low-chart" *ngIf="+dataItem?.position < 0"></i>
+                <span class="amount">{{ dataItem?.position | number: '1.0' }} </span>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+     </ng-template>
   </kendo-combobox>
-</form>

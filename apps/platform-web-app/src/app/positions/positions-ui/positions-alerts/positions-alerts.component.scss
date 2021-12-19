@@ -1,0 +1,58 @@
+@import '../../../../../../../libs/shared/src/lib/styles/_components/colors';
+@import '../../../../../../../libs/shared/src/lib/styles/_components/variables';
+@import '../../../../../../../libs/shared/src/lib/styles/_components/mixins';
+
+.alerts-panel {
+  background-color: $white;
+  border-left: 1px solid $border-color;
+  padding: 17px 16px 17px 27px;
+  @include scrollable-section();
+}
+
+.rounded-btn {
+  height: 18px;
+  border-radius: 10px;
+  padding: 0 8px;
+  line-height: 16px;
+  color: #141726;
+  font-size: 12px;
+  font-weight: normal;
+  margin: 0 3px;
+
+  &.active {
+    font-weight: 600;
+    color: $white;
+    background-color: $active-status-text-color;
+  }
+}
+
+.btn-action {
+  color: #999fa8;
+  padding: 0;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2px 3px;
+}
+
+.items-table {
+  @include styled-table();
+
+  .table {
+    td:first-child {
+      width: 33%;
+    }
+    tbody tr td:last-of-type {
+      padding-right: 0;
+    }
+  }
+}
+.green-text {
+  color: #008300;
+}
+.red-text {
+  color: #ff0000;
+}

@@ -38,8 +38,8 @@ describe('PositionsPnlDataFieldsEffects', () => {
         }
       ]
     });
-    effects = TestBed.get(PositionsPnlDataFieldsEffects);
-    service = TestBed.get(PositionsPnlDataFieldsService);
+    effects = TestBed.inject(PositionsPnlDataFieldsEffects);
+    service = TestBed.inject(PositionsPnlDataFieldsService);
   });
 
   describe('load$', () => {

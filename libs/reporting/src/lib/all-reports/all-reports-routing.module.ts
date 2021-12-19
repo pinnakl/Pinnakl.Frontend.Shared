@@ -17,24 +17,24 @@ import { AllReportsComponent } from './all-reports.component';
 @Injectable()
 export class AllReportsResolve implements Resolve<Promise<ReportGroup[]>> {
   constructor(
-    private clientReportService: ClientReportService,
-    private userReportService: UserReportService,
-    private userService: UserService
-  ) {}
+    private readonly clientReportService: ClientReportService,
+    private readonly userReportService: UserReportService,
+    private readonly userService: UserService
+  ) { }
 
-  resolve(): Promise<ReportGroup[]> {
+  async resolve(): Promise<any> {
     return Promise.all([
       this.clientReportService.getClientReports(),
       this.userReportService.getUserReports(this.userService.getUser().id)
     ]).then(result => {
       const [clientReports, userReports] = result;
       return this.getReportGroups(
-        _.filter(userReports, { isPnklInternal: false }),
-        this.getReportGroups(
-          _.filter(clientReports, { isPnklInternal: false }),
-          []
+          _.filter(userReports, { isPnklInternal: false }),
+          this.getReportGroups(
+            _.filter(clientReports, { isPnklInternal: false }),
+            []
+          )
         )
-      );
     });
   }
 

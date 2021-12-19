@@ -1,4 +1,10 @@
+export enum BrokerEnvironmentType {
+  UAT = 'UAT',
+  PROD = 'PROD'
+}
+
 export class Broker {
+  public showAlgo: boolean;
   constructor(
     public id: number,
     public brokerCode: string,
@@ -7,7 +13,8 @@ export class Broker {
     public clearingIndicator: boolean,
     public clearingBrokerId: number,
     public nsccCode: string,
-    public commissionPerShare: number
+    public fixNetBrokerCode: string,
+    public environment: BrokerEnvironmentType
   ) {}
 }
 
@@ -20,6 +27,8 @@ export class BrokerFromApi {
     public clearing_indicator: string,
     public clearingbrokerid: string,
     public nscccode: string,
-    public commissionpershare: string
+    public fixnetbrokercode: string,
+    public environment: BrokerEnvironmentType,
+    public showalgo: string
   ) {}
 }

@@ -25,7 +25,7 @@ export class DashoardGuard implements CanActivate {
         if (loaded) {
           return;
         }
-        this.store.dispatch(new AttemptLoadDashboardBackend());
+        // this.store.dispatch(new AttemptLoadDashboardBackend());
       }),
       filter(loaded => loaded),
       take(1)

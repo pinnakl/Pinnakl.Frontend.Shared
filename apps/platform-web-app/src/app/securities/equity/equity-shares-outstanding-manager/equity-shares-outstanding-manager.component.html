@@ -1,0 +1,7 @@
+<value-history-manager-popup
+  [fetchHistoryItems]="getSharesOutstanding"
+  (onClose)="onClose.emit()"
+  (onLatestValueChange)="onSharesOutstandingChange.emit($event)"
+  [saveAllHistoryItems]="saveSharesOutstanding"
+  title="Shares Outstanding"
+></value-history-manager-popup>

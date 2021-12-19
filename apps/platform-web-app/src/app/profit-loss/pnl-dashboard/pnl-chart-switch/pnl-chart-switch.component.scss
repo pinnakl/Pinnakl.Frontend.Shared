@@ -1,0 +1,20 @@
+@import '../../../../../../../libs/shared/src/lib/styles/_components/colors';
+
+.switch-btn {
+  border-radius: 8px;
+  background-color: transparent;
+  padding: 4px;
+  margin-left: 8px;
+
+  &.active {
+    background-color: #eaecf0;
+    i {
+      color: $denim;
+    }
+  }
+
+  i {
+    color: #999fa8;
+    font-size: 16px;
+  }
+}

@@ -1,9 +1,7 @@
-import { Action } from '@ngrx/store';
-import {
-  ActivitySummaryModel,
-  AlertModel,
-  DashboardBackend
-} from '../../../dashboard-backend';
+import { createAction, props } from '@ngrx/store';
+import { ActivitySummaryModel } from '../../../dashboard-backend/dashboard/activity-summary.model';
+import { AlertModel } from '../../../dashboard-backend/dashboard/alert.model';
+import { DashboardBackend } from '../../../dashboard-backend/dashboard/dashboard-backend.model';
 
 export enum DashboardBackendActionTypes {
   AttemptLoadDashboardBackend = '[DashboardBackend] Attempt Load DashboardBackend',
@@ -16,51 +14,42 @@ export enum DashboardBackendActionTypes {
   RemoveDashboardAlert = '[DashboardBackend] Remove Alert'
 }
 
-export class LoadDashboardBackend implements Action {
-  readonly type = DashboardBackendActionTypes.LoadDashboardBackend;
-  constructor(public payload: { dashboardBackend: DashboardBackend }) {}
-}
 
-export class AttemptLoadDashboardBackend implements Action {
-  readonly type = DashboardBackendActionTypes.AttemptLoadDashboardBackend;
-}
+export const LoadDashboardBackend = createAction(
+  DashboardBackendActionTypes.LoadDashboardBackend,
+  props<{ dashboardBackend: DashboardBackend }>()
+);
 
-export class LoadDashboardBackendFailed implements Action {
-  readonly type = DashboardBackendActionTypes.LoadDashboardBackendFailed;
-  constructor(public payload: { error: any }) {}
-}
+export const AttemptLoadDashboardBackend = createAction(
+  DashboardBackendActionTypes.AttemptLoadDashboardBackend
+);
 
-export class AttemptLoadActivitySummary implements Action {
-  readonly type = DashboardBackendActionTypes.AttemptLoadActivitySummary;
-  constructor(public payload: { startDate: Date; endDate: Date }) {}
-}
+export const LoadDashboardBackendFailed = createAction(
+  DashboardBackendActionTypes.LoadDashboardBackendFailed,
+  props<{ error: any }>()
+);
 
-export class LoadActivitySummary implements Action {
-  readonly type = DashboardBackendActionTypes.LoadActivitySummary;
-  constructor(public payload: { activitySummary: ActivitySummaryModel }) {}
-}
+export const AttemptLoadActivitySummary = createAction(
+  DashboardBackendActionTypes.AttemptLoadActivitySummary,
+  props<{ startDate: Date; endDate: Date }>()
+);
 
-export class LoadActivitySummaryFailed implements Action {
-  readonly type = DashboardBackendActionTypes.LoadActivitySummaryFailed;
-  constructor(public payload: { error: any }) {}
-}
+export const LoadActivitySummary = createAction(
+  DashboardBackendActionTypes.LoadActivitySummary,
+  props<{ activitySummary: ActivitySummaryModel }>()
+);
 
-export class AddDashboardAlert implements Action {
-  readonly type = DashboardBackendActionTypes.AddDashboardAlert;
-  constructor(public payload: AlertModel) {}
-}
+export const LoadActivitySummaryFailed = createAction(
+  DashboardBackendActionTypes.LoadActivitySummaryFailed,
+  props<{ error: any }>()
+);
 
-export class RemoveDashboardAlert implements Action {
-  readonly type = DashboardBackendActionTypes.RemoveDashboardAlert;
-  constructor(public payload: { id: number }) {}
-}
+export const AddDashboardAlert = createAction(
+  DashboardBackendActionTypes.AddDashboardAlert,
+  props<{ payload: AlertModel }>()
+);
 
-export type DashboardBackendActions =
-  | AddDashboardAlert
-  | AttemptLoadDashboardBackend
-  | AttemptLoadActivitySummary
-  | LoadActivitySummary
-  | LoadActivitySummaryFailed
-  | LoadDashboardBackend
-  | LoadDashboardBackendFailed
-  | RemoveDashboardAlert;
+export const RemoveDashboardAlert = createAction(
+  DashboardBackendActionTypes.RemoveDashboardAlert,
+  props<{ id: number }>()
+);

@@ -1,16 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { NgModule, ModuleWithProviders, Inject } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { TreeModule } from 'angular-tree-component';
 
 import {
   PinnaklGridModule,
-  ReportingHelper,
   SharedModule
 } from '@pnkl-frontend/shared';
 import { AllReportsRoutingModule } from './all-reports/all-reports-routing.module';
 import { AllReportsComponent } from './all-reports/all-reports.component';
+import { FILE_SERVICE_URL_REPORTING } from './enviroment.tokens';
 import { ManagerReportsRoutingModule } from './manager-reports/manager-reports-routing.module';
 import { ManagerReportsComponent } from './manager-reports/manager-reports.component';
 import { ReportingManagerRoutingModule } from './report-manager/report-manager-routing.module';
@@ -20,7 +20,7 @@ import { ReportingConfigComponent } from './report-manager/reporting-config/repo
 import { ReportingExportManagerComponent } from './report-manager/reporting-export-manager/reporting-export-manager.component';
 import { UserReportActionsComponent } from './report-manager/user-report-actions/user-report-actions.component';
 import { UserReportSaveManagerComponent } from './report-manager/user-report-save-manager/user-report-save-manager.component';
-import { FILE_SERVICE_URL_REPORTING } from './enviroment.tokens';
+import { ReportingHelper } from './shared/reporting-helper.service';
 import { SetFileServiceUrl } from './shared/set-file-service-url.service';
 
 @NgModule({
@@ -35,6 +35,7 @@ import { SetFileServiceUrl } from './shared/set-file-service-url.service';
     UserReportSaveManagerComponent
   ],
   imports: [
+    SharedModule,
     AllReportsRoutingModule,
     CommonModule,
     FormsModule,
@@ -42,13 +43,22 @@ import { SetFileServiceUrl } from './shared/set-file-service-url.service';
     PinnaklGridModule,
     ReactiveFormsModule,
     ReportingManagerRoutingModule,
-    SharedModule.register({
-      fileServiceUrl: ''
-    }),
+    SharedModule,
     TreeModule.forRoot()
   ],
   providers: [ReportingHelper, SetFileServiceUrl],
-  exports: [ReportingConfigComponent, UserReportSaveManagerComponent]
+  exports: [
+    ReportingConfigComponent,
+    UserReportSaveManagerComponent,
+    AllReportsComponent,
+    ManagerReportsComponent,
+    ReportingConfigComponent,
+    ReportingExportManagerComponent,
+    ReportManagerComponent,
+    ReportNameEditorComponent,
+    UserReportActionsComponent,
+    UserReportSaveManagerComponent
+  ]
 })
 export class ReportingModule {
   public static register({ fileServiceUrl }): ModuleWithProviders<ReportingModule> {

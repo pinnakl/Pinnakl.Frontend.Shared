@@ -6,12 +6,16 @@ import { DEFAULTSCREEN } from '../environment.tokens';
 
 @Injectable()
 export class AlreadyLoggedInGuard implements CanActivate {
-  constructor(private router: Router, private _userService: UserService,    @Inject(DEFAULTSCREEN) private DEFAULTSCREEN: string,
-  ) {}
+  constructor(
+    private readonly router: Router,
+    private readonly _userService: UserService,
+    @Inject(DEFAULTSCREEN) private readonly DEFAULTSCREEN: { prod: string, dev: string },
+  ) { }
+
   canActivate(): boolean {
     const _userLoggedIn = this._userLoggedIn();
     if (_userLoggedIn) {
-      this.router.navigate(['/' + this.DEFAULTSCREEN]);
+      this.router.navigate(['/' + this.DEFAULTSCREEN.prod]);
       return false;
     }
     return true;

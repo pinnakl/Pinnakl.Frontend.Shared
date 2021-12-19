@@ -1,0 +1,66 @@
+<pinnakl-modal
+  className="new-style"
+  [showCloseButton]="false"
+  [width]="400"
+  [hideDialog]="!savePresetModalShow"
+  (closeModal)="onClose.emit()"
+>
+  <div class="container-fluid">
+    <div class="row">
+      <form class="col-md-12" [formGroup]="savePresetForm" (ngSubmit)="savePreset()">
+        <div class="row py-2">
+          <div class="col-md-12">
+            <span class="title">Save as</span>
+          </div>
+        </div>
+        <div class="row pt-4">
+          <div class="col-md-12">
+            <pinnakl-input
+              type="text"
+              label="NAME"
+              labelClass="input-label"
+              inputClass="ghost-border-bottom"
+              controlName="presetName"
+              [form]="savePresetForm"
+            ></pinnakl-input>
+          </div>
+        </div>
+<!--        <div class="row pt-2">-->
+<!--          <div class="col-md-12 mb-2 input-label">TYPE</div>-->
+<!--          <div class="col-md-12">-->
+<!--              <span class="toggle-radio-btn">-->
+<!--                <input-->
+<!--                  formControlName="presetType"-->
+<!--                  id="gridConfigType"-->
+<!--                  type="radio"-->
+<!--                  [value]="PMSConfigType.GRID"-->
+<!--                />-->
+<!--                <label for="gridConfigType">Grid/Table</label>-->
+<!--              </span>-->
+<!--            <span class="toggle-radio-btn">-->
+<!--                <input-->
+<!--                  formControlName="presetType"-->
+<!--                  id="widgetConfigType"-->
+<!--                  type="radio"-->
+<!--                  [value]="PMSConfigType.WIDGET"-->
+<!--                />-->
+<!--                <label for="widgetConfigType">Summary Widget</label>-->
+<!--              </span>-->
+<!--          </div>-->
+<!--        </div>-->
+        <div class="row pt-5 pb-2">
+          <div class="col-md-6">
+            <button class="btn btn-oulined waves-effect" (click)="onClose.emit()">
+              CANCEL
+            </button>
+          </div>
+          <div class="col-md-6 text-align-right">
+            <button class="btn btn-success waves-effect" type="submit" [disabled]="!savePresetForm.valid">
+              SAVE
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</pinnakl-modal>

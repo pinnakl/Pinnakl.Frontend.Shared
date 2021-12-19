@@ -2,23 +2,22 @@ import { Injectable } from '@angular/core';
 
 import { AuthenticationParameters } from './authentication-parameters.model';
 import {
-  DeleteWebRequest,
-  GetWebRequest,
-  PostManyWebRequest,
-  PostWebRequest,
-  PutWebRequest
-} from './models/web-request.model';
-import {
   AuthWebSocketMessage,
   DeAuthWebSocketMessage,
+  DeleteWebRequest,
   DeleteWebSocketMessage,
+  GetWebRequest,
   GetWebSocketMessage,
+  PostManyWebRequest,
+  PostWebRequest,
   PostWebSocketMessage,
+  PutWebRequest,
   PutWebSocketMessage,
   SubscribeWebSocketMessage,
   UnsubscribeWebSocketMessage,
   WebSocketMessage
-} from './models/web-socket-message.model';
+} from './models';
+
 // Making ws to outside of class so that single variable will be used for all instances of this service
 let _currentRequestId = 0,
   _creatingWebSocket = false,
@@ -298,13 +297,14 @@ export class PinnaklWebSocketService {
           _creatingWebSocket = true;
           const socket = new WebSocket(_serverURL);
           socket.onopen = (event: Event) => {
-            console.info('Connected to Server'); // tslint:disable-line:no-console
+            // eslint-disable-next-line no-console
+            console.info('Connected to Server');
             _ws = <WebSocket>event.target;
 
             _ws.onmessage = (onMessageEvent: MessageEvent) =>
               this.onMessage(onMessageEvent);
             _creatingWebSocket = false;
-            resolve();
+            resolve({});
           };
           socket.onclose = (event: CloseEvent) => {
             _promises = {};
@@ -315,7 +315,7 @@ export class PinnaklWebSocketService {
         } else {
           const interval = setInterval(() => {
             if (_ws) {
-              resolve();
+              resolve({});
               clearInterval(interval);
               _retryCount = 0;
             } else if (_retryCount > 100) {

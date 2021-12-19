@@ -4,7 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 
 @Injectable()
 export class Toastr {
-  constructor(private toastr: ToastrService) {}
+  constructor(private  readonly toastr: ToastrService) {}
 
   error(message: string, title?: string, options?: any): void {
     this.toastr.error(message, title, options);

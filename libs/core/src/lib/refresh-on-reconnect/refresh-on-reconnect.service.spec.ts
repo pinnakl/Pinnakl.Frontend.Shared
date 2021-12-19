@@ -2,9 +2,9 @@ import { TestBed } from '@angular/core/testing';
 
 import { BehaviorSubject } from 'rxjs';
 
-import { BackendConnectionFacade } from 'app/app-state';
+import { BackendConnectionFacade } from '@pnkl-frontend/app-state';
+import { RefreshOnReconnectService } from '@pnkl-frontend/core';
 import { LOCATION } from '../location.injection-token';
-import { RefreshOnReconnectService } from './refresh-on-reconnect.service';
 
 const reconnectedAtSubject = new BehaviorSubject<Date>(null);
 const mockBackendConnectionFacade: Partial<BackendConnectionFacade> = {
@@ -29,8 +29,8 @@ describe('RefreshOnReconnectService', () => {
         }
       ]
     });
-    mockLocation = TestBed.get(LOCATION);
-    service = TestBed.get(RefreshOnReconnectService);
+    mockLocation = TestBed.inject(LOCATION);
+    service = TestBed.inject(RefreshOnReconnectService);
   });
 
   describe('disable()', () => {

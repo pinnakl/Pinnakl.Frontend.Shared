@@ -83,23 +83,24 @@
             [pinnedBottomRowData]="aggregation"
             [rowData]="reportData"
             [searchText]="gridSearchText"
+            [frameworkComponents]="frameworkComponents"
             rowGroupPanelShow="always"
             styleClass="full-width"
           >
           </pinnakl-grid>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
           <grid-filter
             [columns]="filterColumns"
             [filterVisible]="filterVisible"
             (onApply)="applyFilter()"
             [parameters]="reportParameters"
             [reportId]="reportId"
-            typeName="report"
+            typeName="entities/report"
           >
           </grid-filter>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-6 reporting-config-panel">
           <reporting-config
             [clientReportColumns]="clientReportColumns"
             (columnsSelected)="onColumnsSelected($event)"

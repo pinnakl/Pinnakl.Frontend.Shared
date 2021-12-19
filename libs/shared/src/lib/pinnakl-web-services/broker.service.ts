@@ -2,44 +2,36 @@
 import { Injectable } from '@angular/core';
 
 // Models
-import {
-  DeleteWebRequest,
-  GetWebRequest,
-  PostWebRequest,
-  PutWebRequest,
-  WebServiceProvider
-} from '@pnkl-frontend/core';
-import { BrokerIdentificationIds } from '../models/oms/broker/broker-identification-ids.model';
-import { BrokerIdentificationIdsFromApi } from '../models/oms/broker/broker-identification-ids.model';
-import { BrokerIdentificationType } from '../models/oms/broker/broker-identification-type.model';
-import { BrokerIdentificationTypeFromApi } from '../models/oms/broker/broker-identification-type.model';
-import { BrokerIdentificationTypes } from '../models/oms/broker/broker-identification-types.model';
-import { Broker } from '../models/oms/broker/broker.model';
-import { BrokerFromApi } from '../models/oms/broker/broker.model';
-import { BrokerContact } from './../models/oms/broker/broker-contact.model';
+import { getBooleanFromString, WebServiceProvider } from '@pnkl-frontend/core';
+import { map } from 'rxjs/operators';
+import { BrokerIdentificationTypes } from '../models';
+import { Broker } from '../models';
+import { BrokerFromApi } from '../models';
+import { BrokerContact } from '../models';
+import { BrokerEnvironmentType, BrokerIdentificationIds } from '../models';
+import { BrokerIdentificationIdsFromApi } from '../models';
+import { BrokerIdentificationType } from '../models';
+import { BrokerIdentificationTypeFromApi } from '../models';
 
 // Services
-import { Utility } from '../services/utility.service';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class BrokerService {
-  private readonly BROKER_API_URL = '/brokers';
-  private readonly BROKER_IDENTIFICATION_TYPE_API_URL =
-    '/broker_identification_types';
-  private readonly BROKER_IDENTIFICATION_ID_API_URL =
-    '/broker_identification_Id';
+  private readonly _brokersEndpoint = 'entities/brokers';
+  private readonly _brokerEmailsEndpoint = 'entities/broker_emails';
+  private readonly _brokerIdentificationIdEndpoint =
+    'entities/broker_identification_Id';
+  private readonly _brokerIdentificationTypesEndpoint =
+    'entities/broker_identification_types';
 
   constructor(
-    private wsp: WebServiceProvider,
-    private utility: Utility,
-    private http: HttpClient
+    private readonly wsp: WebServiceProvider,
+    private readonly http: HttpClient
   ) {}
 
-  public getBrokers(): Promise<Broker[]> {
-    // tslint:disable-next-line:max-line-length
-
-    let fields = [
+  public async getBrokers(): Promise<Broker[]> {
+    const fields = [
       'id',
       'brokercode',
       'brokername',
@@ -47,81 +39,72 @@ export class BrokerService {
       'sendallocations',
       'clearing_indicator',
       'clearingbrokerid',
-      'commissionPerShare'
+      'environment',
+      'showAlgo'
     ];
 
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.BROKER_API_URL,
-      options: {
+    const entities = await this.wsp.getHttp<BrokerFromApi[]>({
+      endpoint: this._brokersEndpoint,
+      params: {
         fields: fields
       }
-    };
+    });
 
-    return this.wsp
-      .get(getWebRequest)
-      .then((entities: BrokerFromApi[]) => {
-        return entities.map(entity => this.formatBroker(entity));
-      })
-      .then(check => {
-        return check;
-      });
+    return entities.map(this.formatBroker);
   }
 
   public getBrokersHTTP(): Promise<Broker[]> {
     const BROKERS_URL = 'broker';
     return this.http
       .get(BROKERS_URL)
-      .toPromise()
-      .then((brokersapidata: BrokerFromApi[]) => {
-        const brokers = brokersapidata.map(p => this.formatBroker(p));
-        return brokers;
-      });
+      .pipe(
+        map((brokersapidata: BrokerFromApi[]) =>
+          brokersapidata.map(this.formatBroker)
+        )
+      )
+      .toPromise();
   }
 
-  public postBrokerIdentifier(
+  public async postBrokerIdentifier(
     brokerIdentifier: BrokerIdentificationIds
   ): Promise<any> {
-    let payload = {
-      brokerId: brokerIdentifier.brokerId,
-      brokerIdentificationId: brokerIdentifier.brokerIdentificationTypeId,
-      brokerIdentifier: brokerIdentifier.brokerIdentifier
-    };
+    const result = await this.wsp.postHttp<BrokerIdentificationIdsFromApi>({
+      endpoint: this._brokerIdentificationIdEndpoint,
+      body: {
+        brokerId: brokerIdentifier.brokerId.toString(),
+        brokerIdentificationId: brokerIdentifier.brokerIdentificationTypeId.toString(),
+        brokerIdentifier: brokerIdentifier.brokerIdentifier
+      }
+    });
 
-    const postWebRequest: PostWebRequest = {
-      endPoint: this.BROKER_IDENTIFICATION_ID_API_URL,
-      payload: payload
-    };
-
-    return this.wsp
-      .post(postWebRequest)
-      .then(result => this.formatBrokerId(result));
+    return this.formatBrokerId(result);
   }
 
-  public putBrokerIdentifier(
+  public async putBrokerIdentifier(
     brokerIdentifier: BrokerIdentificationIds
   ): Promise<any> {
-    let payload = {
-      id: brokerIdentifier.id,
-      brokerId: brokerIdentifier.brokerId,
-      brokerIdentificationId: brokerIdentifier.brokerIdentificationTypeId,
-      brokerIdentifier: brokerIdentifier.brokerIdentifier
-    };
+    const result = await this.wsp.putHttp<BrokerIdentificationIdsFromApi>({
+      endpoint: this._brokerIdentificationIdEndpoint,
+      body: {
+        id: brokerIdentifier.id.toString(),
+        brokerId: brokerIdentifier.brokerId.toString(),
+        brokerIdentificationId: brokerIdentifier.brokerIdentificationTypeId.toString(),
+        brokerIdentifier: brokerIdentifier.brokerIdentifier
+      }
+    });
 
-    const putWebRequest: PutWebRequest = {
-      endPoint: this.BROKER_IDENTIFICATION_ID_API_URL,
-      payload: payload
-    };
-
-    return this.wsp
-      .put(putWebRequest)
-      .then(result => this.formatBrokerId(result));
+    return this.formatBrokerId(result);
   }
 
-  public getBrokerIdentificationTypes(): Promise<BrokerIdentificationType[]> {
-    let fields = ['id', 'type', 'description'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.BROKER_IDENTIFICATION_TYPE_API_URL,
-      options: {
+  public async getBrokerIdentificationTypes(): Promise<
+    BrokerIdentificationType[]
+  > {
+    const fields = ['id', 'type', 'description'];
+    const brokerIdTypes = await this.wsp.getHttp<
+      BrokerIdentificationTypeFromApi[]
+    >({
+      endpoint: this._brokerIdentificationTypesEndpoint,
+      params: {
         fields: fields,
         orderBy: [
           {
@@ -130,23 +113,18 @@ export class BrokerService {
           }
         ]
       }
-    };
+    });
 
-    return this.wsp
-      .get(getWebRequest)
-      .then((brokersIdTypes: BrokerIdentificationTypeFromApi[]) =>
-        brokersIdTypes.map(brokersIdType =>
-          this.formatBrokerIdType(brokersIdType)
-        )
-      );
+    return brokerIdTypes.map(this.formatBrokerIdType);
   }
-  public getBrokerIdentificationIds(
+
+  public async getBrokerIdentificationIds(
     brokerId: number
   ): Promise<BrokerIdentificationIds[]> {
-    let fields = ['BrokerId', 'BrokerIdentificationId', 'BrokerIdentifier'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.BROKER_IDENTIFICATION_ID_API_URL,
-      options: {
+    const fields = ['BrokerId', 'BrokerIdentificationId', 'BrokerIdentifier'];
+    const brokerIdentificationIds = await this.wsp.getHttp<any[]>({
+      endpoint: this._brokerIdentificationIdEndpoint,
+      params: {
         fields: fields,
         filters: [
           {
@@ -156,20 +134,16 @@ export class BrokerService {
           }
         ]
       }
-    };
+    });
 
-    return this.wsp
-      .get(getWebRequest)
-      .then((brokerIds: BrokerIdentificationIdsFromApi[]) =>
-        brokerIds.map(brokerIdentifier => this.formatBrokerId(brokerIdentifier))
-      );
+    return brokerIdentificationIds.map(this.formatBrokerId);
   }
 
-  getBrokerContacts(brokerId: number): Promise<BrokerContact[]> {
-    let fields = ['id', 'brokerid', 'commtype', 'commaddress'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: 'broker_emails',
-      options: {
+  async getBrokerContacts(brokerId: number): Promise<BrokerContact[]> {
+    const fields = ['id', 'brokerid', 'commtype', 'commaddress'];
+    const brokerContacts = await this.wsp.getHttp<any[]>({
+      endpoint: 'entities/broker_emails',
+      params: {
         fields: fields,
         filters: [
           {
@@ -179,31 +153,35 @@ export class BrokerService {
           }
         ]
       }
-    };
-    return this.wsp
-      .get(getWebRequest)
-      .then(result => result.map(x => this.formatBrokerContact(x)));
+    });
+
+    return brokerContacts.map(this.formatBrokerContact);
   }
 
-  private formatBroker(broker: BrokerFromApi): Broker {
-    let id = parseInt(broker.id);
-    let clearingBrokerId = parseInt(broker.clearingbrokerid);
-    return new Broker(
+  public formatBroker(broker: BrokerFromApi): Broker {
+    const id = parseInt(broker.id, 10);
+    const clearingBrokerId = parseInt(broker.clearingbrokerid, 10);
+    const newBroker = new Broker(
       !isNaN(id) ? id : null,
       broker.brokercode,
       broker.brokername,
-      broker.sendallocations === 'True' ? true : false,
-      broker.clearing_indicator === 'True' ? true : false,
+      getBooleanFromString(broker.sendallocations),
+      broker.clearing_indicator === 'True',
       !isNaN(clearingBrokerId) ? clearingBrokerId : null,
       broker.nscccode,
-      +broker.commissionpershare
+      broker.fixnetbrokercode,
+      broker.environment as BrokerEnvironmentType
     );
+
+    newBroker.showAlgo = getBooleanFromString(broker.showalgo);
+    return newBroker;
   }
+
   private formatBrokerIdType(
     brokersIdType: BrokerIdentificationTypeFromApi
   ): BrokerIdentificationType {
-    let id = parseInt(brokersIdType.id);
-    let orderOfImportance = parseInt(brokersIdType.orderofimportance);
+    const id = parseInt(brokersIdType.id, 10);
+    const orderOfImportance = parseInt(brokersIdType.orderofimportance, 10);
     return new BrokerIdentificationType(
       !isNaN(id) ? id : null,
       BrokerIdentificationTypes[brokersIdType.type],
@@ -214,11 +192,13 @@ export class BrokerService {
   private formatBrokerId(
     brokerIdentifier: BrokerIdentificationIdsFromApi
   ): BrokerIdentificationIds {
-    let id = parseInt(brokerIdentifier.id);
-    let brokerId = parseInt(brokerIdentifier.brokerid);
-    let brokerIdentificationId = parseInt(
-      brokerIdentifier.brokeridentificationid
+    const id = parseInt(brokerIdentifier.id, 10);
+    const brokerId = parseInt(brokerIdentifier.brokerid, 10);
+    const brokerIdentificationId = parseInt(
+      brokerIdentifier.brokeridentificationid,
+      10
     );
+
     return new BrokerIdentificationIds(
       !isNaN(id) ? id : null,
       !isNaN(brokerId) ? brokerId : null,
@@ -234,89 +214,110 @@ export class BrokerService {
       result.commtype = 'EMAIL';
     }
     return new BrokerContact(
-      result.id ? parseInt(result.id) : null,
-      result.brokerid ? parseInt(result.brokerid) : null,
+      result.id ? parseInt(result.id, 10) : null,
+      result.brokerid ? parseInt(result.brokerid, 10) : null,
       result.commtype, // BrokerCommunicationTypes[result.commtype],
       result.commaddress
     );
   }
 
-  postBrokerContact(brokerContact: BrokerContact): Promise<BrokerContact> {
-    const postWebRequest: PostWebRequest = {
-      endPoint: 'broker_emails',
-      payload: {
+  async postBrokerContact(
+    brokerContact: BrokerContact
+  ): Promise<BrokerContact> {
+    const result = await this.wsp.postHttp({
+      endpoint: this._brokerEmailsEndpoint,
+      body: {
         commaddress: brokerContact.communicationAddress,
-        commtype: brokerContact.communicationType,
-        brokerid: brokerContact.brokerId
+        commtype: brokerContact.communicationType.toString(),
+        brokerid: brokerContact.brokerId.toString()
       }
-    };
-
-    return this.wsp
-      .post(postWebRequest)
-      .then(result => this.formatBrokerContact(result));
-  }
-
-  putBrokerContact(brokerContact: BrokerContact): Promise<BrokerContact> {
-    const putWebRequest: PutWebRequest = {
-      endPoint: 'broker_emails',
-      payload: {
-        id: brokerContact.id,
-        commaddress: brokerContact.communicationAddress,
-        commtype: brokerContact.communicationType,
-        brokerid: brokerContact.brokerId
-      }
-    };
-
-    return this.wsp
-      .put(putWebRequest)
-      .then(result => this.formatBrokerContact(result));
-  }
-
-  getBroker(id: number): Promise<any> {
-    let getWebRequest: GetWebRequest = {
-      endPoint: this.BROKER_API_URL,
-      options: {
-        id: id.toString()
-      }
-    };
-
-    return this.wsp.get(getWebRequest).then(result => {
-      return this.formatBroker(result[0]);
     });
+
+    return this.formatBrokerContact(result);
   }
 
-  postBroker(broker: Broker): Promise<Broker> {
-    let payload = {
-      brokercode: broker.brokerCode,
-      brokername: broker.brokerName,
-      sendallocations: broker.sendAllocations.toString(),
-      clearing_indicator: broker.clearingIndicator.toString(),
-      clearingbrokerid: broker.clearingBrokerId
+  async putBrokerContact(brokerContact: BrokerContact): Promise<BrokerContact> {
+    const result = await this.wsp.putHttp<any>({
+      endpoint: this._brokerEmailsEndpoint,
+      body: {
+        id: brokerContact.id.toString(),
+        commaddress: brokerContact.communicationAddress,
+        commtype: brokerContact.communicationType.toString(),
+        brokerid: brokerContact.brokerId.toString()
+      }
+    });
+
+    return this.formatBrokerContact(result);
+  }
+
+  async getBroker(id: number): Promise<any> {
+    const fields = [
+      'id',
+      'brokercode',
+      'brokername',
+      'nscccode',
+      'sendallocations',
+      'clearing_indicator',
+      'clearingbrokerid',
+      'environment'
+    ];
+
+    const result = await this.wsp.getHttp<BrokerFromApi[]>({
+      endpoint: this._brokersEndpoint,
+      params: {
+        filters: [
+          {
+            key: 'id',
+            type: 'EQ',
+            value: [id.toString()]
+          }
+        ],
+        fields
+      }
+    });
+
+    return this.formatBroker(result[0]);
+  }
+
+  async postBroker(broker: Broker): Promise<Broker> {
+    const clearingbrokerid =
+      broker.clearingIndicator.toString() !== 'false'
+        ? 'null'
+        : broker.clearingBrokerId
         ? broker.clearingBrokerId.toString()
-        : 'null',
-      nscccode: broker.nsccCode ? broker.nsccCode : 'null'
-    };
+        : 'null';
 
-    if (payload.clearing_indicator !== 'false') {
-      payload.clearingbrokerid = 'null';
-    }
+    const result = await this.wsp.postHttp<BrokerFromApi>({
+      endpoint: this._brokersEndpoint,
+      body: {
+        clearingbrokerid: clearingbrokerid.toString(),
+        brokercode: broker.brokerCode,
+        brokername: broker.brokerName,
+        sendallocations: broker.sendAllocations.toString(),
+        clearing_indicator: broker.clearingIndicator.toString(),
+        nscccode: broker.nsccCode ? broker.nsccCode : 'null'
+      }
+    });
 
-    let postWebRequest: PostWebRequest = {
-      endPoint: this.BROKER_API_URL,
-      payload: payload
-    };
-
-    return this.wsp
-      .post(postWebRequest)
-      .then(result => this.formatBroker(result));
+    return this.formatBroker(result);
   }
 
-  putBroker(payload: Broker): Promise<Broker> {
-    let payloadNew: any = payload;
+  async putBroker(payload: Broker): Promise<Broker> {
+    const payloadNew: any = payload;
     Object.keys(payload).forEach(key => {
       if (key === 'clearingIndicator') {
         payloadNew['clearing_indicator'] = payload.clearingIndicator.toString();
         delete payloadNew['clearingIndicator'];
+      } else if (key == 'sendAllocations') {
+        payloadNew[key] = payload[key].toString();
+        delete payloadNew[key];
+      } else if (
+        typeof payload[key] === 'number' &&
+        payload[key] === Number(payload[key]) &&
+        payload[key] !== Infinity &&
+        payload[key] !== !Infinity
+      ) {
+        payloadNew[key] = payload[key].toString();
       }
     });
     if (
@@ -332,42 +333,29 @@ export class BrokerService {
     ) {
       payloadNew.clearingBrokerId = 'null';
     }
-    const putWebRequest: PutWebRequest = {
-      endPoint: this.BROKER_API_URL,
-      payload: payloadNew
-    };
-    return this.wsp
-      .put(putWebRequest)
-      .then(result => this.formatBroker(result));
+    const result = await this.wsp.putHttp<BrokerFromApi>({
+      endpoint: this._brokersEndpoint,
+      body: payloadNew
+    });
+
+    return this.formatBroker(result);
   }
 
-  deleteBrokerIdentificationId(id: number): Promise<string> {
-    const deleteWebRequest: DeleteWebRequest = {
-      endPoint: this.BROKER_IDENTIFICATION_ID_API_URL,
-      payload: {
-        id: id
-      }
-    };
-    return this.wsp.delete(deleteWebRequest);
+  async deleteBrokerIdentificationId(id: number): Promise<string> {
+    return this.wsp.deleteHttp({
+      endpoint: `${this._brokerIdentificationIdEndpoint}/${id}`
+    });
   }
 
-  deleteBrokerContact(id: number): Promise<string> {
-    const deleteWebRequest: DeleteWebRequest = {
-      endPoint: 'broker_emails',
-      payload: {
-        id: id
-      }
-    };
-    return this.wsp.delete(deleteWebRequest);
+  async deleteBrokerContact(id: number): Promise<string> {
+    return this.wsp.deleteHttp({
+      endpoint: `${this._brokerEmailsEndpoint}/${id}`
+    });
   }
 
-  deleteBroker(id: number): Promise<string> {
-    const deleteWebRequest: DeleteWebRequest = {
-      endPoint: 'brokers',
-      payload: {
-        id: id
-      }
-    };
-    return this.wsp.delete(deleteWebRequest);
+  async deleteBroker(id: number): Promise<string> {
+    return this.wsp.deleteHttp({
+      endpoint: `${this._brokersEndpoint}/${id}`
+    });
   }
 }

@@ -18,10 +18,9 @@ interface FrontEndError {
 @Injectable()
 export class FrontendErrorService {
   constructor(
-    private _http: HttpClient,
-    private _userService: UserService,
-    @Inject(FRONT_END_ERROR_SERVICE_URL)
-    private FRONT_END_ERROR_RESOURCE_URL: string
+    private readonly _http: HttpClient,
+    private readonly _userService: UserService,
+    @Inject(FRONT_END_ERROR_SERVICE_URL) private readonly FRONT_END_ERROR_RESOURCE_URL: string
   ) {}
   handleError(error: any): void {
     console.error(error);

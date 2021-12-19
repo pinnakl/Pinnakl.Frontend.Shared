@@ -1,0 +1,96 @@
+<form
+  class="container-fluid new-alert-form order-form-height"
+  novalidate
+  [formGroup]="alertForm"
+>
+  <div class="row form-group">
+    <div class="col-12">
+      <h3 class="align-left">
+        {{ title }}
+      </h3>
+    </div>
+  </div>
+
+  <div class="row form-group">
+    <div class="col-md-12">
+      <security-selector
+        formControlName="security"
+        [objectModel]="true"
+        [required]="true"
+        [securities]="securities"
+        [disabled]="submitting"
+      >
+      </security-selector>
+    </div>
+  </div>
+  <div class="row form-group">
+    <!-- Price Type -->
+    <div class="col-md-6" *ngIf="!watchlistMode">
+      <pinnakl-input
+        controlName="priceType"
+        label="PRICE TYPE"
+        type="dropdown"
+        [dropdownSource]="priceTypes"
+        [dropdownOptions]="{
+          viewProperty: 'value',
+          modelProperty: 'value'
+        }"
+        [form]="alertForm"
+        [required]="true"
+        [disabled]="submitting"
+      >
+      </pinnakl-input>
+    </div>
+
+    <!-- Condition -->
+    <div class="col-md-6" *ngIf="!watchlistMode">
+      <pinnakl-input
+        controlName="condition"
+        label="TRIGGERED"
+        type="dropdown"
+        [dropdownSource]="conditionTypes"
+        [dropdownOptions]="{
+          viewProperty: 'key',
+          modelProperty: 'value'
+        }"
+        [form]="alertForm"
+        [required]="true"
+        [disabled]="submitting"
+      >
+      </pinnakl-input>
+    </div>
+
+    <!-- PRICE -->
+    <div class="col-md-6" *ngIf="!watchlistMode">
+      <pinnakl-input
+        controlName="price"
+        label="PRICE"
+        type="numeric"
+        [form]="alertForm"
+        [disabled]="submitting"
+      >
+      </pinnakl-input>
+    </div>
+  </div>
+
+  <div class="panel-command row form-group">
+    <div class="col-12 d-flex justify-content-end">
+      <button
+        class="btn reset-btn mr-3"
+        (click)="closeModal()"
+        [disabled]="submitting"
+      >
+        CANCEL
+      </button>
+      <button
+        type="submit"
+        class="btn action-btn waves-effect"
+        (click)="submitForm($event)"
+        [disabled]="submitting"
+      >
+        <ng-container *ngIf="watchlistMode">ADD</ng-container>
+        <ng-container *ngIf="!watchlistMode">CREATE</ng-container>
+      </button>
+    </div>
+  </div>
+</form>

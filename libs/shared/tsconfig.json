@@ -1,7 +1,8 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "types": ["node", "jest", "googlemaps"]
+    "types": ["node", "jest", "googlemaps"],
+    "allowSyntheticDefaultImports": true
   },
   "include": ["**/*.ts"]
 }

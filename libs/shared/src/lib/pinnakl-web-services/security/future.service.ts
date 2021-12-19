@@ -1,17 +1,19 @@
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 
-import { GetWebRequest, PostWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
+import {
+  WebServiceProvider
+} from '@pnkl-frontend/core';
+import { Future } from '../../models/security';
 import { FutureFromApi } from '../../models/security/future-from-api.model';
-import { Future } from '../../models/security/future.model';
 
 @Injectable()
 export class FutureService {
-  private readonly RESOURCE_URL = 'futures';
+  private readonly _futuresEndpoint = 'entities/futures';
 
-  constructor(private wsp: WebServiceProvider) {}
+  constructor(private readonly wsp: WebServiceProvider) { }
 
-  getFutureFromSecurityId(securityId: number): Promise<Future> {
+  async getFutureFromSecurityId(securityId: number): Promise<Future> {
     const fields = [
       'Contract_Size',
       'Expiration_Date',
@@ -25,9 +27,9 @@ export class FutureService {
       'MaintenanceMargin'
     ];
 
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: {
+    const futures = await this.wsp.getHttp<FutureFromApi[]>({
+      endpoint: this._futuresEndpoint,
+      params: {
         fields: fields,
         filters: [
           {
@@ -37,53 +39,42 @@ export class FutureService {
           }
         ]
       }
-    };
-
-    return this.wsp
-      .get(getWebRequest)
-      .then((entities: FutureFromApi[]) =>
-        entities.length === 0 ? null : this.formatFuture(entities[0])
-      );
+    });
+    return futures.length === 0 ? null : this.formatFuture(futures[0]);
   }
 
-  postFuture(entityToSave: Future): Promise<Future> {
-    const requestBody = this.getFutureForServiceRequest(entityToSave);
+  async postFuture(entityToSave: Future): Promise<Future> {
+    const entity = await this.wsp.postHttp<FutureFromApi>({
+      endpoint: this._futuresEndpoint,
+      body: this.getFutureForServiceRequest(entityToSave)
+    });
 
-    const postWebRequest: PostWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      payload: requestBody
-    };
-
-    return this.wsp
-      .post(postWebRequest)
-      .then((entity: FutureFromApi) => this.formatFuture(entity));
+    return this.formatFuture(entity);
   }
 
-  putFuture(entityToSave: Future): Promise<Future> {
-    let requestBody = this.getFutureForServiceRequest(entityToSave);
-    return this.wsp
-      .put({
-        endPoint: this.RESOURCE_URL,
-        payload: requestBody
-      })
-      .then((entity: FutureFromApi) => this.formatFuture(entity));
+  async putFuture(entityToSave: Future): Promise<Future> {
+    const entity = await this.wsp.putHttp<FutureFromApi>({
+      endpoint: this._futuresEndpoint,
+      body: this.getFutureForServiceRequest(entityToSave)
+    });
+
+    return this.formatFuture(entity);
   }
 
   private formatFuture(entity: FutureFromApi): Future {
     const contractSize = parseFloat(entity.contract_size),
       expirationDateMoment = moment(entity.expiration_date, 'MM/DD/YYYY'),
-      id = parseInt(entity.id),
+      id = +entity.id,
       lastTradeableDateMoment = moment(
         entity.last_tradeable_date,
         'MM/DD/YYYY'
       ),
-      securityId = parseInt(entity.securityid),
+      securityId = +entity.securityid,
       tickSize = parseFloat(entity.tick_size),
       tickValue = parseFloat(entity.tick_value),
       valueOf1Pt = parseFloat(entity.value_of_1_pt),
       initialMargin = parseFloat(entity.initialmargin),
       maintenanceMargin = parseFloat(entity.maintenancemargin);
-
 
     return new Future(
       !isNaN(contractSize) ? contractSize : null,
@@ -97,8 +88,7 @@ export class FutureService {
       !isNaN(tickValue) ? tickValue : null,
       !isNaN(valueOf1Pt) ? valueOf1Pt : null,
       !isNaN(initialMargin) ? initialMargin : null,
-      !isNaN(maintenanceMargin) ? maintenanceMargin : null,
-
+      !isNaN(maintenanceMargin) ? maintenanceMargin : null
     );
   }
 
@@ -116,7 +106,6 @@ export class FutureService {
         initialMargin,
         maintenanceMargin
       } = entity;
-
 
     if (contractSize !== undefined) {
       entityForApi.contract_size =
@@ -153,11 +142,11 @@ export class FutureService {
     }
     if (initialMargin !== undefined) {
       entityForApi.initialmargin =
-      initialMargin !== null ? initialMargin.toString() : 'null';
+        initialMargin !== null ? initialMargin.toString() : 'null';
     }
     if (maintenanceMargin !== undefined) {
       entityForApi.maintenancemargin =
-      maintenanceMargin !== null ? maintenanceMargin.toString() : 'null';
+        maintenanceMargin !== null ? maintenanceMargin.toString() : 'null';
     }
 
     return entityForApi;

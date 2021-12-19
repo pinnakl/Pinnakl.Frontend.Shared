@@ -1,33 +1,27 @@
 import { Injectable } from '@angular/core';
-import {
-  GetWebRequest,
-  PostWebRequest,
-  WebServiceProvider
-} from '@pnkl-frontend/core';
-import { PeLoan, PeLoanApi } from '../../models';
+import { WebServiceProvider } from '@pnkl-frontend/core';
 import * as moment from 'moment';
+import { PeLoan, PeLoanApi } from '../../models';
 
 @Injectable()
 export class PeloanService {
-  private readonly RESOURCE_URL = 'pe_loans';
-  constructor(private wsp: WebServiceProvider) {}
+  private readonly _peLoansEndpoint = 'entities/pe_loans';
 
-  postLoan(peLoan: PeLoan): Promise<PeLoan> {
-    const payload: any = this.formatLoanData(peLoan);
-    let postWebRequest: PostWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      payload: payload
-    };
+  constructor(private readonly wsp: WebServiceProvider) { }
 
-    return this.wsp.post(postWebRequest).then((entity: PeLoanApi) => {
-      return this.formatPeLoanApi(entity);
+  async postLoan(peLoan: PeLoan): Promise<PeLoan> {
+    const entity = await this.wsp.postHttp<PeLoanApi>({
+      endpoint: this._peLoansEndpoint,
+      body: this.formatLoanData(peLoan)
     });
+
+    return this.formatPeLoanApi(entity);
   }
 
-  getPeLoanDetailsById(id: number): Promise<PeLoan> {
-    let getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: {
+  async getPeLoanDetailsById(id: number): Promise<PeLoan> {
+    const entities = await this.wsp.getHttp<PeLoanApi[]>({
+      endpoint: this._peLoansEndpoint,
+      params: {
         fields: ['*'],
         filters: [
           {
@@ -37,29 +31,24 @@ export class PeloanService {
           }
         ]
       }
-    };
-    return this.wsp.get(getWebRequest).then((entity: PeLoanApi[]) => {
-      if (entity && entity.length > 0) {
-        return this.formatPeLoanApi(entity[0]);
-      }
-      return null;
     });
+
+    return entities?.length ? this.formatPeLoanApi(entities[0]) : null;
   }
 
-  putLoan(peLoan: PeLoan): Promise<PeLoan> {
-    let requestBody = this.fromPutLoanPayload(peLoan);
-    return this.wsp
-      .put({
-        endPoint: this.RESOURCE_URL,
-        payload: requestBody
-      })
-      .then((entity: PeLoanApi) => this.formatPeLoanApi(entity));
+  async putLoan(peLoan: PeLoan): Promise<PeLoan> {
+    const entity = await this.wsp.putHttp<PeLoanApi>({
+      endpoint: this._peLoansEndpoint,
+      body: this.fromPutLoanPayload(peLoan)
+    });
+
+    return this.formatPeLoanApi(entity);
   }
 
   fromPutLoanPayload(peLoan: PeLoan): any {
-    let formattedLoanData = {};
+    const formattedLoanData = {};
 
-    for (let key in peLoan) {
+    for (const key in peLoan) {
       if (peLoan.hasOwnProperty(key)) {
         if (key === 'accruingIndicator') {
           if (!peLoan[key] && peLoan[key] !== false) {
@@ -76,13 +65,14 @@ export class PeloanService {
     return formattedLoanData;
   }
 
-  getPeLoanFromSecurityId(securityId: number): Promise<PeLoan> {
+  async getPeLoanFromSecurityId(securityId: number): Promise<PeLoan> {
     if (!securityId) {
       return Promise.resolve({} as PeLoan);
     }
-    let getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: {
+
+    const entities = await this.wsp.getHttp<PeLoanApi[]>({
+      endpoint: this._peLoansEndpoint,
+      params: {
         fields: ['*'],
         filters: [
           {
@@ -92,25 +82,16 @@ export class PeloanService {
           }
         ]
       }
-    };
-
-    return this.wsp.get(getWebRequest).then((entity: PeLoanApi[]) => {
-      if (entity && entity.length > 0) {
-        return this.formatPeLoanApi(entity[0]);
-      }
-      return null;
     });
+
+    return entities?.length ? this.formatPeLoanApi(entities[0]) : null;
   }
 
   formatPeLoanApi(entity: PeLoanApi): PeLoan {
-    const loan: PeLoan = {
-      accruingIndicator: entity.accruingindicator
-        ? entity.accruingindicator === 'True'
-          ? true
-          : false
-        : null,
+    return {
+      accruingIndicator: entity.accruingindicator ? entity.accruingindicator === 'True' : null,
       couponRate: entity.couponrate ? parseFloat(entity.couponrate) : null,
-      couponTypeId: entity.coupontypeid ? parseInt(entity.coupontypeid) : null,
+      couponTypeId: entity.coupontypeid ? parseInt(entity.coupontypeid, 10) : null,
       couponType: entity.coupontype,
       firstAccrualDate: entity.firstaccrualdate
         ? moment(entity.firstaccrualdate, 'MM/DD/YYYY').toDate()
@@ -118,24 +99,23 @@ export class PeloanService {
       firstCouponDate: entity.firstcoupondate
         ? moment(entity.firstcoupondate, 'MM/DD/YYYY').toDate()
         : null,
-      id: parseInt(entity.id),
+      id: parseInt(entity.id, 10),
       interestBasisId: entity.interestbasisid
-        ? parseInt(entity.interestbasisid)
+        ? parseInt(entity.interestbasisid, 10)
         : null,
-      faceAmount: entity.faceamount ? parseInt(entity.faceamount) : null,
+      faceAmount: entity.faceamount ? parseInt(entity.faceamount, 10) : null,
       maturityDate: entity.maturitydate
         ? moment(entity.maturitydate, 'MM/DD/YYYY').toDate()
         : null,
       paymentFrequencyId: entity.paymentfrequencyid
-        ? parseInt(entity.paymentfrequencyid)
+        ? parseInt(entity.paymentfrequencyid, 10)
         : null,
       paymentFrequency: entity.paymentfrequency,
-      securityId: entity.securityid ? parseInt(entity.securityid) : null,
+      securityId: entity.securityid ? parseInt(entity.securityid, 10) : null,
       creditQuality: entity.creditquality ? entity.creditquality : null,
       status: entity.status ? entity.status : null,
       geography: entity.geography ? entity.geography : null
     };
-    return loan;
   }
 
   formatLoanData(peLoan: PeLoan): any {

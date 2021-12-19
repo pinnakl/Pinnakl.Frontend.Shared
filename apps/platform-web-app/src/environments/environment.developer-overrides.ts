@@ -1,12 +1,9 @@
 import {
-  defaultLoginCredentials,
-  fileServiceUrls,
   firebaseConfigs,
-  frontEndErrorServiceUrls,
+  httpServerUrls,
   httpServiceUrls,
-  requestTimeoutPeriods,
-  serverUrls,
-  sseAppUrls
+  sseAppUrls,
+  sseBackupAppUrls
 } from './pinnakl-environment-options';
 import { PinnaklEnvironment } from './pinnakl-environment.model';
 
@@ -18,6 +15,7 @@ export const environment: Partial<PinnaklEnvironment> = {
   production: false,
   firebaseConfig: firebaseConfigs.prod,
   httpServiceUrl: httpServiceUrls.prod,
-  serverUrl: serverUrls.prod,
-  sseAppUrl: sseAppUrls.prod
+  httpServerUrl: httpServerUrls.staging,
+  sseAppUrl: sseAppUrls.prod,
+  sseBackupAppUrl: sseBackupAppUrls.prod
 };

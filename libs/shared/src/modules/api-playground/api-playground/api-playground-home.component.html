@@ -1,0 +1,32 @@
+<div class="bg-white p-3 container-fluid wrapper">
+  <div class="my-3 col-auto">
+    <input [(ngModel)]="from" />
+    <input class="ml-3" [(ngModel)]="to" />
+    <button class="btn btn-primary mx-3" (click)="doSomething()">
+      DO SOMETHING
+    </button>
+    <button class="btn btn-primary mx-3" (click)="sseTesting(true)">
+      START SSE TESTING
+    </button>
+    <button class="btn btn-primary mx-3" (click)="sseTesting(false)">
+      STOP SSE TESTING
+    </button>
+    <button class="btn btn-primary mx-3" (click)="clearEvents()">
+      CLEAR EVENTS ARRAY
+    </button>
+  </div>
+  <div class="my-3 col-auto">
+    <pre
+    >{{ apiActionArrayResult | json }}</pre
+    >
+
+
+    <pre
+      [ngClass]="{
+        'text-success': !apiActionError,
+        'text-danger': apiActionError
+      }"
+      >{{ apiActionResult | json }}</pre
+    >
+  </div>
+</div>

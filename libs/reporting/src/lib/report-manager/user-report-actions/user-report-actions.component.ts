@@ -7,8 +7,8 @@ import {
   UserReport,
   UserReportService,
   Utility,
-  ReportingHelper
 } from '@pnkl-frontend/shared';
+import { ReportingHelper } from '../../shared/reporting-helper.service';
 
 declare let $: any;
 
@@ -19,24 +19,24 @@ declare let $: any;
 export class UserReportActionsComponent {
   @Input() reportName = '';
   @Input() userReportId: number;
-  @Input() private savedColumns: ReportingColumn[];
+  @Input() savedColumns: ReportingColumn[];
   @Output() reportRenamed = new EventEmitter<string>();
 
   actionsVisible = false;
   confirmationVisible = false;
   hideRenameModal = true;
   constructor(
-    private pinnaklSpinner: PinnaklSpinner,
-    private reportingHelper: ReportingHelper,
-    private router: Router,
-    private toastr: Toastr,
-    private userReportService: UserReportService,
-    private utility: Utility
-  ) {}
+    private readonly pinnaklSpinner: PinnaklSpinner,
+    private readonly reportingHelper: ReportingHelper,
+    private readonly router: Router,
+    private readonly toastr: Toastr,
+    private readonly userReportService: UserReportService,
+    private readonly utility: Utility
+  ) { }
 
   deleteReport(): void {
     this.pinnaklSpinner.spin();
-    let deleteColumnsPromise: Promise<any> = !this.savedColumns
+    const deleteColumnsPromise: Promise<any> = !this.savedColumns
       ? Promise.resolve()
       : Promise.all(
           this.savedColumns.map(col => this.reportingHelper.deleteColumn(col))
@@ -60,7 +60,7 @@ export class UserReportActionsComponent {
     this.pinnaklSpinner.spin();
     this.userReportService
       .putUserReport(report)
-      .then(ur => {
+      .then(() => {
         this.pinnaklSpinner.stop();
         this.toastr.success('Report renamed successfully');
         this.reportRenamed.emit(reportName);

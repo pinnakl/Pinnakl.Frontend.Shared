@@ -1,0 +1,37 @@
+<div class="row bgColorWhite center-aligned-row wrapper">
+  <div class="col-12">
+    <div class="row">
+      <div class="col-6">
+        <span class="title" *ngIf="mainAccount">{{mainAccount.accountCode + ' '}}</span>
+        <span class="title">P&L {{currentType}}</span></div>
+      <div class="col-6">
+        <form [formGroup]="form" class="type-switcher">
+          <label *ngFor="let item of types" [for]="item.label" class="type-switcher-item">
+            <input type="radio" [id]="item.label" [value]="item.label" formControlName="type">
+            <span>{{item.value}}</span>
+          </label>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-12">
+    <div class="row" style="width: 100%;">
+      <div class="col-12">
+        <pnkl-line-chart-date
+          style="width: 100%"
+          defaultFrequency="Minutely"
+          [customStyles]="{ 'height': '550' }"
+          [fitToData]="true"
+          [showLegend]="false"
+          [values]="chartData"
+          [colors]="['#7f3aff']"
+          [keysToShow]="keysToShow"
+          tooltipDatePipeFormat="shortTime"
+          [customCategoriesAxis]="true"
+          [customAxisFormat]="customAxisFormat"
+          [tooltipValueFormatter]="tooltipValueFormatter"
+        ></pnkl-line-chart-date>
+      </div>
+      </div>
+  </div>
+</div>

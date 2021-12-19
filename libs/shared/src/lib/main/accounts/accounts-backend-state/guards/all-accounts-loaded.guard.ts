@@ -23,13 +23,13 @@ export class AllAccountsLoadedGuard implements CanActivate {
         if (loaded) {
           return;
         }
-        this.store.dispatch(new AttemptLoadAccounts());
-        this.store.dispatch(new AttemptLoadCashBalance());
+        this.store.dispatch(AttemptLoadAccounts());
+        this.store.dispatch(AttemptLoadCashBalance());
       }),
       filter(loaded => loaded),
       take(1)
     );
   }
 
-  constructor(private store: Store<State>) {}
+  constructor(private readonly store: Store<State>) {}
 }

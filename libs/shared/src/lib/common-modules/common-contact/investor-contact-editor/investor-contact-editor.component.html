@@ -1,0 +1,237 @@
+<form
+  class="col-12 edit-contact-form"
+  [formGroup]="contactForm"
+  (ngSubmit)="saveContact()"
+  [class.ng-submitted]="submitted"
+>
+  <div class="row">
+    <div class="col-12 title">
+      <h3 class="align-left">
+        <span class="text">{{ editContact ? 'Edit Contact' : 'New Contact' }}</span>
+        <span class="rolling-avg-score" *ngIf="editContact"> {{editContact?.rollingTwelveMonthAvgScore | number: '1.0-0'}} </span>
+        <i class="icon-pinnakl-portal" *ngIf="editContact?.isPortalUser === 'True'"></i>
+      </h3>
+    </div>
+  </div>
+  <div class="row form-group">
+    <pinnakl-input
+      class="col-md-3"
+      controlName="salutation"
+      [dropdownSource]="salutations"
+      [form]="contactForm"
+      label="SALUTATION"
+      type="dropdown"
+    >
+    </pinnakl-input>
+    <pinnakl-input
+      class="col-md-3"
+      controlName="firstName"
+      [form]="contactForm"
+      label="FIRST NAME"
+      [required]="true"
+      type="text"
+    >
+    </pinnakl-input>
+    <pinnakl-input
+      class="col-md-3"
+      controlName="lastName"
+      [form]="contactForm"
+      label="LAST NAME"
+      [required]="true"
+      type="text"
+    >
+    </pinnakl-input>
+    <pinnakl-input
+      class="col-md-3"
+      controlName="preferredName"
+      [form]="contactForm"
+      label="PREFERRED NAME"
+      type="text"
+    >
+    </pinnakl-input>
+  </div>
+
+  <div class="row form-group" *ngIf="isWithoutInverstor">
+    <pinnakl-input
+    class="col-12"
+    controlName="investorId"
+    [form]="contactForm"
+    [required]="true"
+    [dropdownSource]="organizations"
+    [dropdownOptions]="{
+            objectModel: true,
+            modelProperty: 'OrganizationId',
+            viewProperty: 'OrganizationName'
+          }"
+    type="dropdown"
+    label="Related Organization"
+    (onFilterValueChange)="getOrganizations($event)"
+    (onDropdownValueChange)="selectOrganizations($event)"
+    >
+    </pinnakl-input>
+  </div>
+
+  <div class="row form-group">
+    <pinnakl-input
+      class="col-md-3"
+      controlName="title"
+      [form]="contactForm"
+      label="TITLE"
+      type="text"
+    >
+    </pinnakl-input>
+    <pinnakl-input
+      class="col-md-9"
+      controlName="postalAddressId"
+      [dropdownSource]="investorAddresses"
+      [dropdownOptions]="{
+        modelProperty: 'id',
+        viewProperty: 'addressString'
+      }"
+      [form]="contactForm"
+      label="ADDRESS"
+      type="dropdown"
+    >
+    </pinnakl-input>
+  </div>
+
+  <div class="row form-group">
+    <pinnakl-input
+      class="col-12"
+      controlName="distributionListContacts"
+      [dropdownSource]="distLists"
+      [dropdownOptions]="{
+        modelProperty: 'id',
+        viewProperty: 'name'
+      }"
+      [form]="contactForm"
+      label="DISTRIBUTION LIST"
+      type="multiselect"
+    >
+    </pinnakl-input>
+  </div>
+
+  <app-custom-attributes-values-editor
+    *ngIf="customAttributes?.length"
+    #customAttributesComponent
+    [customAttributes]="customAttributes"
+    [customAttributeValues]="customAttributeValues"
+    [showOnlyForm]="true"
+    [entity]="editContact"
+    [entityKey]="'contactId'"
+    [featureName]="'Contact'"
+    (update)="customAttributesUpdated.emit($event)"
+  ></app-custom-attributes-values-editor>
+
+  <div class="row form-group">
+    <contact-phones-editor
+      class="col-12"
+      formControlName="phones"
+      [phoneTypes]="phoneTypes"
+      (onDelete)="onDelete($event)"
+    ></contact-phones-editor>
+
+    <contact-email-addresses-editor
+      class="col-12"
+      formControlName="emailAddresses"
+      (onDelete)="onDelete($event)"
+      (onChange)="emailsChange($event)"
+    ></contact-email-addresses-editor>
+  </div>
+
+  <div class="row form-group">
+    <pinnakl-input
+      class="col-12"
+      controlName="notes"
+      [form]="contactForm"
+      label="NOTES"
+      type="textArea"
+      inputClass="height-4"
+    ></pinnakl-input>
+  </div>
+
+  <div class="row no-gutters">
+    <div class="col-12">
+      <div class="row no-gutters justify-content-start">
+        <span
+          class="col-auto add-btn d-flex mb-4 cursor-pointer"
+          (click)="addPhone()"
+        >
+          <img
+            alt="phone-icon"
+            src="assets/images/phone.svg"
+            class="img-fluid mr-2"
+          />
+          <span>ADD PHONE NUMBER</span>
+        </span>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="row no-gutters justify-content-start">
+        <span
+          class="col-auto add-btn d-flex mb-4 cursor-pointer"
+          (click)="addEmail()"
+        >
+          <img
+            alt="phone-icon"
+            src="assets/images/email.svg"
+            class="img-fluid mr-2"
+          />
+          <span>ADD EMAIL</span>
+        </span>
+      </div>
+    </div>
+    <div class="col-12" *ngIf="!isWithoutInverstor">
+      <div class="row no-gutters justify-content-start align">
+        <span
+          class="col-auto add-btn d-flex mb-4 cursor-pointer migration-text"
+          (click)="onMigrate()"
+        >
+          <span>MIGRATE TO ANOTHER ORGANIZATION</span>
+        </span>
+        <div class="cursor-pointer" *ngIf="editContact && editContact.migrations" (click)="onMigrationHistoryOpen.emit(editContact?.migrations)">
+          <span class="icon-history"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row flex-no-wrap align-items-center form-group">
+    <div class="col-auto">
+      <button
+        #anchor
+        class="btn btn-outline-secondary waves-effect"
+        type="button"
+        (click)="showConfirmation = true"
+        [disabled]="!contactForm.dirty"
+      >
+        CANCEL
+      </button>
+      <confirm-action
+        [anchor]="anchor"
+        [showConfirmation]="showConfirmation"
+        [confirmationMessage]="
+          'Are you sure you want to cancel and close the form?'
+        "
+        (onConfirmed)="resetParentForm()"
+        (onCancelled)="onConfirmationCancel()"
+      >
+      </confirm-action>
+    </div>
+
+    <div class="col d-flex align-items-center justify-content-end flex-grow-1">
+
+      <pinnakl-input
+        [ngClass]="{hidden: isWithoutInverstor ? !contactForm.get('investorId').value : false}"
+        class="mr-3"
+        controlName="isPrimary"
+        type="boolean"
+        [form]="contactForm"
+        label="Primary contact"
+      ></pinnakl-input>
+
+      <button class="btn btn-success waves-effect" type="submit">SAVE</button>
+    </div>
+  </div>
+</form>

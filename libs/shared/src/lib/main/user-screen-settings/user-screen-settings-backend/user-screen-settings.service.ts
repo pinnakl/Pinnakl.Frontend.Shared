@@ -1,123 +1,111 @@
 import { Injectable } from '@angular/core';
 
 import { UserService, WebServiceProvider } from '@pnkl-frontend/core';
-import { UserScreenSettingFromApi } from './user-screen-setting-from-api.model';
+import { UserModuleConfig } from '../../../models/user-module-config';
 import { UserScreenSetting } from './user-screen-setting.model';
 
 @Injectable()
 export class UserScreenSettingsService {
-  private readonly RESOURCE_URL = 'user_screen_settings';
-  constructor(
-    private wsp: WebServiceProvider,
-    private userService: UserService
-  ) {}
+  private readonly _userModuleConfig = 'entities/user_module_configs';
+  readonly PnLDashboardConfigName = 'widgets';
+  readonly PnLDashboardModule = 'PNL_DASHBOARD_WIDGETS';
+
+  constructor(private readonly wsp: WebServiceProvider, private readonly userService: UserService) { }
 
   async getAll(): Promise<UserScreenSetting[]> {
     const user = this.userService.getUser();
-    const entitiesFromApi: UserScreenSettingFromApi[] = await this.wsp.get({
-      endPoint: this.RESOURCE_URL,
-      options: {
-        fields: ['screen', 'setting', 'settingValue'],
+    const entitiesFromApi: UserModuleConfig[] = await this.wsp.getHttp({
+      endpoint: this._userModuleConfig,
+      params: {
+        fields: [ 'id', 'userid', 'module', 'configname', 'configvalue' ],
         filters: [
           {
-            key: 'userId',
+            key: 'userid',
             type: 'EQ',
-            value: [user.id.toString()]
+            value: [ user.id.toString() ]
+          },
+          {
+            key: 'configname',
+            type: 'EQ',
+            value: [ this.PnLDashboardConfigName ]
+          },
+          {
+            key: 'module',
+            type: 'EQ',
+            value: [ this.PnLDashboardModule ]
           }
         ]
       }
     });
-    const entities = entitiesFromApi.map(formatUserScreenSetting);
-    return entities;
+    return entitiesFromApi.map((setting: UserModuleConfig) => this.formatUserScreenSetting(setting));
   }
 
   async post(entity: Partial<UserScreenSetting>): Promise<UserScreenSetting> {
-    const entityForServiceRequest = getUserScreenSettingForServiceRequest(
-      entity
-    );
-    const entityFromApi: UserScreenSettingFromApi = await this.wsp.post({
-      endPoint: this.RESOURCE_URL,
-      payload: entityForServiceRequest
+    const entityFromApi: UserModuleConfig = await this.wsp.postHttp({
+      endpoint: this._userModuleConfig,
+      body: this.getUserScreenSettingForServiceRequest(entity)
     });
-    const savedEntity = formatUserScreenSetting(entityFromApi);
-    return savedEntity;
+    return this.formatUserScreenSetting(entityFromApi);
   }
 
   async put(entity: Partial<UserScreenSetting>): Promise<UserScreenSetting> {
-    const entityForServiceRequest = getUserScreenSettingForServiceRequest(
-      entity
-    );
-    const entityFromApi: UserScreenSettingFromApi = await this.wsp.put({
-      endPoint: this.RESOURCE_URL,
-      payload: entityForServiceRequest
+    const entityFromApi: UserModuleConfig = await this.wsp.putHttp({
+      endpoint: this._userModuleConfig,
+      body: this.getUserScreenSettingForServiceRequest(entity)
     });
-    const savedEntity = formatUserScreenSetting(entityFromApi);
-    return savedEntity;
+    return this.formatUserScreenSetting(entityFromApi);
   }
-}
 
-function formatUserScreenSetting({
-  id,
-  screen,
-  setting,
-  settingvalue
-}: UserScreenSettingFromApi): UserScreenSetting {
-  return {
-    id: +id,
-    screen,
-    setting,
-    settingValue: formatUserScreenSettingValue(setting, settingvalue)
-  };
-}
+  private formatUserScreenSetting(config: UserModuleConfig): UserScreenSetting {
+    const configValue = JSON.parse(config.configvalue);
+    return {
+      id: +config.id,
+      screen: configValue.screen,
+      setting: configValue.setting,
+      settingValue: this.formatUserScreenSettingValue(configValue.setting, configValue.settingvalue)
+    };
+  }
 
-function formatUserScreenSettingValue(
-  setting: string,
-  settingValue: string
-): number | number[] | string | string[] {
-  switch (setting.toLowerCase()) {
-    case 'widget ids':
-      return settingValue.split(',').map(id => +id);
-    default:
-      throw new Error('Invalid setting');
+  private formatUserScreenSettingValue(setting: string, settingValue: string): number | number[] | string | string[] {
+    switch ( setting.toLowerCase() ) {
+      case 'widget ids':
+        return settingValue.split(',').map(id => +id);
+      default:
+        throw new Error('Invalid setting');
+    }
   }
-}
 
-function getUserScreenSettingForServiceRequest({
-  id,
-  screen,
-  setting,
-  settingValue
-}: Partial<UserScreenSetting>): UserScreenSettingFromApi {
-  const entityForApi = {} as UserScreenSettingFromApi;
-  if (id) {
-    entityForApi.id = id.toString();
+  private getUserScreenSettingForServiceRequest({ id, screen, setting, settingValue }: Partial<UserScreenSetting>): UserModuleConfig {
+    const userSetting = {} as UserModuleConfig;
+    const configValue = {} as any;
+    userSetting.module = this.PnLDashboardModule;
+    userSetting.configname = this.PnLDashboardConfigName;
+    userSetting.userid = this.userService.getUser().id.toString();
+    if (id) {
+      userSetting.id = id.toString();
+    }
+    if (screen) {
+      configValue.screen = screen;
+    }
+    if (setting) {
+      configValue.setting = setting;
+    }
+    if (settingValue) {
+      configValue.settingvalue = this.getUserScreenSettingValueForServiceRequest(setting, settingValue);
+    }
+    userSetting.configvalue = JSON.stringify(configValue);
+    if (!Object.keys(userSetting).length) {
+      throw new Error('Invalid entity');
+    }
+    return userSetting;
   }
-  if (screen) {
-    entityForApi.screen = screen;
-  }
-  if (setting) {
-    entityForApi.setting = setting;
-  }
-  if (settingValue) {
-    entityForApi.settingvalue = getUserScreenSettingValueForServiceRequest(
-      setting,
-      settingValue
-    );
-  }
-  if (!Object.keys(entityForApi).length) {
-    throw new Error('Invalid entity');
-  }
-  return entityForApi;
-}
 
-function getUserScreenSettingValueForServiceRequest(
-  setting: string,
-  settingValue: number | number[] | string | string[]
-): string {
-  switch (setting.toLowerCase()) {
-    case 'widget ids':
-      return (<number[]>settingValue).join(',');
-    default:
-      throw new Error('Invalid setting');
+  private getUserScreenSettingValueForServiceRequest(setting: string, settingValue: number | number[] | string | string[]): string {
+    switch ( setting.toLowerCase() ) {
+      case 'widget ids':
+        return (<number[]> settingValue).join(',');
+      default:
+        throw new Error('Invalid setting');
+    }
   }
 }

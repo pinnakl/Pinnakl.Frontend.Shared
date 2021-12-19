@@ -1,70 +1,63 @@
 import { Injectable } from '@angular/core';
 
-import { GetWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
+import { WebServiceProvider } from '@pnkl-frontend/core';
+import { Organization } from '../../models/security';
 import { OrganizationFromApi } from '../../models/security/organization-from-api.model';
-import { Organization } from '../../models/security/organization.model';
 
 @Injectable()
 export class OrganizationService {
-  private readonly ORGANIZATIONS_URL = 'organizations';
+  private readonly _organizationsEndpoint = 'entities/organizations';
 
   private _organizations: Organization[];
 
-  constructor(private wsp: WebServiceProvider) {}
+  constructor(private readonly wsp: WebServiceProvider) { }
 
   getAllOrganizations(): Promise<Organization[]> {
     if (this._organizations) {
       return Promise.resolve(this._organizations);
     }
-    const fields = [
-      'Country_Code',
-      'Id',
-      'Name',
-      'Risk_Country_Code',
-      'Status_Id',
-      'Ticker'
-    ];
-
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.ORGANIZATIONS_URL,
-      options: {
-        fields: fields
-      }
-    };
 
     return this.wsp
-      .get(getWebRequest)
-      .then((entities: OrganizationFromApi[]) => {
-        this._organizations = entities.map(entity =>
-          this.formatOrganization(entity)
-        );
+      .getHttp<OrganizationFromApi[]>({
+        endpoint: this._organizationsEndpoint,
+        params: {
+          fields: [
+            'Country_Code',
+            'Id',
+            'Name',
+            'Risk_Country_Code',
+            'Status_Id',
+            'Ticker'
+          ]
+        }
+      })
+      .then(entities => {
+        this._organizations = entities.map(this.formatOrganization);
         return this._organizations;
       });
   }
 
   postOrganization(entityToSave: Organization): Promise<Organization> {
-    let requestBody = this.getOrganizationForServiceRequest(entityToSave);
     return this.wsp
-      .post({
-        endPoint: this.ORGANIZATIONS_URL,
-        payload: requestBody
+      .postHttp<OrganizationFromApi>({
+        endpoint: this._organizationsEndpoint,
+        body: this.getOrganizationForServiceRequest(entityToSave)
       })
-      .then((entity: OrganizationFromApi) => this.formatOrganization(entity));
+      .then(this.formatOrganization);
   }
 
   putOrganization(entityToSave: Organization): Promise<Organization> {
-    let requestBody = this.getOrganizationForServiceRequest(entityToSave);
     return this.wsp
-      .put({
-        endPoint: this.ORGANIZATIONS_URL,
-        payload: requestBody
+      .putHttp<OrganizationFromApi>({
+        endpoint: this._organizationsEndpoint,
+        body: this.getOrganizationForServiceRequest(entityToSave)
       })
-      .then((entity: OrganizationFromApi) => this.formatOrganization(entity));
+      .then(this.formatOrganization);
   }
 
   private formatOrganization(entity: OrganizationFromApi): Organization {
-    let id = parseInt(entity.id),
-      statusId = parseInt(entity.status_id);
+    const id = parseInt(entity.id, 10);
+    const statusId = parseInt(entity.status_id, 10);
     return new Organization(
       entity.country_code,
       !isNaN(id) ? id : null,

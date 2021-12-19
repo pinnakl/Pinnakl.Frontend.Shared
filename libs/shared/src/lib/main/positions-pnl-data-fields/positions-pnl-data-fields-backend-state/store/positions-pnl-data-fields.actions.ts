@@ -1,4 +1,4 @@
-import { Action } from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
 
 import { PositionsPnlDataField } from '../../positions-pnl-data-fields-backend';
 
@@ -8,25 +8,16 @@ export enum PositionsPnlDataFieldsActionTypes {
   LoadPositionsPnlDataFieldsFailed = '[PnlField] Load PositionsPnlDataFields Failed'
 }
 
-export class AttemptLoadPositionsPnlDataFields implements Action {
-  readonly type =
-    PositionsPnlDataFieldsActionTypes.AttemptLoadPositionsPnlDataFields;
-}
+export const AttemptLoadPositionsPnlDataFields = createAction(
+  PositionsPnlDataFieldsActionTypes.AttemptLoadPositionsPnlDataFields
+);
 
-export class LoadPositionsPnlDataFields implements Action {
-  readonly type = PositionsPnlDataFieldsActionTypes.LoadPositionsPnlDataFields;
-  constructor(
-    public payload: { positionsPnlDataFields: PositionsPnlDataField[] }
-  ) {}
-}
+export const LoadPositionsPnlDataFields = createAction(
+  PositionsPnlDataFieldsActionTypes.LoadPositionsPnlDataFields,
+  props<{ positionsPnlDataFields: PositionsPnlDataField[] }>()
+);
 
-export class LoadPositionsPnlDataFieldsFailed implements Action {
-  readonly type =
-    PositionsPnlDataFieldsActionTypes.LoadPositionsPnlDataFieldsFailed;
-  constructor(public payload: { error: any }) {}
-}
-
-export type PositionsPnlDataFieldActions =
-  | AttemptLoadPositionsPnlDataFields
-  | LoadPositionsPnlDataFields
-  | LoadPositionsPnlDataFieldsFailed;
+export const LoadPositionsPnlDataFieldsFailed = createAction(
+  PositionsPnlDataFieldsActionTypes.LoadPositionsPnlDataFieldsFailed,
+  props<{ error: any }>()
+);

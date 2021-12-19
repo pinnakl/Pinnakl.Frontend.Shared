@@ -1,37 +1,28 @@
 import { Injectable } from '@angular/core';
 
-import { GetWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
+import { WebServiceProvider } from '@pnkl-frontend/core';
+import { Country } from '../../models/security';
 import { CountryFromApi } from '../../models/security/country-from-api.model';
-import { Country } from '../../models/security/country.model';
 
 @Injectable()
 export class CountryService {
-  private readonly RESOURCE_URL = '/countries';
+  private readonly _countriesEndpoint = 'entities/countries';
 
-  constructor(private wsp: WebServiceProvider) {}
+  constructor(private readonly wsp: WebServiceProvider) {}
 
-  getCountries(): Promise<Country[]> {
-    let fields = ['Code', 'Id', 'Name', 'Region', 'SubRegion'],
-      queryString = `${this.RESOURCE_URL}?fields=${fields}`;
-
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: {
-        fields: fields
+  async getCountries(): Promise<Country[]> {
+    const entities = await this.wsp.getHttp<CountryFromApi[]>({
+      endpoint: this._countriesEndpoint,
+      params: {
+        fields: ['Code', 'Id', 'Name', 'Region', 'SubRegion']
       }
-    };
+    });
 
-    return this.wsp
-      .get(getWebRequest)
-      .then((entities: CountryFromApi[]) =>
-        entities.length === 0
-          ? null
-          : entities.map(entity => this.formatCountry(entity))
-      );
+    return entities.length === 0 ? null : entities.map(this.formatCountry);
   }
   private formatCountry(entity: CountryFromApi): Country {
-    let code = entity.code,
-      id = parseInt(entity.id),
+    const code = entity.code,
+      id = parseInt(entity.id, 10),
       name = entity.name,
       region = entity.region,
       subRegion = entity.subRegion;

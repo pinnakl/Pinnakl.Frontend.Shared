@@ -9,7 +9,7 @@ import { selectAccountsLoaded, selectAllAccounts, State } from './store';
 
 @Injectable()
 export class AccountsBackendStateFacade {
-  constructor(private _store: Store<State>) {}
+  constructor(private readonly _store: Store<State>) {}
   accounts$: Observable<Account[]> = this._store.select(selectAllAccounts);
   accountsLoaded$: Observable<boolean> = this._store.select(
     selectAccountsLoaded

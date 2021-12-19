@@ -1,0 +1,13 @@
+<span class="input-wrapper" *ngFor="let holder of placeholders; index as i"
+      [class.code-hidden]="isCodeHidden">
+  <input #input
+        id="digit-input"
+         (click)="onClick($event)"
+         (paste)="onPaste($event, i)"
+         (input)="onInput($event, i)"
+         (keydown)="onKeydown($event, i)"
+         [type]="inputType"
+         [disabled]="disabled"
+         autocomplete="one-time-code"/>
+         <input type="text" id="underscore" value="_" disabled/>
+</span>

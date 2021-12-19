@@ -2,10 +2,9 @@ import { Injectable } from '@angular/core';
 
 import * as moment from 'moment';
 
-import { UserService, WebServiceProvider } from '@pnkl-frontend/core';
+import { SessionInformationFromApi, UserService, WebServiceProvider } from '@pnkl-frontend/core';
 import { ClientJsSessionInformationProvider } from './client-js-session-information-provider.service';
 import { IpdataSessionInformationProvider } from './ipdata-session-information-provider.service';
-import { SessionInformationFromApi } from './session-information-from-api.model';
 
 // Includes only required fields from SessionInformationFromApi
 interface SessionInformationToPost extends Partial<SessionInformationFromApi> {
@@ -29,20 +28,20 @@ interface SessionInformationToPost extends Partial<SessionInformationFromApi> {
 
 @Injectable()
 export class SessionManagementService {
-  private readonly _RESOURCE_URL = 'session_management';
+  private readonly _sessionManagementEndpoint = 'entities/session_management';
 
   constructor(
-    private _clientJsSessionInformationProvider: ClientJsSessionInformationProvider,
-    private _ipdataSessionInformationProvider: IpdataSessionInformationProvider,
-    private _userService: UserService,
-    private _wsp: WebServiceProvider
-  ) {}
+    private readonly _clientJsSessionInformationProvider: ClientJsSessionInformationProvider,
+    private readonly _ipdataSessionInformationProvider: IpdataSessionInformationProvider,
+    private readonly _userService: UserService,
+    private readonly _wsp: WebServiceProvider
+  ) { }
 
   async post(): Promise<void> {
     const sessionInformation = await this._gatherSessionInformation();
-    return this._wsp.post({
-      endPoint: this._RESOURCE_URL,
-      payload: sessionInformation
+    return this._wsp.postHttp({
+      endpoint: this._sessionManagementEndpoint,
+      body: sessionInformation
     });
   }
 

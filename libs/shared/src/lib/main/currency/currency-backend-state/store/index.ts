@@ -38,3 +38,5 @@ export const selectDefaultCurrencyId = createSelector(
     return usd ? usd.id : null;
   }
 );
+
+export { LoadCurrencies } from './currency';

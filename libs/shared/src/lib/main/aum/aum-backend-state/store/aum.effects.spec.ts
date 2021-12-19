@@ -28,8 +28,8 @@ describe('AumEffects', () => {
         }
       ]
     });
-    effects = TestBed.get(AumEffects);
-    service = TestBed.get(AccountingService);
+    effects = TestBed.inject(AumEffects);
+    service = TestBed.inject(AccountingService);
   });
 
   describe('load$', () => {

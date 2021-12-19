@@ -10,3 +10,18 @@
   align-items: center;
   justify-content: center;
 }
+
+:host ::ng-deep {
+  .highcharts-data-label.highcharts-data-label-color-undefined.highcharts-label.highcharts-tracker {
+    span {
+      white-space: normal !important;
+    }
+  }
+
+  .highcharts-data-label.highcharts-data-label-color-undefined.highcharts-label.highcharts-tracker.tree-map-category-label {
+    span {
+      white-space: nowrap;
+    }
+  }
+
+}

@@ -1,0 +1,23 @@
+<div class="row">
+  <div class="col-md-4">
+    <span class="vertical-align-basline-middle color-white ml-5">Currency</span>
+  </div>
+  <div class="col-md-8">
+    <form [formGroup]="currencySelectionForm" novalidate>
+      <pinnakl-input
+        controlName="currency"
+        [dropdownSource]="currencies"
+        [dropdownOptions]="{
+          objectModel: true,
+          viewProperty: 'currency'
+        }"
+        [form]="currencySelectionForm"
+        hideLabel="True"
+        inputClass="pnkl-select-dark"
+        type="dropdown"
+      >
+      </pinnakl-input>
+    </form>
+  </div>
+</div>
+s

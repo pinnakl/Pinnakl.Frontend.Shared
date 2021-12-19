@@ -1,0 +1,15 @@
+<div [hidden]="securitiesHelper.currentTab !== 'securityInformation'">
+  <peloan-information
+    [asset]="peLoan"
+    [couponTypes]="couponTypes"
+    [currencies]="currencies"
+    [interestBasisOptions]="interestBasisOptions"
+    [manualSecuritySource]="manualSecuritySource"
+    [organizations]="organizations"
+    [paymentFrequencyOptions]="paymentFrequencyOptions"
+    [sectorOptions]="sectorOptions"
+    [security]="security"
+    [securityTypes]="securityTypes"
+  >
+  </peloan-information>
+</div>

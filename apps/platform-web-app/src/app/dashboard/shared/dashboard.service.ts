@@ -5,7 +5,7 @@ import * as moment from 'moment';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { GetWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
+import { WebServiceProvider } from '@pnkl-frontend/core';
 import { UserService } from '@pnkl-frontend/core';
 import { SubscriptionResponse } from '@pnkl-frontend/core';
 import { Account } from '@pnkl-frontend/shared';
@@ -25,10 +25,14 @@ import { TradeRequest } from './trade-request.model';
 
 @Injectable()
 export class DashboardService {
-  private readonly BENCHMARK_COMPARISONS_RESOURCE_URL = 'benchmark_comparisons';
-  private readonly NOTIFICATIONS_RESOURCE_URL = 'notifications';
-  private readonly TASK_REQUESTS_RESOURCE_URL = 'task_requests';
-  private readonly TASK_STATUS_DETAILS_RESOURCE_URL = 'task_status_details';
+  private readonly _tasksEndpoint = 'entities/tasks';
+  private readonly _taskParamsEndpoint = 'entities/task_params';
+  private readonly _taskRequestsEndpoint = 'entities/task_requests';
+  private readonly _notificationsEndpoint = 'entities/notifications';
+  private readonly _tradeRequestsEndpoint = 'entities/trade_requests';
+  private readonly _monthlyReturnsEndpoint = 'entities/monthly_returns';
+  private readonly _taskStatusDetailsEndpoint = 'entities/task_status_details';
+  private readonly _benchmarkComparisonsEndpoint = 'entities/benchmark_comparisons';
 
   constructor(
     private fileService: FileService,
@@ -36,18 +40,17 @@ export class DashboardService {
     private wsp: WebServiceProvider
   ) {}
 
-  getNotifications(): Promise<Notification[]> {
-    const fields = [
-      'id',
-      'notificationtype',
-      'notificationtypedescription',
-      'notification',
-      'iso8601rundatetime'
-    ];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.NOTIFICATIONS_RESOURCE_URL,
-      options: {
-        fields,
+  async getNotifications(): Promise<Notification[]> {
+    const notifications = await this.wsp.getHttp<NotificationFromApi[]>({
+      endpoint: this._notificationsEndpoint,
+      params: {
+        fields: [
+          'id',
+          'notificationtype',
+          'notificationtypedescription',
+          'notification',
+          'iso8601rundatetime'
+        ],
         filters: [
           {
             key: '',
@@ -57,131 +60,87 @@ export class DashboardService {
         ],
         orderBy: [{ direction: 'DESC', field: 'iso8601rundatetime' }]
       }
-    };
-    return this.wsp
-      .get(getWebRequest)
-      .then((notifications: NotificationFromApi[]) =>
-        notifications.map(notification => this.formatNotification(notification))
-      );
+    });
+
+    return notifications.map(this.formatNotification);
   }
 
-  getStatsData(accounts: Account[]): Promise<Stats> {
-    const accountIds: number[] = accounts.map(account => parseInt(account.id));
-    return Promise.all([
+  async getStatsData(accounts: Account[]): Promise<Stats> {
+    const accountIds: number[] = accounts.map(account => parseInt(account.id, 10));
+    const [benchmark, pnl, trades] = await Promise.all<BenchmarkComparison[], MonthlyReturn[], TradeRequest[]>([
       this.getBenchmarkComparisons(accountIds),
       this.getMonthlyReturns(accountIds),
       this.getTradeRequests()
-    ]).then(
-      (result: [BenchmarkComparison[], MonthlyReturn[], TradeRequest[]]) => {
-        let [benchmark, pnl, trades] = result;
-        return this.formatStatsData(benchmark, pnl, trades);
-      }
-    );
+    ]);
+
+    return this.formatStatsData(benchmark, pnl, trades);
   }
 
-  getTaskObjects(): Promise<TaskObject[]> {
-    return Promise.all([this.getTasks(), this.getTaskStatusDetails()])
-      .then(result => {
-        let [tasks, taskStatusDetails] = result;
-        return Promise.all([
-          tasks.filter(task => task.frontEndIndicator),
-          this.getTaskParams(_.map(tasks, 'id')),
-          taskStatusDetails
-        ]);
-      })
-      .then(result => {
-        let [tasks, taskParams, taskStatusDetails] = result;
-        return tasks.map(task => {
-          let statusDetail = _.find(taskStatusDetails, { taskId: task.id }),
-            lastRunDetails = statusDetail ? statusDetail.lastRunDetails : null,
-            params = _.filter(taskParams, { taskId: task.id });
-          return new TaskObject(
-            lastRunDetails,
-            params,
-            statusDetail ? statusDetail.result : false,
-            task
-          );
-        });
-      });
+  async getTaskObjects(): Promise<TaskObject[]> {
+    const [tasks, taskStatusDetails] = await Promise.all([this.getTasks(), this.getTaskStatusDetails()]);
+
+    const [filteredTasks, taskParams] = await Promise.all([
+      tasks.filter(task => task.frontEndIndicator),
+      this.getTaskParams(_.map(tasks, 'id'))
+    ]);
+
+    return filteredTasks.map(task => {
+      const statusDetail = _.find(taskStatusDetails, { taskId: task.id });
+      const lastRunDetails = statusDetail ? statusDetail.lastRunDetails : null;
+      const params = _.filter(taskParams, { taskId: task.id });
+
+      return new TaskObject(
+        lastRunDetails,
+        params,
+        statusDetail ? statusDetail.result : false,
+        task
+      );
+    });
   }
 
-  postTaskRequest(
+  async postTaskRequest(
     inputParams: string,
     taskId: number,
     userId: number
   ): Promise<any> {
-    let requestBody = {
-      createdBy: userId,
-      createdOn: moment().format('YYYY-MM-DD'),
-      inputParams,
-      isScheduledTask: 0,
-      taskId
-    };
-    return this.wsp.post({
-      endPoint: this.TASK_REQUESTS_RESOURCE_URL,
-      payload: requestBody
+    return this.wsp.postHttp({
+      endpoint: this._taskRequestsEndpoint,
+      body: {
+        createdBy: userId,
+        createdOn: moment().format('YYYY-MM-DD'),
+        inputParams,
+        isScheduledTask: 0,
+        taskId
+      }
     });
   }
 
-  runTask(task: TaskObject): Promise<any> {
-    let params = task.params ? task.params : [];
-    return Promise.all(params.map(param => this.getParamValue(param))).then(
-      paramValues => {
-        params.forEach((param, i) => (param.value = paramValues[i]));
-        let inputParams = '';
-        inputParams = params
-          .reduce(
-            (paramString, param, i) =>
-              `${paramString}${param.name}:${param.value},`,
-            ''
-          )
-          .slice(0, -1);
-        return this.postTaskRequest(
-          inputParams,
-          task.id,
-          this.userService.getUser().id
-        );
-      }
-    );
-  }
+  async runTask(task: TaskObject): Promise<any> {
+    const params = task.params || [];
+    const paramValues = await Promise.all(params.map(param => this.getParamValue(param)));
 
-  subscribeToNotificationsAndTaskStatusDetails(): [
-    Observable<SubscriptionResponse<Notification>>,
-    Observable<SubscriptionResponse<TaskStatusDetail>>
-  ] {
-    let [notificationObservable, taskStatusDetailObservable]: [
-      Observable<SubscriptionResponse<NotificationFromApi>>,
-      Observable<SubscriptionResponse<TaskStatusDetailFromApi>>
-    ] = this.wsp.subscribeToMany([
-      this.NOTIFICATIONS_RESOURCE_URL,
-      this.TASK_STATUS_DETAILS_RESOURCE_URL
-    ]) as any;
-    return [
-      notificationObservable.pipe(
-        map((result: SubscriptionResponse<NotificationFromApi>) => {
-          let response = new SubscriptionResponse<Notification>();
-          response.action = result.action;
-          response.body = this.formatNotification(result.body);
-          return response;
-        })
-      ),
-      taskStatusDetailObservable.pipe(
-        map((result: SubscriptionResponse<TaskStatusDetailFromApi>) => {
-          let response = new SubscriptionResponse<TaskStatusDetail>();
-          response.action = result.action;
-          response.body = this.formatTaskStatusDetail(result.body);
-          return response;
-        })
+    params.forEach((param, i) => (param.value = paramValues[i]));
+    let inputParams = '';
+    inputParams = params
+      .reduce(
+        (paramString, param, i) =>
+          `${paramString}${param.name}:${param.value},`,
+        ''
       )
-    ];
+      .slice(0, -1);
+    return this.postTaskRequest(
+      inputParams,
+      task.id,
+      this.userService.getUser().id
+    );
   }
 
   subscribeToTaskStatusDetails(): Observable<
     SubscriptionResponse<TaskStatusDetail>
   > {
-    return this.wsp.subscribe(this.TASK_STATUS_DETAILS_RESOURCE_URL).pipe(
+    return this.wsp.subscribe(this._taskStatusDetailsEndpoint).pipe(
       map((result: SubscriptionResponse<TaskStatusDetailFromApi>) => {
-        let response = new SubscriptionResponse<TaskStatusDetail>();
+        const response = new SubscriptionResponse<TaskStatusDetail>();
         response.action = result.action;
         response.body = this.formatTaskStatusDetail(result.body);
         return response;
@@ -205,10 +164,11 @@ export class DashboardService {
       ),
       taskInstanceQueueId = parseInt(lastRunDetails.taskinstancequeueid),
       taskRequestId = parseInt(lastRunDetails.taskrequestid);
-    let listOfProps = {};
-    for (let key in lastRunDetails.listofprops) {
+    const listOfProps = {};
+    for (const key in lastRunDetails.listofprops) {
+      // eslint-disable-next-line no-prototype-builtins
       if (lastRunDetails.listofprops.hasOwnProperty(key)) {
-        let formattedKey = key
+        const formattedKey = key
           .replace(/_/g, ' ')
           .replace(
             /\w\S*/g,
@@ -229,7 +189,7 @@ export class DashboardService {
   }
 
   private formatNotification(notification: NotificationFromApi): Notification {
-    let id = parseInt(notification.id),
+    const id = parseInt(notification.id),
       notificationType = parseInt(notification.notificationtype),
       runDateTimeMoment = moment(
         notification.iso8601rundatetime,
@@ -267,7 +227,7 @@ export class DashboardService {
   private formatTaskStatusDetail(
     taskStatusDetail: TaskStatusDetailFromApi
   ): TaskStatusDetail {
-    let lastRunDetails = this.formatLastRunDetails(
+    const lastRunDetails = this.formatLastRunDetails(
         taskStatusDetail.lastrundetails
       ),
       taskId = parseInt(taskStatusDetail.taskid);
@@ -279,64 +239,64 @@ export class DashboardService {
     );
   }
 
-  private getBenchmarkComparisons(
+  private async getBenchmarkComparisons(
     accountIds: number[]
   ): Promise<BenchmarkComparison[]> {
-    const fields = ['alpha'],
-      getWebRequest: GetWebRequest = {
-        endPoint: this.BENCHMARK_COMPARISONS_RESOURCE_URL,
-        options: {
-          fields,
-          filters: [
-            {
-              key: '',
-              type: 'TOP',
-              value: ['1']
-            },
-            {
-              key: 'IsPrimaryAccountForReturns',
-              type: 'EQ',
-              value: ['1']
-            },
-            {
-              key: 'IsPrimaryBenchmark',
-              type: 'EQ',
-              value: ['1']
-            },
-            {
-              key: 'accountid',
-              type: 'IN',
-              value: accountIds.map(id => id.toString())
-            }
-          ],
-          orderBy: [
-            {
-              direction: 'DESC',
-              field: 'date'
-            }
-          ]
-        }
-      };
-    return this.wsp
-      .get(getWebRequest)
-      .then((benchmarkComparisons: { alpha: string; id: string }[]) =>
-        benchmarkComparisons.map(benchmarkComparison => {
-          let alpha = parseFloat(benchmarkComparison.alpha),
-            id = parseInt(benchmarkComparison.id);
-          return new BenchmarkComparison(
-            !isNaN(alpha) ? alpha : null,
-            !isNaN(id) ? id : null
-          );
-        })
+    const benchmarkComparisons = await this.wsp.getHttp<{ alpha: string; id: string }[]>({
+      endpoint: this._benchmarkComparisonsEndpoint,
+      params: {
+        fields: ['alpha'],
+        filters: [
+          {
+            key: '',
+            type: 'TOP',
+            value: ['1']
+          },
+          {
+            key: 'IsPrimaryAccountForReturns',
+            type: 'EQ',
+            value: ['1']
+          },
+          {
+            key: 'IsPrimaryBenchmark',
+            type: 'EQ',
+            value: ['1']
+          },
+          {
+            key: 'accountid',
+            type: 'IN',
+            value: accountIds.map(id => id.toString())
+          }
+        ],
+        orderBy: [
+          {
+            direction: 'DESC',
+            field: 'date'
+          }
+        ]
+      }
+    });
+
+    return benchmarkComparisons.map(benchmarkComparison => {
+      const alpha = parseFloat(benchmarkComparison.alpha);
+      const id = parseInt(benchmarkComparison.id, 10);
+      return new BenchmarkComparison(
+        !isNaN(alpha) ? alpha : null,
+        !isNaN(id) ? id : null
       );
+    });
   }
 
-  private getMonthlyReturns(accountIds: number[]): Promise<MonthlyReturn[]> {
-    const fields = ['accountid', 'mtdreturn', 'ytdreturn'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: 'monthly_returns',
-      options: {
-        fields,
+  private async getMonthlyReturns(accountIds: number[]): Promise<MonthlyReturn[]> {
+    const monthlyReturns = await this.wsp.getHttp<{
+      accountid: string;
+      id: string;
+      mtdreturn: string;
+      ytdreturn: string;
+    }[]>({
+      endpoint: this._monthlyReturnsEndpoint,
+      params: {
+        fields: ['accountid', 'mtdreturn', 'ytdreturn'],
         filters: [
           {
             key: 'IsPrimaryForReturns',
@@ -356,31 +316,20 @@ export class DashboardService {
         ],
         orderBy: [{ direction: 'DESC', field: 'date' }]
       }
-    };
-    return this.wsp
-      .get(getWebRequest)
-      .then(
-        (
-          monthlyReturns: {
-            accountid: string;
-            id: string;
-            mtdreturn: string;
-            ytdreturn: string;
-          }[]
-        ) =>
-          monthlyReturns.map(monthlyReturn => {
-            let accountId = parseInt(monthlyReturn.accountid),
-              id = parseInt(monthlyReturn.id),
-              mtdReturn = parseFloat(monthlyReturn.mtdreturn),
-              ytdReturn = parseFloat(monthlyReturn.ytdreturn);
-            return new MonthlyReturn(
-              !isNaN(accountId) ? accountId : null,
-              !isNaN(id) ? id : null,
-              !isNaN(mtdReturn) ? mtdReturn : null,
-              !isNaN(ytdReturn) ? ytdReturn : null
-            );
-          })
+    });
+
+    return monthlyReturns.map(monthlyReturn => {
+      const id = parseInt(monthlyReturn.id, 10);
+      const mtdReturn = parseFloat(monthlyReturn.mtdreturn);
+      const ytdReturn = parseFloat(monthlyReturn.ytdreturn);
+      const accountId = parseInt(monthlyReturn.accountid, 10);
+      return new MonthlyReturn(
+        !isNaN(accountId) ? accountId : null,
+        !isNaN(id) ? id : null,
+        !isNaN(mtdReturn) ? mtdReturn : null,
+        !isNaN(ytdReturn) ? ytdReturn : null
       );
+    });
   }
 
   private getParamValue(param: TaskParam): Promise<any> {
@@ -391,49 +340,50 @@ export class DashboardService {
       }
       return Promise.resolve(value);
     }
-    let file: File = param.value.file;
     return this.fileService.upload({
-      file,
+      file: param.value.file,
       osType: param.osType
     });
   }
 
-  getTasks(): Promise<Task[]> {
-    const getWebRequest: GetWebRequest = {
-      endPoint: 'tasks',
-      options: {
+  async getTasks(): Promise<Task[]> {
+    const tasks = await this.wsp.getHttp<{
+      category: string;
+      description: string;
+      frontendindicator: string;
+      id: string;
+      name: string;
+    }[]>({
+      endpoint: this._tasksEndpoint,
+      params: {
         fields: ['id', 'name', 'description', 'category', 'frontendindicator']
       }
-    };
-    return this.wsp
-      .get(getWebRequest)
-      .then(
-        (
-          tasks: {
-            category: string;
-            description: string;
-            frontendindicator: string;
-            id: string;
-            name: string;
-          }[]
-        ) =>
-          tasks.map(task => {
-            let id = parseInt(task.id);
-            return new Task(
-              task.category,
-              task.description,
-              task.frontendindicator === 'True',
-              !isNaN(id) ? id : null,
-              task.name
-            );
-          })
+    });
+
+    return tasks.map(task => {
+      const id = parseInt(task.id, 10);
+      return new Task(
+        task.category,
+        task.description,
+        task.frontendindicator === 'True',
+        !isNaN(id) ? id : null,
+        task.name
       );
+    });
   }
 
-  private getTaskParams(taskIds: number[]): Promise<TaskParam[]> {
-    const getWebRequest: GetWebRequest = {
-      endPoint: 'task_params',
-      options: {
+  private async getTaskParams(taskIds: number[]): Promise<TaskParam[]> {
+    const taskParams = await this.wsp.getHttp<{
+      caption: string;
+      id: string;
+      name: string;
+      options: string;
+      ostype: string;
+      taskid: string;
+      type: string;
+    }[]>({
+      endpoint: this._taskParamsEndpoint,
+      params: {
         fields: ['taskid', 'name', 'caption', 'type', 'options', 'ostype'],
         filters: [
           {
@@ -443,60 +393,41 @@ export class DashboardService {
           }
         ]
       }
-    };
-    return this.wsp
-      .get(getWebRequest)
-      .then(
-        (
-          taskParams: {
-            caption: string;
-            id: string;
-            name: string;
-            options: string;
-            ostype: string;
-            taskid: string;
-            type: string;
-          }[]
-        ) =>
-          taskParams.map(taskParam => {
-            let id = parseInt(taskParam.id),
-              taskId = parseInt(taskParam.taskid),
-              type = taskParam.type,
-              options =
-                taskParam.options.length > 0
-                  ? taskParam.options.toUpperCase().split(',')
-                  : [];
-            return new TaskParam(
-              taskParam.caption,
-              !isNaN(id) ? id : null,
-              taskParam.name,
-              options,
-              taskParam.ostype,
-              !isNaN(taskId) ? taskId : null,
-              type,
-              type === 'date' ? new Date() : undefined
-            );
-          })
+    });
+
+    return taskParams.map(taskParam => {
+      const id = parseInt(taskParam.id, 10);
+      const taskId = parseInt(taskParam.taskid, 10);
+      const type = taskParam.type;
+      const options =
+          taskParam.options.length > 0
+            ? taskParam.options.toUpperCase().split(',')
+            : [];
+      return new TaskParam(
+        taskParam.caption,
+        !isNaN(id) ? id : null,
+        taskParam.name,
+        options,
+        taskParam.ostype,
+        !isNaN(taskId) ? taskId : null,
+        type,
+        type === 'date' ? new Date() : undefined
       );
+    });
   }
 
-  private getTaskStatusDetails(): Promise<TaskStatusDetail[]> {
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.TASK_STATUS_DETAILS_RESOURCE_URL
-    };
-    return this.wsp
-      .get(getWebRequest)
-      .then((taskStatusDetails: TaskStatusDetailFromApi[]) =>
-        taskStatusDetails.map(taskStatusDetail =>
-          this.formatTaskStatusDetail(taskStatusDetail)
-        )
-      );
+  private async getTaskStatusDetails(): Promise<TaskStatusDetail[]> {
+    const taskStatusDetails = await this.wsp.getHttp<TaskStatusDetailFromApi[]>({
+      endpoint: this._taskStatusDetailsEndpoint
+    });
+
+    return taskStatusDetails.map(this.formatTaskStatusDetail.bind(this));
   }
 
-  private getTradeRequests(): Promise<TradeRequest[]> {
-    const getWebRequest: GetWebRequest = {
-      endPoint: 'trade_requests',
-      options: {
+  private async getTradeRequests(): Promise<TradeRequest[]> {
+    const tradeRequests = await this.wsp.getHttp<{ id: string }[]>({
+      endpoint: this._tradeRequestsEndpoint,
+      params: {
         fields: ['id'],
         filters: [
           {
@@ -506,12 +437,11 @@ export class DashboardService {
           }
         ]
       }
-    };
-    return this.wsp.get(getWebRequest).then((tradeRequests: { id: string }[]) =>
-      tradeRequests.map(tradeRequest => {
-        let id = parseInt(tradeRequest.id);
-        return new TradeRequest(!isNaN(id) ? id : null);
-      })
-    );
+    });
+
+    return tradeRequests.map(tradeRequest => {
+      const id = parseInt(tradeRequest.id, 10);
+      return new TradeRequest(!isNaN(id) ? id : null);
+    });
   }
 }

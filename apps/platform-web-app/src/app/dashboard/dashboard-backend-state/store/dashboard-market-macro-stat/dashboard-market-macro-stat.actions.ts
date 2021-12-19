@@ -1,6 +1,5 @@
-import { Action } from '@ngrx/store';
-
-import { DashboardMarketMacroStat } from '../../../dashboard-backend';
+import { createAction, props } from '@ngrx/store';
+import { DashboardMarketMacroStat } from '../../../dashboard-backend/dashboard-market-macro-stat/dashboard-market-macro-stat.model';
 
 export enum DashboardMarketMacroStatActionTypes {
   AttemptLoadDashboardMarketMacroStats = '[DashboardMarketMacroStat] Attempt Load DashboardMarketMacroStats',
@@ -10,36 +9,24 @@ export enum DashboardMarketMacroStatActionTypes {
   UnsubscribeFromDashboardMarketMacroStats = '[DashboardMarketMacroStat] Unsubscribe from DashboardMarketMacroStats'
 }
 
-export class AttemptLoadDashboardMarketMacroStats implements Action {
-  readonly type =
-    DashboardMarketMacroStatActionTypes.AttemptLoadDashboardMarketMacroStats;
-}
+export const AttemptLoadDashboardMarketMacroStats = createAction(
+  DashboardMarketMacroStatActionTypes.AttemptLoadDashboardMarketMacroStats
+);
 
-export class LoadDashboardMarketMacroStats implements Action {
-  readonly type =
-    DashboardMarketMacroStatActionTypes.LoadDashboardMarketMacroStats;
-  constructor(public payload: { entities: DashboardMarketMacroStat[] }) {}
-}
+export const LoadDashboardMarketMacroStats = createAction(
+  DashboardMarketMacroStatActionTypes.LoadDashboardMarketMacroStats,
+  props<{ entities: DashboardMarketMacroStat[] }>()
+);
 
-export class LoadDashboardMarketMacroStatsFailed implements Action {
-  readonly type =
-    DashboardMarketMacroStatActionTypes.LoadDashboardMarketMacroStatsFailed;
-  constructor(public payload: { error: any }) {}
-}
+export const LoadDashboardMarketMacroStatsFailed = createAction(
+  DashboardMarketMacroStatActionTypes.LoadDashboardMarketMacroStatsFailed,
+  props<{ error: any }>()
+);
 
-export class SubscribeToDashboardMarketMacroStats implements Action {
-  readonly type =
-    DashboardMarketMacroStatActionTypes.SubscribeToDashboardMarketMacroStats;
-}
+export const SubscribeToDashboardMarketMacroStats = createAction(
+  DashboardMarketMacroStatActionTypes.SubscribeToDashboardMarketMacroStats
+);
 
-export class UnsubscribeFromDashboardMarketMacroStats implements Action {
-  readonly type =
-    DashboardMarketMacroStatActionTypes.UnsubscribeFromDashboardMarketMacroStats;
-}
-
-export type DashboardMarketMacroStatActions =
-  | AttemptLoadDashboardMarketMacroStats
-  | LoadDashboardMarketMacroStats
-  | LoadDashboardMarketMacroStatsFailed
-  | SubscribeToDashboardMarketMacroStats
-  | UnsubscribeFromDashboardMarketMacroStats;
+export const UnsubscribeFromDashboardMarketMacroStats = createAction(
+  DashboardMarketMacroStatActionTypes.UnsubscribeFromDashboardMarketMacroStats
+);

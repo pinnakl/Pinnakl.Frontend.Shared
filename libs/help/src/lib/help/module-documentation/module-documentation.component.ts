@@ -12,7 +12,7 @@ export class ModuleDocumentationComponent implements OnInit {
   htmlSource: any;
   safevideourl: any;
 
-  constructor(private sanitizer: DomSanitizer) {}
+  constructor(private readonly sanitizer: DomSanitizer) {}
 
   ngOnInit() {}
 

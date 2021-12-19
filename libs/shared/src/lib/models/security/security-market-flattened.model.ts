@@ -18,7 +18,8 @@ export class SecurityMarketFlattened {
     public secType: string,
     public secTypeId: number,
     public sedol: string,
-    public ticker: string
+    public ticker: string,
+    public position: string
   ) {}
 }
 
@@ -41,6 +42,7 @@ export class SecurityMarketFlattenedFromAPI {
     public sectype: string,
     public sectypeid: string,
     public sedol: string,
-    public ticker: string
+    public ticker: string,
+    public position: string
   ) {}
 }

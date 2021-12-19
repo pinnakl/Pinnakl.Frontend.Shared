@@ -2,15 +2,15 @@ import { Injectable } from '@angular/core';
 
 import * as moment from 'moment';
 
-import { GetWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
+import { WebServiceProvider } from '@pnkl-frontend/core';
+import { ReportColumn } from '../../models/reporting';
 import { ReportColumnFromApi } from '../../models/reporting/report-column-from-api.model';
-import { ReportColumn } from '../../models/reporting/report-column.model';
 
 @Injectable()
 export class ReportColumnService {
-  private readonly RESOURCE_URL = '/report_columns';
+  private readonly _reportColumnsEndpoint = 'entities/report_columns';
 
-  constructor(private wsp: WebServiceProvider) {}
+  constructor(private readonly wsp: WebServiceProvider) {}
 
   formatFilterValues(
     filterValues: string,
@@ -55,21 +55,19 @@ export class ReportColumnService {
         'Type',
         'ViewOrder',
         'Formula'
-      ],
-      getWebRequest: GetWebRequest = {
-        endPoint: this.RESOURCE_URL,
-        options: {
+      ];
+
+    return this.wsp
+      .getHttp<ReportColumnFromApi[]>({
+        endpoint: this._reportColumnsEndpoint,
+        params: {
           fields,
           filters: [
             { key: 'reportId', type: 'EQ', value: [reportId.toString()] }
           ]
         }
-      };
-    return this.wsp
-      .get(getWebRequest)
-      .then((entities: ReportColumnFromApi[]) =>
-        entities.map(entity => this.formatReportColumn(entity))
-      );
+      })
+      .then(entities => entities.map(this.formatReportColumn.bind(this)));
   }
 
   public formatReportColumn(entity: ReportColumnFromApi): ReportColumn {

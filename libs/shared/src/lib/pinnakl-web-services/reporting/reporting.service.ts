@@ -3,33 +3,34 @@ import { Injectable } from '@angular/core';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 
-import { GetWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
-import { FileService } from '../../pinnakl-web-services/file.service';
-import { Utility } from '../../services/utility.service';
+import { WebServiceProvider } from '@pnkl-frontend/core';
+import { ReportingColumn, ReportOptions, ReportParameter } from '../../models';
 import { OmsAndPositionsColumnFromApi } from '../../models/reporting/oms-positions-column-from-api.model';
-import { ReportOptions } from '../../models/reporting/report-options.model';
 import { ReportParameterFromApi } from '../../models/reporting/report-parameter-from-api.model';
-import { ReportParameter } from '../../models/reporting/report-parameter.model';
-import { ReportingColumn } from '../../models/reporting/reporting-column.model';
+
+import { Utility } from '../../services';
+import { FileService } from '../file.service';
 
 @Injectable()
 export class ReportingService {
-  private readonly REPORT_PARAMETERS_RESOURCE_URL = 'report_parameters';
+  private readonly _reportEndpoint = 'entities/report';
+  private readonly _reportsEndpoint = 'entities/reports';
+  private readonly _reportParametersEndpoint = 'entities/report_parameters';
 
   constructor(
-    private fileService: FileService,
-    private utility: Utility,
-    private wsp: WebServiceProvider
-  ) {}
+    private readonly fileService: FileService,
+    private readonly utility: Utility,
+    private readonly wsp: WebServiceProvider
+  ) { }
 
   formatReportParameter(
     reportParameter: ReportParameterFromApi
   ): ReportParameter {
-    let type = reportParameter.type,
+    const type = reportParameter.type,
       formattedParameter = new ReportParameter(
         reportParameter.caption,
         reportParameter.defaultvalue,
-        parseInt(reportParameter.id),
+        parseInt(reportParameter.id, 10),
         reportParameter.name.toLowerCase(),
         reportParameter.required === 'True',
         type,
@@ -53,19 +54,20 @@ export class ReportingService {
     return formattedParameter;
   }
 
-  getDropdownValues(
+  async getDropdownValues(
     id: number,
     params: ReportParameter[],
     reportingColumns: ReportingColumn[],
     typeName: string
   ): Promise<string[]> {
-    let reportOptions = {} as ReportOptions;
+    const reportOptions = {} as ReportOptions;
     reportOptions.reportingColumns = reportingColumns;
     reportOptions.id = id;
     reportOptions.parameters = this.getParametersForReportOptions(params);
-    const getWebRequest: GetWebRequest = {
-      endPoint: typeName,
-      options: {
+
+    const options = await this.wsp.getHttp<{ [columnName: string]: string }[]>({
+      endpoint: typeName,
+      params: {
         filters: [
           {
             key: 'reportOptions',
@@ -74,21 +76,17 @@ export class ReportingService {
           }
         ]
       }
-    };
+    });
 
-    return this.wsp
-      .get(getWebRequest)
-      .then((options: { [columnName: string]: string }[]) => {
-        if (!options || options.length === 0) {
-          return [];
-        }
-        let columnName = Object.keys(options[0])[0];
-        return _(options)
-          .uniqBy(columnName)
-          .map(columnName)
-          .sort()
-          .value();
-      });
+    if (!options || options.length === 0) {
+      return [];
+    }
+    const columnName = Object.keys(options[0])[0];
+    return _(options)
+      .uniqBy(columnName)
+      .map(columnName)
+      .sort()
+      .value();
   }
 
   exportAndDownloadReport(
@@ -111,12 +109,11 @@ export class ReportingService {
     });
   }
 
-  getReportId(reportName: string): Promise<any> {
-    let fields = ['Id'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: 'reports',
-      options: {
-        fields: fields,
+  async getReportId(reportName: string): Promise<any> {
+    const result = await this.wsp.getHttp<any[]>({
+      endpoint: this._reportsEndpoint,
+      params: {
+        fields: ['Id'],
         filters: [
           {
             key: 'ReportName',
@@ -125,24 +122,18 @@ export class ReportingService {
           }
         ]
       }
-    };
-
-    return this.wsp.get(getWebRequest).then(result => {
-      if (result.length > 0) {
-        return parseInt(result[0].id);
-      } else {
-        return null;
-      }
     });
+
+    return result.length > 0 ? parseInt(result[0].id, 10) : null;
   }
 
   getReportData(
     id: number,
     params: ReportParameter[],
     reportingColumns: ReportingColumn[],
-    endPoint: string = 'report'
+    endpoint: string = 'entities/report'
   ): Promise<any[]> {
-    let reportOptions = new ReportOptions();
+    const reportOptions = new ReportOptions();
     reportOptions.id = id;
     reportOptions.parameters = this.getParametersForReportOptions(params);
 
@@ -155,9 +146,9 @@ export class ReportingService {
             : !(col.filters === undefined || col.filters === null))
       )
       .map(col => {
-        let rc = new ReportingColumn();
+        const rc = new ReportingColumn();
         rc.include = col.include;
-        let filters = col.filters;
+        const filters = col.filters;
         if (!(filters === undefined || filters === null)) {
           if (filters instanceof Array) {
             if (filters.length > 0) {
@@ -175,9 +166,9 @@ export class ReportingService {
 
     reportOptions.reportingColumns = reportingColumns;
 
-    const getWebRequest: GetWebRequest = {
-      endPoint,
-      options: {
+    return this.wsp.getHttp<any[]>({
+      endpoint,
+      params: {
         filters: [
           {
             key: 'reportOptions',
@@ -186,22 +177,21 @@ export class ReportingService {
           }
         ]
       }
-    };
-    return this.wsp.get(getWebRequest, true).then(reportData => {
-      let numericColumns = _.filter(
+    }).then(reportData => {
+      const numericColumns = _.filter(
         reportingColumns,
         col => col.type === 'numeric' || col.type === 'currency'
       );
-      for (let column of numericColumns) {
-        for (let row of reportData) {
-          let value = parseFloat(row[column.name]);
+      for (const column of numericColumns) {
+        for (const row of reportData) {
+          const value = parseFloat(row[column.name]);
           row[column.name] = !isNaN(value) ? value : null;
         }
       }
-      let dateColumns = _.filter(reportingColumns, { type: 'date' });
-      for (let column of dateColumns) {
-        for (let row of reportData) {
-          let value = moment(row[column.name]);
+      const dateColumns = _.filter(reportingColumns, { type: 'date' });
+      for (const column of dateColumns) {
+        for (const row of reportData) {
+          const value = moment(row[column.name]);
           row[column.name] = value.isValid() ? value.toDate() : null;
         }
       }
@@ -210,21 +200,18 @@ export class ReportingService {
   }
 
   getReportParameters(reportId: number): Promise<ReportParameter[]> {
-    const fields = ['name', 'caption', 'type', 'defaultvalue', 'required'],
-      getWebRequest: GetWebRequest = {
-        endPoint: this.REPORT_PARAMETERS_RESOURCE_URL,
-        options: {
-          fields,
+    return this.wsp
+      .getHttp<ReportParameterFromApi[]>({
+        endpoint: this._reportParametersEndpoint,
+        params: {
+          fields: ['name', 'caption', 'type', 'defaultvalue', 'required'],
           filters: [
             { key: 'reportId', type: 'EQ', value: [reportId.toString()] }
           ]
         }
-      };
-    return this.wsp
-      .get(getWebRequest)
-      .then((parameters: ReportParameterFromApi[]) =>
-        parameters
-          .map(parameter => this.formatReportParameter(parameter))
+      })
+      .then(parameters => parameters
+          .map<ReportParameter>(this.formatReportParameter.bind(this))
           .filter(param => param.name !== 'clientid')
       );
   }
@@ -235,7 +222,7 @@ export class ReportingService {
     let so = 1,
       vo = 1;
     return allColumns.map(column => {
-      let {
+      const {
           datatype,
           isaggregating,
           isascendingbydefault,
@@ -266,14 +253,14 @@ export class ReportingService {
     params: ReportParameter[],
     reportingColumns: ReportingColumn[]
   ): Promise<number> {
-    let reportOptions = new ReportOptions();
-    reportOptions.id = id;
+    const reportOptions = new ReportOptions();
+    reportOptions.id = <any>id.toString();
     reportOptions.parameters = this.getParametersForReportOptions(params);
 
     reportingColumns = reportingColumns
       .filter(col => col.viewOrder !== -1 || col.filters)
       .map(col => {
-        let rc = new ReportingColumn();
+        const rc = new ReportingColumn();
         if (col.filters) {
           rc.filters = col.filters;
         }
@@ -290,26 +277,26 @@ export class ReportingService {
         return rc;
       });
 
-    reportOptions.clientReportId = clientReportId;
+    reportOptions.clientReportId = <any>clientReportId.toString();
     reportOptions.exportedFileName = exportedFileName;
     reportOptions.exportToExcel = exportToExcel;
     reportOptions.exportToPdf = !exportToExcel;
     reportOptions.reportingColumns = reportingColumns;
-    const getWebRequest: GetWebRequest = {
-      endPoint: 'report',
-      options: {
-        filters: [
-          {
-            key: 'reportOptions',
-            type: 'EQ',
-            value: [JSON.stringify(reportOptions)]
-          }
-        ]
-      }
-    };
+
     return this.wsp
-      .get(getWebRequest, true)
-      .then((result: { fileid: string }[]) => parseInt(result[0].fileid));
+      .getHttp<{ fileid: string }[]>({
+        endpoint: this._reportEndpoint,
+        params: {
+          filters: [
+            {
+              key: 'reportOptions',
+              type: 'EQ',
+              value: [JSON.stringify(reportOptions)]
+            }
+          ]
+        }
+      })
+      .then(result => +result[0].fileid);
   }
 
   private formatParameterValue(param: ReportParameter, dateFormat: string): Date {

@@ -1,53 +1,56 @@
 import { Injectable } from '@angular/core';
 
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { concatMap, map, takeUntil } from 'rxjs/operators';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { concatMap, map, takeUntil, tap } from 'rxjs/operators';
 
-import { DashboardMarketMacroStatService } from '../../../dashboard-backend';
 import {
-  DashboardMarketMacroStatActionTypes,
+  DashboardMarketMacroStatService
+} from '../../../dashboard-backend/dashboard-market-macro-stat/dashboard-market-macro-stat.service';
+import {
+  AttemptLoadDashboardMarketMacroStats,
   LoadDashboardMarketMacroStats,
-  LoadDashboardMarketMacroStatsFailed
+  LoadDashboardMarketMacroStatsFailed,
+  SubscribeToDashboardMarketMacroStats,
+  UnsubscribeFromDashboardMarketMacroStats
 } from './dashboard-market-macro-stat.actions';
 
 @Injectable()
 export class DashboardMarketMacroStatEffects {
-  @Effect()
-  loadDashboardMarketMacroStats$ = this.actions$.pipe(
-    ofType(
-      DashboardMarketMacroStatActionTypes.AttemptLoadDashboardMarketMacroStats
-    ),
+  loadDashboardMarketMacroStats$ = createEffect(() => this.actions$.pipe(
+    ofType(AttemptLoadDashboardMarketMacroStats),
     concatMap(async () => {
       try {
         const entities = await this.dashboardMarketMacroStatService.getAll();
-        return new LoadDashboardMarketMacroStats({ entities });
+        return LoadDashboardMarketMacroStats({ entities });
       } catch (error) {
-        return new LoadDashboardMarketMacroStatsFailed({ error });
+        return LoadDashboardMarketMacroStatsFailed({ error });
       }
     })
-  );
+  ));
 
-  @Effect()
-  subscribeDashboardMarketMacroStats$ = this.actions$.pipe(
-    ofType(
-      DashboardMarketMacroStatActionTypes.SubscribeToDashboardMarketMacroStats
-    ),
+  subscribeDashboardMarketMacroStats$ = createEffect(() => this.actions$.pipe(
+    ofType(SubscribeToDashboardMarketMacroStats),
     concatMap(() =>
       this.dashboardMarketMacroStatService.subscribe().pipe(
-        map(entities => new LoadDashboardMarketMacroStats({ entities })),
+        map(entities => LoadDashboardMarketMacroStats({ entities })),
         takeUntil(
           this.actions$.pipe(
-            ofType(
-              DashboardMarketMacroStatActionTypes.UnsubscribeFromDashboardMarketMacroStats
-            )
+            ofType(UnsubscribeFromDashboardMarketMacroStats)
           )
         )
       )
     )
-  );
+  ));
+
+  unsubscribeDashboardMarketMacroStats$ = createEffect(() => this.actions$.pipe(
+    ofType(UnsubscribeFromDashboardMarketMacroStats),
+    tap(() => this.dashboardMarketMacroStatService.unsubscribe())
+  ), {
+    dispatch: false
+  });
 
   constructor(
-    private actions$: Actions,
-    private dashboardMarketMacroStatService: DashboardMarketMacroStatService
-  ) {}
+    private readonly actions$: Actions,
+    private readonly dashboardMarketMacroStatService: DashboardMarketMacroStatService
+  ) { }
 }

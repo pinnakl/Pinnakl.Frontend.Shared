@@ -1,0 +1,13 @@
+<positions-grid
+  [colDefs]="colDefs$ | async"
+  (columnMoved)="columnMoved($event)"
+  [getRowNodeId]="getRowNodeId$ | async"
+  [gridAggregations]="gridAggregations$ | async"
+  [gridData]="gridData$ | async"
+  [gridHeight]="gridHeight"
+  [searchText]="searchText"
+  (groupChanged)="groupChanged($event)"
+  (selectPosition)="selectPosition.emit($event)"
+  (sortChanged)="sortChanged($event)"
+  (filtersChanged)="filtersChanged($event)"
+></positions-grid>

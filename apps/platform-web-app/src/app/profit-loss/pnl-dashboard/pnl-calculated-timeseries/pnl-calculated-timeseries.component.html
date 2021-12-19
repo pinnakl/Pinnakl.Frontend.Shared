@@ -1,0 +1,14 @@
+<pnl-calculated-timeseries-filter
+  [accounts]="accounts"
+  [pnlFields]="pnlFields"
+  [pnlCalculatedTimeseriesFilter]="pnlCalculatedTimeseriesFilter"
+  (onFilterChanged)="onFilterChanged.emit($event)"
+  (onDataTypeChanged)="onDataTypeChanged($event)"
+></pnl-calculated-timeseries-filter>
+
+<pnl-calculated-timeseries-chart
+  [hideSelected]="hideSelected"
+  [pnlCalculatedTimeSeries]="pnlCalculatedTimeSeries"
+  [pnlTimeSeriesChartType]="pnlTimeSeriesChartType"
+  (onChartTypeChanged)="onChartTypeChanged($event)"
+></pnl-calculated-timeseries-chart>

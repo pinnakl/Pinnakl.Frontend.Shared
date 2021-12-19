@@ -1,0 +1,104 @@
+<div
+  [@alertsVisibleChanged]="alertsVisible"
+  class="col-md-4 positions-slide-right alerts-panel"
+>
+  <!--  positions alerts-->
+  <div class="row justify-content-between">
+    <div class="col-7">
+      <p class="font-weight-bold">ALERTS</p>
+    </div>
+    <div class="col-5 d-flex justify-content-end align-items-center">
+      <button
+        class="btn rounded-btn waves-effect pull-left"
+        [class.active]="filterType === filterTypes.ACTIVE"
+        (click)="toggleFilter(filterTypes.ACTIVE)"
+      >
+        Active
+      </button>
+      <button
+        class="btn rounded-btn waves-effect pull-left"
+        [class.active]="filterType === filterTypes.TRIGGERED"
+        (click)="toggleFilter(filterTypes.TRIGGERED)"
+      >
+        Triggered
+      </button>
+      <button
+        class="btn-action"
+        (click)="toggleModal(modalTypes.NEW_ALERT_MODAL)"
+      >
+        <img src="assets/images/green-add.svg" />
+      </button>
+    </div>
+  </div>
+  <div class="row mb-4">
+    <div class="col-md-12">
+      <div class="table-responsive items-table">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Security</th>
+              <th scope="col">Price type</th>
+              <th scope="col">Trigger</th>
+              <th scope="col" class="text-align-right">Current</th>
+              <th scope="col">Time</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="!alerts$">
+              <td colspan="6">No alerts set.</td>
+            </tr>
+            <ng-container *ngFor="let alert of alerts$ | async">
+              <ng-container *ngIf="alert">
+                <tr *ngIf="filterAlerts(alert)">
+                  <td scope="row">
+                    {{ getSecurityName(alert.securityid) | cropText: 30 }}
+                  </td>
+                  <td scope="row">{{ alert.pricetype }}</td>
+                  <td scope="row">
+                    {{ formatCondition(alert.condition) }}
+                    {{ alert.price | number: '1.2-2' }}
+                  </td>
+                  <td scope="row" class="text-align-right">
+                    {{ alert.currentPrice | number: '1.2-2' }}
+                  </td>
+                  <td scope="row">
+                    {{ alert.createdLocalDate | date: 'M/dd/yy, hh:mm a' }}
+                  </td>
+                  <td scope="row">
+                    <button
+                      *ngIf="allowDelete(alert)"
+                      class="btn-action pull-right icon-pinnakl-cancel"
+                      (click)="deleteAlert(alert.id)"
+                    ></button>
+                  </td>
+                </tr>
+              </ng-container>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!--  alerts watchlist-->
+  <positions-alerts-watchlist
+    [securities]="securities"
+    (toggleModal)="toggleModal(modalTypes.ADD_TO_WATCHLIST_MODAL)"
+  ></positions-alerts-watchlist>
+</div>
+<!-- New Item Modal-->
+<pinnakl-modal
+  [hideDialog]="!showModal"
+  [width]="485"
+  [showCloseButton]="true"
+  (closeModal)="showModal = false"
+  [className]="'newOrderModal'"
+>
+  <new-alert
+    [securities]="securitiesOptions"
+    (hideModal)="toggleModal(this.modalTypes.NEW_ALERT_MODAL)"
+    [watchlistMode]="showAddToListModal"
+    [title]="showAddToListModal ? 'Add to Watchlist' : 'New Alert'"
+  ></new-alert>
+</pinnakl-modal>

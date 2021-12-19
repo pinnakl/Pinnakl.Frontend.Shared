@@ -1,46 +1,39 @@
 import { Injectable } from '@angular/core';
 
-import { GetWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
-import { ClientConnectivityFromApi } from '../models/client-connectivity-from-api.model';
-import { ClientConnectivity } from '../models/client-connectivity.model';
+import { WebServiceProvider } from '@pnkl-frontend/core';
+import { ClientConnectivity, ClientConnectivityFromApi } from '../models';
 
 @Injectable()
 export class ClientConnectivityService {
-  private readonly RESOURCE_URL = 'client_connectivity';
-  constructor(private wsp: WebServiceProvider) {}
+  private readonly clientConnectivityEndpoint = 'entities/client_connectivity';
+  constructor(private readonly wsp: WebServiceProvider) {}
 
   getClientConnectivities(): Promise<ClientConnectivity[]> {
-    const fields = [
-      'Id',
-      'AdminId',
-      'CustodianId',
-      'Entity',
-      'EntityType',
-      'Recon_Indicator',
-      'StockLoan_Indicator',
-      'TradeFile_Indicator'
-    ];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: {
-        fields
-      }
-    };
     return this.wsp
-      .get(getWebRequest)
-      .then((clientConnectivities: ClientConnectivityFromApi[]) =>
-        clientConnectivities.map(clientConnectivity =>
-          this.formatClientConnectivity(clientConnectivity)
-        )
-      );
+      .getHttp<ClientConnectivityFromApi[]>({
+        endpoint: this.clientConnectivityEndpoint,
+        params: {
+          fields: [
+            'Id',
+            'AdminId',
+            'CustodianId',
+            'Entity',
+            'EntityType',
+            'Recon_Indicator',
+            'StockLoan_Indicator',
+            'TradeFile_Indicator'
+          ]
+        }
+      })
+      .then(clientConnectivities => clientConnectivities.map(this.formatClientConnectivity));
   }
 
   private formatClientConnectivity(
     entity: ClientConnectivityFromApi
   ): ClientConnectivity {
-    let adminId = parseInt(entity.adminid),
-      custodianId = parseInt(entity.custodianid),
-      id = parseInt(entity.id);
+    const id = parseInt(entity.id, 10);
+    const adminId = parseInt(entity.adminid, 10);
+    const custodianId = parseInt(entity.custodianid, 10);
     return new ClientConnectivity(
       !isNaN(adminId) ? adminId : null,
       !isNaN(custodianId) ? custodianId : null,

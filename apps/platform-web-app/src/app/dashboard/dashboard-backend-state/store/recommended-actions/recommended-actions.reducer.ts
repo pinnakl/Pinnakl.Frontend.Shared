@@ -1,9 +1,13 @@
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { Action, createReducer, on } from '@ngrx/store';
 
-import { RecommendedAction } from '../../../dashboard-backend';
+import { RecommendedAction } from '../../../dashboard-backend/recommended-actions/recommended-action.model';
 import {
-  RecommendedActionActions,
-  RecommendedActionsActionTypes
+  AddRecommendedAction,
+  AttemptLoadRecommendedActions,
+  LoadRecommendedActions,
+  LoadRecommendedActionsFailed,
+  UpdateRecommendedAction
 } from './recommended-actions.actions';
 
 export interface State extends EntityState<RecommendedAction> {
@@ -20,42 +24,25 @@ export const initialState: State = adapter.getInitialState({
   loading: false
 });
 
-export function reducer(
-  state: State = initialState,
-  action: RecommendedActionActions
-): State {
-  switch (action.type) {
-    case RecommendedActionsActionTypes.AddRecommendedAction: {
-      return adapter.addOne(action.payload.recommendedAction, {
-        ...state,
-        loading: false,
-        loaded: true
-      });
-    }
+const featureReducer = createReducer(
+  initialState,
+  on(AddRecommendedAction, (state, { recommendedAction }) => adapter.addOne(recommendedAction, {
+    ...state,
+    loading: false,
+    loaded: true
+  })),
+  on(AttemptLoadRecommendedActions, (state) => ({ ...state, loaded: false, loading: true })),
+  on(LoadRecommendedActions, (state, { recommendedActions }) => adapter.setAll(recommendedActions, {
+    ...state,
+    loading: false,
+    loaded: true
+  })),
+  on(UpdateRecommendedAction, (state, { recommendedAction }) => adapter.updateOne(recommendedAction, state)),
+  on(LoadRecommendedActionsFailed, (state) => ({ ...state, loaded: false, loading: false }))
+);
 
-    case RecommendedActionsActionTypes.AttemptLoadRecommendedActions: {
-      return { ...state, loaded: false, loading: true };
-    }
-
-    case RecommendedActionsActionTypes.LoadRecommendedActions: {
-      return adapter.addAll(action.payload.recommendedActions, {
-        ...state,
-        loading: false,
-        loaded: true
-      });
-    }
-
-    case RecommendedActionsActionTypes.UpdateRecommendedAction: {
-      return adapter.updateOne(action.payload.recommendedAction, state);
-    }
-
-    case RecommendedActionsActionTypes.LoadRecommendedActionsFailed: {
-      return { ...state, loaded: false, loading: false };
-    }
-    default: {
-      return state;
-    }
-  }
+export function reducer(state: State | undefined, action: Action): State {
+  return featureReducer(state, action);
 }
 
 export const selectLoaded = (state: State) => state.loaded;

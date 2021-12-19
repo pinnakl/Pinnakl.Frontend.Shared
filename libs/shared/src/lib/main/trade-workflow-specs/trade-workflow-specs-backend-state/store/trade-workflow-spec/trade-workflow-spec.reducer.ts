@@ -1,9 +1,11 @@
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { Action, createReducer, on } from '@ngrx/store';
 
 import { TradeWorkflowSpec } from '../../../trade-workflow-specs-backend';
 import {
-  TradeWorkflowSpecActions,
-  TradeWorkflowSpecActionTypes
+  AttemptLoadTradeWorkflowSpecs,
+  LoadTradeWorkflowSpecs,
+  LoadTradeWorkflowSpecsFailed
 } from './trade-workflow-spec.actions';
 
 export interface State extends EntityState<TradeWorkflowSpec> {
@@ -20,37 +22,27 @@ export const initialState: State = adapter.getInitialState({
   loading: false
 });
 
-export function reducer(
-  state: State = initialState,
-  action: TradeWorkflowSpecActions
-): State {
-  switch (action.type) {
-    case TradeWorkflowSpecActionTypes.AttemptLoadTradeWorkflowSpecs: {
-      return {
-        ...state,
-        loaded: false,
-        loading: true
-      };
-    }
-    case TradeWorkflowSpecActionTypes.LoadTradeWorkflowSpecs: {
-      return adapter.addAll(action.payload.tradeWorkflowSpecs, {
-        ...state,
-        loaded: true,
-        loading: false
-      });
-    }
-    case TradeWorkflowSpecActionTypes.LoadTradeWorkflowSpecsFailed: {
-      return {
-        ...state,
-        loaded: false,
-        loading: false
-      };
-    }
-    default: {
-      return state;
-    }
-  }
-}
+const featureReducer = createReducer(
+  initialState,
+  on(AttemptLoadTradeWorkflowSpecs, (state) => ({
+    ...state,
+    loaded: false,
+    loading: true
+  })),
+  on(LoadTradeWorkflowSpecs, (state, { tradeWorkflowSpecs }) => adapter.setAll(tradeWorkflowSpecs, {
+    ...state,
+    loaded: true,
+    loading: false
+  })),
+  on(LoadTradeWorkflowSpecsFailed, (state) => ({
+    ...state,
+    loaded: false,
+    loading: false
+  }))
+);
 
+export function reducer(state: State | undefined, action: Action): State {
+  return featureReducer(state, action);
+}
 export const { selectAll } = adapter.getSelectors();
 export const selectLoaded = (state: State) => state.loaded;

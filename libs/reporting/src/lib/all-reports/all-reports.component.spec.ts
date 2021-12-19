@@ -91,7 +91,7 @@ describe('AllReportsComponent (inline template)', () => {
       providers: [{ provide: ActivatedRoute, useClass: ActivatedRouteStub }]
     }).compileComponents(); // compile template and css
 
-    let activatedRouteInstance = TestBed.get(ActivatedRoute);
+    let activatedRouteInstance = TestBed.inject(ActivatedRoute);
     activatedRouteInstance.setSnapShot({ reportGroups });
   }));
 
@@ -148,7 +148,6 @@ class AllReportsPage {
   reportCategoryTitles: DebugElement[];
   clientReportsForCategories: DebugElement[][] = [];
   userReportsForCategories: DebugElement[][] = [];
-  constructor() {}
 
   addPageElements(
     comp: AllReportsComponent,

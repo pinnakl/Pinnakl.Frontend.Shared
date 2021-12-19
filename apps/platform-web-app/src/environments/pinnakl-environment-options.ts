@@ -58,22 +58,28 @@ export const requestTimeoutPeriods = {
   prod: 30000
 };
 
-export const serverUrls = {
-  local: 'ws://localhost:45612',
-  prod: 'wss://servergateway.pinnakl.com:45611',
-  // staging: 'ws://stagingserver.pinnakl.com:45612'
-  staging: 'ws://indiastagevm.westindia.cloudapp.azure.com:45612'
-};
-
 export const sseAppUrls = {
   local: 'https://localhost:44393/api/',
   prod: 'https://sse.pinnakl.com/api/',
   staging: 'http://stagingserver.pinnakl.com/PnklSSE/api/'
 };
 
+export const sseBackupAppUrls = {
+  local: 'https://appsvc-pinnakl-sse-sub1.azurewebsites.net/api/',
+  prod: 'https://appsvc-pinnakl-sse-sub1.azurewebsites.net/api/',
+  staging: 'https://appsvc-pinnakl-sse-sub1.azurewebsites.net/api/'
+};
+
+export const httpServerUrls = {
+  local: 'http://localhost:62190',
+  prod: 'https://core-platform-services.pinnakl.com',
+  staging: 'https://appsvc-pinnakl-httpcore-dev.azurewebsites.net'
+};
+
 export const httpServiceUrls = {
   local: 'https://localhost:44323/api/',
-  prod: 'https://services.pinnakl.com/api/'
+  prod: 'https://services.pinnakl.com/api/',
+  staging: 'https://appsvc-pinnakl-trading-test.azurewebsites.net/api/'
 };
 // prod1: 'https://servergateway.pinnakl.com/PnklSSE/api/'
 // prod2: 'http://pinnakl.cloudpap.net/PnklSSE/api/'

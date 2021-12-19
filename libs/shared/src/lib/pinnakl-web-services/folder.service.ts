@@ -1,59 +1,56 @@
 import { Injectable } from '@angular/core';
 
 import {
-  DeleteWebRequest,
-  GetWebRequest,
-  PostWebRequest,
-  PutWebRequest,
   WebServiceProvider
 } from '@pnkl-frontend/core';
-import { Folder } from '../models/oms/folder.model';
-import { CustomAttributeOMS} from '../models/oms/custom-attribute-oms.model';
+import { Folder } from '../models/oms';
+import { CustomAttributeOMS } from '../models/oms';
 
 @Injectable()
 export class FolderService {
-  constructor(private wsp: WebServiceProvider) {}
+  private readonly _tradeFolderEndpoint = 'entities/trade_folder';
+  private readonly _tradeRequestsEndpoint = 'entities/trade_requests';
+  private readonly _tradeRequestCustomEndpoint = 'entities/trade_request_custom';
+  private readonly _tradeReqCustomColClientMapEndpoint = 'entities/trade_req_custom_col_client_map';
 
-  getFolders(): Promise<Folder[]> {
-    let fields = ['id', 'col1'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: 'trade_folder',
-      options: {
-        fields: fields
+  constructor(private readonly wsp: WebServiceProvider) {}
+
+  async getFolders(): Promise<Folder[]> {
+    const folders = await this.wsp.getHttp<any[]>({
+      endpoint: this._tradeFolderEndpoint,
+      params: {
+        fields: ['id', 'col1']
       }
-    };
-    return this.wsp
-      .get(getWebRequest)
-      .then(result => result.map(x => this.formatFolder(x)));
+    });
+
+    return folders.map(this.formatFolder);
   }
 
   private formatFolder(result: any): Folder {
-    let id = parseInt(result.id);
+    const id = parseInt(result.id, 10);
     return new Folder(!isNaN(id) ? id : null, result.col1);
   }
 
-  saveFolder(
+  async saveFolder(
     col1: string,
     col2: string,
     col3: string,
     col4: string,
     col5: string
   ): Promise<any> {
-    const postWebRequest: PostWebRequest = {
-      endPoint: 'trade_request_custom',
-      payload: {
+    return this.wsp.postHttp({
+      endpoint: this._tradeRequestCustomEndpoint,
+      body: {
         Col1: col1,
         Col2: col2,
         Col3: col3,
         Col4: col4,
         Col5: col5
       }
-    };
-
-    return this.wsp.post(postWebRequest);
+    });
   }
 
-  updateFolder(
+  async updateFolder(
     id: number,
     col1: string,
     col2: string,
@@ -61,26 +58,24 @@ export class FolderService {
     col4: string,
     col5: string
   ): Promise<any> {
-    const putWebRequest: PutWebRequest = {
-      endPoint: 'trade_request_custom',
-      payload: {
-        id: id,
+    return this.wsp.putHttp({
+      endpoint: this._tradeRequestCustomEndpoint,
+      body: {
+        id: id.toString(),
         Col1: col1,
         Col2: col2,
         Col3: col3,
         Col4: col4,
         Col5: col5
       }
-    };
-    return this.wsp.put(putWebRequest);
+    });
   }
 
-  confirmDeleteForFolder(id: number): Promise<any> {
-    let fields = ['id'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: 'trade_requests',
-      options: {
-        fields: fields,
+  async confirmDeleteForFolder(id: number): Promise<any> {
+    return this.wsp.getHttp<any[]>({
+      endpoint: this._tradeRequestsEndpoint,
+      params: {
+        fields: ['id'],
         filters: [
           {
             key: 'customattribid',
@@ -89,38 +84,28 @@ export class FolderService {
           }
         ]
       }
-    };
-    return this.wsp.get(getWebRequest);
+    });
   }
 
-  deleteFolder(id: number): Promise<any> {
-    const deleteWebRequest: DeleteWebRequest = {
-      endPoint: 'trade_request_custom',
-      payload: {
-        id: id.toString()
-      }
-    };
-
-    return this.wsp.delete(deleteWebRequest);
+  async deleteFolder(id: number): Promise<any> {
+    return this.wsp.deleteHttp({
+      endpoint: `${this._tradeRequestCustomEndpoint}/${id}`
+    });
   }
 
-
-  getCustomAttribList(): Promise<CustomAttributeOMS[]> {
-    let fields = ['ColName', 'ColMappedTo'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: 'trade_req_custom_col_client_map',
-      options: {
-        fields: fields
+  async getCustomAttribList(): Promise<CustomAttributeOMS[]> {
+    const tradeReqTags = await this.wsp.getHttp<any[]>({
+      endpoint: this._tradeReqCustomColClientMapEndpoint,
+      params: {
+        fields: ['ColName', 'ColMappedTo']
       }
-    };
+    });
 
-    return this.wsp
-      .get(getWebRequest)
-      .then(result => result.map(x => this.formatCustomAttribute(x)));
+    return tradeReqTags.map(this.formatCustomAttribute);
   }
 
   private formatCustomAttribute(result: any): CustomAttributeOMS {
-    let id = parseInt(result.id);
+    const id = parseInt(result.id, 10);
     return new CustomAttributeOMS(
       !isNaN(id) ? id : null,
       result.colname,
@@ -128,14 +113,12 @@ export class FolderService {
     );
   }
 
-  getAllCustomValues(): Promise<any[]> {
-    let fields = ['Col1', 'Col2', 'Col3', 'Col4', 'Col5'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: 'trade_request_custom',
-      options: {
-        fields: fields
+  async getAllCustomValues(): Promise<any[]> {
+    return this.wsp.getHttp<any[]>({
+      endpoint: 'entities/trade_request_custom',
+      params: {
+        fields: ['Col1', 'Col2', 'Col3', 'Col4', 'Col5']
       }
-    };
-    return this.wsp.get(getWebRequest);
+    });
   }
 }

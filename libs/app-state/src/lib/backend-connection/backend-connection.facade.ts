@@ -9,11 +9,11 @@ import {
 
 @Injectable()
 export class BackendConnectionFacade {
-  constructor(private _store: Store<BackendConnectionState>) {}
+  constructor(private readonly _store: Store<BackendConnectionState>) {}
 
   reconnectedAt$ = this._store.select(selectBackendReconnectedAt);
 
   setReconnectedAt(reconnectedAt: Date): void {
-    this._store.dispatch(new SetReconnectedAt({ reconnectedAt }));
+    this._store.dispatch(SetReconnectedAt({ reconnectedAt }));
   }
 }

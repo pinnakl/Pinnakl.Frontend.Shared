@@ -8,3 +8,17 @@
   z-index: 1;
   right: 15px;
 }
+
+:host ::ng-deep {
+  .reporting-config-panel {
+    .reporting-filter-height {
+      width: 100%;
+      height: calc(100vh - 214px);
+      overflow: auto;
+    }
+  }
+
+  .oms-filter-preset {
+    height: calc(100vh - 535px) !important;
+  }
+}

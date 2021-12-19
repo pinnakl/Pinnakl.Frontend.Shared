@@ -1,0 +1,7 @@
+<value-history-manager-popup
+  [fetchHistoryItems]="getCouponRates"
+  (onClose)="onClose.emit()"
+  (onLatestValueChange)="onCouponChange.emit($event)"
+  [saveAllHistoryItems]="saveCouponRates"
+  title="Coupon Rate"
+></value-history-manager-popup>

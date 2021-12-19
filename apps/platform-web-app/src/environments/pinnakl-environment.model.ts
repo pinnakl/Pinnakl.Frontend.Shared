@@ -14,7 +14,8 @@ export interface PinnaklEnvironment {
   includeTesting: boolean;
   production: boolean;
   requestTimeoutPeriod: number;
-  serverUrl: string;
+  httpServerUrl: string;
   sseAppUrl: string;
+  sseBackupAppUrl: string;
   httpServiceUrl: string;
 }

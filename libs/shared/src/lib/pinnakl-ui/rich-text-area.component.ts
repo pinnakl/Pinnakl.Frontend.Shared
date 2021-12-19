@@ -38,7 +38,7 @@ export class RichTextAreaComponent
   editor: Editor;
   @ViewChild('textarea', { static: true }) private elementRef: ElementRef;
 
-  constructor(private ngZone: NgZone) {}
+  constructor(private readonly ngZone: NgZone) {}
 
   ngOnDestroy(): void {
     tinymce.remove(this.editor);

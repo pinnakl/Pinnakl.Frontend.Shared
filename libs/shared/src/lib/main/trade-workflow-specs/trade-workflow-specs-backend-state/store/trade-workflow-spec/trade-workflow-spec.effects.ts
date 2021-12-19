@@ -1,38 +1,31 @@
 import { Injectable } from '@angular/core';
 
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Observable } from 'rxjs';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatMap } from 'rxjs/operators';
 
 import { TradeWorkflowSpecService } from '../../../trade-workflow-specs-backend';
 import {
   AttemptLoadTradeWorkflowSpecs,
   LoadTradeWorkflowSpecs,
-  LoadTradeWorkflowSpecsFailed,
-  TradeWorkflowSpecActionTypes
+  LoadTradeWorkflowSpecsFailed
 } from './trade-workflow-spec.actions';
 
 @Injectable()
 export class TradeWorkflowSpecEffects {
-  @Effect()
-  load$: Observable<
-    LoadTradeWorkflowSpecs | LoadTradeWorkflowSpecsFailed
-  > = this._actions$.pipe(
-    ofType<AttemptLoadTradeWorkflowSpecs>(
-      TradeWorkflowSpecActionTypes.AttemptLoadTradeWorkflowSpecs
-    ),
+  load$ = createEffect(() => this._actions$.pipe(
+    ofType(AttemptLoadTradeWorkflowSpecs),
     concatMap(async () => {
       try {
         const tradeWorkflowSpecs = await this._tradeWorkflowSpecService.getAll();
-        return new LoadTradeWorkflowSpecs({ tradeWorkflowSpecs });
+        return LoadTradeWorkflowSpecs({ tradeWorkflowSpecs });
       } catch (error) {
-        return new LoadTradeWorkflowSpecsFailed({ error });
+        return LoadTradeWorkflowSpecsFailed({ error });
       }
     })
-  );
+  ));
 
   constructor(
-    private _actions$: Actions,
-    private _tradeWorkflowSpecService: TradeWorkflowSpecService
-  ) {}
+    private readonly _actions$: Actions,
+    private readonly _tradeWorkflowSpecService: TradeWorkflowSpecService
+  ) { }
 }

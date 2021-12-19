@@ -5,7 +5,7 @@ import {
   transition,
   trigger
 } from '@angular/animations';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ClientConnectivity } from '@pnkl-frontend/shared';
 import { TaskObject } from '../../../shared/task-object.model';
 
@@ -28,13 +28,10 @@ import { TaskObject } from '../../../shared/task-object.model';
     ])
   ]
 })
-export class TaskManagerComponent implements OnInit {
+export class TaskManagerComponent {
   @Input() entities: ClientConnectivity[];
   @Input() operation: string;
   @Input() task: TaskObject;
   @Output() taskRunCompleted = new EventEmitter<void>();
   @Input() visible: boolean;
-  constructor() {}
-
-  ngOnInit() {}
 }

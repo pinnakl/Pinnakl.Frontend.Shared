@@ -1,0 +1,147 @@
+<div class="container-fluid">
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="row mt-4">
+          <div class="col-md-2">
+            <pinnakl-input
+              controlName="paymentDate"
+              [form]="form"
+              label="Payment Date"
+              [required]="true"
+              type="date"
+            >
+            </pinnakl-input>
+          </div>
+          <div class="col-md-2">
+            <pinnakl-input
+              controlName="payment"
+              [form]="form"
+              label="Payment"
+              [required]="true"
+              type="numeric"
+            >
+            </pinnakl-input>
+          </div>
+          <div class="col-md-2">
+            <pinnakl-input
+              controlName="principal"
+              [form]="form"
+              label="Principal"
+              [required]="true"
+              type="numeric"
+            >
+            </pinnakl-input>
+          </div>
+          <div class="col-md-2">
+            <pinnakl-input
+              controlName="interest"
+              [form]="form"
+              label="Interest"
+              [required]="true"
+              type="numeric"
+            >
+            </pinnakl-input>
+          </div>
+          <div class="col-md-3">
+            <button
+              *ngIf="paymentSelected"
+              (click)="cancelEditClicked()"
+              class="btn btn-security btn-cancel"
+            >
+              CANCEL
+            </button>
+            <button class="btn btn-security ml-2 btn-success" type="submit">
+              SAVE
+            </button>
+          </div>
+          <!-- <div class="col-md-1"></div> -->
+          <!-- <div *ngIf="paymentSelected" class="col-md-1">
+            <button
+              (click)="cancelEditClicked()"
+              class="btn btn-security btn-cancel"
+            >
+              CANCEL
+            </button>
+          </div>
+          <div class="col-md-1">
+            <button class="btn btn-security btn-success" type="submit">
+              SAVE
+            </button>
+          </div> -->
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-12 mb-5 text-center">
+      <!-- <div class="row">
+        <div class="col-md-12">
+          <div class="row mr-1 text-capitalize font-weight-bold">
+            <div class="col-md-1 py-2 border-payment-col">Payment Id</div>
+            <div class="col-md-1 py-2 border-payment-col">Payment Date</div>
+            <div class="col-md-1 py-2 border-payment-col">Payment</div>
+            <div class="col-md-1 py-2 border-payment-col">Principal</div>
+            <div class="col-md-1 py-2 border-payment-col">Interest</div>
+            <div class="col-md-1 py-2 border-payment-col">Action</div>
+          </div>
+        </div>
+      </div> -->
+      <div class="row">
+        <div class="col-md-12 payment-history-grid">
+          <div class="row">
+            <div class="col-md-12">
+              <div class="row text-capitalize font-weight-bold">
+                <div class="col-md-1 py-2 border-payment-col">Payment Id</div>
+                <div class="col-md-1 py-2 border-payment-col">Payment Date</div>
+                <div class="col-md-1 py-2 border-payment-col">Payment</div>
+                <div class="col-md-1 py-2 border-payment-col">Principal</div>
+                <div class="col-md-1 py-2 border-payment-col">Interest</div>
+                <div class="col-md-1 py-2 border-payment-col">Action</div>
+              </div>
+            </div>
+          </div>
+          <div class="row" *ngFor="let payment of paymentHistory">
+            <div class="col-md-1 py-1 border-payment-col">{{ payment.id }}</div>
+            <div class="col-md-1 py-1 border-payment-col">
+              {{ payment.paymentDate | date: 'shortDate' }}
+            </div>
+            <div class="col-md-1 py-1 border-payment-col">
+              {{ payment.payment }}
+            </div>
+            <div class="col-md-1 py-1 border-payment-col">
+              {{ payment.principal }}
+            </div>
+            <div class="col-md-1 py-1 border-payment-col">
+              {{ payment.interest }}
+            </div>
+            <div class="col-md-1 py-1 border-payment-col">
+              <a class="action-button">
+                <span
+                  #anchor
+                  (click)="deletePayment(payment.id)"
+                  class="icon-pinnakl-trash-empty color-red cursor-pointer"
+                ></span>
+                <confirm-action
+                  [anchor]="anchor"
+                  class="col-md-12"
+                  confirmationMessage="Are you sure you want to reset the form?"
+                  (onCancelled)="cancelDeletion()"
+                  (onConfirmed)="deletePaymentConfirmed()"
+                  [showConfirmation]="cancelConfirmationVisible"
+                >
+                </confirm-action>
+              </a>
+              <a class="action-button">
+                <span
+                  (click)="editPayment(payment)"
+                  class="icon-pinnakl-edit-securities cursor-pointer"
+                ></span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -11,7 +11,15 @@ export class TradeWorkflowSpecsBackendStateFacade {
     select(_selectRealtimePortfolioOn)
   );
 
-  constructor(private _store: Store<any>) {}
+  rebalanceBpsAdjVisible$: Observable<boolean> = this._store.pipe(
+    select(_selectRebalanceBpsAdjVisible)
+  );
+
+  positionsCalcAum$: Observable<boolean> = this._store.pipe(
+    select(_selectCalcAum)
+  );
+
+  constructor(private readonly _store: Store<any>) {}
 }
 
 const _selectRealtimePortfolioOn = createSelector(
@@ -22,5 +30,27 @@ const _selectRealtimePortfolioOn = createSelector(
       return false;
     }
     return currentSpec.realTimePortfolio;
+  }
+);
+
+const _selectRebalanceBpsAdjVisible = createSelector(
+  selectAllTradeWorkflowSpecs,
+  specs => {
+    const currentSpec = specs[0];
+    if (!currentSpec) {
+      return false;
+    }
+    return currentSpec.rebalanceBpsAdjVisible;
+  }
+);
+
+const _selectCalcAum = createSelector(
+  selectAllTradeWorkflowSpecs,
+  specs => {
+    const currentSpec = specs[0];
+    if (!currentSpec) {
+      return false;
+    }
+    return currentSpec.calcAum;
   }
 );

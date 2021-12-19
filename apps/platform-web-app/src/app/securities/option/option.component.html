@@ -1,0 +1,22 @@
+<div [hidden]="securitiesHelper.currentTab !== 'securityInformation'">
+  <option-information
+    [asset]="option"
+    [currencies]="currencies"
+    [optionTypeOptions]="optionTypeOptions"
+    [putCallIndicatorOptions]="putCallIndicatorOptions"
+    [manualSecuritySource]="manualSecuritySource"
+    [organizations]="organizations"
+    [sectorOptions]="sectorOptions"
+    [security]="security"
+    [securityTypes]="securityTypes"
+  >
+  </option-information>
+</div>
+
+<div
+  *ngIf="option"
+  [hidden]="securitiesHelper.currentTab !== 'additionalInformation'"
+>
+  <option-additional-information [asset]="option">
+  </option-additional-information>
+</div>

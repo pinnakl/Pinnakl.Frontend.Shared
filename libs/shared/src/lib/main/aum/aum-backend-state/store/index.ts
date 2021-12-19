@@ -29,3 +29,5 @@ export const selectAccountsAumState = createSelector(
   selectAumFeature,
   state => state.accountsAum
 );
+
+export { LoadFullAum, LoadAccountsAum } from './aum.actions';

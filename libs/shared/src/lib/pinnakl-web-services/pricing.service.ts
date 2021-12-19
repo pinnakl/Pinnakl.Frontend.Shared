@@ -3,10 +3,6 @@ import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 
 import {
-  DeleteWebRequest,
-  GetWebRequest,
-  PostWebRequest,
-  PutWebRequest,
   WebServiceProvider
 } from '@pnkl-frontend/core';
 import {
@@ -14,79 +10,61 @@ import {
   Price,
   PricingComment,
   PricingSource
-} from '../models/pricing.model';
+} from '../models';
 
 @Injectable()
 export class PricingService {
-  constructor(private wsp: WebServiceProvider) {}
+  private readonly _pricesEndpoint = 'entities/prices';
+  private readonly _pricingDatesEndpoint = 'entities/pricing_dates';
+  private readonly _priceCommentsEndpoint = 'entities/price_comments';
+  private readonly _pricingSourcesEndpoint = 'entities/pricing_sources';
+  private readonly _pricesCarryOverEndpoint = 'entities/prices_carry_over';
+  private readonly _portfolioWithPricesEndpoint = 'entities/portfolio_with_prices';
 
-  getPortfolio(
+  constructor(private readonly wsp: WebServiceProvider) {}
+
+  async getPortfolio(
     pricingDate: Date,
     prevPricingDate: Date,
-    assetType
+    assetType: any
   ): Promise<Array<Position>> {
-    let pricingDateString = moment(pricingDate).format('MM/DD/YYYY');
-    let prevPricingDateString = moment(prevPricingDate).format('MM/DD/YYYY');
+    const portfolio = await this.wsp
+      .getHttp<any[]>({
+        endpoint: this._portfolioWithPricesEndpoint,
+        params: {
+          filters: [
+            {
+              key: 'pricingdate',
+              type: 'EQ',
+              value: [moment(pricingDate).format('MM/DD/YYYY')]
+            },
+            {
+              key: 'assettype',
+              type: 'IN',
+              value: assetType
+            },
+            {
+              key: 'prevpricingdate',
+              type: 'EQ',
+              value: [moment(prevPricingDate).format('MM/DD/YYYY')]
+            }
+          ]
+        }
+      });
 
-    const getWebRequest: GetWebRequest = {
-      endPoint: 'portfolio_with_prices',
-      options: {
-        filters: [
-          {
-            key: 'pricingdate',
-            type: 'EQ',
-            value: [pricingDateString]
-          },
-          {
-            key: 'assettype',
-            type: 'IN',
-            value: assetType
-          },
-          {
-            key: 'prevpricingdate',
-            type: 'EQ',
-            value: [prevPricingDateString]
-          }
-        ]
-      }
-    };
-
-    return this.wsp
-      .get(getWebRequest)
-      .then(portfolio => portfolio.map(x => this.formatPosition(x)));
+    return portfolio.map(this.formatPosition);
   }
 
-  private formatPosition(result: any): Position {
-    let change = parseFloat(result.change),
-      mid = parseFloat(result.mid),
-      prevMid = parseFloat(result.prevmid);
-    return new Position(
-      result.assettype,
-      !isNaN(change) ? change : 0,
-      result.comment,
-      result.commentid,
-      result.description,
-      result.identifier,
-      !isNaN(mid) ? mid : 0,
-      !isNaN(prevMid) ? prevMid : 0,
-      result.pricetype,
-      result.securityid,
-      result.ticker
-    );
-  }
-
-  getLatestPricingDate(pricingDate: Date): Promise<string> {
-    let pricingDateString = moment(pricingDate).format('MM/DD/YYYY');
-    let fields = ['pricingdate'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: 'pricing_dates',
-      options: {
-        fields: fields,
+  async getLatestPricingDate(pricingDate: Date): Promise<string> {
+    const result = await this.wsp.getHttp({
+      endpoint: this._pricingDatesEndpoint,
+      params: {
+        fields: ['pricingdate'],
         filters: [
           {
             key: 'pricingdate',
             type: 'LE',
-            value: [pricingDateString]
+            value: [moment(pricingDate).format('MM/DD/YYYY')]
           },
           {
             key: '',
@@ -101,17 +79,15 @@ export class PricingService {
           }
         ]
       }
-    };
-
-    return this.wsp.get(getWebRequest).then(result => {
-      return result[0].pricingdate;
     });
+
+    return result[0].pricingdate;
   }
 
-  getPrices(pricingDate: Date, securityId): Promise<Array<Price>> {
-    let pricingDateString = moment(pricingDate).format('MM/DD/YYYY');
+  async getPrices(pricingDate: Date, securityIds: string[]): Promise<Array<Price>> {
+    const pricingDateString = moment(pricingDate).format('MM/DD/YYYY');
 
-    let fields = [
+    const fields = [
       'id',
       'pricedate',
       'securityid',
@@ -124,28 +100,190 @@ export class PricingService {
       'entrymethod',
       'include'
     ];
-    const getWebRequest: GetWebRequest = {
-      endPoint: 'prices',
-      options: {
-        fields: fields,
+
+    const prices = await this.wsp
+      .getHttp<any[]>({
+        endpoint: this._pricesEndpoint,
+        params: {
+          fields: fields,
+          filters: [
+            {
+              key: 'pricedate',
+              type: 'EQ',
+              value: [pricingDateString]
+            },
+            {
+              key: 'securityid',
+              type: 'IN',
+              value: securityIds
+            }
+          ]
+        }
+      });
+
+    return prices.map(this.formatPrice);
+  }
+
+  async getPricingSources(): Promise<PricingSource[]> {
+    const pricingSources = await this.wsp
+      .getHttp<any[]>({
+        endpoint: this._pricingSourcesEndpoint,
+        params: {
+          fields: ['id', 'name', 'manuallyinsertable', 'fileload', 'exclusive']
+        }
+      });
+
+    return pricingSources.map(this.formatPricingSource);
+  }
+
+  async getPricingSourceBySourceTypeAndName(
+    sourceType: string,
+    name: string
+  ): Promise<any> {
+    const pricingSources = await this.wsp.getHttp<any[]>({
+      endpoint: this._pricingSourcesEndpoint,
+      params: {
+        fields: ['id'],
         filters: [
           {
-            key: 'pricedate',
+            key: 'SourceType',
             type: 'EQ',
-            value: [pricingDateString]
+            value: [sourceType]
           },
           {
-            key: 'securityid',
+            key: 'Name',
             type: 'EQ',
-            value: [securityId]
+            value: [name]
           }
         ]
       }
-    };
+    });
 
-    return this.wsp
-      .get(getWebRequest)
-      .then(prices => prices.map(x => this.formatPrice(x)));
+    return  pricingSources.length === 1 ? pricingSources[0] : null;
+  }
+
+  async savePrices(
+    priceDate: Date,
+    securityId,
+    mid,
+    source,
+    evaltime,
+    include
+  ): Promise<Price> {
+    const price = await this.wsp.postHttp({
+      endpoint: this._pricesEndpoint,
+      body: {
+        pricedate: moment(priceDate).format('MM/DD/YYYY'),
+        securityid: securityId.toString(),
+        mid: mid.toString(),
+        source: source.toString(),
+        evaltime: evaltime,
+        entrymethod: 'manual',
+        include: include === true ? '1' : '0'
+      }
+    });
+
+    return this.formatPrice(price);
+  }
+
+  async deletePrices(id: string): Promise<string> {
+    return this.wsp.deleteHttp({
+      endpoint: `${this._pricesEndpoint}/${id}`
+    });
+  }
+
+  async savePricingSources(name: string): Promise<PricingSource> {
+    const pricingSource = await this.wsp
+      .postHttp<any>({
+        endpoint: this._pricingSourcesEndpoint,
+        body: {
+          sourcetype: 'pricing',
+          name: name,
+          manuallyinsertable: '1',
+          fileload: '0',
+          exclusive: '0'
+        }
+      });
+
+    return this.formatPricingSource(pricingSource);
+  }
+
+  async updatePrices(id: string, include: boolean): Promise<Price> {
+    const prices = await this.wsp.putHttp({
+      endpoint: this._pricesEndpoint,
+      body: {
+        id: id.toString(),
+        include: include === true ? '1' : '0'
+      }
+    });
+
+    return this.formatPrice(prices);
+  }
+
+  async saveComments(priceDate: Date, securityId, comment): Promise<PricingComment> {
+    const priceDateString = moment(priceDate).format('MM/DD/YYYY');
+
+    const entity = await this.wsp.postHttp({
+      endpoint: this._priceCommentsEndpoint,
+      body: {
+        pricedate: priceDateString,
+        securityid: securityId.toString(),
+        comment: comment
+      }
+    });
+
+    return this.formatPricingComment(entity);
+  }
+
+  async updateComments(
+    priceDate: Date,
+    securityId,
+    comment,
+    id
+  ): Promise<PricingComment> {
+    const priceDateString = moment(priceDate).format('MM/DD/YYYY');
+
+    const price = await this.wsp.putHttp({
+      endpoint: this._priceCommentsEndpoint,
+      body: {
+        pricedate: priceDateString,
+        securityid: securityId,
+        comment: comment,
+        id: id
+      }
+    });
+
+    return this.formatPricingComment(price);
+  }
+
+  async postCarryOverPrices(
+    prevPricingDate: Date,
+    pricingDate: Date,
+    assettype
+  ): Promise<any> {
+    const prevPricingDateString = moment(prevPricingDate).format('MM/DD/YYYY');
+    const pricingDateString = moment(pricingDate).format('MM/DD/YYYY');
+
+    return this.wsp.postHttp({
+      endpoint: this._pricesCarryOverEndpoint,
+      body: {
+        prevpricingdate: prevPricingDateString,
+        pricingdate: pricingDateString,
+        securitylist: 'manual',
+        assettype: assettype
+      }
+    });
+  }
+
+  private formatPricingComment(result: any): PricingComment {
+    let priceDate = moment(result.pricedate, 'MM/DD/YYYY');
+
+    return new PricingComment(
+      result.id,
+      priceDate.isValid() ? priceDate.toDate() : null,
+      result.securityid,
+      result.comment
+    );
   }
 
   private formatPrice(result: any): Price {
@@ -166,22 +304,6 @@ export class PricingService {
     );
   }
 
-  getPricingSources(): Promise<PricingSource[]> {
-    let fields = ['id', 'name', 'manuallyinsertable', 'fileload', 'exclusive'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: 'pricing_sources',
-      options: {
-        fields: fields
-      }
-    };
-
-    return this.wsp
-      .get(getWebRequest)
-      .then(pricingSources =>
-        pricingSources.map(x => this.formatPricingSource(x))
-      );
-  }
-
   private formatPricingSource(result: any): PricingSource {
     return new PricingSource(
       result.exclusive === 'True' ? true : false,
@@ -192,178 +314,22 @@ export class PricingService {
     );
   }
 
-  getPricingSourceBySourceTypeAndName(
-    sourceType: string,
-    name: string
-  ): Promise<any> {
-    let fields = ['id'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: 'pricing_sources',
-      options: {
-        fields: fields,
-        filters: [
-          {
-            key: 'SourceType',
-            type: 'EQ',
-            value: [sourceType]
-          },
-          {
-            key: 'Name',
-            type: 'EQ',
-            value: [name]
-          }
-        ]
-      }
-    };
-
-    return this.wsp.get(getWebRequest).then(pricingSources => {
-      return new Promise((resolve, reject) => {
-        if (pricingSources.length === 1) {
-          resolve(pricingSources[0]);
-        } else {
-          resolve(null);
-        }
-      });
-    });
-  }
-
-  savePrices(
-    priceDate: Date,
-    securityId,
-    mid,
-    source,
-    evaltime,
-    include
-  ): Promise<Price> {
-    let priceDateString = moment(priceDate).format('MM/DD/YYYY');
-
-    const savePriceBody: PostWebRequest = {
-      endPoint: 'prices',
-      payload: {
-        pricedate: priceDateString,
-        securityid: securityId,
-        mid: mid,
-        source: source,
-        evaltime: evaltime,
-        entrymethod: 'manual',
-        include: include === true ? 1 : 0
-      }
-    };
-
-    return this.wsp.post(savePriceBody).then(price => {
-      return this.formatPrice(price);
-    });
-  }
-
-  deletePrices(id): Promise<string> {
-    const deleteWebRequest: DeleteWebRequest = {
-      endPoint: 'prices',
-      payload: {
-        id: id
-      }
-    };
-
-    return this.wsp.delete(deleteWebRequest);
-  }
-
-  savePricingSources(name): Promise<PricingSource> {
-    let savePricingSourcesRequestBody = {
-      sourcetype: 'pricing',
-      name: name,
-      manuallyinsertable: 1,
-      fileload: 0,
-      exclusive: 0
-    };
-
-    const savePricesSourcesRequestBody: PostWebRequest = {
-      endPoint: 'pricing_sources',
-      payload: savePricingSourcesRequestBody
-    };
-
-    return this.wsp
-      .post(savePricesSourcesRequestBody)
-      .then(pricingSource => this.formatPricingSource(pricingSource));
-  }
-
-  updatePrices(id, include): Promise<Price> {
-    const putWebRequest: PutWebRequest = {
-      endPoint: 'prices',
-      payload: {
-        id: id,
-        include: include === true ? 1 : 0
-      }
-    };
-
-    return this.wsp.put(putWebRequest).then(price => this.formatPrice(price));
-  }
-
-  saveComments(priceDate: Date, securityId, comment): Promise<PricingComment> {
-    let priceDateString = moment(priceDate).format('MM/DD/YYYY');
-
-    const postWebRequest: PostWebRequest = {
-      endPoint: 'price_comments',
-      payload: {
-        pricedate: priceDateString,
-        securityid: securityId,
-        comment: comment
-      }
-    };
-
-    return this.wsp
-      .post(postWebRequest)
-      .then(result => this.formatPricingComment(result));
-  }
-
-  private formatPricingComment(result: any): PricingComment {
-    let priceDate = moment(result.pricedate, 'MM/DD/YYYY');
-
-    return new PricingComment(
-      result.id,
-      priceDate.isValid() ? priceDate.toDate() : null,
+  private formatPosition(result: any): Position {
+    let change = parseFloat(result.change),
+      mid = parseFloat(result.mid),
+      prevMid = parseFloat(result.prevmid);
+    return new Position(
+      result.assettype,
+      !isNaN(change) ? change : 0,
+      result.comment,
+      result.commentid,
+      result.description,
+      result.identifier,
+      !isNaN(mid) ? mid : 0,
+      !isNaN(prevMid) ? prevMid : 0,
+      result.pricetype,
       result.securityid,
-      result.comment
+      result.ticker
     );
-  }
-
-  updateComments(
-    priceDate: Date,
-    securityId,
-    comment,
-    id
-  ): Promise<PricingComment> {
-    let priceDateString = moment(priceDate).format('MM/DD/YYYY');
-    const putWebRequest: PutWebRequest = {
-      endPoint: 'price_comments',
-      payload: {
-        pricedate: priceDateString,
-        securityid: securityId,
-        comment: comment,
-        id: id
-      }
-    };
-
-    return this.wsp
-      .put(putWebRequest)
-      .then(result => this.formatPricingComment(result));
-  }
-
-  postCarryOverPrices(
-    prevPricingDate: Date,
-    pricingDate: Date,
-    assettype
-  ): Promise<any> {
-    let prevPricingDateString = moment(prevPricingDate).format('MM/DD/YYYY');
-    let pricingDateString = moment(pricingDate).format('MM/DD/YYYY');
-
-    const postWebRequest: PostWebRequest = {
-      endPoint: 'prices_carry_over',
-      payload: {
-        prevpricingdate: prevPricingDateString,
-        pricingdate: pricingDateString,
-        securitylist: 'manual',
-        assettype: assettype
-      }
-    };
-    return this.wsp.post(postWebRequest);
   }
 }

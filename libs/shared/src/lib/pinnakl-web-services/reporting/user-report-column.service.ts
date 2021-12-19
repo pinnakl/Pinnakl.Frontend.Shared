@@ -2,24 +2,23 @@ import { Injectable } from '@angular/core';
 
 import * as moment from 'moment';
 
-import { GetWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
+import { WebServiceProvider } from '@pnkl-frontend/core';
+import { UserReportColumn } from '../../models/reporting';
 import { UserReportColumnFromApi } from '../../models/reporting/user-report-column-from-api.model';
-import { UserReportColumn } from '../../models/reporting/user-report-column.model';
 import { ReportColumnService } from './report-column.service';
 
 @Injectable()
 export class UserReportColumnService {
-  private readonly RESOURCE_URL = 'user_report_columns';
+  private readonly _userReportColumnsEndpoint = 'entities/user_report_columns';
 
   constructor(
-    private reportColumnService: ReportColumnService,
-    private wsp: WebServiceProvider
-  ) {}
+    private readonly reportColumnService: ReportColumnService,
+    private readonly wsp: WebServiceProvider
+  ) { }
 
-  deleteUserReportColumn(id: number): Promise<void> {
-    return this.wsp.delete({
-      endPoint: this.RESOURCE_URL,
-      payload: { id: id.toString() }
+  async deleteUserReportColumn(id: number): Promise<void> {
+    return this.wsp.deleteHttp({
+      endpoint: `${this._userReportColumnsEndpoint}/${id}`
     });
   }
 
@@ -38,28 +37,31 @@ export class UserReportColumnService {
     return JSON.stringify(filterValues);
   }
 
-  getUserReportColumns(userReportId: number): Promise<UserReportColumn[]> {
+  async getUserReportColumns(
+    userReportId: number
+  ): Promise<UserReportColumn[]> {
     const fields = [
-        'Caption',
-        'DecimalPlaces',
-        'FilterValues',
-        'GroupOrder',
-        'Id',
-        'IsAggregating',
-        'Name',
-        'RenderingFunction',
-        'ReportColumnId',
-        'SortAscending',
-        'SortOrder',
-        'Type',
-        'UserReportId',
-        'ViewOrder',
-        'Formula'
-      ],
-      getWebRequest: GetWebRequest = {
-        endPoint: this.RESOURCE_URL,
-        options: {
-          fields,
+      'Caption',
+      'DecimalPlaces',
+      'FilterValues',
+      'GroupOrder',
+      'Id',
+      'IsAggregating',
+      'Name',
+      'RenderingFunction',
+      'ReportColumnId',
+      'SortAscending',
+      'SortOrder',
+      'Type',
+      'UserReportId',
+      'ViewOrder'
+    ];
+
+    const userReportColumns = await this.wsp.getHttp<UserReportColumnFromApi[]>(
+      {
+        endpoint: this._userReportColumnsEndpoint,
+        params: {
+          fields: fields,
           filters: [
             {
               key: 'UserReportId',
@@ -68,46 +70,44 @@ export class UserReportColumnService {
             }
           ]
         }
-      };
-    return this.wsp
-      .get(getWebRequest)
-      .then((entities: UserReportColumnFromApi[]) =>
-        entities.map(column => this.formatUserReportColumn(column))
-      );
+      }
+    );
+
+    return userReportColumns.map(this.formatUserReportColumn.bind(this));
   }
 
-  postUserReportColumn(
+  async postUserReportColumn(
     reportColumn: UserReportColumn
   ): Promise<UserReportColumn> {
-    const requestBody = this.getUserReportColumnForServiceRequest(reportColumn);
-    return this.wsp
-      .post({ endPoint: this.RESOURCE_URL, payload: requestBody })
-      .then((entity: UserReportColumnFromApi) =>
-        this.formatUserReportColumn(entity)
-      );
+    const entity = await this.wsp.postHttp<UserReportColumnFromApi>({
+      endpoint: this._userReportColumnsEndpoint,
+      body: this.getUserReportColumnForServiceRequest(reportColumn)
+    });
+
+    return this.formatUserReportColumn(entity);
   }
 
-  putUserReportColumn(
+  async putUserReportColumn(
     reportColumn: UserReportColumn
   ): Promise<UserReportColumn> {
-    const requestBody = this.getUserReportColumnForServiceRequest(reportColumn);
-    return this.wsp
-      .put({ endPoint: this.RESOURCE_URL, payload: requestBody })
-      .then((entity: UserReportColumnFromApi) =>
-        this.formatUserReportColumn(entity)
-      );
+    const entity = await this.wsp.putHttp<UserReportColumnFromApi>({
+      endpoint: this._userReportColumnsEndpoint,
+      body: this.getUserReportColumnForServiceRequest(reportColumn)
+    });
+
+    return this.formatUserReportColumn(entity);
   }
 
   public formatUserReportColumn(
     entity: UserReportColumnFromApi
   ): UserReportColumn {
-    const decimalPlaces = parseInt(entity.decimalplaces),
-      groupOrder = parseInt(entity.grouporder),
-      id = parseInt(entity.id),
-      reportColumnId = parseInt(entity.reportcolumnid),
-      sortOrder = parseInt(entity.sortorder),
-      userReportId = parseInt(entity.userreportid),
-      viewOrder = parseInt(entity.vieworder);
+    const decimalPlaces = parseInt(entity.decimalplaces, 10),
+      groupOrder = parseInt(entity.grouporder, 10),
+      id = parseInt(entity.id, 10),
+      reportColumnId = parseInt(entity.reportcolumnid, 10),
+      sortOrder = parseInt(entity.sortorder, 10),
+      userReportId = parseInt(entity.userreportid, 10),
+      viewOrder = parseInt(entity.vieworder, 10);
     return new UserReportColumn(
       entity.caption,
       !isNaN(decimalPlaces) ? decimalPlaces : null,

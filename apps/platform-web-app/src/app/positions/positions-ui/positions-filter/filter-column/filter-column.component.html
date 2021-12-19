@@ -1,0 +1,53 @@
+<form
+  pnklCustomScroll
+  [formGroup]="form"
+  darkMode="true"
+  class="row grid-filter-columns"
+>
+  <div class="col-md-12">
+    <div class="row mt-3">
+      <div class="col-md-4 check-holder check-holder-empty mb-4">
+        <span *ngIf="!suppressSelection">
+          <input type="checkbox" id="selectAll" formControlName="selectAll" />
+          <label for="selectAll"></label>
+          <label class="ml-3">SELECT ALL</label>
+        </span>
+      </div>
+    </div>
+    <div class="row m-t-minus-2" *ngFor="let column of columns; let i = index">
+      <div
+        *ngIf="!suppressSelection"
+        class="col-md-1 check-holder check-holder-empty mt-4"
+      >
+        <input
+          type="checkbox"
+          [id]="'checkbox' + i"
+          [formControlName]="column.name + 'include'"
+        />
+        <label [for]="'checkbox' + i"></label>
+      </div>
+      <div class="col-md-8 flex-pull-right">
+        <pinnakl-input
+          [controlName]="column.name"
+          [dropdownSource]="column.dropdownOptions"
+          [form]="form"
+          [inputClass]="
+            column.type === 'date'
+              ? 'datepicker-dark popup-left-margin-adjust'
+              : column.type === 'text'
+              ? 'pnkl-select-dark'
+              : undefined
+          "
+          [label]="column.caption"
+          [labelClass]="
+            !suppressSelection
+              ? 'grid-filter-label text-uppercase'
+              : 'grid-filter-label text-uppercase left-minus-10'
+          "
+          [type]="column.type !== 'text' ? column.type : 'multiselect'"
+        >
+        </pinnakl-input>
+      </div>
+    </div>
+  </div>
+</form>

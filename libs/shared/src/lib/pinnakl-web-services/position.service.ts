@@ -2,43 +2,41 @@ import { Injectable } from '@angular/core';
 
 import * as moment from 'moment';
 
-// tslint:disable-next-line:nx-enforce-module-boundaries
-import {
-  DeleteWebRequest,
-  GetWebRequest,
-  PostWebRequest,
-  WebServiceProvider
-} from '@pnkl-frontend/core';
-import { ReconciliationPosition } from '../models/recon';
-import { ReconciliationPositionFromApi } from '../models/recon/reconciliation-position-from-api.model';
+import { WebServiceProvider } from '@pnkl-frontend/core';
+import { BehaviorSubject } from 'rxjs';
 import {
   SecurityPriceAlert,
-  WatchlistItem,
-  SecurityPriceAlertPayload
-} from '../models/security-price-alert.model';
+  SecurityPriceAlertPayload,
+  WatchlistItem
+} from '../models';
+import { ReconciliationPosition } from '../models/recon';
+import { ReconciliationPositionFromApi } from '../models/recon/reconciliation-position-from-api.model';
 
 @Injectable()
 export class PositionService {
-  private readonly RECONCILIATION_RESOURCE_URL = 'recon';
-  private readonly EXTERNAL_POSITIONS_RESOURCE_URL = 'extpos';
-  private readonly PRICE_CHART_URL = 'security_price_timeseries';
-  private readonly POSITION_CHART_URL = 'security_position_timeseries';
-  private readonly TRADE_REQUEST_URL = 'trade_requests';
-  private readonly POSITION_SUMMARY = 'positions_mv';
-  private readonly PNL_URL = 'pnl_per_security';
-  private readonly SECURITY_PRICE_ALERTS_URL = 'security_price_alerts';
-  private readonly WATCH_LIST_ITEMS_URL = 'watch_list_items';
+  private readonly PNL_URL = 'entities/pnl_per_security';
+  private readonly POSITION_SUMMARY = 'entities/positions_mv';
+  private readonly TRADE_REQUEST_URL = 'entities/trade_requests';
+  private readonly RECONCILIATION_RESOURCE_URL = 'entities/recon';
+  private readonly WATCH_LIST_ITEMS_URL = 'entities/watch_list_items';
+  private readonly EXTERNAL_POSITIONS_RESOURCE_URL = 'entities/extpos';
+  private readonly PRICE_CHART_URL = 'entities/security_price_timeseries';
+  private readonly POSITION_CHART_URL = 'entities/security_position_timeseries';
+  private readonly SECURITY_PRICE_ALERTS_URL = 'entities/security_price_alerts';
+  private readonly TRADE_ALLOCATION = 'entities/trade_allocations';
 
-  constructor(private wsp: WebServiceProvider) {}
+  selectedPositionPopupAccount$ = new BehaviorSubject<any>(null);
 
-  getPositions(
+  constructor(private readonly wsp: WebServiceProvider) {}
+
+  async getPositions(
     accountId: number,
     entityId: number,
     reconciliationDate: Date
   ): Promise<ReconciliationPosition[]> {
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.RECONCILIATION_RESOURCE_URL,
-      options: {
+    const positions = await this.wsp.getHttp<ReconciliationPositionFromApi[]>({
+      endpoint: this.RECONCILIATION_RESOURCE_URL,
+      params: {
         filters: [
           {
             key: 'posdate',
@@ -62,112 +60,172 @@ export class PositionService {
           }
         ]
       }
-    };
-    return this.wsp
-      .get(getWebRequest)
-      .then((positions: ReconciliationPositionFromApi[]) =>
-        positions.map(position => ({
-          assetType: position.assettype,
-          comment: position.comment,
-          externalDescription: position.extdescription,
-          externalPosition: isNaN(parseFloat(position.extpos))
-            ? null
-            : parseFloat(position.extpos),
-          externalTrsIndicator:
-            position.exttrsindicator === ''
-              ? null
-              : position.exttrsindicator === 'True',
-          id: isNaN(parseInt(position.id, 10))
-            ? null
-            : parseInt(position.id, 10),
-          identifier1: position.id1,
-          identifier2: position.id2,
-          identifier3: position.id3,
-          matchType: position.matchtype,
-          pinnaklDescription: position.pnkldescription,
-          pinnaklPosition: isNaN(parseFloat(position.pnklpos))
-            ? null
-            : parseFloat(position.pnklpos),
-          pinnaklSecurityId: isNaN(parseInt(position.pnklsecid, 10))
-            ? null
-            : parseInt(position.pnklsecid, 10),
-          pinnaklTrsIndicator:
-            position.pnkltrsindicator === ''
-              ? null
-              : position.pnkltrsindicator === 'True',
-          resultType: position.resulttype,
-          username: position.username
-        }))
-      );
+    });
+
+    return positions.map(this.formatRecon);
+
+    // TODO Use when will be fixed on backend
+    // return this.wsp
+    //   .getHttp<ReconciliationPositionFromApi[]>({
+    //     endpoint: this.RECONCILIATION_RESOURCE_URL,
+    //     params: {
+    //       filters: [
+    //         {
+    //           key: 'posdate',
+    //           type: 'EQ',
+    //           value: [moment(reconciliationDate).format('MM/DD/YYYY')]
+    //         },
+    //         {
+    //           key: 'extentityid',
+    //           type: 'EQ',
+    //           value: [entityId.toString()]
+    //         },
+    //         {
+    //           key: 'accountid',
+    //           type: 'EQ',
+    //           value: [accountId.toString()]
+    //         },
+    //         {
+    //           key: 'comparisontype',
+    //           type: 'IN',
+    //           value: ['matches', 'diff', 'unmatch']
+    //         }
+    //       ]
+    //     }
+    //   })
+    //   .then(positions =>
+    //     positions.map(position => ({
+    //       assetType: position.assettype,
+    //       comment: position.comment,
+    //       externalDescription: position.extdescription,
+    //       externalPosition: isNaN(parseFloat(position.extpos))
+    //         ? null
+    //         : parseFloat(position.extpos),
+    //       id: isNaN(parseInt(position.id, 10))
+    //         ? null
+    //         : parseInt(position.id, 10),
+    //       identifier1: position.id1,
+    //       identifier2: position.id2,
+    //       identifier3: position.id3,
+    //       matchType: position.matchtype,
+    //       pinnaklDescription: position.pnkldescription,
+    //       pinnaklPosition: isNaN(parseFloat(position.pnklpos))
+    //         ? null
+    //         : parseFloat(position.pnklpos),
+    //       pinnaklSecurityId: isNaN(parseInt(position.pnklsecid, 10))
+    //         ? null
+    //         : parseInt(position.pnklsecid, 10),
+    //       resultType: position.resulttype,
+    //       username: position.username
+    //     }))
+    //   );
   }
 
   saveComment(id: number, comment: string): Promise<ReconciliationPosition> {
-    const saveCommentRequestBody = {
-      id,
-      comment
-    };
-    return this.wsp.put({
-      endPoint: this.EXTERNAL_POSITIONS_RESOURCE_URL,
-      payload: saveCommentRequestBody
+    return this.wsp.putHttp({
+      endpoint: this.EXTERNAL_POSITIONS_RESOURCE_URL,
+      body: {
+        comment,
+        id: id.toString()
+      }
     });
   }
 
-  getPriceHistoryChart(securityId: string): Promise<any> {
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.PRICE_CHART_URL,
-      options: {
-        filters: [{ key: 'securityid', type: 'EQ', value: [securityId] }]
+  getPriceHistoryChart(securityId: number): Promise<any> {
+    return this.wsp.getHttp({
+      endpoint: this.PRICE_CHART_URL,
+      params: {
+        filters: [{ key: 'securityid', type: 'EQ', value: [securityId.toString()] }]
       }
-    };
-    return this.wsp.get(getWebRequest);
+    });
   }
 
-  getPositionChart(securityId: string): Promise<any> {
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.POSITION_CHART_URL,
-      options: {
-        filters: [{ key: 'securityid', type: 'EQ', value: [securityId] }]
+  getPositionChart(securityId: number): Promise<any> {
+    return this.wsp.getHttp<any>({
+      endpoint: this.POSITION_CHART_URL,
+      params: {
+        filters: [{ key: 'securityid', type: 'EQ', value: [securityId.toString()] }]
       }
-    };
-    return this.wsp.get(getWebRequest);
+    });
   }
 
-  getTradeHistory(securityId: number | string): Promise<any> {
-    const fields = [
-      'tradedate',
-      'trantype',
-      'trsindicator',
-      'ticker',
-      'cusip',
-      'description',
-      'quantity',
-      'price',
-      'currency',
-      'commission',
-      'netmoneylocal',
-      'brokername'
-    ];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.TRADE_REQUEST_URL,
-      options: {
-        fields: fields,
+  getTradeHistory(
+    id: number | string,
+    underlyingSecId: number,
+    isUnderlyingEnabled: boolean = false
+  ): Promise<any> {
+    return this.wsp.getHttp<any>({
+      endpoint: this.TRADE_REQUEST_URL,
+      params: {
+        fields: [
+          'tradedate',
+          'trantype',
+          'ticker',
+          'cusip',
+          'description',
+          'quantity',
+          'price',
+          'currency',
+          'commission',
+          'netmoneylocal',
+          'brokername',
+          'commissionpershare'
+        ],
         filters: [
           {
-            key: 'securityid',
+            key: isUnderlyingEnabled ? 'underlyingsecid' : 'securityid',
             type: 'EQ',
-            value: [securityId.toString()]
+            value: [
+              isUnderlyingEnabled ? underlyingSecId.toString() : id.toString()
+            ]
           }
         ]
       }
-    };
-
-    return this.wsp.get(getWebRequest);
+    });
   }
 
-  getPositionSummary(securityId: string, posDate: string): Promise<any> {
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.POSITION_SUMMARY,
-      options: {
+  getTradeAllocationsBySecurity(
+    secId: number,
+    underlyingSecId: number,
+    isUnderlyingEnabled: boolean,
+    accountId?: string
+  ): Promise<any> {
+    const filters = [
+      {
+        key: isUnderlyingEnabled ? 'underlyingsecid' : 'securityid',
+        type: 'EQ',
+        value: [isUnderlyingEnabled ? underlyingSecId.toString() : secId]
+      }
+    ];
+    if (accountId) {
+      filters.push({ key: 'accountId', type: 'EQ', value: [accountId] });
+    }
+    return this.wsp.getHttp({
+      endpoint: this.TRADE_ALLOCATION,
+      params: {
+        fields: [
+          'tradedate',
+          'trantype',
+          'ticker',
+          'cusip',
+          'description',
+          'quantity',
+          'price',
+          'currency',
+          'commission',
+          'netmoneylocal',
+          'executingbrokername',
+          'commpershare'
+        ],
+        filters
+      }
+    });
+  }
+
+  getPositionSummary(securityId: number, posDate: string): Promise<any> {
+    return this.wsp.getHttp({
+      endpoint: this.POSITION_SUMMARY,
+      params: {
         filters: [
           {
             key: 'securityid',
@@ -181,16 +239,14 @@ export class PositionService {
           }
         ]
       }
-    };
-    return this.wsp.get(getWebRequest);
+    });
   }
 
   getPnl(securityId: string, date: string): Promise<any> {
-    const fields = ['AccountId', 'SecurityId', 'Mtd_Pnl', 'Ytd_Pnl'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.PNL_URL,
-      options: {
-        fields: fields,
+    return this.wsp.getHttp({
+      endpoint: this.PNL_URL,
+      params: {
+        fields: ['AccountId', 'SecurityId', 'Mtd_Pnl', 'Ytd_Pnl'],
         filters: [
           {
             key: 'securityid',
@@ -204,16 +260,14 @@ export class PositionService {
           }
         ]
       }
-    };
-    return this.wsp.get(getWebRequest);
+    });
   }
 
   getLatestTradeDate(securityId: string): Promise<any> {
-    const fields = ['tradedate'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.TRADE_REQUEST_URL,
-      options: {
-        fields: fields,
+    return this.wsp.getHttp({
+      endpoint: this.TRADE_REQUEST_URL,
+      params: {
+        fields: ['tradedate'],
         filters: [
           {
             key: 'securityid',
@@ -233,8 +287,7 @@ export class PositionService {
           }
         ]
       }
-    };
-    return this.wsp.get(getWebRequest);
+    });
   }
 
   async getPriceAlerts(): Promise<SecurityPriceAlert[]> {
@@ -248,61 +301,73 @@ export class PositionService {
       'createDateTime',
       'status'
     ];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.SECURITY_PRICE_ALERTS_URL,
-      options: { fields }
-    };
-    const alerts = await this.wsp.get(getWebRequest);
+    const alerts = await this.wsp.getHttp<Partial<SecurityPriceAlert>[]>({
+      endpoint: this.SECURITY_PRICE_ALERTS_URL,
+      params: { fields }
+    });
     return alerts.map(alert => new SecurityPriceAlert(alert));
   }
 
   async creatNewAlert(
     payload: SecurityPriceAlertPayload
   ): Promise<SecurityPriceAlert> {
-    const postWebRequest: PostWebRequest = {
-      endPoint: this.SECURITY_PRICE_ALERTS_URL,
-      payload
-    };
-    return this.wsp.post(postWebRequest);
+    return this.wsp.postHttp({
+      endpoint: this.SECURITY_PRICE_ALERTS_URL,
+      body: payload
+    });
   }
 
   async deleteAlert(id: string): Promise<any> {
-    const deleteWebRequest: DeleteWebRequest = {
-      endPoint: this.SECURITY_PRICE_ALERTS_URL,
-      payload: { id }
-    };
-    return this.wsp.delete(deleteWebRequest);
+    return this.wsp.deleteHttp({
+      endpoint: `${this.SECURITY_PRICE_ALERTS_URL}/${id}`
+    });
   }
 
   async getWatchlistItems(): Promise<WatchlistItem[]> {
-    //id, securityid, ticker, CreateDateTime
-    const fields = [
-      'id',
-      'securityId',
-      'ticker',
-      'createDateTime'
-    ];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.WATCH_LIST_ITEMS_URL,
-      options: { fields }
-    };
-    const items = await this.wsp.get(getWebRequest);
+    // id, securityid, ticker, CreateDateTime
+    const fields = ['id', 'securityId', 'ticker', 'createDateTime'];
+    const items = await this.wsp.getHttp<Partial<WatchlistItem>[]>({
+      endpoint: this.WATCH_LIST_ITEMS_URL,
+      params: { fields }
+    });
     return items.map(item => new WatchlistItem(item));
   }
 
   async addToWatchlist(payload: any): Promise<any> {
-    const postWebRequest: PostWebRequest = {
-      endPoint: this.WATCH_LIST_ITEMS_URL,
-      payload
-    };
-    return this.wsp.post(postWebRequest);
+    return this.wsp.postHttp({
+      endpoint: this.WATCH_LIST_ITEMS_URL,
+      body: payload
+    });
   }
 
   async deleteFromWatchlist(id: string): Promise<any> {
-    const deleteWebRequest: DeleteWebRequest = {
-      endPoint: this.WATCH_LIST_ITEMS_URL,
-      payload: { id }
+    return this.wsp.deleteHttp({
+      endpoint: `${this.WATCH_LIST_ITEMS_URL}/${id}`
+    });
+  }
+
+  private formatRecon(position: any): ReconciliationPosition {
+    return {
+      assetType: position.assettype,
+      comment: position.comment,
+      externalDescription: position.extdescription,
+      externalPosition: isNaN(parseFloat(position.extpos))
+        ? null
+        : parseFloat(position.extpos),
+      id: isNaN(parseInt(position.id, 10)) ? null : parseInt(position.id, 10),
+      identifier1: position.id1,
+      identifier2: position.id2,
+      identifier3: position.id3,
+      matchType: position.matchtype,
+      pinnaklDescription: position.pnkldescription,
+      pinnaklPosition: isNaN(parseFloat(position.pnklpos))
+        ? null
+        : parseFloat(position.pnklpos),
+      pinnaklSecurityId: isNaN(parseInt(position.pnklsecid, 10))
+        ? null
+        : parseInt(position.pnklsecid, 10),
+      resultType: position.resulttype,
+      username: position.username
     };
-    return this.wsp.delete(deleteWebRequest);
   }
 }

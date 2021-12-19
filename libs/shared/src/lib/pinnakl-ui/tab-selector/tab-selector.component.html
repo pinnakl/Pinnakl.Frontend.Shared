@@ -1,0 +1,20 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="row d-flex justify-content-center tab-title">
+      <div
+        (click)="itemSelectionHandler(item)"
+        class="col-md-auto pb-1 tab-container"
+        [ngClass]="{ 'tab-selected': selectedItem === item }"
+        *ngFor="let item of tabList">
+        {{ item }}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="row d-flex justify-content-center">
+      <div class="tab-content">
+        <ng-content select="[tab-content]"></ng-content>
+      </div>
+    </div>
+  </div>
+</div>

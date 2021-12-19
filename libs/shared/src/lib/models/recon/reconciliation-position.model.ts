@@ -3,7 +3,6 @@ export class ReconciliationPosition {
   comment: string;
   externalDescription: string;
   externalPosition: number;
-  externalTrsIndicator: boolean;
   id: number;
   identifier1: string;
   identifier2: string;
@@ -12,7 +11,6 @@ export class ReconciliationPosition {
   pinnaklDescription: string;
   pinnaklPosition: number;
   pinnaklSecurityId: number;
-  pinnaklTrsIndicator: boolean;
   resultType: string;
   username: string;
 }

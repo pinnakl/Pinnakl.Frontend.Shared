@@ -39,3 +39,27 @@
     }
   }
 }
+
+.align-items-baseline {
+  align-items: baseline;
+}
+
+.overflow-y-no-x {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.overflow-x-no-y {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.overflow-no-x-no-y {
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.overflow-x-y {
+  overflow-x: auto;
+  overflow-y: auto;
+}

@@ -1,6 +1,6 @@
 export class LastRunDetails {
   constructor(
-    public listOfProps: object,
+    public listOfProps: any,
     public runBy: string,
     public runByFirstName: string,
     public runByLastName: string,

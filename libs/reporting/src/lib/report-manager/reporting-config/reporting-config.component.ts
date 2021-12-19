@@ -79,7 +79,7 @@ export class ReportingConfigComponent implements OnDestroy, OnInit {
         );
   }
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private readonly fb: FormBuilder) {}
 
   isImportantColumn(column: ReportingColumn): boolean {
     return _.includes(this.importantColumnNames, column.name.toLowerCase());

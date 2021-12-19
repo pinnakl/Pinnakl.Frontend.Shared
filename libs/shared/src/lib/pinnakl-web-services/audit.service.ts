@@ -1,19 +1,22 @@
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 
-import { GetWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
+import { WebServiceProvider } from '@pnkl-frontend/core';
+import { AuditLog } from '../models';
 import { AuditLogFromApi } from '../models/audit-log-from-api.model';
-import { AuditLog } from '../models/audit-log.model';
 
 @Injectable()
 export class AuditLogService {
-  private readonly RESOURCE_URL = 'audit';
+  private readonly _auditEndpoint = 'entities/audit';
   actionStrings = { i: 'Insert', u: 'Update', d: 'Delete' };
 
-  constructor(private wsp: WebServiceProvider) {}
+  constructor(private readonly wsp: WebServiceProvider) {}
 
-  getAuditLogsForTable(tableName: string, id: number): Promise<AuditLog[]> {
-    let fields = [
+  async getAuditLogsForTable(
+    tableName: string,
+    id: number
+  ): Promise<AuditLog[]> {
+    const fields = [
       'action',
       'fieldname',
       'id',
@@ -24,9 +27,10 @@ export class AuditLogService {
       'tableName',
       'username'
     ];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: {
+
+    const auditLogs = await this.wsp.getHttp<AuditLogFromApi[]>({
+      endpoint: this._auditEndpoint,
+      params: {
         fields: fields,
         filters: [
           {
@@ -41,20 +45,16 @@ export class AuditLogService {
           }
         ]
       }
-    };
+    });
 
-    return this.wsp
-      .get(getWebRequest)
-      .then((entities: AuditLogFromApi[]) =>
-        entities.map(column => this.formatAuditLog(column))
-      );
+    return auditLogs.map(this.formatAuditLog);
   }
 
-  getAuditLogsForTableAndIds(
+  async getAuditLogsForTableAndIds(
     tableName: string,
-    ids: number[]
+    ids: string[]
   ): Promise<AuditLog[]> {
-    let fields = [
+    const fields = [
       'action',
       'fieldname',
       'id',
@@ -66,9 +66,10 @@ export class AuditLogService {
       'username'
     ];
     ids = ids.filter(id => id != null);
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: {
+
+    const auditLogs = await this.wsp.getHttp<AuditLogFromApi[]>({
+      endpoint: this._auditEndpoint,
+      params: {
         fields: fields,
         filters: [
           {
@@ -79,24 +80,21 @@ export class AuditLogService {
           {
             key: 'pk',
             type: 'IN',
-            value: ids.length > 0 ? ids.map(id => id.toString()) : []
+            value: ids
           }
         ]
       }
-    };
-    return this.wsp
-      .get(getWebRequest)
-      .then((entities: AuditLogFromApi[]) =>
-        entities.map(column => this.formatAuditLog(column))
-      );
+    });
+
+    return auditLogs.map(this.formatAuditLog);
   }
 
-  getAuditLogsForTableFieldWithAction(
+  async getAuditLogsForTableFieldWithAction(
     action: string,
     fieldName: string[],
     tableName: string
   ): Promise<AuditLog[]> {
-    let fields = [
+    const fields = [
       'action',
       'fieldname',
       'id',
@@ -107,9 +105,10 @@ export class AuditLogService {
       'tableName',
       'username'
     ];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: {
+
+    const auditLogs = await this.wsp.getHttp<AuditLogFromApi[]>({
+      endpoint: this._auditEndpoint,
+      params: {
         fields: fields,
         filters: [
           {
@@ -129,20 +128,17 @@ export class AuditLogService {
           }
         ]
       }
-    };
-    return this.wsp
-      .get(getWebRequest)
-      .then((entities: AuditLogFromApi[]) =>
-        entities.map(column => this.formatAuditLog(column))
-      );
+    });
+
+    return auditLogs.map(this.formatAuditLog);
   }
 
-  getDeletedAuditLogForSecurityId(
+  async getDeletedAuditLogForSecurityId(
     fieldName: string,
     fieldValue: number,
     tableName: string
   ): Promise<AuditLog[]> {
-    let fields = [
+    const fields = [
       'action',
       'fieldname',
       'id',
@@ -153,9 +149,10 @@ export class AuditLogService {
       'tableName',
       'username'
     ];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: {
+
+    const auditLogs = await this.wsp.getHttp<AuditLogFromApi[]>({
+      endpoint: this._auditEndpoint,
+      params: {
         fields: fields,
         filters: [
           {
@@ -180,18 +177,15 @@ export class AuditLogService {
           }
         ]
       }
-    };
-    return this.wsp
-      .get(getWebRequest)
-      .then((entities: AuditLogFromApi[]) =>
-        entities.map(column => this.formatAuditLog(column))
-      );
+    });
+
+    return auditLogs.map(this.formatAuditLog);
   }
 
   private formatAuditLog(entity: AuditLogFromApi): AuditLog {
-    let action = this.actionStrings[entity.action.toLowerCase()],
-      id = parseInt(entity.id),
-      pk = parseInt(entity.pk),
+    const action = this.actionStrings[entity.action.toLowerCase()],
+      id = parseInt(entity.id, 10),
+      pk = parseInt(entity.pk, 10),
       logTime = moment(entity.logtime, 'MM/DD/YYYY HH:mm:ss');
     return new AuditLog(
       action,

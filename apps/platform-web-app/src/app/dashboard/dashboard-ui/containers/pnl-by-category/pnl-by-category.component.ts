@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { PnlExposure } from '../../../dashboard-backend/dashboard';
+import { PnlExposure } from '../../../dashboard-backend/dashboard/pnl-exposure.model';
 @Component({
   selector: 'pnl-by-category',
   templateUrl: './pnl-by-category.component.html',
@@ -8,7 +8,6 @@ import { PnlExposure } from '../../../dashboard-backend/dashboard';
 export class PnlByCategoryComponent {
   @Input() pnlData: PnlExposure[];
   @Input() category: string;
-  constructor() {}
 
   absoluteValue(number: number): number {
     return Math.abs(number);

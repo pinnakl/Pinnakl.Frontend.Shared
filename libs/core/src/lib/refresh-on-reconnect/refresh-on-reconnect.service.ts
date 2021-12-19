@@ -10,8 +10,8 @@ import { LOCATION } from '../location.injection-token';
 export class RefreshOnReconnectService {
   private _reconnectionSubscription: Subscription;
   constructor(
-    private _backendConnectionFacade: BackendConnectionFacade,
-    @Inject(LOCATION) private _location: Location
+    private readonly _backendConnectionFacade: BackendConnectionFacade,
+    @Inject(LOCATION) private readonly _location: Location
   ) {}
 
   disable(): void {

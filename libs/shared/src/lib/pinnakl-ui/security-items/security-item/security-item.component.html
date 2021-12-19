@@ -1,0 +1,28 @@
+<div class="flex-container" (click)="itemClickHandler(dataItem)">
+	<div class="flex-item">
+		<div class="security-icon-container" [ngStyle]="{ background: addAlpha(dataItem?.color) }">
+			<span [ngStyle]="{ color: dataItem?.color }">{{ getCurrentSymbol(dataItem.ticker) }}</span>
+		</div>
+	</div>
+	<div class="flex-item">
+		<div class="security-item-info">
+			<div class="first-name" *ngIf="dataItem?.assetType !== 'option'" innerHTML="{{ dataItem.description | highlight : searchText }}"></div>
+			<div class="second-name" innerHTML="{{ dataItem.ticker | highlight : searchText }}"></div>
+		</div>
+	</div>
+	<div class="flex-item">
+		<div class="security-item-assettype">{{ dataItem?.assetType }}</div>
+	</div>
+	<div class="flex-item">
+		<div class="security-item-cusip">
+			<span>{{ dataItem?.cusip }}</span>
+		</div>
+	</div>
+	<div class="flex-item">
+		<div class="security-item-amount-container" *ngIf="+dataItem?.position !== 0">
+			<i class="custom-icon-top-chart" *ngIf="+dataItem?.position > 0"></i>
+			<i class="custom-icon-low-chart" *ngIf="+dataItem?.position < 0"></i>
+			<span class="amount">{{ dataItem?.position | number: '1.0' }} </span>
+		</div>
+	</div>
+</div>

@@ -15,6 +15,7 @@ import * as _ from 'lodash';
 import { Place } from './place.model';
 
 @Component({
+  // tslint:disable-next-line:component-selector
   selector: 'pinnakl-place-autocomplete',
   template: `
     <input
@@ -45,7 +46,7 @@ export class PinnaklPlaceAutocompleteComponent
   private placeTypeValid: boolean;
   private suggestionTypeValid = false;
 
-  constructor(private mapsAPILoader: MapsAPILoader, private ngZone: NgZone) {}
+  constructor(private readonly mapsAPILoader: MapsAPILoader, private readonly ngZone: NgZone) {}
 
   ngOnInit(): void {
     this.inputElement = this.inputElementRef.nativeElement;

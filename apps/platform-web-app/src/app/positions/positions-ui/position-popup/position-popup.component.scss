@@ -1,0 +1,17 @@
+.trade-history-container {
+  height: 460px;
+}
+
+.account-header {
+  display: flex;
+  .account-selector {
+    width: 200px;
+    margin-left: 35%;
+
+    ::ng-deep {
+      pnkl-validation {
+        display: none;
+      }
+    }
+  }
+}

@@ -1,30 +1,34 @@
-import { Action } from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
 
 export enum AumActionTypes {
   AttemptLoadAum = '[Aum] Attempt Load Aum',
   LoadAum = '[Aum] Load Aum',
+  LoadFullAum = '[Aum] Load Full Aum',
   LoadAccountsAum = '[Aum] Load Accounts Aum',
   LoadAumFailed = '[Aum] Load Aum Failed'
 }
 
-export class AttemptLoadAum implements Action {
-  readonly type = AumActionTypes.AttemptLoadAum;
-  constructor(public payload: { accountId: number; date: Date }) {}
-}
+export const AttemptLoadAum = createAction(
+  AumActionTypes.AttemptLoadAum,
+  props<{ accountId: number; date: Date }>()
+);
 
-export class LoadAum implements Action {
-  readonly type = AumActionTypes.LoadAum;
-  constructor(public payload: { aum: number }) {}
-}
+export const LoadAum = createAction(
+  AumActionTypes.LoadAum,
+  props<{ aum: number }>()
+);
 
-export class LoadAccountsAum implements Action {
-  readonly type = AumActionTypes.LoadAccountsAum;
-  constructor(public payload: { accountId: number; aum: number }[]) {}
-}
+export const LoadFullAum = createAction(
+  AumActionTypes.LoadFullAum,
+  props<{ accountId: number; date: Date, aum: number }>()
+);
 
-export class LoadAumFailed implements Action {
-  readonly type = AumActionTypes.LoadAumFailed;
-  constructor(public payload: { error: any }) {}
-}
+export const LoadAccountsAum = createAction(
+  AumActionTypes.LoadAccountsAum,
+  props<{ payload: { accountId: number; aum: number }[] }>()
+);
 
-export type AumActions = AttemptLoadAum | LoadAum | LoadAccountsAum | LoadAumFailed;
+export const LoadAumFailed = createAction(
+  AumActionTypes.LoadAumFailed,
+  props<{ error: any }>()
+);

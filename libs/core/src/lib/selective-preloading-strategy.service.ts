@@ -14,7 +14,7 @@ export class OnDemandPreloadStrategy implements PreloadingStrategy {
   private preloadOnDemand$: Observable<OnDemandPreloadOptions>;
   private preloadedModules: string[] = [];
 
-  constructor(private preloadOnDemandService: OnDemandPreloadService) {
+  constructor(private readonly preloadOnDemandService: OnDemandPreloadService) {
     this.preloadOnDemand$ = this.preloadOnDemandService.state;
   }
 

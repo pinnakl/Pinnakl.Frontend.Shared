@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Observable } from 'rxjs';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { concatMap, map } from 'rxjs/operators';
 
 import { AccountingService } from '../../../../pinnakl-web-services/accounting.service';
 import {
   AttemptLoadAum,
-  AumActionTypes,
   LoadAum,
   LoadAumFailed
 } from './aum.actions';
@@ -15,14 +13,13 @@ import {
 @Injectable()
 export class AumEffects {
   constructor(
-    private _accountingService: AccountingService,
-    private _actions$: Actions
-  ) {}
+    private readonly _accountingService: AccountingService,
+    private readonly _actions$: Actions
+  ) { }
 
-  @Effect()
-  load$: Observable<LoadAum | LoadAumFailed> = this._actions$.pipe(
-    ofType<AttemptLoadAum>(AumActionTypes.AttemptLoadAum),
-    map(action => action.payload),
+  load$ = createEffect(() => this._actions$.pipe(
+    ofType(AttemptLoadAum),
+    map(action => action),
     concatMap(async ({ accountId, date }) => {
       try {
         const aums = await this._accountingService.getAUMByAccountIdAndDate(
@@ -30,10 +27,10 @@ export class AumEffects {
           date
         );
         const aum = +aums[0].aum;
-        return new LoadAum({ aum });
+        return LoadAum({ aum });
       } catch (error) {
-        return new LoadAumFailed({ error });
+        return LoadAumFailed({ error });
       }
     })
-  );
+  ));
 }

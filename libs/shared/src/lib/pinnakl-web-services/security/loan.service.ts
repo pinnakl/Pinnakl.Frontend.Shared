@@ -1,17 +1,19 @@
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 
-import { GetWebRequest, PostWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
+import {
+  WebServiceProvider
+} from '@pnkl-frontend/core';
+import { Loan } from '../../models/security';
 import { LoanFromApi } from '../../models/security/loan-from-api.model';
-import { Loan } from '../../models/security/loan.model';
 
 @Injectable()
 export class LoanService {
-  private readonly RESOURCE_URL = 'loans';
+  private readonly _loansEndpoint = 'entities/loans';
 
-  constructor(private wsp: WebServiceProvider) {}
+  constructor(private readonly wsp: WebServiceProvider) { }
 
-  getLoanFromSecurityId(securityId: number): Promise<Loan> {
+  async getLoanFromSecurityId(securityId: number): Promise<Loan> {
     const fields = [
       'Accruing_Indicator',
       'Coupon_Rate',
@@ -25,9 +27,10 @@ export class LoanService {
       'Payment_Frequency',
       'SecurityId'
     ];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: {
+
+    const loans = await this.wsp.getHttp<LoanFromApi[]>({
+      endpoint: this._loansEndpoint,
+      params: {
         fields: fields,
         filters: [
           {
@@ -37,48 +40,38 @@ export class LoanService {
           }
         ]
       }
-    };
-
-    return this.wsp
-      .get(getWebRequest)
-      .then((entities: LoanFromApi[]) =>
-        entities.length === 0 ? null : this.formatLoan(entities[0])
-      );
+    });
+    return loans.length === 0 ? null : this.formatLoan(loans[0]);
   }
 
-  postLoan(entityToSave: Loan): Promise<Loan> {
-    let requestBody = this.getLoanForServiceRequest(entityToSave);
+  async postLoan(entityToSave: Loan): Promise<Loan> {
+    const entity = await this.wsp.postHttp<LoanFromApi>({
+      endpoint: this._loansEndpoint,
+      body: this.getLoanForServiceRequest(entityToSave)
+    });
 
-    let postWebRequest: PostWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      payload: requestBody
-    };
-
-    return this.wsp
-      .post(postWebRequest)
-      .then((entity: LoanFromApi) => this.formatLoan(entity));
+    return this.formatLoan(entity);
   }
 
-  putLoan(entityToSave: Loan): Promise<Loan> {
-    let requestBody = this.getLoanForServiceRequest(entityToSave);
-    return this.wsp
-      .put({
-        endPoint: this.RESOURCE_URL,
-        payload: requestBody
-      })
-      .then((entity: LoanFromApi) => this.formatLoan(entity));
+  async putLoan(entityToSave: Loan): Promise<Loan> {
+    const entity = await this.wsp.putHttp<LoanFromApi>({
+      endpoint: this._loansEndpoint,
+      body: this.getLoanForServiceRequest(entityToSave)
+    });
+
+    return this.formatLoan(entity);
   }
 
   formatLoan(entity: LoanFromApi): Loan {
-    let couponRate = parseFloat(entity.coupon_rate),
-      couponTypeId = parseInt(entity.coupon_type),
+    const couponRate = parseFloat(entity.coupon_rate),
+      couponTypeId = parseInt(entity.coupon_type, 10),
       firstCouponDateMoment = moment(entity.first_coupon_date, 'MM/DD/YYYY'),
-      id = parseInt(entity.id),
-      interestBasisId = parseInt(entity.interest_basis),
+      id = parseInt(entity.id, 10),
+      interestBasisId = parseInt(entity.interest_basis, 10),
       maturityDateMoment = moment(entity.maturity_date, 'MM/DD/YYYY'),
       outstandingAmount = parseFloat(entity.outstanding_amount),
-      paymentFrequencyId = parseInt(entity.payment_frequency),
-      securityId = parseInt(entity.securityid);
+      paymentFrequencyId = parseInt(entity.payment_frequency, 10),
+      securityId = parseInt(entity.securityid, 10);
     return new Loan(
       entity.accruing_indicator === 'True',
       !isNaN(couponRate) ? couponRate : null,
@@ -95,7 +88,7 @@ export class LoanService {
   }
 
   private getLoanForServiceRequest(entity: Loan): LoanFromApi {
-    let entityForApi = {} as LoanFromApi,
+    const entityForApi = {} as LoanFromApi,
       {
         accruingIndicator,
         couponRate,

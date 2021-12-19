@@ -1,106 +1,95 @@
 import { Injectable } from '@angular/core';
 
-import { GetWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
+import { WebServiceProvider } from '@pnkl-frontend/core';
+import { UserReportIdcColumn } from '../../models/reporting';
 import { UserReportIdcColumnFromApi } from '../../models/reporting/user-report-idc-column-from-api.model';
-import { UserReportIdcColumn } from '../../models/reporting/user-report-idc-column.model';
 import { ReportColumnService } from './report-column.service';
 import { UserReportColumnService } from './user-report-column.service';
 
 @Injectable()
 export class UserReportIdcColumnService {
-  private readonly RESOURCE_URL = '/user_report_idc_columns';
+  private readonly _userReportIDCColumnsEndpoint =
+    'entities/user_report_idc_columns';
 
   constructor(
-    private reportColumnService: ReportColumnService,
-    private userReportColumnService: UserReportColumnService,
-    private wsp: WebServiceProvider
-  ) {}
+    private readonly reportColumnService: ReportColumnService,
+    private readonly userReportColumnService: UserReportColumnService,
+    private readonly wsp: WebServiceProvider
+  ) { }
 
-  deleteUserReportIdcColumn(id: number): Promise<void> {
-    return this.wsp.delete({
-      endPoint: this.RESOURCE_URL,
-      payload: { id: id.toString() }
+  async deleteUserReportIdcColumn(id: number): Promise<void> {
+    return this.wsp.deleteHttp({
+      endpoint: `${this._userReportIDCColumnsEndpoint}/${id}`
     });
   }
 
-  getUserReportIdcColumns(
+  async getUserReportIdcColumns(
     userReportId: number
   ): Promise<UserReportIdcColumn[]> {
     const fields = [
-        'Caption',
-        'FilterValues',
-        'GroupOrder',
-        'Id',
-        'IdcColumnId',
-        'IsAggregating',
-        'Name',
-        'SortAscending',
-        'SortOrder',
-        'Type',
-        'UserReportId',
-        'ViewOrder'
-      ],
-      getWebRequest: GetWebRequest = {
-        endPoint: this.RESOURCE_URL,
-        options: {
-          fields,
-          filters: [
-            {
-              key: 'UserReportId',
-              type: 'EQ',
-              value: [userReportId.toString()]
-            }
-          ]
-        }
-      };
-    return this.wsp
-      .get(getWebRequest)
-      .then((entities: UserReportIdcColumnFromApi[]) =>
-        entities.map(column => this.formatUserReportIdcColumn(column))
-      );
+      'Caption',
+      'FilterValues',
+      'GroupOrder',
+      'Id',
+      'IdcColumnId',
+      'IsAggregating',
+      'Name',
+      'SortAscending',
+      'SortOrder',
+      'Type',
+      'UserReportId',
+      'ViewOrder'
+    ];
+
+    const userReportIDCColumns = await this.wsp.getHttp<
+      UserReportIdcColumnFromApi[]
+    >({
+      endpoint: this._userReportIDCColumnsEndpoint,
+      params: {
+        fields: fields,
+        filters: [
+          {
+            key: 'UserReportId',
+            type: 'EQ',
+            value: [userReportId.toString()]
+          }
+        ]
+      }
+    });
+    return userReportIDCColumns.map(this.formatUserReportIdcColumn);
   }
 
-  postUserReportIdcColumn(
+  async postUserReportIdcColumn(
     reportColumn: UserReportIdcColumn
   ): Promise<UserReportIdcColumn> {
-    let requestBody = this.getUserReportIdcColumnForServiceRequest(
-      reportColumn
-    );
-    return this.wsp
-      .post({
-        endPoint: this.RESOURCE_URL,
-        payload: requestBody
-      })
-      .then((entity: UserReportIdcColumnFromApi) =>
-        this.formatUserReportIdcColumn(entity)
-      );
+    const entity = await this.wsp.postHttp<UserReportIdcColumnFromApi>({
+      endpoint: this._userReportIDCColumnsEndpoint,
+      body: this.getUserReportIdcColumnForServiceRequest(reportColumn)
+    });
+
+    return this.formatUserReportIdcColumn(entity);
   }
 
-  putUserReportIdcColumn(
+  async putUserReportIdcColumn(
     reportColumn: UserReportIdcColumn
   ): Promise<UserReportIdcColumn> {
-    let requestBody = this.getUserReportIdcColumnForServiceRequest(
-      reportColumn
-    );
-    return this.wsp
-      .put({
-        endPoint: this.RESOURCE_URL,
-        payload: requestBody
-      })
-      .then((entity: UserReportIdcColumnFromApi) =>
-        this.formatUserReportIdcColumn(entity)
-      );
+    const entity = await this.wsp.putHttp<UserReportIdcColumnFromApi>({
+      endpoint: this._userReportIDCColumnsEndpoint,
+      body: this.getUserReportIdcColumnForServiceRequest(reportColumn)
+    });
+
+    return this.formatUserReportIdcColumn(entity);
   }
 
   public formatUserReportIdcColumn(
     entity: UserReportIdcColumnFromApi
   ): UserReportIdcColumn {
-    let groupOrder = parseInt(entity.grouporder),
-      id = parseInt(entity.id),
-      idcColumnId = parseInt(entity.idccolumnid),
-      sortOrder = parseInt(entity.sortorder),
-      userReportId = parseInt(entity.userreportid),
-      viewOrder = parseInt(entity.vieworder);
+    const groupOrder = parseInt(entity.grouporder, 10),
+      id = parseInt(entity.id, 10),
+      idcColumnId = parseInt(entity.idccolumnid, 10),
+      sortOrder = parseInt(entity.sortorder, 10),
+      userReportId = parseInt(entity.userreportid, 10),
+      viewOrder = parseInt(entity.vieworder, 10);
     return new UserReportIdcColumn(
       entity.caption,
       this.reportColumnService.formatFilterValues(
@@ -123,7 +112,7 @@ export class UserReportIdcColumnService {
   private getUserReportIdcColumnForServiceRequest(
     column: UserReportIdcColumn
   ): UserReportIdcColumnFromApi {
-    let entityForApi = {} as UserReportIdcColumnFromApi,
+    const entityForApi = {} as UserReportIdcColumnFromApi,
       {
         filterValues,
         groupOrder,

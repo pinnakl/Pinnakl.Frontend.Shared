@@ -1,6 +1,5 @@
-import { Action } from '@ngrx/store';
-
-import { Account, CashBalance } from '../../../../../models';
+import { createAction, props } from '@ngrx/store';
+import { CashBalance } from '../../../../../models';
 
 export enum CashBalanceActionTypes {
   AttemptLoadCashBalance = '[Account] Attempt Load Cash Balance',
@@ -8,23 +7,16 @@ export enum CashBalanceActionTypes {
   LoadCashBalanceFailed = '[Account] Load Cash Balance Failed'
 }
 
-export class AttemptLoadCashBalance implements Action {
-  readonly type = CashBalanceActionTypes.AttemptLoadCashBalance;
-}
+export const AttemptLoadCashBalance = createAction(
+  CashBalanceActionTypes.AttemptLoadCashBalance
+);
 
-export class LoadCashBalance implements Action {
-  readonly type = CashBalanceActionTypes.LoadCashBalance;
+export const LoadCashBalance = createAction(
+  CashBalanceActionTypes.LoadCashBalance,
+  props<{ cashBalance: CashBalance[] }>()
+);
 
-  constructor(public payload: { cashBalance: CashBalance[] }) {}
-}
-
-export class LoadCashBalanceFailed implements Action {
-  readonly type = CashBalanceActionTypes.LoadCashBalanceFailed;
-
-  constructor(public payload: { error: any }) {}
-}
-
-export type CashBalanceActions =
-  | AttemptLoadCashBalance
-  | LoadCashBalance
-  | LoadCashBalanceFailed;
+export const LoadCashBalanceFailed = createAction(
+  CashBalanceActionTypes.LoadCashBalanceFailed,
+  props<{ error: any }>()
+);

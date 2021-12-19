@@ -1,0 +1,11 @@
+<form [formGroup]="formGroup">
+  <pinnakl-input
+    controlName="pnlFieldSelected"
+    label="Field"
+    type="dropdown"
+    [dropdownSource]="pnlFields"
+    [dropdownOptions]="{ viewProperty: 'name' }"
+    [form]="formGroup"
+    [required]="true"
+  ></pinnakl-input>
+</form>

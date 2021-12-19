@@ -1,0 +1,73 @@
+<div class="row bgColorWhite center-aligned-row wrapper">
+  <div class="col">
+    <div class="sub_header1 border-right-gray mt-4 mb-4 pl-2">
+      <div class="row">
+        <h3>
+<!--          <b>{{ positionsSummary.totalMVUSD + positionsSummary.cashYesterday | number: '1.0-0' }}</b>-->
+          <b>{{ ((tradeWorkflowSpecsBackendStateFacade.positionsCalcAum$ | async) ?
+            positionsSummary.totalMVUSD : positionsSummary.aum) | number: '1.0-0'
+            }}</b>
+        </h3>
+      </div>
+      <div class="row label_sub_header">Net Liq(prior close)</div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="sub_header1 border-right-gray mt-4 mb-4">
+      <div class="row">
+        <h3>
+          <b>{{
+            positionsSummary.realizedPnl + positionsSummary.unRealizedPnl
+              | number: '1.0-0'
+          }}</b>
+        </h3>
+      </div>
+      <div class="row label_sub_header">P/L Day</div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="sub_header1 border-right-gray mt-4 mb-4">
+      <div class="row">
+        <h3>
+          <b>{{
+            ((tradeWorkflowSpecsBackendStateFacade.positionsCalcAum$ | async) ?
+              positionsSummary.totalMVUSD : positionsSummary.aum) +
+              positionsSummary.realizedPnl +
+              positionsSummary.unRealizedPnl | number: '1.0-0'
+          }}</b>
+        </h3>
+      </div>
+      <div class="row label_sub_header">Net Liq</div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="sub_header1 border-right-gray mt-4 mb-4">
+      <div class="row">
+        <h3>
+          <b>{{
+            ((positionsSummary.realizedPnl + positionsSummary.unRealizedPnl) /
+              positionsSummary.aum) *
+              100 | number: '1.2-2'
+          }}</b>
+        </h3>
+      </div>
+      <div class="row label_sub_header">Daily P/L %</div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="sub_header2 mt-4 mb-4">
+      <div class="row">
+        <h3>
+          <b>{{ ((tradeWorkflowSpecsBackendStateFacade.positionsCalcAum$ | async) ?
+            positionsSummary.totalMVUSD : positionsSummary.aum) | number: '1.0-0'
+            }}</b>
+        </h3>
+      </div>
+      <div class="row label_sub_header">AUM</div>
+    </div>
+  </div>
+</div>

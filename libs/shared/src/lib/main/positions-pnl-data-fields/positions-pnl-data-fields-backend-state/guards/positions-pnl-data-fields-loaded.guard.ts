@@ -12,7 +12,7 @@ import {
 
 @Injectable()
 export class PositionsPnlDataFieldsLoadedGuard implements CanActivate {
-  constructor(private store: Store<any>) {}
+  constructor(private readonly store: Store<any>) {}
 
   canActivate(): Observable<boolean> {
     return this.store.pipe(
@@ -21,7 +21,7 @@ export class PositionsPnlDataFieldsLoadedGuard implements CanActivate {
         if (loaded) {
           return;
         }
-        this.store.dispatch(new AttemptLoadPositionsPnlDataFields());
+        this.store.dispatch(AttemptLoadPositionsPnlDataFields());
       }),
       filter(loaded => loaded),
       first()

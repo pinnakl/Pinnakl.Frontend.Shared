@@ -1,0 +1,59 @@
+<div class="close-button">
+  <div class="row">
+    <div class="container-input" (click)="openWideSearch()">
+      <i class="icon-pinnakl-search-security"></i>
+      <span>{{getCurrentSecutity().ticker}}</span>
+    </div>
+    <div class="nav-container">
+      <a *ngFor="let tab of tabs" class="tab-container" [ngClass]="{ active: tabActive === tab.name }" href="javascript:;" (click)="activateTab(tab.name)">{{ tab.caption }}</a>
+    </div>
+  </div>
+  <div class="close-btn">
+    <pnkl-modal-close-btn  (click)="closeModal()"></pnkl-modal-close-btn>
+  </div>
+</div>
+
+<div>
+  <div class="modal-body padding0">
+    <section class="section-padding section-white">
+      <div class="container-fluid">
+        <!-- <div class="holder"> -->
+          <!--           <div class="row">
+            <div class="col-12 col-md-11 col-sm-10 mobile-mb account-header">
+              <h2>{{ securityDescription }}</h2>
+              <div class="account-selector">
+                <pinnakl-input controlName="account" [dropdownSource]="accounts" [dropdownOptions]="{
+                    objectModel: true,
+                    viewProperty: 'accountCode'
+                  }" [form]="accountForm" label="Account" type="dropdown">
+                </pinnakl-input>
+              </div>
+            </div>
+            <div class="col-md-default-width flex-pull-right">
+            </div>
+          </div> -->
+        <!-- </div> -->
+        <div *ngIf="tabs && tabs.length > 0" class="tab-content">
+          <div class="tab-pane" [ngClass]="{ active: true }">
+            <div class="display-none" [ngClass]="{ 'display-block': tabActive === 'positionSummaryTab'}">
+              <position-summary *ngIf="positionSummaryTab" [securityId]="securityId" [posDate]="posDate"
+                [accounts]="accounts"></position-summary>
+            </div>
+            <div class="display-none trade-history-container"
+              [ngClass]="{'display-block': tabActive === 'tradeHistoryTab'}">
+              <trade-history *ngIf="tradeHistoryTab" [secId]="securityId" [underlyingSecId]="underlyingSecId">
+              </trade-history>
+            </div>
+            <div class="display-none" [ngClass]="{'display-block': tabActive === 'positionVsPriceTab'}">
+              <position-vs-price *ngIf="positionVsPriceTab" [securityId]="securityId"></position-vs-price>
+            </div>
+            <div class="display-none" [ngClass]="{'display-block': tabActive === 'priceComparisonTab'}">
+              <price-comparison *ngIf="priceComparisonTab" [securityId]="securityId" [securities]="securities">
+              </price-comparison>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

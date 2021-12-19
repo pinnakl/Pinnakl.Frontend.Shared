@@ -3,9 +3,6 @@ import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 
 import {
-  GetWebRequest,
-  PostWebRequest,
-  PutWebRequest,
   WebServiceProvider
 } from '@pnkl-frontend/core';
 
@@ -14,31 +11,33 @@ import { EquitySharesOutstanding } from '../../models/security';
 
 @Injectable()
 export class EquitySharesOutstandingService {
-  private readonly RESOURCE_URL = 'equity_shares_outstandings';
+  private readonly _equitySharesOutEndpoint =
+    'entities/equity_shares_outstandings';
   private readonly DATE_FORMAT = 'MM/DD/YYYY';
 
-  constructor(private wsp: WebServiceProvider) {}
+  constructor(private readonly wsp: WebServiceProvider) { }
 
-  get(equityId: number): Promise<EquitySharesOutstanding[]> {
-    let fields = [
+  async get(equityId: number): Promise<EquitySharesOutstanding[]> {
+    const fields = [
       'id',
       'equityid',
       'sharesoutstanding',
       'enddate',
       'startdate'
     ];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: {
-        fields,
-        filters: [{ key: 'equityid', type: 'EQ', value: [equityId.toString()] }]
-      }
-    };
-    return this.wsp
-      .get(getWebRequest)
-      .then(entities =>
-        entities.map(entity => this.formatSharesOutstanding(entity))
-      );
+
+    const sharesOut = await this.wsp
+      .getHttp<EquitySharesOutstandingFromApi[]>({
+        endpoint: this._equitySharesOutEndpoint,
+        params: {
+          fields,
+          filters: [
+            { key: 'equityid', type: 'EQ', value: [equityId.toString()] }
+          ]
+        }
+      });
+
+    return sharesOut.map(this.formatSharesOutstanding);
   }
 
   async saveMany(x: {
@@ -46,11 +45,11 @@ export class EquitySharesOutstandingService {
     delete: EquitySharesOutstanding[];
     update: EquitySharesOutstanding[];
   }): Promise<void> {
-    let addPromises = x.add.map(equityToAdd => this.post(equityToAdd));
-    let updatePromises = x.update.map(equityToUpdate =>
+    const addPromises = x.add.map(equityToAdd => this.post(equityToAdd));
+    const updatePromises = x.update.map(equityToUpdate =>
       this.put(equityToUpdate)
     );
-    let deletePromises = x.delete.map(equityToDelete =>
+    const deletePromises = x.delete.map(equityToDelete =>
       this.delete(equityToDelete.id)
     );
     await Promise.all(
@@ -58,52 +57,38 @@ export class EquitySharesOutstandingService {
     );
   }
 
-  private delete(id: number): Promise<void> {
-    return this.wsp.delete({ endPoint: this.RESOURCE_URL, payload: { id } });
+  private async delete(id: number): Promise<void> {
+    return this.wsp.deleteHttp({
+      endpoint: `${this._equitySharesOutEndpoint}/${id}`
+    });
   }
 
-  post(
+  async post(
     entityToSave: EquitySharesOutstanding
   ): Promise<EquitySharesOutstanding> {
-    let requestBody = this.getEquitySharesOutstandingForServiceRequest(
-      entityToSave
-    );
+    const entity = await this.wsp.postHttp<EquitySharesOutstandingFromApi>({
+      endpoint: this._equitySharesOutEndpoint,
+      body: this.getEquitySharesOutstandingForServiceRequest(entityToSave)
+    });
 
-    let postWebRequest: PostWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      payload: requestBody
-    };
-
-    return this.wsp
-      .post(postWebRequest)
-      .then((entity: EquitySharesOutstandingFromApi) =>
-        this.formatSharesOutstanding(entity)
-      );
+    return this.formatSharesOutstanding(entity);
   }
 
-  private put(
+  private async put(
     entityToSave: EquitySharesOutstanding
   ): Promise<EquitySharesOutstanding> {
-    let requestBody = this.getEquitySharesOutstandingForServiceRequest(
-      entityToSave
-    );
+    const entity = await this.wsp.putHttp<EquitySharesOutstandingFromApi>({
+      endpoint: this._equitySharesOutEndpoint,
+      body: this.getEquitySharesOutstandingForServiceRequest(entityToSave)
+    });
 
-    let putWebRequest: PutWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      payload: requestBody
-    };
-
-    return this.wsp
-      .put(putWebRequest)
-      .then((entity: EquitySharesOutstandingFromApi) =>
-        this.formatSharesOutstanding(entity)
-      );
+    return this.formatSharesOutstanding(entity);
   }
 
   private getEquitySharesOutstandingForServiceRequest(
     entity: EquitySharesOutstanding
   ): EquitySharesOutstandingFromApi {
-    let entityForApi = {} as EquitySharesOutstandingFromApi,
+    const entityForApi = {} as EquitySharesOutstandingFromApi,
       { endDate, equityId, id, sharesOutstanding, startDate } = entity;
     if (endDate !== undefined) {
       entityForApi.enddate =
@@ -132,12 +117,12 @@ export class EquitySharesOutstandingService {
   private formatSharesOutstanding(
     entity: EquitySharesOutstandingFromApi
   ): EquitySharesOutstanding {
-    let sharesOutstanding = parseFloat(entity.sharesoutstanding),
+    const sharesOutstanding = parseFloat(entity.sharesoutstanding),
       endDateMoment = moment(entity.enddate, this.DATE_FORMAT),
       startDateMoment = moment(entity.startdate, this.DATE_FORMAT);
     return {
-      id: parseInt(entity.id),
-      equityId: parseInt(entity.equityid),
+      id: parseInt(entity.id, 10),
+      equityId: parseInt(entity.equityid, 10),
       sharesOutstanding: !isNaN(sharesOutstanding) ? sharesOutstanding : null,
       endDate: endDateMoment.isValid() ? endDateMoment.toDate() : null,
       startDate: startDateMoment.isValid() ? startDateMoment.toDate() : null

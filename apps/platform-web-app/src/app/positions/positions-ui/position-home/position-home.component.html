@@ -1,0 +1,238 @@
+<div *ngIf="saveAsModalShow">
+  <save-as-modal
+    [currentPreset]="pmsSelectedGridPresetConfig"
+    [saveAsModalShow]="saveAsModalShow"
+    (onClose)="saveAsModalClose()"
+    (saveToNew)="saveToNew()"
+    (saveToCurrent)="saveToCurrent()"
+  ></save-as-modal>
+</div>
+<div *ngIf="savePresetModalShow">
+  <create-preset-modal
+    [savePresetModalShow]="savePresetModalShow"
+    (onClose)="closeSavePresetModal()"
+    (onSave)="savePreset($event)"
+  ></create-preset-modal>
+</div>
+
+<section class="section-full-height relative position-home">
+  <div class="filter-holder">
+    <div class="filter-header">
+      <div class="container-fluid">
+        <div class="pms-head-line">
+          <h2 class="text-secondary">Portfolio</h2>
+          <div class="actions-container">
+            <div [ngClass]="{'hidden' : !showRebalanceMenu}" class="rebalance-actions">
+              <div class="filter-list">
+                <div class="filter-list-item" [class.active]="rebalanceVisible" data-tooltip="Open rebalance worksheet">
+                  <a (click)="toggleRebalancePanel()" class="sidebar-filter-trigger">
+                    <i class="icon-pinnakl-edit-security"></i>
+                  </a>
+                </div>
+                <div class="filter-list-item" [class.active]="sendTradesVisible" data-tooltip="Stage orders">
+                  <a (click)="openRebalanceOrdersModal()" class="sidebar-filter-trigger">
+                    <i class="icon-pinnakl-play"></i>
+                  </a>
+                </div>
+                <div [class.active]="false" class="filter-list-item" data-tooltip="Reset">
+                  <a #resetPositionsOrdersAnchor
+                     (click)="resetRebalanceConfirmationTrigger()"
+                     class="sidebar-filter-trigger">
+                    <i class="icon-pinnakl-trash"></i>
+                  </a>
+                  <confirm-action [anchor]="resetPositionsOrdersAnchor"
+                                  [showConfirmation]="showResetRebalanceConfirmation"
+                                  [confirmationMessage]="'Are you sure you want to reset your rebalance workspace?'"
+                                  (onConfirmed)="resetPositionsOrders()"
+                                  (onCancelled)="showResetRebalanceConfirmation = false">
+                  </confirm-action>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="subscribedToRealtimePortfolio" class="open-close-action" (click)="showRebalanceMenu = !showRebalanceMenu">
+              <i [ngClass]="!showRebalanceMenu ? 'icon-pinnakl-left-open' : 'icon-pinnakl-right-open'"></i>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-auto align-self-center mr-auto preset-with-filters">
+            <h6 class="filter-list-item text-secondary">
+              PRESET: {{ presetName }}
+            </h6>
+            <h6 class="filter-list-item text-secondary">
+              FILTER: {{ filterString }}
+            </h6>
+          </div>
+          <div class="col-2 mr-2">
+            <pinnakl-search-input
+              [darkMode]="true"
+              [(ngModel)]="gridSearchText"
+            ></pinnakl-search-input>
+          </div>
+          <div class="col-auto">
+            <div class="filter-list">
+              <div
+                class="filter-list-item"
+                [class.active]="alertsVisible"
+                data-tooltip="Alerts and watchlists"
+              >
+                <a
+                  (click)="togglePanel(panelTypes.ALERTS_VISIBLE)"
+                  class="sidebar-filter-trigger"
+                >
+                  <img src="assets/images/columns.svg"/>
+                </a>
+              </div>
+
+              <div
+                class="filter-list-item"
+                data-tooltip="Filter"
+                [class.active]="filterVisible"
+              >
+                <a
+                  (click)="togglePanel(panelTypes.FILTERS_VISIBLE)"
+                  class="sidebar-filter-trigger"
+                >
+                  <i class="icon-pinnakl-filter"></i>
+                </a>
+              </div>
+              <div data-tooltip="Save" class="filter-list-item dropdown show">
+                <a
+                  class="sidebar-filter-trigger"
+                  (click)="saveAsModalShow = !saveAsModalShow"
+                >
+                  <i class="icon-pinnakl-floppy"></i>
+                </a>
+              </div>
+              <div
+                class="filter-list-item"
+                [class.active]="configVisible"
+                data-tooltip="Configure"
+              >
+                <a
+                  (click)="togglePanel(panelTypes.CONFIG_VISIBLE)"
+                  class="sidebar-configuration-trigger"
+                >
+                  <i class="icon-pinnakl-cog"></i>
+                </a>
+              </div>
+              <app-streams-status
+                class="filter-list-item" [class.active]="true"
+                [requiredEstablishedStreamsReady$]="requiredEstablishedStreamsReady$"
+                [requiredStreamsErrored$]="requiredStreamsErrored$"
+              ></app-streams-status>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="scrollable-section row flex-no-wrap">
+    <div class="col-12 light-bg drag-container" cdkDropList (cdkDropListDropped)="drop($event)">
+      <div class="row" *ngFor="let elem of getSortedDraggedElements">
+        <ng-content *ngIf="elem.value === 'table'; then table"></ng-content>
+        <ng-content *ngIf="elem.value === 'summary'; then summary"></ng-content>
+        <ng-content *ngIf="elem.value === 'statistic'; then statistic"></ng-content>
+      </div>
+      <ng-template class="row" #table>
+        <div class="p-grid-container" id="p-grid-container" cdkDrag>
+          <div class="grid-handle-button" cdkDragHandle>
+            Drag and Drop<span class="k-icon k-i-move"></span>
+          </div>
+          <positions-grid-container
+            [gridHeight]="positionsGridHeight"
+            [searchText]="gridSearchText"
+            [rebalanceVisible]="rebalanceVisible"
+            (selectPosition)="actionBtnClicked($event)"
+          ></positions-grid-container>
+        </div>
+      </ng-template>
+      <ng-template #summary>
+        <div class="col-12 p-summary-container" id="p-summary-container" cdkDrag>
+          <div class="grid-handle-button" cdkDragHandle>
+            Drag and Drop<span class="k-icon k-i-move"></span>
+          </div>
+          <positions-home-summary
+            *ngIf="positionsHomeSummary$ | async"
+            [positionsSummary]="positionsHomeSummary$ | async"
+          ></positions-home-summary>
+        </div>
+      </ng-template>
+      <ng-template #statistic>
+        <div class="p-statistic-container" cdkDrag>
+          <div class="grid-handle-button" cdkDragHandle>
+            Drag and Drop<span class="k-icon k-i-move"></span>
+          </div>
+          <div class="statistics-blocks w-100 row">
+            <div class="left-section col-6">
+              <positions-home-cash-balance
+                *ngIf="positionsHomeSummary$ | async"
+                [cashBalance]="cashBalance$ | async"
+              ></positions-home-cash-balance>
+            </div>
+            <div class="right-section col-6">
+              <positions-home-market-value-summary
+                *ngIf="positionsHomeSummary$ | async"
+                [marketValueSummary]="marketValueSummary$ | async"
+              ></positions-home-market-value-summary>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+      <div class="row">
+        <div class="col-12">
+          <positions-home-pnl-chart
+            *ngIf="(positionsPnlValues$ | async) && (mainAccount$ | async)"
+            [positionsPnlValues]="positionsPnlValues$"
+            [mainAccount]="mainAccount$ | async"
+          ></positions-home-pnl-chart>
+        </div>
+      </div>
+    </div>
+
+    <positions-alerts
+      *ngIf="securities"
+      [securities]="securities"
+      [alertsVisible]="alertsVisible"
+    ></positions-alerts>
+
+    <positions-filter
+      [filterVisible]="filterVisible"
+      [showListedSecuritiesButton]="subscribedToRealtimePortfolio"
+      (onFilterApply)="onFilterApply()"
+    ></positions-filter>
+
+    <positions-report-config
+      [configVisible]="configVisible"
+      [importantColumnNames]="['identifier']"
+      [availableGridPresets]="availableGridPresets | async"
+      [availableWidgetPresets]="availableWidgetPresets | async"
+      [originalGridPresetId]="pmsSelectedGridPresetConfig?.id"
+      [originalWidgetPresetId]="pmsSelectedWidgetPresetConfig?.id"
+      (onApplyPresets)="applyPositionPreset($event)"
+      (selectPresetOnDeleting)="reinitializePresets()"
+    ></positions-report-config>
+  </div>
+</section>
+<position-popup
+  *ngIf="showPositionPopup && brokers && funds && securities"
+  [accounts]="accounts$ | async"
+  [brokers]="brokers"
+  [funds]="funds"
+  [openPortfolioModal]="openPortfolioModal.asObservable()"
+  [openPositionEditModal]="openPositionEditModal.asObservable()"
+  [openPositionSummaryModal]="openPositionSummaryModal.asObservable()"
+  [securities]="securities"
+  [secId]="+selectedGridRow.securityId"
+  [underlyingSecId]="+selectedGridRow.UnderlyingSecId"
+  (positionEditModalClosed)="positionEditModalClosed()"
+></position-popup>
+
+<pinnakl-modal *ngIf="!hideRebalanceOrdersModal"
+               [hideDialog]="hideRebalanceOrdersModal"
+               [width]="1000"
+               [maxHeight]="'80vh'"
+               (closeModal)="toggleRebalanceOrdersModal()"
+               [showCloseButton]="true">
+  <rebalance-orders (closeModal)="toggleRebalanceOrdersModal()"></rebalance-orders>
+</pinnakl-modal>

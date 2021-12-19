@@ -9,15 +9,15 @@ export class PushNotificationService {
     'web_push_notification_setting';
 
   constructor(
-    private firebaseService: FirebaseMessagingService,
-    private userPushNotificationService: UserPushNotificationSettingsService
-  ) {}
+    private readonly firebaseService: FirebaseMessagingService,
+    private readonly userPushNotificationService: UserPushNotificationSettingsService
+  ) { }
 
   async loadWebNotificationSettings(): Promise<void> {
-    let storedWebNotificationSettings = localStorage.getItem(
+    const storedWebNotificationSettings = localStorage.getItem(
         this.WEB_PUSH_NOTIFICATION_SETTINGS
-      ),
-      newWebSettings: string;
+      );
+    let newWebSettings: string;
     try {
       newWebSettings = await this.firebaseService.getFCMWebSetting();
     } catch (error) {

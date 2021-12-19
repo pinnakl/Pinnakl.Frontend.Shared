@@ -33,7 +33,7 @@ export class PinnaklChipListComponent implements OnInit, ControlValueAccessor {
   value: any[];
   @Input() fieldName: string;
   @Output() addNewListItem = new EventEmitter<any>();
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(private readonly formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({

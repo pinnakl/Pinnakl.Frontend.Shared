@@ -1,29 +1,28 @@
 import { Injectable } from '@angular/core';
 
-import { GetWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
+import { WebServiceProvider } from '@pnkl-frontend/core';
+import { UserReportCustomAttribute } from '../../models/reporting';
 import { UserReportCustomAttributeFromApi } from '../../models/reporting/user-report-custom-attribute-from-api.model';
-import { UserReportCustomAttribute } from '../../models/reporting/user-report-custom-attribute.model';
 import { ReportColumnService } from './report-column.service';
 import { UserReportColumnService } from './user-report-column.service';
 
 @Injectable()
 export class UserReportCustomAttributeService {
-  private readonly RESOURCE_URL = 'user_report_custom_attributes';
+  private readonly _userReportCustomAttributesEndpoint = 'entities/user_report_custom_attributes';
 
   constructor(
-    private reportColumnService: ReportColumnService,
-    private userReportColumnService: UserReportColumnService,
-    private wsp: WebServiceProvider
-  ) {}
+    private readonly reportColumnService: ReportColumnService,
+    private readonly userReportColumnService: UserReportColumnService,
+    private readonly wsp: WebServiceProvider
+  ) { }
 
-  deleteUserReportCustomAttribute(id: number): Promise<void> {
-    return this.wsp.delete({
-      endPoint: this.RESOURCE_URL,
-      payload: { id: id.toString() }
+  async deleteUserReportCustomAttribute(id: number): Promise<void> {
+    return this.wsp.deleteHttp({
+      endpoint: `${this._userReportCustomAttributesEndpoint}/${id}`
     });
   }
 
-  getUserReportCustomAttributes(
+  async getUserReportCustomAttributes(
     userReportId: number
   ): Promise<UserReportCustomAttribute[]> {
     const fields = [
@@ -38,57 +37,45 @@ export class UserReportCustomAttributeService {
         'Type',
         'UserReportId',
         'ViewOrder'
-      ],
-      getWebRequest: GetWebRequest = {
-        endPoint: this.RESOURCE_URL,
-        options: {
-          fields,
-          filters: [
-            {
-              key: 'UserReportId',
-              type: 'EQ',
-              value: [userReportId.toString()]
-            }
-          ]
-        }
-      };
-    return this.wsp
-      .get(getWebRequest)
-      .then((entities: UserReportCustomAttributeFromApi[]) =>
-        entities.map(entity => this.formatUserReportCustomAttribute(entity))
-      );
+      ];
+
+    const entities = await this.wsp.getHttp<UserReportCustomAttributeFromApi[]>({
+      endpoint: this._userReportCustomAttributesEndpoint,
+      params: {
+        fields,
+        filters: [
+          {
+            key: 'UserReportId',
+            type: 'EQ',
+            value: [userReportId.toString()]
+          }
+        ]
+      }
+    });
+
+    return entities.map(this.formatUserReportCustomAttribute.bind(this));
   }
 
-  postUserReportCustomAttribute(
+  async postUserReportCustomAttribute(
     userReportCustomAttribute: UserReportCustomAttribute
   ): Promise<UserReportCustomAttribute> {
-    let requestBody = this.getUserReportCustomAttributeForServiceRequest(
-      userReportCustomAttribute
-    );
-    return this.wsp
-      .post({
-        endPoint: this.RESOURCE_URL,
-        payload: requestBody
-      })
-      .then((entity: UserReportCustomAttributeFromApi) =>
-        this.formatUserReportCustomAttribute(entity)
-      );
+    const entity = await this.wsp.postHttp<UserReportCustomAttributeFromApi>({
+      endpoint: this._userReportCustomAttributesEndpoint,
+      body: this.getUserReportCustomAttributeForServiceRequest(userReportCustomAttribute)
+    });
+
+    return this.formatUserReportCustomAttribute(entity);
   }
 
-  putUserReportCustomAttribute(
+  async putUserReportCustomAttribute(
     userReportCustomAttribute: UserReportCustomAttribute
   ): Promise<UserReportCustomAttribute> {
-    let requestBody = this.getUserReportCustomAttributeForServiceRequest(
-      userReportCustomAttribute
-    );
-    return this.wsp
-      .put({
-        endPoint: this.RESOURCE_URL,
-        payload: requestBody
-      })
-      .then((entity: UserReportCustomAttributeFromApi) =>
-        this.formatUserReportCustomAttribute(entity)
-      );
+    const entity = await this.wsp.putHttp<UserReportCustomAttributeFromApi>({
+      endpoint: this._userReportCustomAttributesEndpoint,
+      body: this.getUserReportCustomAttributeForServiceRequest(userReportCustomAttribute)
+    });
+
+    return this.formatUserReportCustomAttribute(entity);
   }
 
   public formatUserReportCustomAttribute(

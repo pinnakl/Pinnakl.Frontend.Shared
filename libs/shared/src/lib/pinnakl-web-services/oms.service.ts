@@ -6,7 +6,8 @@ import * as _ from 'lodash';
 import * as moment from 'moment';
 
 // Models
-import { GetWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
+import { WebServiceProvider } from '@pnkl-frontend/core';
+import { Account } from '../models/account.model';
 import { Broker } from '../models/oms/broker/broker.model';
 import { CurrencyForOMSFromApi } from '../models/oms/currency.model';
 import { CurrencyForOMS } from '../models/oms/currency.model';
@@ -27,31 +28,37 @@ import { TradingCurrency } from '../models/oms/trading-currency.model';
 import { PBAccount } from '../models/pb-account.model';
 import { AssetType } from '../models/security/asset-type.model';
 import { SecurityType } from '../models/security/security-type.model';
+import { AUM } from './../models/aum.model';
 import { Folder } from './../models/oms/folder.model';
 import { Security } from './../models/security/security.model';
 
 // Services
-import { AuthenticationService, User, UserFromApi } from '@pnkl-frontend/core';
+import { User, UserFromApi } from '@pnkl-frontend/core';
 import { BrokerService } from '../pinnakl-web-services/broker.service';
 import { SecurityService } from '../pinnakl-web-services/security/security.service';
 import { TradeAllocationService } from '../pinnakl-web-services/trade-allocation.service';
 import { Utility } from '../services/utility.service';
+import { AccountService } from './account.service';
+import { AccountingService } from './accounting.service';
 import { MarketService } from './security/market.service';
 
 @Injectable()
 export class OMSService {
-  private readonly HOLIDAY_API_URL = 'holidays';
-  private readonly CURRENCIES_API_URL = 'global_currencies';
-  private readonly TRADING_CURRENCIES_API_URL = 'trading_currencies';
-  private readonly PSET_API_URL = 'psets';
-  private readonly ALLOCATION_TEMPLATE_API_URL = 'trade_allocation_templates';
-  private readonly FOLDER_API = 'trade_folder';
-  private readonly FX_RATE_API_URL = 'fxrates';
-  private readonly SEC_FEE_API_URL = 'sec_fee';
+  private readonly _omsEndpoint = 'entities/oms';
+  private readonly _holidaysEndpoint = 'entities/holidays';
+  private readonly _globalCurrenciesEndpoint = 'entities/global_currencies';
+  private readonly _tradingCurrenciesEndpoint = 'entities/trading_currencies';
+  private readonly _psetsEndpoint = 'entities/psets';
+  private readonly _tradeFolderEndpoint = 'entities/trade_folder';
+  private readonly _fxRatesEndpoint = 'entities/fxrates';
+  private readonly _secFeeEndpoint = 'entities/sec_fee';
+  private readonly _tradeRequestApproversEndpoint =
+    'entities/trade_request_approvers';
+  private readonly _tradeWorkflowSpecsEndpoint =
+    'entities/trade_workflow_specs';
   private readonly DTC_BIC = 'dtcyus33';
-  private readonly TRADE_APPROVERS_API_URL = 'trade_request_approvers';
-  private readonly TRADE_WORKFLOW_SPECS_API_URL = 'trade_workflow_specs';
 
+  private _accounts: Account[];
   private _holidays: Holiday[];
   private _pSETs: PSET[];
   private _currencies: CurrencyForOMS[];
@@ -65,34 +72,99 @@ export class OMSService {
   private _secFeeRates: SecFee[];
   private _tradeAprovers: User[];
   private _tradeWorkflowSpecs: TradeWorkflowSpecs;
+  private _aum: AUM[] = [];
 
   constructor(
-    private wsp: WebServiceProvider,
-    private securityService: SecurityService,
-    private marketService: MarketService,
-    private brokerService: BrokerService,
-    private tradeAllocationService: TradeAllocationService,
-    private utility: Utility,
-    private authService: AuthenticationService
-  ) {}
+    private readonly wsp: WebServiceProvider,
+    private readonly securityService: SecurityService,
+    private readonly marketService: MarketService,
+    private readonly brokerService: BrokerService,
+    private readonly accountService: AccountService,
+    private readonly accountingService: AccountingService,
+    private readonly tradeAllocationService: TradeAllocationService,
+    private readonly utility: Utility
+  ) { }
 
-  public getHolidays(): Promise<Holiday[]> {
+  public async getOMSData(): Promise<any> {
+    const result = await this.wsp.getHttp<any[]>({
+      endpoint: this._omsEndpoint
+    });
+
+    this._accounts = result
+      .filter(item => item['pnkl_type'] === 'accounts')
+      .map(this.accountService.formatAccount);
+    const trade_params = result.filter(
+      item => item['pnkl_type'] === 'omstrade_params'
+    );
+    const trade_columns = result.filter(
+      item => item['pnkl_type'] === 'omstrade_columns'
+    );
+
+    this._pSETs = result
+      .filter(item => item['pnkl_type'] === 'psets')
+      .map(pset => this.formatPSETs(pset));
+    this._tradingCurrencies = result
+      .filter(item => item['pnkl_type'] === 'trading_currencies')
+      .map(pset => this.formatTradingCurrency(pset));
+    this._brokers = result
+      .filter(item => item['pnkl_type'] === 'brokers')
+      .map(broker => this.brokerService.formatBroker(broker));
+    this._tradeWorkflowSpecs = result
+      .filter(item => item['pnkl_type'] === 'trade_workflow_specs')
+      .map(spec => this.formatTradeWorkflowSpecs(spec))[0];
+
+    // this._aum.push(new AUM(0, 17, 148239359.03, new Date()));
+    // this._aum.push(new AUM(0, 18, 49572206.53, new Date()));
+    this._aum = result
+      .filter(item => item['pnkl_type'] === 'aum')
+      .map(aum => this.accountingService.formatAUM(aum));
+
+    this.securityService.formatAndSetAssetTypes(
+      result.filter(item => item['pnkl_type'] === 'asset_types')
+    );
+
+    this._secFeeRates = result
+      .filter(item => item['pnkl_type'] === 'sec_fee')
+      .map(assetType => this.formatSECFeeRate(assetType));
+
+    this._PBAccounts = result
+      .filter(item => item['pnkl_type'] === 'pbaccounts')
+      .map(acct => this.tradeAllocationService.formatPbAccount(acct));
+
+    this._holidays = result
+      .filter(item => item['pnkl_type'] === 'holidays')
+      .map(holiday => this.formatHoliday(holiday));
+
+    this._securities = this.securityService.formatAndSetSecurities(
+      result.filter(item => item['pnkl_type'] === 'securities')
+    );
+
+    this._fxRates = result
+      .filter(item => item['pnkl_type'] === 'fxrates')
+      .map(fxRate => this.formatFxRate(fxRate));
+
+    return [
+      trade_params,
+      trade_columns,
+      this._tradeWorkflowSpecs,
+      this._accounts
+    ];
+  }
+
+  public async getHolidays(): Promise<Holiday[]> {
     if (this._holidays) {
       return Promise.resolve(this._holidays);
     }
 
-    const fields = ['Id', 'holidaydate'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.HOLIDAY_API_URL,
-      options: {
-        fields: fields
+    const holidays = await this.wsp.getHttp<HolidayFromApi[]>({
+      endpoint: this._holidaysEndpoint,
+      params: {
+        fields: ['Id', 'holidaydate']
       }
-    };
-
-    return this.wsp.get(getWebRequest).then((holidays: HolidayFromApi[]) => {
-      this._holidays = holidays.map(holiday => this.formatHoliday(holiday));
-      return this._holidays;
     });
+
+    this._holidays = holidays.map(holiday => this.formatHoliday(holiday));
+    return this._holidays;
   }
 
   private formatHoliday(holiday: HolidayFromApi): Holiday {
@@ -111,28 +183,22 @@ export class OMSService {
       return Promise.resolve(this._currencies);
     }
 
-    const fields = ['Id', 'currency'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.CURRENCIES_API_URL,
-      options: {
-        fields: fields
-      }
-    };
-
     return this.wsp
-      .get(getWebRequest)
-      .then((currencies: CurrencyForOMSFromApi[]) => {
-        this._currencies = currencies.map(currency =>
-          this.formatCurrency(currency)
-        );
+      .getHttp<CurrencyForOMSFromApi[]>({
+        endpoint: this._globalCurrenciesEndpoint,
+        params: {
+          fields: ['Id', 'currency']
+        }
+      })
+      .then(currencies => {
+        this._currencies = currencies.map(this.formatCurrency);
         return this._currencies;
       });
   }
 
-  private formatCurrency(currency: CurrencyForOMSFromApi): CurrencyForOMS {
-    const id = +currency.id,
-      curr = currency.currency;
-    return new CurrencyForOMS(!isNaN(id) ? id : null, curr);
+  public formatCurrency(currency: CurrencyForOMSFromApi): CurrencyForOMS {
+    const id = +currency.id;
+    return new CurrencyForOMS(!isNaN(id) ? id : null, currency.currency);
   }
 
   public getTradingCurrencies(): Promise<TradingCurrency[]> {
@@ -140,19 +206,16 @@ export class OMSService {
       return Promise.resolve(this._tradingCurrencies);
     }
 
-    const fields = ['id', 'g_id', 'currency'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.TRADING_CURRENCIES_API_URL,
-      options: {
-        fields: fields
-      }
-    };
-
     return this.wsp
-      .get(getWebRequest)
-      .then((tradingCurrencies: TradingCurrencyFromApi[]) => {
-        this._tradingCurrencies = tradingCurrencies.map(tradingCurrency =>
-          this.formatTradingCurrency(tradingCurrency)
+      .getHttp<TradingCurrencyFromApi[]>({
+        endpoint: this._tradingCurrenciesEndpoint,
+        params: {
+          fields: ['id', 'g_id', 'currency']
+        }
+      })
+      .then(tradingCurrencies => {
+        this._tradingCurrencies = tradingCurrencies.map(
+          this.formatTradingCurrency
         );
         return this._tradingCurrencies;
       });
@@ -185,18 +248,21 @@ export class OMSService {
       return Promise.resolve(this._pSETs);
     }
 
-    const fields = ['id', 'name', 'bic', 'currencyid', 'currency'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.PSET_API_URL,
-      options: {
-        fields: fields
-      }
-    };
+    return this.wsp
+      .getHttp<PSETFromAPI[]>({
+        endpoint: this._psetsEndpoint,
+        params: {
+          fields: ['id', 'name', 'bic', 'currencyid', 'currency']
+        }
+      })
+      .then(psets => {
+        this._pSETs = psets.map(this.formatPSETs);
+        return this._pSETs;
+      });
+  }
 
-    return this.wsp.get(getWebRequest).then((psets: PSETFromAPI[]) => {
-      this._pSETs = psets.map(pset => this.formatPSETs(pset));
-      return this._pSETs;
-    });
+  public getAUMs(): Promise<AUM[]> {
+    return Promise.resolve(this._aum);
   }
 
   private formatPSETs(pset: PSETFromAPI): PSET {
@@ -247,6 +313,26 @@ export class OMSService {
         });
     }
   }
+
+  public async getSecuritiesIfMissing(newSecIds: number[]): Promise<boolean> {
+    const existingSecIds = this._securities.map(p => p.id);
+    const secIdsToFetch = _.difference(newSecIds, existingSecIds);
+
+    if (secIdsToFetch.length > 0) {
+      console.log('Missing seurities found: ', secIdsToFetch);
+      await this.securityService.getAllTradingSecurities().then(result => {
+        const newSecurities = result.filter(
+          sec => existingSecIds.includes(sec.id) === false
+        );
+        this._securities = this._securities.concat(newSecurities);
+        console.log('Missing securities added ', newSecurities);
+        return Promise.resolve(true);
+      });
+    } else {
+      return Promise.resolve(true);
+    }
+  }
+
   public getBrokers(): Promise<Broker[]> {
     if (this._brokers) {
       return Promise.resolve(this._brokers);
@@ -261,67 +347,89 @@ export class OMSService {
     });
   }
 
-  public getTradeApprovers(): Promise<User[]> {
+  public async getTradeApprovers(): Promise<User[]> {
     if (this._tradeAprovers) {
       return Promise.resolve(this._tradeAprovers);
     }
 
     const fields = ['clientid', 'userid', 'firstname', 'lastname'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.TRADE_APPROVERS_API_URL,
-      options: {
+    const tradeApprovers = await this.wsp.getHttp<UserFromApi[]>({
+      endpoint: this._tradeRequestApproversEndpoint,
+      params: {
         fields: fields
       }
-    };
-
-    return this.wsp.get(getWebRequest).then((users: UserFromApi[]) => {
-      this._tradeAprovers = users.map(
-        user =>
-          new User(
-            +user['clientid'],
-            null,
-            null,
-            `${user['firstname']} ${user['lastname']}`,
-            +user['userid'],
-            null,
-            null,
-            null
-          )
-      );
-      return this._tradeAprovers;
     });
+
+    this._tradeAprovers = tradeApprovers.map(
+      user =>
+        new User(
+          +user['clientid'],
+          null,
+          null,
+          `${user['firstname']} ${user['lastname']}`,
+          +user['userid'],
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null
+        )
+    );
+    return this._tradeAprovers;
   }
 
-  public getTradeWorkflowSpecs(): Promise<TradeWorkflowSpecs> {
+  public async getTradeWorkflowSpecs(): Promise<TradeWorkflowSpecs> {
     if (this._tradeWorkflowSpecs) {
       return Promise.resolve(this._tradeWorkflowSpecs);
     }
 
-    const fields = ['manualApproval', 'listedExecution', 'nonListedFills'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.TRADE_WORKFLOW_SPECS_API_URL,
-      options: {
+    const fields = [
+      'manualApproval',
+      'listedExecution',
+      'locatesIntegration',
+      'nonListedFills',
+      'minIncrement',
+      'quantityAsPct'
+    ];
+
+    const specs = await this.wsp.getHttp<TradeWorkflowSpecsFromApi[]>({
+      endpoint: this._tradeWorkflowSpecsEndpoint,
+      params: {
         fields: fields
       }
-    };
+    });
 
-    return this.wsp
-      .get(getWebRequest)
-      .then((workflowSpecs: TradeWorkflowSpecsFromApi[]) => {
-        this._tradeWorkflowSpecs = workflowSpecs.map(workflowSpec =>
-          this.formatTradeWorkflowSpecs(workflowSpec)
-        )[0];
-        return this._tradeWorkflowSpecs;
-      });
+    this._tradeWorkflowSpecs = this.formatTradeWorkflowSpecs(specs[0]);
+    return this._tradeWorkflowSpecs;
   }
 
-  private formatTradeWorkflowSpecs(
+  public async putTradeWorkflowSpecs(
+    data: Partial<TradeWorkflowSpecs>
+  ): Promise<any> {
+    const result = await this.wsp.putHttp<TradeWorkflowSpecsFromApi>({
+      endpoint: this._tradeWorkflowSpecsEndpoint,
+      body: data
+    });
+
+    this._tradeWorkflowSpecs = this.formatTradeWorkflowSpecs(result);
+    return this._tradeWorkflowSpecs;
+  }
+
+  public formatTradeWorkflowSpecs(
     workflowSpec: TradeWorkflowSpecsFromApi
   ): TradeWorkflowSpecs {
     return new TradeWorkflowSpecs(
-      workflowSpec.manualapproval === 'True' ? true : false,
-      workflowSpec.listedexecution === 'True' ? true : false,
-      workflowSpec.nonlistedfills === 'True' ? true : false
+      workflowSpec.id,
+      workflowSpec.manualapproval === 'True',
+      workflowSpec.listedexecution === 'True',
+      workflowSpec.nonlistedfills === 'True',
+      workflowSpec.locatesintegration === 'True',
+      workflowSpec.minincrement === 'True',
+      +workflowSpec.quantityaspct,
+      workflowSpec.onlyviewtodayactivity === 'True',
+      workflowSpec.defaultallocationaccts
     );
   }
 
@@ -340,60 +448,57 @@ export class OMSService {
   public LoadFxRates(date: Date): Promise<FxRate[]> {
     const rateDate = this.utility.addBusinessDays(date, -3, []);
 
-    if (!_.find(this._fxRates, { priceDate: date })) {
-      const fields = ['id', 'currencyid', 'pricedate', 'fxrate'];
-      const getWebRequest: GetWebRequest = {
-        endPoint: this.FX_RATE_API_URL,
-        options: {
-          fields: fields,
-          filters: [
-            {
-              key: 'pricedate',
-              type: 'GE',
-              value: [moment(rateDate).format('MM/DD/YYYY')]
-            }
-          ]
-        }
-      };
-
-      return this.wsp.get(getWebRequest).then((fxRates: FxRateFromApi[]) => {
-        this._fxRates = fxRates.map(fxRate => this.formatFxRate(fxRate));
-        return this._fxRates;
-      });
+    if (
+      !_.find(this._fxRates, { priceDate: date }) &&
+      date.toDateString !== new Date().toDateString
+    ) {
+      return this.wsp
+        .getHttp<FxRateFromApi[]>({
+          endpoint: this._fxRatesEndpoint,
+          params: {
+            fields: ['id', 'currencyid', 'pricedate', 'fxrate'],
+            filters: [
+              {
+                key: 'pricedate',
+                type: 'GE',
+                value: [moment(rateDate).format('MM/DD/YYYY')]
+              }
+            ]
+          }
+        })
+        .then(fxRates => {
+          this._fxRates = fxRates.map(this.formatFxRate);
+          return this._fxRates;
+        });
     }
   }
+
   public getFxRate(date: Date, currency: CurrencyForOMS): Promise<FxRate> {
-    let fxRate = this.getFxRateFromList(this._fxRates, date, currency);
+    const fxRate = this.getFxRateFromList(this._fxRates, date, currency);
     if (fxRate) {
       return Promise.resolve(fxRate);
     }
 
-    const fields = ['id', 'currencyid', 'pricedate', 'fxrate'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.FX_RATE_API_URL,
-      options: {
-        fields: fields,
-        filters: [
-          {
-            key: 'pricedate',
-            type: 'EQ',
-            value: [moment(date).format('MM/DD/YYYY')]
-          }
-        ]
-      }
-    };
-
-    return this.wsp.get(getWebRequest).then((fxRates: FxRateFromApi[]) => {
-      this._fxRates = this._fxRates.concat(
-        fxRates.map(rt => this.formatFxRate(rt))
-      );
-      fxRate = this.getFxRateFromList(this._fxRates, date, currency);
-      if (fxRate) {
-        return Promise.resolve(fxRate);
-      } else {
-        Promise.resolve(1);
-      }
-    });
+    return this.wsp
+      .getHttp<FxRateFromApi[]>({
+        endpoint: this._fxRatesEndpoint,
+        params: {
+          fields: ['id', 'currencyid', 'pricedate', 'fxrate'],
+          filters: [
+            {
+              key: 'pricedate',
+              type: 'EQ',
+              value: [moment(date).format('MM/DD/YYYY')]
+            }
+          ]
+        }
+      })
+      .then(fxRates => {
+        this._fxRates = this._fxRates.concat(fxRates.map(this.formatFxRate));
+        return Promise.resolve(
+          this.getFxRateFromList(this._fxRates, date, currency)
+        );
+      });
   }
 
   private getFxRateFromList(
@@ -422,25 +527,21 @@ export class OMSService {
     };
   }
 
-  public getSECFeeRates(): Promise<SecFee[]> {
+  public async getSECFeeRates(): Promise<SecFee[]> {
     if (this._secFeeRates) {
-      Promise.resolve(this._secFeeRates);
+      return Promise.resolve(this._secFeeRates);
     }
 
     const fields = ['id', 'assetTypeId', 'fees', 'startdate', 'enddate'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.SEC_FEE_API_URL,
-      options: {
-        fields: fields
-      }
-    };
-
-    return this.wsp.get(getWebRequest).then((secFeeRates: SecFeeFromAPI[]) => {
-      this._secFeeRates = secFeeRates.map(secFeeRate =>
-        this.formatSECFeeRate(secFeeRate)
-      );
-      return this._secFeeRates;
-    });
+    this._secFeeRates = await this.wsp
+      .getHttp<SecFeeFromAPI[]>({
+        endpoint: this._secFeeEndpoint,
+        params: {
+          fields: fields
+        }
+      })
+      .then(rates => rates.map(this.formatSECFeeRate));
+    return this._secFeeRates;
   }
 
   private formatSECFeeRate(secfee: SecFeeFromAPI): SecFee {
@@ -475,7 +576,8 @@ export class OMSService {
     let validFeeTr = false;
 
     if (
-      ['equity', 'option', 'pfd'].indexOf(pAssetType) > -1 ||
+      ['equity', 'pfd'].indexOf(pAssetType) > -1 ||
+      ['eqopt', 'futopt'].indexOf(pSectype) > -1 ||
       ['etf', 'mf'].indexOf(pSectype) > -1
     ) {
       if (tranType) {
@@ -511,11 +613,12 @@ export class OMSService {
 
   public getBookCurrency(): CurrencyForOMS {
     if (this._tradingCurrencies !== undefined) {
-      const ret = _.filter(this._tradingCurrencies, function (
-        o: TradingCurrency
-      ): boolean {
-        return o.currency === 'USD';
-      })[0];
+      const ret = _.filter(
+        this._tradingCurrencies,
+        function (o: TradingCurrency): boolean {
+          return o.currency === 'USD';
+        }
+      )[0];
       return this.convertTradingCurrencyToCurrency(ret);
     } else {
       return null;
@@ -535,13 +638,12 @@ export class OMSService {
   }
 
   public isCounterpartyTrade(
-    trsIndicator: boolean,
     assetType: string,
     privateIndicator: boolean
   ): boolean {
     assetType = assetType !== undefined ? assetType.toLowerCase() : undefined;
     if (
-      trsIndicator === true ||
+      assetType === 'trs' ||
       assetType === 'cds' ||
       assetType === 'bankdebt' ||
       privateIndicator === true
@@ -552,21 +654,13 @@ export class OMSService {
     }
   }
 
-  public getAccountType(
-    trsIndicator: boolean,
-    assetType: string,
-    privateIndicator: boolean
-  ): string {
+  public getAccountType(assetType: string, privateIndicator: boolean): string {
     let accountType = null;
-    if (
-      trsIndicator === undefined &&
-      assetType === undefined &&
-      privateIndicator === undefined
-    ) {
+    if (assetType === undefined && privateIndicator === undefined) {
       return 'pb';
     }
 
-    if (trsIndicator === true) {
+    if (assetType.toLowerCase() === 'trs') {
       accountType = 'trs';
     } else {
       if (
@@ -589,11 +683,12 @@ export class OMSService {
   ): Date {
     let numDays = 0;
     if (pTradeDate !== undefined && pAssetTypeId !== undefined) {
-      const found = _.filter(this._assetTypes, function (
-        o: AssetType
-      ): boolean {
-        return o.id === pAssetTypeId;
-      });
+      const found = _.filter(
+        this._assetTypes,
+        function (o: AssetType): boolean {
+          return o.id === pAssetTypeId;
+        }
+      );
 
       if (found.length > 1) {
         alert('Incorrect Settlement Instructions !');
@@ -618,7 +713,7 @@ export class OMSService {
     }
   }
 
-  public getPaymentCurrency(
+  public async getPaymentCurrency(
     security: Security,
     tranType: string
   ): Promise<number> {
@@ -628,14 +723,13 @@ export class OMSService {
       if (tranType) {
         // If the transaction type is a sell or a sell short, then the primary currency is the payment currency
         if (tranType.substring(0, 1).toLowerCase() === 's') {
-          return Promise.resolve(security.currencyId);
+          return security.currencyId;
         } else {
           // Secondary currency is payment currency
-          const fields = ['secondaryCurrencyId'];
-          const getWebRequest: GetWebRequest = {
-            endPoint: 'currencies',
-            options: {
-              fields: fields,
+          const result = await this.wsp.getHttp<any[]>({
+            endpoint: 'entities/currencies',
+            params: {
+              fields: ['secondaryCurrencyId'],
               filters: [
                 {
                   key: 'securityid',
@@ -644,35 +738,29 @@ export class OMSService {
                 }
               ]
             }
-          };
-
-          return this.wsp.get(getWebRequest).then(result => {
-            return +result[0].secondarycurrencyid;
           });
+
+          return +result[0].secondarycurrencyid;
         }
       }
     }
   }
 
   public getCounterparties(
-    trsIndicator: boolean,
     assetType: string,
     privateIndicator: boolean
   ): PBAccount[] {
     // Filter and get only the relevant account Types.
-    const accountType = this.getAccountType(
-      trsIndicator,
-      assetType,
-      privateIndicator
+    const accountType = this.getAccountType(assetType, privateIndicator);
+    const pbAccounts = _.filter(
+      this._PBAccounts,
+      o => o.accountType.toLowerCase() === accountType
     );
-    const pbAccounts = _.filter(this._PBAccounts, function (o) {
-      return o.accountType.toLowerCase() === accountType;
-    });
 
     // Get only the custodianid,custodianname fields so that a unique function can be applied.
-    const pbAccountsMap = _.map(pbAccounts, function (object) {
-      return _.pick(object, ['custodianId', 'custodianName']);
-    });
+    const pbAccountsMap = _.map(pbAccounts, o =>
+      _.pick(o, ['custodianId', 'custodianName'])
+    );
 
     // apply unique function.
     let counterparties = _.uniqWith(pbAccountsMap, _.isEqual);
@@ -682,13 +770,12 @@ export class OMSService {
 
   public getFolders(): Promise<Folder> {
     const fields = ['id', 'col1'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.FOLDER_API,
-      options: {
+    return this.wsp.getHttp<any>({
+      endpoint: this._tradeFolderEndpoint,
+      params: {
         fields: fields
       }
-    };
-    return this.wsp.get(getWebRequest);
+    });
   }
 
   public calcPrincipal(

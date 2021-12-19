@@ -1,0 +1,67 @@
+<div>
+  <div class="row justify-content-between">
+    <div class="col-7">
+      <p class="font-weight-bold">WATCHLIST</p>
+    </div>
+    <div class="col-5 d-flex justify-content-end align-items-center">
+      <button class="btn-action" (click)="openModal()">
+        <img src="assets/images/green-add.svg" />
+      </button>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <div class="col-md-12">
+      <div class="table-responsive items-table">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Security</th>
+              <th scope="col" class="text-align-right">Last</th>
+              <th scope="col" class="text-align-right">Net Chng %</th>
+              <th scope="col" class="text-align-right">High</th>
+              <th scope="col" class="text-align-right">Low</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="!watchlistItems$">
+              <td colspan="6">No items set.</td>
+            </tr>
+            <ng-container *ngFor="let item of watchlistItems$ | async">
+              <ng-container *ngIf="item">
+                <tr>
+                  <td scope="row">
+                    {{ item.ticker }}
+                  </td>
+                  <td scope="row" class="text-align-right">
+                    {{ item.lastPrice | number: '1.2-2' }}
+                  </td>
+                  <td
+                    scope="row"
+                    class="text-align-right"
+                    [ngClass]="item.netchange >= 0 ? 'green-text' : 'red-text'"
+                  >
+                    {{ item.netchange | number: '1.3-3' }}
+                  </td>
+                  <td scope="row" class="text-align-right">
+                    {{ item.high | number: '1.2-2' }}
+                  </td>
+                  <td scope="row" class="text-align-right">
+                    {{ item.low | number: '1.2-2' }}
+                  </td>
+                  <td scope="row">
+                    <button
+                      class="btn-action pull-right icon-pinnakl-cancel"
+                      (click)="deleteFromWatchlist(item.id)"
+                    ></button>
+                  </td>
+                </tr>
+              </ng-container>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

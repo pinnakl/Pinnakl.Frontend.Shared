@@ -19,12 +19,12 @@ export class AllTradeWorkflowSpecsLoadedGuard implements CanActivate {
         if (loaded) {
           return;
         }
-        this._store.dispatch(new AttemptLoadTradeWorkflowSpecs());
+        this._store.dispatch(AttemptLoadTradeWorkflowSpecs());
       }),
       filter(loaded => loaded),
       first()
     );
   }
 
-  constructor(private _store: Store<any>) {}
+  constructor(private readonly _store: Store<any>) {}
 }

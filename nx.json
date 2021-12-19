@@ -8,34 +8,13 @@
     "nx.json": "*"
   },
   "projects": {
-    "platform-web-app": {
-      "tags": []
-    },
-    "platform-web-app-e2e": {
-      "tags": []
-    },
-    "shared": {
-      "tags": []
-    },
-    "pnkl-charts": {
-      "tags": []
-    },
-    "core": {
-      "tags": []
-    },
     "app-state": {
       "tags": []
     },
     "authentication": {
       "tags": []
     },
-    "pinnakl-modal": {
-      "tags": []
-    },
-    "help": {
-      "tags": []
-    },
-    "reporting": {
+    "core": {
       "tags": []
     },
     "crm-app": {
@@ -44,18 +23,42 @@
     "crm-app-e2e": {
       "tags": []
     },
-    "push-notifications-config": {
-      "tags": []
-    },
-    "pnkl-ui-elements": {
-      "tags": []
-    },
     "crm-documents": {
       "tags": []
     },
     "crm-documents-e2e": {
       "tags": [],
       "implicitDependencies": ["crm-documents"]
+    },
+    "crm-investor-portal": {
+      "tags": []
+    },
+    "help": {
+      "tags": []
+    },
+    "pinnakl-modal": {
+      "tags": []
+    },
+    "platform-web-app": {
+      "tags": []
+    },
+    "platform-web-app-e2e": {
+      "tags": []
+    },
+    "pnkl-charts": {
+      "tags": []
+    },
+    "pnkl-ui-elements": {
+      "tags": []
+    },
+    "push-notifications-config": {
+      "tags": []
+    },
+    "reporting": {
+      "tags": []
+    },
+    "shared": {
+      "tags": []
     }
   }
 }

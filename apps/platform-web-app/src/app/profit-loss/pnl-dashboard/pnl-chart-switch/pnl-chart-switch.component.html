@@ -1,0 +1,16 @@
+<div class="d-flex align-items-center justify-content-end">
+  <button
+    class="btn switch-btn"
+    [class.active]="chartType === chartTypes.BAR"
+    (click)="change(chartTypes.BAR)"
+  >
+    <i class="icon-pinnakl-bar"></i>
+  </button>
+  <button
+    class="btn switch-btn"
+    [class.active]="chartType === chartTypes.LINE"
+    (click)="change(chartTypes.LINE)"
+  >
+    <i class="icon-pinnakl-line"></i>
+  </button>
+</div>

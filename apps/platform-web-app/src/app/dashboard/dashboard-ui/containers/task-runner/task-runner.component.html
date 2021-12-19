@@ -4,8 +4,11 @@
   [formGroup]="form"
   (ngSubmit)="onSubmit(form)"
 >
-  <div class="row center-aligned-row mt-3">
-    <div class="col-md-2" *ngFor="let parameter of task.params">
+  <div class="d-flex justify-content-center align-items-center mt-3">
+    <div
+      class="col-auto d-flex justify-content-end align-items-center"
+      *ngFor="let parameter of task.params"
+    >
       <pinnakl-input
         [controlName]="parameter.name"
         [dropdownSource]="parameter.options"
@@ -15,7 +18,7 @@
       >
       </pinnakl-input>
     </div>
-    <div class="col-md-1 pt-4">
+    <div class="col-auto">
       <button class="btn btn-success" type="submit">RUN</button>
     </div>
   </div>

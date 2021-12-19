@@ -3,16 +3,16 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class MapsHelper {
-  constructor(private mapsAPILoader: MapsAPILoader) {}
+  constructor(private readonly mapsAPILoader: MapsAPILoader) {}
 
   getCoordinatesForAddress(
     address: string
   ): Promise<{ latitude: number; longitude: number }> {
-    let geocoder = new google.maps.Geocoder();
+    const geocoder = new google.maps.Geocoder();
     return new Promise((resolve, reject) => {
       geocoder.geocode({ address }, (results, status) => {
         if (status.toString() === 'OK') {
-          let result = results[0],
+          const result = results[0],
             coordinates = {
               latitude:
                 Math.round(result.geometry.location.lat() * 10000) / 10000,

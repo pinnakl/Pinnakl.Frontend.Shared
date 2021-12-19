@@ -1,4 +1,4 @@
-﻿<div [formGroup]="form" [ngSwitch]="type.toLowerCase()">
+﻿<div [formGroup]="form" [ngSwitch]="type.toLowerCase()" [ngClass]="containerClass">
   <label
     class="mb-0"
     [ngClass]="labelClass"
@@ -12,10 +12,13 @@
   </label>
   <div *ngSwitchCase="'date'">
     <pinnakl-date-input
+      [type]="type"
       [disableInput]="disabled"
       [formControlName]="controlName"
       [inputClass]="inputClass"
       [dateOptions]="dateOptions"
+      [topView]="topView"
+      [bottomView]="bottomView"
     >
     </pinnakl-date-input>
   </div>
@@ -37,18 +40,22 @@
       [dropdownSource]="dropdownSource"
       [dropdownOptions]="dropdownOptions"
       (dropdownFetchData)="dropdownFetchDataEmit()"
+      (onDropdownValueChange)="onDropdownValueChange.emit($event)"
       [disabled]="disabled"
     ></pnkl-multiselect-dropdown>
   </div>
   <div *ngSwitchCase="'dropdown'" [ngClass]="inputClass">
     <pinnakl-dropdown
+      [ngClass]="inputClass"
       [dropdownSource]="dropdownSource"
       [dropdownOptions]="dropdownOptions"
+      [clearButton]="(dropdownOptions?.clearButton === true || dropdownOptions?.clearButton === false) ? dropdownOptions.clearButton : true"
       [form]="form"
       [controlName]="controlName"
       [disabled]="disabled"
       (dropdownFetchData)="dropdownFetchDataEmit()"
-      (onDropdownValueChange)="dropdownValueChanged()"
+      (onDropdownValueChange)="dropdownValueChanged($event)"
+      (onFilterValueChange)="filterValueChange($event)"
     >
     </pinnakl-dropdown>
   </div>
@@ -99,6 +106,7 @@
       [disabledInput]="disabled ? true : undefined"
       [inputClass]="inputClass"
       [label]="label"
+      [placeholder]="placeholder"
       [inputOptions]="inputOptions"
       [formControlName]="controlName"
     >
@@ -122,22 +130,27 @@
       >
       <label
         [attr.class]="toggleStyle.switch"
+        [for]="controlName"
         *ngIf="checkBoxStyle === 'toggle'"
       >
         <input
           type="checkbox"
+          [id]="controlName"
           [attr.checked]="value"
           [formControlName]="controlName"
         />
-        <div [attr.class]="toggleStyle.holder"></div>
+        <span [attr.class]="toggleStyle.holder"></span>
       </label>
       <input
         type="checkbox"
+        [id]="controlName"
         [attr.checked]="value"
         [formControlName]="controlName"
         *ngIf="checkBoxStyle === 'input-check'"
       />
-      <label *ngIf="checkBoxStyle === 'input-check'">{{ label }}</label>
+      <label [for]="controlName" *ngIf="checkBoxStyle === 'input-check'">{{
+        label
+      }}</label>
     </span>
   </div>
   <div *ngSwitchCase="'password'">
@@ -174,5 +187,33 @@
     >
     </pinnakl-input-floating-label>
   </div>
-  <pnkl-validation [form]="form" [controlName]="controlName" *ngIf="showValidation"></pnkl-validation>
+  <div *ngSwitchCase="'month-picker'">
+    <pinnakl-date-input
+      [type]="type"
+      [disableInput]="disabled"
+      [formControlName]="controlName"
+      [inputClass]="inputClass"
+      [dateOptions]="dateOptions"
+      [topView]="topView"
+      [bottomView]="bottomView"
+    >
+    </pinnakl-date-input>
+  </div>
+
+  <div *ngSwitchCase="'date-time'">
+    <pinnakl-date-time-input
+      [type]="type"
+      [disableInput]="disabled"
+      [formControlName]="controlName"
+      [inputClass]="inputClass"
+    >
+    </pinnakl-date-time-input>
+  </div>
+
+  
+  <pnkl-validation
+    [form]="form"
+    [controlName]="controlName"
+    *ngIf="showValidation"
+  ></pnkl-validation>
 </div>

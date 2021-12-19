@@ -1,31 +1,33 @@
 import { Injectable } from '@angular/core';
 
-import { GetWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
+import { WebServiceProvider } from '@pnkl-frontend/core';
 import { CounterPartyRelationshipType } from '../models/oms/counterparty-relationship-types.model';
 
 @Injectable()
 export class CounterpartyRelationshipsService {
-  constructor(private wsp: WebServiceProvider) {}
+  constructor(private readonly wsp: WebServiceProvider) {}
 
-  getCounterPartyRelationshipTypes(): Promise<CounterPartyRelationshipType[]> {
-    let fields = ['reltype'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: 'counterparty_relationship_types',
-      options: {
+  async getCounterPartyRelationshipTypes(): Promise<
+    CounterPartyRelationshipType[]
+  > {
+    const fields = ['reltype'];
+
+    const entities = await this.wsp.getHttp<any[]>({
+      endpoint: 'entities/counterparty_relationship_types',
+      params: {
         fields: fields
       }
-    };
-    return this.wsp
-      .get(getWebRequest)
-      .then(result =>
-        result.map(x => this.formatCounterPartyRelationshipType(x))
-      );
+    });
+
+    return entities.map(relType =>
+      this.formatCounterPartyRelationshipType(relType)
+    );
   }
 
   formatCounterPartyRelationshipType(
     result: any
   ): CounterPartyRelationshipType {
-    let id = parseInt(result.id);
+    const id = parseInt(result.id, 10);
     return new CounterPartyRelationshipType(
       !isNaN(id) ? id : null,
       result.reltype
@@ -36,11 +38,12 @@ export class CounterpartyRelationshipsService {
     return accountService.getAccounts();
   }
 
-  confirmDeleteForCounterpartyRelationship(id: number): Promise<any> {
-    let fields = ['id'];
-    const getWebRequest: GetWebRequest = {
-      endPoint: 'trade_requests',
-      options: {
+  async confirmDeleteForCounterpartyRelationship(id: number): Promise<any> {
+    const fields = ['id'];
+
+    const entities = await this.wsp.getHttp<any[]>({
+      endpoint: 'entities/trade_requests',
+      params: {
         fields: fields,
         filters: [
           {
@@ -55,7 +58,8 @@ export class CounterpartyRelationshipsService {
           }
         ]
       }
-    };
-    return this.wsp.get(getWebRequest);
+    });
+
+    return entities;
   }
 }

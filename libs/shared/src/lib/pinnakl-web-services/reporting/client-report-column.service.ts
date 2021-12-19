@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
 
-import { GetWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
+import { WebServiceProvider } from '@pnkl-frontend/core';
 import { ClientReportColumnFromApi } from '../../models/reporting/client-report-column-from-api.model';
-import { ClientReportColumn } from '../../models/reporting/client-report-column.model';
+import { ClientReportColumn } from '../../models/reporting';
 import { ReportColumnService } from './report-column.service';
 
 @Injectable()
 export class ClientReportColumnService {
-  private readonly RESOURCE_URL = '/client_report_columns';
+  private readonly _clientReportColumnsEndpoint = 'entities/client_report_columns';
 
   constructor(
-    private reportColumnService: ReportColumnService,
-    private wsp: WebServiceProvider
-  ) {}
+    private readonly reportColumnService: ReportColumnService,
+    private readonly wsp: WebServiceProvider
+  ) { }
 
   getClientReportColumns(
     clientReportId: number
@@ -31,10 +31,12 @@ export class ClientReportColumnService {
         'SortOrder',
         'Type',
         'ViewOrder'
-      ],
-      getWebRequest: GetWebRequest = {
-        endPoint: this.RESOURCE_URL,
-        options: {
+      ];
+
+    return this.wsp
+      .getHttp<ClientReportColumnFromApi[]>({
+        endpoint: this._clientReportColumnsEndpoint,
+        params: {
           fields,
           filters: [
             {
@@ -44,13 +46,8 @@ export class ClientReportColumnService {
             }
           ]
         }
-      };
-
-    return this.wsp
-      .get(getWebRequest)
-      .then((entities: ClientReportColumnFromApi[]) =>
-        entities.map(entity => this.formatClientReportColumn(entity))
-      );
+      })
+      .then(entities => entities.map(this.formatClientReportColumn.bind(this)));
   }
 
   public formatClientReportColumn(

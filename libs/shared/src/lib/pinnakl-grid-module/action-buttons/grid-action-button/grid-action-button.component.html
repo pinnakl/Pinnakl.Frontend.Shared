@@ -1,13 +1,7 @@
 <div>
-  <div
-    [ngClass]="{ active: showOptions }"
-    class="action-button-group oms-grid-action-btn z-index-10"
-  >
-    <a title="Delete" class="action-button cursor-pointer">
-      <span
-        class="action-icon action-icon-delete"
-        (click)="deleteClicked()"
-      ></span>
+  <div [ngClass]="{ active: showOptions }" class="action-button-group oms-grid-action-btn z-index-10">
+    <a #deleteAnchor title="Delete" class="action-button cursor-pointer">
+      <span class="action-icon action-icon-delete" (click)="deleteClicked()"></span>
     </a>
     <a title="History" class="action-button cursor-pointer">
       <span class="action-icon action-icon-history"></span>
@@ -15,9 +9,15 @@
     <a title="Clone" class="action-button cursor-pointer">
       <span class="action-icon action-icon-add" (click)="cloneClicked()"></span>
     </a>
+    <a title="Allocate" class="action-button cursor-pointer">
+      <span class="action-icon action-icon-allocate" (click)="allocateClicked()"></span>
+    </a>
     <a title="Edit" class="action-button cursor-pointer">
       <span class="action-icon action-icon-edit" (click)="editClicked()"></span>
     </a>
+    <confirm-action class="overlay-confirm" *ngIf="showConfirmDialog" [anchor]="deleteAnchor" [showConfirmation]="true"
+      confirmationMessage="Are you sure you want to delete this trade?" messageClass="col-md-8"
+      (onCancelled)="onDeleteCancelledClicked()" (onConfirmed)="onDeleteConfirmedClicked()"></confirm-action>
   </div>
   <a class="action-group-button cursor-pointer">
     <span class="action-icon action-icon-dots" (click)="toggleOptions()"></span>

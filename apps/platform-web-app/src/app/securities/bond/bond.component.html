@@ -1,0 +1,22 @@
+<bond-information
+  [asset]="bond"
+  [couponTypes]="couponTypes"
+  [currencies]="currencies"
+  [hidden]="securitiesHelper.currentTab !== 'securityInformation'"
+  [interestBasisOptions]="interestBasisOptions"
+  [manualSecuritySource]="manualSecuritySource"
+  [organizations]="organizations"
+  [paymentFrequencyOptions]="paymentFrequencyOptions"
+  [sectorOptions]="sectorOptions"
+  [securityTypes]="securityTypes"
+  [security]="security"
+  class="container-fluid"
+>
+</bond-information>
+
+<bond-additional-information
+  *ngIf="bond"
+  [hidden]="securitiesHelper.currentTab !== 'additionalInformation'"
+  [asset]="bond"
+>
+</bond-additional-information>

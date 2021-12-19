@@ -15,11 +15,11 @@ export class ValueHistoryManagerService {
   private existingValueHistoryItems: ValueHistoryItem[] = [];
 
   constructor(
-    private entityDurationValidationService: EntityDurationValidationService,
-    private pinnaklSpinner: PinnaklSpinner,
-    private toastr: Toastr,
-    private utility: Utility
-  ) {}
+    private readonly entityDurationValidationService: EntityDurationValidationService,
+    private readonly pinnaklSpinner: PinnaklSpinner,
+    private readonly toastr: Toastr,
+    private readonly utility: Utility
+  ) { }
 
   addHistoryItem(valueHistoryItem: ValueHistoryItem): void {
     this.currentValueHistoryItems = [

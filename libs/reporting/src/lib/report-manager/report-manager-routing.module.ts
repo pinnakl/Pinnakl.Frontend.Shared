@@ -16,7 +16,8 @@ import {
   RouteResolverComponent,
   UserReportColumnService,
   UserReportCustomAttributeService,
-  UserReportIdcColumnService
+  UserReportIdcColumnService,
+  CustomAttributeFeature
 } from '@pnkl-frontend/shared';
 
 import { ReportManagerResolvedData } from '../shared/report-manager-resolved-data.model';
@@ -26,18 +27,18 @@ import { ReportManagerComponent } from './report-manager.component';
 export class ReportingManagerResolve
   implements Resolve<Promise<ReportManagerResolvedData>> {
   constructor(
-    private clientReportColumnService: ClientReportColumnService,
-    private customAttributesService: CustomAttributesService,
-    private omsService: OMSService,
-    private idcColumnsService: IdcColumnsService,
-    private reportColumnService: ReportColumnService,
-    private reportingService: ReportingService,
-    private userReportColumnService: UserReportColumnService,
-    private userReportCustomAttributeService: UserReportCustomAttributeService,
-    private userReportIdcColumnService: UserReportIdcColumnService
-  ) {}
-  resolve(route: ActivatedRouteSnapshot): Promise<ReportManagerResolvedData> {
-    let {
+    private readonly clientReportColumnService: ClientReportColumnService,
+    private readonly customAttributesService: CustomAttributesService,
+    private readonly omsService: OMSService,
+    private readonly idcColumnsService: IdcColumnsService,
+    private readonly reportColumnService: ReportColumnService,
+    private readonly reportingService: ReportingService,
+    private readonly userReportColumnService: UserReportColumnService,
+    private readonly userReportCustomAttributeService: UserReportCustomAttributeService,
+    private readonly userReportIdcColumnService: UserReportIdcColumnService
+  ) { }
+  async resolve(route: ActivatedRouteSnapshot): Promise<ReportManagerResolvedData> {
+    const {
         id: idString,
         name,
         clientReportId: clientReportIdString,
@@ -48,19 +49,14 @@ export class ReportingManagerResolve
         clientReportId: string;
         userReportId: string;
       },
-      id = parseInt(idString),
-      clientReportId = parseInt(clientReportIdString),
+      id = parseInt(idString, 10),
+      clientReportId = parseInt(clientReportIdString, 10),
       userReportId =
         userReportIdString && userReportIdString !== 'null'
-          ? parseInt(userReportIdString)
-          : null,
-      reportManagerResolvedData: ReportManagerResolvedData;
-    console.log({
-      id: idString,
-      name,
-      clientReportId: clientReportIdString,
-      userReportId: userReportIdString
-    });
+          ? parseInt(userReportIdString, 10)
+          : null;
+    let reportManagerResolvedData: ReportManagerResolvedData;
+
     return Promise.all([
       !userReportId
         ? this.clientReportColumnService.getClientReportColumns(clientReportId)
@@ -73,7 +69,6 @@ export class ReportingManagerResolve
         : null
     ])
       .then(result => {
-        console.log(result);
         const [
             clientReportColumns,
             curencies,
@@ -81,9 +76,24 @@ export class ReportingManagerResolve
             reportParameters,
             userReportColumns
           ] = result,
-          securityIdPresent = reportColumns.some(
+          securityIdPresent = !!reportColumns.find(
             col => col.name.toLowerCase() === 'securityid'
+          ),
+          investorIdPresent = !!reportColumns.find(
+            col => col.name.toLowerCase() === 'organizationid'
+          ),
+          contactIdPresent = !!reportColumns.find(
+            col => col.name.toLowerCase() === 'contactid'
           );
+        let featureName: CustomAttributeFeature = null;
+        if (securityIdPresent) {
+          featureName = CustomAttributeFeature.SECURITY;
+        } else if (investorIdPresent) {
+          featureName = CustomAttributeFeature.ORGANIZATION;
+        } else if (contactIdPresent) {
+          featureName = CustomAttributeFeature.CONTACT;
+        }
+
         reportManagerResolvedData = new ReportManagerResolvedData(
           clientReportColumns,
           clientReportId,
@@ -99,11 +109,11 @@ export class ReportingManagerResolve
           userReportId,
           null
         );
-        if (!securityIdPresent) {
+        if (!featureName) {
           return null;
         }
         return Promise.all([
-          this.customAttributesService.getCustomAttributes(),
+          this.customAttributesService.getCustomAttributes(featureName),
           this.idcColumnsService.getIdcColumnsObject(),
           userReportId
             ? this.userReportCustomAttributeService.getUserReportCustomAttributes(
@@ -121,7 +131,7 @@ export class ReportingManagerResolve
         if (!result) {
           return reportManagerResolvedData;
         }
-        let [
+        const [
           customAttributes,
           idcColumns,
           userReportCustomAttributes,

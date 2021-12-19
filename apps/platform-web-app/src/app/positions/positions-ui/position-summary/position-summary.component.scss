@@ -1,0 +1,42 @@
+@import '../../../../../../../libs/shared/src/lib/styles/_components/colors';
+
+.pnl_neg_text_color {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 2px;
+  padding: 0 7px;
+  border: 1px solid red;
+  color: red;
+  flex: 0 !important;
+}
+
+.pnl_pos_text_color {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 2px;
+  padding: 0 7px;
+  border: 1px solid $blue4;
+  color: $blue4;
+  flex: 0 !important;
+}
+
+.positionByAccount {
+  border-top: 1px solid #e4e9f0;
+}
+
+.side-border {
+  border-right: 1px solid #e4e9f0;
+}
+
+.positionSumKey {
+  color: #7e8c9e;
+}
+
+.MB30 {
+  margin-bottom: 30px;
+}
+
+.posSummaryRow {
+  padding: 5px 0;
+  border-bottom: 1px solid #e4e9f0;
+}

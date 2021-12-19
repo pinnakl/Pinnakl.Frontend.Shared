@@ -1,0 +1,49 @@
+<div class="row">
+  <div class="col-md-12 security-information-header">
+    <span>Organization</span>
+  </div>
+</div>
+<div class="row mb-3">
+  <div class="col-md-3">
+    <form [formGroup]="form">
+      <pinnakl-input
+        controlName="organizationId"
+        [dropdownSource]="organizations"
+        [dropdownOptions]="{
+          modelProperty: 'id',
+          viewProperty: 'name'
+        }"
+        [form]="form"
+        label="ORGANIZATION"
+        [required]="true"
+        type="dropdown"
+      >
+      </pinnakl-input>
+    </form>
+  </div>
+  <form class="col-md-3" [formGroup]="countryForm">
+    <div class="row">
+      <div class="col-md-7">
+        <pinnakl-input
+          controlName="countryCode"
+          [disabled]="true"
+          [form]="countryForm"
+          label="COUNTRY OF INCORPORATION"
+          type="text"
+        >
+        </pinnakl-input>
+      </div>
+      <div class="col-md-5">
+        <pinnakl-input
+          controlName="riskCountryCode"
+          [disabled]="true"
+          [form]="countryForm"
+          label="COUNTRY OF RISK"
+          type="text"
+        >
+        </pinnakl-input>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="row section-border"></div>

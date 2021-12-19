@@ -1,0 +1,101 @@
+@import '../../../../../../../libs/shared/src/lib/styles/_components/_colors.scss';
+
+.report-config-container {
+  background: $ebony-clay;
+  overflow-y: scroll;
+  top: 162px;
+  height: calc(100% - 162px);
+
+  .presets-container {
+    .presets-wrapper {
+      width: 100%;
+      padding: 0 15px;
+      .presets-container {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: flex-start;
+
+        .preset {
+          display: flex;
+          align-items: center;
+          font-size: 12px;
+          padding: 2px 4px 4px 10px;
+          border-radius: 12px;
+          border: solid 1px white;
+          background-color: #2a3642;
+          color: $white;
+          margin-right: 8px;
+
+          &.selected {
+            background-color: $white;
+            color: #282931;
+          }
+
+          a {
+            color: white;
+            border-radius: 50%;
+            background-color: #738291;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+          }
+        }
+      }
+
+      .presets-header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: baseline;
+
+        .share-btn {
+          font-size: 20px;
+          display: flex;
+          align-items: center;
+
+          svg {
+            margin-right: 5px;
+          }
+        }
+
+        .btn-primary {
+          height: 30px;
+        }
+      }
+    }
+  }
+
+  .grid-font-size {
+    color: white;
+  }
+}
+
+:host ::ng-deep {
+  pinnakl-input {
+    * {
+      color: white !important;
+    }
+  }
+}
+
+.delete-preset-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+
+  .title {
+    font-size: 16px;
+    text-align: left;
+    font-weight: bold;
+  }
+
+  .delete-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}

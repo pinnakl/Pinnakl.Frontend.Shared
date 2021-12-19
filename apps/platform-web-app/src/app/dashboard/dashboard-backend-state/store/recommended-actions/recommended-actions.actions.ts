@@ -1,7 +1,7 @@
 import { Update } from '@ngrx/entity';
-import { Action } from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
+import { RecommendedAction } from '../../../dashboard-backend/recommended-actions/recommended-action.model';
 
-import { RecommendedAction } from '../../../dashboard-backend';
 export enum RecommendedActionsActionTypes {
   AddRecommendedAction = '[RecommendedActions] Add RecommendedAction',
   AttemptLoadRecommendedActions = '[RecommendedActions] Attempt Load RecommendedActions',
@@ -14,65 +14,45 @@ export enum RecommendedActionsActionTypes {
   UpdateRecommendedActionFailed = '[RecommendedActions] Update RecommendedAction Failed'
 }
 
-export class AddRecommendedAction implements Action {
-  readonly type = RecommendedActionsActionTypes.AddRecommendedAction;
 
-  constructor(public payload: { recommendedAction: RecommendedAction }) {}
-}
+export const AddRecommendedAction = createAction(
+  RecommendedActionsActionTypes.AddRecommendedAction,
+  props<{ recommendedAction: RecommendedAction }>()
+);
 
-export class AttemptLoadRecommendedActions implements Action {
-  readonly type = RecommendedActionsActionTypes.AttemptLoadRecommendedActions;
-}
+export const AttemptLoadRecommendedActions = createAction(
+  RecommendedActionsActionTypes.AttemptLoadRecommendedActions
+);
 
-export class AttemptUpdateRecommendedAction implements Action {
-  readonly type = RecommendedActionsActionTypes.AttemptUpdateRecommendedAction;
+export const AttemptUpdateRecommendedAction = createAction(
+  RecommendedActionsActionTypes.AttemptUpdateRecommendedAction,
+  props<{ recommendedAction: Partial<RecommendedAction> }>()
+);
 
-  constructor(
-    public payload: { recommendedAction: Partial<RecommendedAction> }
-  ) {}
-}
+export const LoadRecommendedActions = createAction(
+  RecommendedActionsActionTypes.LoadRecommendedActions,
+  props<{ recommendedActions: RecommendedAction[] }>()
+);
 
-export class LoadRecommendedActions implements Action {
-  readonly type = RecommendedActionsActionTypes.LoadRecommendedActions;
+export const UpdateRecommendedAction = createAction(
+  RecommendedActionsActionTypes.UpdateRecommendedAction,
+  props<{ recommendedAction: Update<RecommendedAction> }>()
+);
 
-  constructor(public payload: { recommendedActions: RecommendedAction[] }) {}
-}
+export const LoadRecommendedActionsFailed = createAction(
+  RecommendedActionsActionTypes.LoadRecommendedActionsFailed,
+  props<{ error: any }>()
+);
 
-export class UpdateRecommendedAction implements Action {
-  readonly type = RecommendedActionsActionTypes.UpdateRecommendedAction;
+export const UpdateRecommendedActionFailed = createAction(
+  RecommendedActionsActionTypes.UpdateRecommendedActionFailed,
+  props<{ error: any }>()
+);
 
-  constructor(
-    public payload: { recommendedAction: Update<RecommendedAction> }
-  ) {}
-}
+export const SubscribeToDashboardRecommendedActions = createAction(
+  RecommendedActionsActionTypes.SubscribeToDashboardRecommendedActions
+);
 
-export class LoadRecommendedActionsFailed implements Action {
-  readonly type = RecommendedActionsActionTypes.LoadRecommendedActionsFailed;
-
-  constructor(public payload: { error: any }) {}
-}
-
-export class UpdateRecommendedActionFailed implements Action {
-  readonly type = RecommendedActionsActionTypes.UpdateRecommendedActionFailed;
-
-  constructor(public payload: { error: any }) {}
-}
-
-export class SubscribeToDashboardRecommendedActions implements Action {
-  readonly type =
-    RecommendedActionsActionTypes.SubscribeToDashboardRecommendedActions;
-}
-
-export class UnSubscribeToDashboardRecommendedActions implements Action {
-  readonly type =
-    RecommendedActionsActionTypes.UnSubscribeToDashboardRecommendedActions;
-}
-
-export type RecommendedActionActions =
-  | AddRecommendedAction
-  | AttemptLoadRecommendedActions
-  | AttemptUpdateRecommendedAction
-  | LoadRecommendedActions
-  | UpdateRecommendedAction
-  | UpdateRecommendedActionFailed
-  | LoadRecommendedActionsFailed;
+export const UnSubscribeToDashboardRecommendedActions = createAction(
+  RecommendedActionsActionTypes.UnSubscribeToDashboardRecommendedActions
+);

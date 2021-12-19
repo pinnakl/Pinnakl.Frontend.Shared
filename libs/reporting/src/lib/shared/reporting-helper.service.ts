@@ -5,25 +5,25 @@ import * as _ from 'lodash';
 
 import {
   ClientReportColumn,
-  ReportColumn,
-  ReportParameter,
-  ReportingColumn,
-  UserReportColumn,
-  UserReportCustomAttribute,
-  UserReportIdcColumn,
   CustomAttribute,
+  ReportColumn,
+  ReportingColumn,
+  ReportParameter,
+  UserReportColumn,
   UserReportColumnService,
+  UserReportCustomAttribute,
   UserReportCustomAttributeService,
+  UserReportIdcColumn,
   UserReportIdcColumnService
 } from '@pnkl-frontend/shared';
 
 @Injectable()
 export class ReportingHelper {
   constructor(
-    private userReportColumnService: UserReportColumnService,
-    private userReportCustomAttributeService: UserReportCustomAttributeService,
-    private userReportIdcColumnService: UserReportIdcColumnService
-  ) {}
+    private readonly userReportColumnService: UserReportColumnService,
+    private readonly userReportCustomAttributeService: UserReportCustomAttributeService,
+    private readonly userReportIdcColumnService: UserReportIdcColumnService
+  ) { }
 
   deleteColumn(col: ReportingColumn): Promise<void> {
     switch (col.reportingColumnType) {
@@ -306,21 +306,21 @@ export class ReportingHelper {
   }
 
   private getGridColumns(gridOptions: GridOptions): ReportingColumn[] {
-    let colStates: {
-      colId: string;
+    const colStates: {
+      colId?: string;
       rowGroupIndex?: number;
     }[] = gridOptions.columnApi.getColumnState();
     if (!colStates || colStates.length === 0) {
       return [];
     }
-    let sortStates = gridOptions.api.getSortModel();
+    const sortStates = gridOptions.api.getSortModel();
     return colStates.map((colState, i) => {
-      let rc = new ReportingColumn();
-      rc.name = colState.colId.replace('_1', '');
+      const rc = new ReportingColumn();
+      rc.name = colState.colId?.replace('_1', '');
       if (colState.rowGroupIndex !== null) {
         rc.groupOrder = colState.rowGroupIndex + 1;
       }
-      let sortOrder = sortStates.findIndex(ss =>
+      const sortOrder = sortStates.findIndex(ss =>
         ss.colId.includes(colState.colId)
       );
       if (sortOrder !== -1) {

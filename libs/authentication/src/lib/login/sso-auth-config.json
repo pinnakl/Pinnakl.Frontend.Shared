@@ -1,0 +1,16 @@
+{
+  "credentials": {
+    "clientId": "59458136-0ba1-466f-9626-a1e14f9a9d36",
+    "tenantId": "291719f5-1538-49bc-949d-7f21a1cf075e"
+  },
+  "configuration": {
+    "redirectUri": "http://localhost:4200/",
+    "postLogoutRedirectUri": "http://localhost:4200/"
+  },
+  "resources": {
+    "todoListApi": {
+      "resourceUri": "*",
+      "resourceScopes": [ "api://47537a11-1adc-428e-81a0-812acfcbfdbd/access_as_user" ]
+    }
+  }
+}

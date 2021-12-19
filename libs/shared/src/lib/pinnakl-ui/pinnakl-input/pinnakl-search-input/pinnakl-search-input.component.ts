@@ -1,8 +1,9 @@
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import { Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 @Component({
   selector: 'pinnakl-search-input',
   templateUrl: './pinnakl-search-input.component.html',
+  styleUrls: ['./pinnakl-search-input.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -11,16 +12,13 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     }
   ]
 })
-export class PinnaklSearchInputComponent
-  implements OnInit, ControlValueAccessor {
+export class PinnaklSearchInputComponent implements ControlValueAccessor {
   @Input() darkMode = false;
   @Input() disableInput: boolean;
   @Input() inputClass: string;
   onChange: Function;
   value: string;
-  constructor() {}
 
-  ngOnInit(): void {}
 
   registerOnChange(fn): void {
     this.onChange = fn;

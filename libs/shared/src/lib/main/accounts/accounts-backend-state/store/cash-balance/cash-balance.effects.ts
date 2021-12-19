@@ -1,35 +1,32 @@
 import { Injectable } from '@angular/core';
 
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Observable } from 'rxjs';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { mergeMap } from 'rxjs/operators';
-
-import { AccountingService, Utility } from '@pnkl-frontend/shared';
+import { AccountingService } from '../../../../../pinnakl-web-services';
+import { Utility } from '../../../../../services';
 
 import {
   AttemptLoadCashBalance,
-  CashBalanceActionTypes,
   LoadCashBalance,
   LoadCashBalanceFailed
 } from './cash-balance.actions';
 
 @Injectable()
 export class CashBalanceEffects {
-  @Effect()
-  load$: Observable<LoadCashBalance | LoadCashBalanceFailed> = this.actions$.pipe(
-    ofType<AttemptLoadCashBalance>(CashBalanceActionTypes.AttemptLoadCashBalance),
+  load$ = createEffect(() => this.actions$.pipe(
+    ofType(AttemptLoadCashBalance),
     mergeMap(() => this._accountingService
       .getCashBal(this.getDate())
-      .then(cashBalance => new LoadCashBalance({cashBalance}))
-      .catch(error => new LoadCashBalanceFailed({error}))
+      .then(cashBalance => LoadCashBalance({ cashBalance }))
+      .catch(error => LoadCashBalanceFailed({ error }))
     )
-  );
+  ));
 
   constructor(
     private readonly _accountingService: AccountingService,
     private readonly _utils: Utility,
-    private actions$: Actions
-  ) {}
+    private readonly actions$: Actions
+  ) { }
 
   private getDate(): Date {
     const prevDate = this._utils.getPreviousBusinessDay();

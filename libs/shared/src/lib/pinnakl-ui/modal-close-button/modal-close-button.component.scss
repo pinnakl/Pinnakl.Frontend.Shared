@@ -1,0 +1,25 @@
+@mixin defaultLineSettings {
+  border-radius: 1px;
+  background-color: #fff;
+  width: 2px;
+  height: 10px;
+}
+
+.x-circle-wrapper {
+  background-color: #7e8c9f;
+  border-radius: 15px;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+  margin: 0 6px 20px 2px;
+  padding: 3px 7px;
+  .first-line {
+    @include defaultLineSettings();
+    transform: rotate(45deg);
+  }
+  .second-line {
+    @include defaultLineSettings();
+    transform: rotate(135deg);
+    margin: -10px 0px;
+  }
+}

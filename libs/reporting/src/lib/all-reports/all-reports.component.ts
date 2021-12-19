@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { UserService } from '@pnkl-frontend/core';
 
 import * as _ from 'lodash';
+import { ProjectNames } from '../../../../shared/src';
 
 import { ReportGroup } from '../shared/report-group.model';
 
@@ -14,13 +15,19 @@ import { ReportGroup } from '../shared/report-group.model';
 })
 export class AllReportsComponent {
   reportGroups: ReportGroup[];
+  projectName: string;
   constructor(
-    private activatedRoute: ActivatedRoute,
-    private userService: UserService
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly userService: UserService
   ) {
-    let { reportGroups } = this.activatedRoute.snapshot.data as {
+    let resolveData = (this.activatedRoute.snapshot.data as {
       reportGroups: ReportGroup[];
-    };
+      projectName: string;
+    });
+
+    let reportGroups = resolveData.reportGroups;
+    this.projectName = resolveData.projectName;
+
     reportGroups.sort((a, b) => {
       if (a.reportCategory.toLowerCase() === 'positions') {
         return -1;
@@ -38,7 +45,7 @@ export class AllReportsComponent {
     });
 
     const user = this.userService.getUser();
-    if ([8, 10].includes(user.clientId)) {
+    if (this.projectName === ProjectNames.CRM) {
       reportGroups = _.filter(reportGroups, {
         reportCategory: 'CRM'
       });
@@ -49,5 +56,6 @@ export class AllReportsComponent {
       rg.userReportList = _.sortBy(rg.userReportList, 'reportName');
     });
     this.reportGroups = reportGroups;
+    this.userService.validateUserResetPasswordModal();
   }
 }

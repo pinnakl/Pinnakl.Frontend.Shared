@@ -80,3 +80,31 @@
     }
   }
 }
+
+.tab-container {
+  flex: 1;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #222 !important;
+  text-transform: capitalize;
+  padding: 10px 12px;
+  margin-left: 6px;
+  border-radius: 8px;
+  line-height: 10px;
+  height: 33px;
+
+  &:hover {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.02), rgba(0, 0, 0, 0.02)), rgb(239, 242, 245);
+  }
+
+  &.tab-selected, &.active {
+    background-color: #168eff;
+    color: #ffffff !important;
+
+    &:hover {
+      background: linear-gradient(0deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.08)), #168eff;
+    }
+  }
+}

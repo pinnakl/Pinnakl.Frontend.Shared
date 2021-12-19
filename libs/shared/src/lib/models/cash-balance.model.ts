@@ -4,6 +4,7 @@ import { Custodian } from './oms/custodian.model';
 export class CashBalance {
   public account: Account;
   public custodian: Custodian;
+  public cashType: string;
   constructor(
     public id: number,
     public date: Date,

@@ -1,5 +1,6 @@
+import { Action, createReducer, on } from '@ngrx/store';
 import { CashBalance } from '../../../../../models';
-import { CashBalanceActions, CashBalanceActionTypes } from './cash-balance.actions';
+import { LoadCashBalance } from './cash-balance.actions';
 
 export interface State {
   loaded: boolean;
@@ -11,22 +12,17 @@ export const initialState: State = {
   cashBalance: []
 };
 
-export function reducer(
-  state: State = initialState,
-  action: CashBalanceActions
-): State {
-  switch (action.type) {
-    case CashBalanceActionTypes.LoadCashBalance: {
-      return {
-        ...state,
-        loaded: true,
-        cashBalance: action.payload.cashBalance
-      };
-    }
-    default: {
-      return state;
-    }
-  }
+const featureReducer = createReducer(
+  initialState,
+  on(LoadCashBalance, (state, { cashBalance }) => ({
+    ...state,
+    loaded: true,
+    cashBalance
+  }))
+);
+
+export function reducer(state: State | undefined, action: Action): State {
+  return featureReducer(state, action);
 }
 
 export const selectAll = (state: State) => state.cashBalance;

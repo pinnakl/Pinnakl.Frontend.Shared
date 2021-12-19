@@ -1,60 +1,124 @@
-<div class="container">
-  <div class="row">
-    <div class="login-form">
-      <div class="big-logo">
-        <img src="assets/images/big-logo2.png" alt="" />
+<div [ngClass]="{'login-external-type': USERTYPE === 'EXTERNAL'}" class='login-container'>
+  <div class="big-logo">
+    <img alt="pinnakl-logo" />
+  </div>
+  <div class='login-column'>
+    <ng-container *ngIf="!isForgotPasswordEnabled; else showForgotPassword">
+      <ng-container *ngIf="showOtpInput; else showDefault">
+        <ng-container [ngSwitch]="otpChannel">
+          <ng-container *ngSwitchCase="'EMAIL'">
+            <div class='welcome-block'>
+              <span class='welcome-text'>2 factor authentication</span>
+              <p class='welcome-sub-text'>Please enter the code received via Email/SMS below</p>
+            </div>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'MOBILE'">
+            <div class='welcome-block'>
+              <span class='welcome-text'>2 factor authentication</span>
+              <p class='welcome-sub-text'>Please enter the code received via Email/SMS below</p>
+            </div>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'QR'">
+            <div class='welcome-block'>
+              <a class="link-btn qr-link" (click)="openModalToGetQrCode()">Scan QR code to create Pinnakl registration</a>
+              <span class='welcome-text'>2 factor authentication</span>
+              <p class='welcome-sub-text'>Please scan the QR code using authenticator app and enter OTP below</p>
+            </div>
+          </ng-container>
+        </ng-container>
+        <pnkl-code-input (codeChanged)="codeChanged($event)" (codeCompleted)="codeCompleted($event)"></pnkl-code-input>
+        <button class="two-fa-go-btn" [disabled]="!otpInputCompleted" (click)="loginOtp()">
+          <span>{{ otpInputCompleted ? 'Go!' : otpInputDigitsLeft + ' digits left' }}</span></button>
+        <a *ngIf="otpChannel === 'EMAIL' || otpChannel === 'MOBILE'" class="link-btn"
+          (click)="resendCode()"><span>Resend code?</span></a>
+      </ng-container>
+      <ng-template #showDefault>
+        <div class='welcome-block'>
+          <p class='welcome-text' *ngIf="userName">Welcome back{{userName ? ', ' + userName : '.'}}</p>
+        </div>
+        <div class="login-form">
+          <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)" [class.ng-submitted]="submitted">
+            <div class='email'>
+              <pinnakl-input [form]="form" controlName="username" label="Email" type="text" [inputOptions]="{
+              floatingLabel: false,
+              inputContainerCss: 'email'
+            }">
+              </pinnakl-input>
+            </div>
+            <div class='password'>
+              <div class='forgot-pass' (click)="forgotPasswordToggle()"><a>Forgot Password?</a></div>
+              <pinnakl-input class='login-password' [form]="form" controlName="password" label="Password"
+                type="password" [inputOptions]="{
+              floatingLabel: false,
+              inputContainerCss: 'password'
+            }">
+              </pinnakl-input>
+            </div>
+            <div *ngIf="showOtpInput">
+              <pinnakl-input [form]="form" controlName="otp" label="One time password" type="text" [inputOptions]="{
+              floatingLabel: true,
+              inputContainerCss: 'color-lighter'
+            }">
+              </pinnakl-input>
+            </div>
+            <div class="login">
+              <span class="input-check form-group">
+                <input id="remember" type="checkbox" formControlName="remember" />
+                <label for="remember">Remember me</label>
+              </span>
+              <ng-template [ngIf]="submitted" [ngIfElse]="loginBtn">
+                <loader-spinner [color]="'primary'" [type]="'infinite-spinner'"></loader-spinner>
+              </ng-template>
+              <ng-template #loginBtn>
+                <button [ngClass]="{'btn-success-external-type': USERTYPE === 'EXTERNAL'}" class="btn-success" type="submit"><span>Login</span></button>
+              </ng-template>
+            </div>
+            <div>
+              <div class="versionNo">Version No: {{ version }}</div>
+            </div>
+          </form>
+          <div class='alt-login-header'><span>Or log in with</span></div>
+          <div class='alt-login'>
+            <button class='office-login' (click)='altLogin()'></button>
+          </div>
+        </div>
+      </ng-template>
+    </ng-container>
+    <ng-template #showForgotPassword>
+      <div class="login-form">
+        <form novalidate [formGroup]="forgotPasswordForm" (ngSubmit)="forgotPassword(forgotPasswordForm)"
+          [class.ng-submitted]="submitted">
+          <div class='email'>
+            <pinnakl-input [form]="forgotPasswordForm" controlName="email" label="Email" type="text" [inputOptions]="{
+              floatingLabel: false,
+              inputContainerCss: 'email'
+            }">
+            </pinnakl-input>
+          </div>
+          <div class="login">
+            <div class='forgot-pass forgot-password-link' (click)="forgotPasswordToggle()"><a>Back to login</a></div>
+            <button class="btn-success" type="submit"><span>Send</span></button>
+          </div>
+        </form>
       </div>
-      <form
-        novalidate
-        [formGroup]="form"
-        (ngSubmit)="onSubmit(form)"
-        [class.ng-submitted]="submitted"
-      >
-        <div>
-          <pinnakl-input
-            [form]="form"
-            controlName="username"
-            label="EMAIL"
-            type="text"
-            [inputOptions]="{
-              floatingLabel: true,
-              inputContainerCss: 'color-lighter'
-            }"
-          >
-          </pinnakl-input>
-        </div>
-        <div>
-          <pinnakl-input
-            [form]="form"
-            controlName="password"
-            label="PASSWORD"
-            type="password"
-            [inputOptions]="{
-              floatingLabel: true,
-              inputContainerCss: 'color-lighter'
-            }"
-          >
-          </pinnakl-input>
-        </div>
-        <span class="input-check form-group">
-          <input id="remember" type="checkbox" formControlName="remember" />
-          <label for="remember">Remember me</label>
-        </span>
-        <div class="login">
-          <button class="btn btn-success btn-full" type="submit">Login</button>
-        </div>
-        <div><a href="">Forgot Password?</a></div>
-        <div>
-          <div class="versionNo">Version No: {{ version }}</div>
-        </div>
-      </form>
-    </div>
+    </ng-template>
+    <session-manager [sessions]="activeSessions" [visible]="sessionManagerVisible"
+      (deactivateAllSessions)="deactivateAllSessions()" (deactivateSession)="deactivateSession($event)"
+      (onClose)="onSessionManagerClose()"></session-manager>
   </div>
 </div>
-<session-manager
-  [sessions]="activeSessions"
-  [visible]="sessionManagerVisible"
-  (deactivateAllSessions)="deactivateAllSessions()"
-  (deactivateSession)="deactivateSession($event)"
-  (onClose)="onSessionManagerClose()"
-></session-manager>
+
+<pinnakl-modal [hideDialog]="hideQrModalDialog" (closeModal)="closeQrModal()" [width]="500">
+  <div class="qr-modal-wrapper">
+    <div class="qr-code-part">
+      <h3>Scan QR code in any authenticator app (Google Authenticator, Duo, Authy)</h3>
+      <qr-code-view [qrdata]="qrCodeSecret$ | async" [errorCorrectionLevel]="'High'"></qr-code-view>
+      <p class='welcome-sub-text'>Close after QR scan is completed and your authenticator app shows One Time Password (OTP)</p>
+    </div>
+    <div class="qr-code-btns py-4">
+      <button class="btn btn-default" (click)="closeQrModal()">CLOSE</button>
+    </div>
+  </div>
+</pinnakl-modal>

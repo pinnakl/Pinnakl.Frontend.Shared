@@ -13,6 +13,7 @@ export class PinnaklDropdownComponent {
   comboBoxInstance: ComboBoxComponent;
   @Input() controlName: string;
   @Input() disabled: boolean;
+  @Input() clearButton = true;
   @Input()
   dropdownOptions: {
     allowCustom: boolean;
@@ -27,11 +28,24 @@ export class PinnaklDropdownComponent {
   private dropdownValueSet = false;
   private dropdownValue: any;
   dropdownLoading: boolean;
-  @Output() dropdownFetchData = new EventEmitter<void>();
+  defaultValue = null;
   @Input() form: FormGroup;
+  @Output() dropdownFetchData = new EventEmitter<void>();
   @Output() onDropdownValueChange = new EventEmitter<number>();
+  @Output() onFilterValueChange = new EventEmitter<string>();
   @Input()
   set dropdownSource(dropdownSource: any[]) {
+    // If there is only one value in list then this value should be set as default
+    if (dropdownSource?.length === 1 && this.dropdownOptions) {
+      if (this.dropdownOptions.objectModel || typeof dropdownSource[0] !== 'object') {
+        this.defaultValue = dropdownSource[0];
+      } else {
+        this.defaultValue = dropdownSource[0][this.dropdownOptions.modelProperty];
+      }
+    } else {
+      this.defaultValue = null;
+    }
+
     this.dropdownCollection = this._dropdownSource = dropdownSource;
     if (!this.dropdownOptions || !this.dropdownOptions.isAsync) {
       return;
@@ -83,6 +97,7 @@ export class PinnaklDropdownComponent {
           : item.toString();
       return itemText.toLowerCase().includes(text.toLowerCase());
     });
+    this.onFilterValueChange.emit(text);
   }
 
   dropdownFocused(comboBoxInstance: ComboBoxComponent): void {

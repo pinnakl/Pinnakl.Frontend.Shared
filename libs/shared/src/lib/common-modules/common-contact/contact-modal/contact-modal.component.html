@@ -1,0 +1,10 @@
+<investor-contact-editor
+  #investorContactCreate
+  [phoneTypes]="crmOptions?.phoneTypes"
+  [distLists]="crmOptions?.distributionLists"
+  (onSubmit)="saveContact($event)"
+  (onEditorClose)="onEditorClose.emit()"
+  [isWithoutInverstor]="true"
+  [isPrimary]="false"
+  >
+  </investor-contact-editor>

@@ -6,6 +6,34 @@
 @import '../../../node_modules/angular-tree-component/dist/angular-tree-component.css';
 @import '../../../node_modules/ngx-toastr/toastr.css';
 @import '../../../node_modules/optiscroll/scss/optiscroll.scss';
+@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+html, body { height: 100%; }
+body { margin: 0; font-family: $body-main-font; }
+
+// Default scrollbar style
+*::-webkit-scrollbar {
+  background-color: #fff;
+  width: 8px;
+  height: 8px;
+}
+
+/* background of the scrollbar except button or resizer */
+*::-webkit-scrollbar-track {
+  background-color: #fff;
+}
+
+/* scrollbar itself */
+*::-webkit-scrollbar-thumb {
+  background-color: #babac0;
+  border-radius: 16px;
+  border: 1px solid #fff;
+}
+
+/* set button(top and bottom of the scrollbar) */
+*::-webkit-scrollbar-button {
+  display: none;
+}
 
 // Form Validation
 form.ng-submitted {
@@ -15,6 +43,7 @@ form.ng-submitted {
   input.pnkl-input,
   kendo-combobox.k-combobox,
   kendo-datepicker.k-datepicker,
+  kendo-datetimepicker.k-datetimepicker,
   kendo-timepicker.k-timepicker {
     &.ng-invalid {
       border-bottom: 1px solid #f74053;
@@ -87,6 +116,7 @@ textarea.pnkl-input {
 
 // Kendo Datepicker/Timepicker changes to match Pinnakl theme
 kendo-datepicker.k-datepicker,
+kendo-datetimepicker.k-datetimepicker,
 kendo-timepicker.k-timepicker {
   width: 100%;
   background: transparent;
@@ -204,6 +234,20 @@ kendo-combobox.k-combobox:hover span.k-select {
   }
 }
 
+.k-multiselect,
+.k-dropdowntree {
+  .k-multiselect-wrap {
+    padding: 0 calc(1.4285714286em + 16px) 0 0;
+  }
+
+  .k-multiselect-wrap,
+  .k-multiselect-wrap:hover {
+    .k-clear-value {
+      right: 20px;
+    }
+  }
+}
+
 .pnkl-select-dark kendo-multiselect.k-multiselect {
   .k-multiselect-wrap,
   .k-multiselect-wrap:hover {
@@ -211,6 +255,9 @@ kendo-combobox.k-combobox:hover span.k-select {
     border: none;
     border-radius: unset;
     border-bottom: 1px solid #7e8c9e;
+    .k-clear-value {
+      right: 20px;
+    }
     .k-button {
       background-color: #38485a;
       color: #fff;
@@ -423,6 +470,7 @@ kendo-grid.k-grid {
   //  | 'Placement Pending' - orange
   .ag-cell {
     &.ems-status-filled:before,
+    &.ems-status-fill:before,
     &.ems-status-canceled:before,
     &.ems-status-stopped:before,
     &.ems-status-expired:before,
@@ -488,6 +536,52 @@ kendo-grid.k-grid {
   }
 }
 
+.ems-trantype-tag {
+  border-radius: 4px;
+  background-color: #18d06b;
+  color: #fff;
+  width: 50px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  padding: 0 6px;
+  padding-bottom: 2px;
+  &.red {
+    background-color: #ff4949;
+  }
+  &.orange {
+    background-color: #ff8b2a;
+  }
+  &.blue {
+    background-color: #168eff;
+  }
+}
+.ag-cell.circle {
+  display: flex;
+  justify-content: center;
+  div {
+    width: 50px;
+    display: flex;
+  }
+}
+.cell-chart {
+  margin-bottom: 2px;
+  margin-right: 3px;
+  .circle-chart__circle {
+    animation: circle-chart-fill 1s reverse;
+    transform: rotate(-90deg);
+    transform-origin: center;
+  }
+
+  @keyframes circle-chart-fill {
+    to {
+      stroke-dasharray: 0 100;
+    }
+  }
+}
+
 .FS20 {
   font-size: 20px !important;
 }
@@ -539,8 +633,8 @@ kendo-grid.k-grid {
 }
 
 .oms-grid-action-btn {
-  margin-left: -156px !important;
-  width: 156px !important;
+  margin-left: -181px !important;
+  width: 181px !important;
   top: 3px !important;
 }
 
@@ -726,6 +820,10 @@ kendo-window .k-window-content {
   .optiscroll-htrack {
     background: rgba(247, 245, 245, 0.3);
   }
+}
+
+.pointer {
+  cursor: pointer;
 }
 
 .margin-top-5px {
@@ -937,4 +1035,36 @@ kendo-window .k-window-content {
   right: 0;
   transform: translateX(100%);
   z-index: 10;
+}
+.right-side {
+  &.allocations-width-1 .max-col {
+    @include respond-to(desktops) {
+      max-width: 21%;
+    }
+  }
+  &.allocations-width-3 .max-col {
+    max-width: 18% !important;
+    @include respond-to(desktops) {
+      max-width: 18% !important;
+    }
+    + .max-col {
+      max-width: 13% !important;
+      @include respond-to(desktops) {
+        max-width: 13% !important;
+      }
+    }
+  }
+}
+//@import '../../../libs/shared/src/lib/styles/_components/_ag-grid.scss';
+.info-container {
+  mark {
+    background-color: #168eff33;
+    padding: 0;
+  }
+}
+.mat-dialog-container {
+  position: relative;
+}
+.modal-dialog-radius-12 .mat-dialog-container {
+  border-radius: 12px;
 }

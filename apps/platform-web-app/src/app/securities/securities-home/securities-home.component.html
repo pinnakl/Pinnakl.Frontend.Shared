@@ -1,0 +1,237 @@
+<div class="security">
+  <section class="section-full-height relative">
+    <div class="filter-holder">
+      <div class="filter-header">
+        <div class="container-fluid">
+          <h2 class="text-secondary">Securities</h2>
+          <div class="row">
+            <div class="col-12 col-sm-12 col-md-12 mobile-mb flex-center">
+              <ul class="assets-type-list">
+                <li>
+                  <span
+                    disabled="true"
+                    class="btn-add-menu"
+                  >
+                    <i class="icon-pinnakl-plus-circled"></i>Add new
+                  </span>
+                </li>
+                <li>
+                  <span
+                    disabled="true"
+                    class="trade-request-trigger"
+                  >
+                    <i class="icon-pinnakl-edit-securities"></i>Edit Securities</span
+                  >
+                </li>
+              </ul>
+              <!-- assets-type-list -->
+            </div>
+            <!-- col -->
+          </div>
+          <!-- row -->
+        </div>
+        <!-- container-fluid -->
+      </div>
+      <!-- filter-header -->
+    </div>
+    <!-- filter-holder -->
+
+    <div class="container-fluid security-holder row-flex row-flex-center">
+      <div class="security-card card card-block text-center">
+        <span class="card-img-top security-icons add-security"></span>
+        <h3>Add New Security</h3>
+        <div class="text-align-center">
+          <button
+            class="btn btn-lg btn-success"
+            (click)="toggleSecurityAddModal()"
+          >
+            ADD
+          </button>
+        </div>
+      </div>
+      <div class="security-card card card-block text-center">
+        <span class="card-img-top security-icons edit-security"></span>
+        <h3>Edit Security</h3>
+        <div class="text-align-center">
+          <button
+            class="btn btn-lg btn-success"
+            (click)="toggleEditSecurityModal()"
+          >
+            EDIT
+          </button>
+        </div>
+      </div>
+      <div class="security-card card card-block text-center">
+        <span class="card-img-top security-icons edit-security"></span>
+        <h3>Manage Organization</h3>
+        <div class="text-align-center">
+          <a
+            class="btn btn-lg btn-success text-uppercase"
+            routerLink="/securities/organizations"
+            >Add/Edit</a
+          >
+        </div>
+      </div>
+    </div>
+    <!-- row -->
+
+    <!-- container-fluid -->
+    <!-- #securityAddModal -->
+    <pinnakl-modal
+      [hideDialog]="hideSecurityAddModal"
+      (closeModal)="toggleSecurityAddModal()"
+    >
+      <div>
+        <div class="add-security-container modal-body">
+          <div class="row">
+            <div class="text-align-center col-md-5">
+              <div>
+                <img
+                  alt="Add Manually"
+                  class="security-add-image"
+                  src="assets/fonts/icons/security-add-manually.svg"
+                />
+              </div>
+              <div>
+                <h3>Add Manually</h3>
+              </div>
+              <div class="py-4 row horizontal-align-center">
+                <div class="col-md-8">
+                  Use this option for securities that will not be available on
+                  IDC
+                </div>
+              </div>
+              <div>
+                <button
+                  class="btn btn-lg btn-success"
+                  (click)="openManualSecurityModal()"
+                >
+                  ADD
+                </button>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="pt-5 text-center">
+                <img src="assets/fonts/icons/or.svg" />
+              </div>
+            </div>
+            <div class="text-align-center col-md-5">
+              <div>
+                <img
+                  class="security-add-image"
+                  src="assets/fonts/icons/security-add-automatically.svg"
+                />
+              </div>
+              <div>
+                <h3>Add Automatically</h3>
+              </div>
+              <div class="py-4 row horizontal-align-center">
+                <div class="col-md-8">
+                  Use this option for securities that will be available at IDC.
+                </div>
+              </div>
+              <div>
+                <button
+                  (click)="openSecurityAutomaticModal()"
+                  class="btn btn-lg btn-success"
+                >
+                  ADD
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </pinnakl-modal>
+
+    <!-- #securityAddModal END -->
+    <!-- #securityManual1 -->
+
+    <!--
+    hideSecurityAutomaticModal -->
+    <pinnakl-modal [hideDialog]="hideSecurityAutomaticModal" (closeModal)="toggleSecurityAutomaticModal()">
+      <add-security-automatic *ngIf="!hideSecurityAutomaticModal" (hideSecurityAutomaticModal)="toggleSecurityAutomaticModal()"></add-security-automatic>
+    </pinnakl-modal>
+
+    <!-- #securityManual1 END -->
+
+    <!-- assetTypeForManualSecurity -->
+
+    <pinnakl-modal
+      [hideDialog]="hideManualSecurityModal"
+      (closeModal)="toggleManualSecurityModal()"
+    >
+      <div>
+        <div class="modal-body">
+          <form
+            class="container-fluid"
+            novalidate
+            [formGroup]="addSecurityManuallyForm"
+            [class.ng-submitted]="submitted"
+          >
+            <div class="row form-group">
+              <div class="col-md-12">
+                <h2>Add New Security Manually</h2>
+                <pinnakl-input
+                  controlName="assetType"
+                  [dropdownSource]="assetTypes"
+                  [dropdownOptions]="{
+                    objectModel: true,
+                    viewProperty: 'assetType'
+                  }"
+                  [form]="addSecurityManuallyForm"
+                  label="ASSET TYPE"
+                  [required]="true"
+                  type="dropdown"
+                >
+                </pinnakl-input>
+              </div>
+              <div class="col-md-12">
+                <button
+                  type="submit"
+                  class="next-btn btn btn-lg btn-success text-uppercase"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </pinnakl-modal>
+
+    <!-- assetTypeForManualSecurity -->
+    <pinnakl-modal
+      *ngIf="!hideEditSecurityModal"
+      [hideDialog]="hideEditSecurityModal"
+      (closeModal)="toggleEditSecurityModal()"
+      [minWidth]="420"
+      [height]="340"
+    >
+      <div class="edit-security-modal-content">
+        <div class="modal-body">
+          <form
+            class="container-fluid"
+            [formGroup]="editSecurityForm"
+            [class.ng-submitted]="submitted"
+          >
+            <div class="row">
+              <div class="col-md-12"><h2>Edit Security</h2></div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-md-12">
+                <security-selector
+                  formControlName="security"
+                  [objectModel]="true"
+                  [required]="true"
+                  [selectionStyle]="'PinnaklSecuritySelector'"
+                >
+                </security-selector>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </pinnakl-modal>
+  </section>
+</div>

@@ -1,0 +1,25 @@
+@import '../../../../../../libs/shared/src/lib/styles/_components/colors';
+.tab-div {
+  box-shadow: 0 4px 12px rgba(4, 4, 4, 0.04);
+  background-color: $white;
+  min-height: 60px;
+
+  .tab-div__button {
+    font-size: 16px;
+    font-weight: 400;
+    color: #777;
+    text-transform: uppercase;
+  }
+
+  .tab-div__activeButton {
+    border-bottom: 3px solid $blue;
+    color: $blue;
+    font-weight: bold;
+  }
+}
+
+.pnl-content-wrap {
+  height: calc(100vh - 118px);
+  overflow-x: hidden;
+  overflow-y: auto;
+}

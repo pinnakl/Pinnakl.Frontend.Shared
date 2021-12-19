@@ -1,0 +1,50 @@
+.account-left-side.allocation_accounts{
+  border: none;
+  text-align: left;
+  margin-bottom: 0;
+  padding-left: 5px;
+}
+.account-names-left {
+  border: none;
+}
+.action_buttons {
+  border: none;
+}
+.account_values {
+  border: none;
+  margin-bottom: 5px;
+}
+.allocationFormArrayClass {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  .row-container {
+    width: 50%;
+  }
+  .account-names-left {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    span.input-check {
+      display: flex;
+      align-items: center;
+      height: 20px;
+      label {
+        width: max-content;
+      }
+    }
+  }
+
+  .quantity-input {
+    width: 80px;
+    padding-left: 12px;
+    label {
+      display: none;
+    }
+  }
+}
+.action-buttons {
+  width: 100%;
+}

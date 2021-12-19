@@ -4,7 +4,7 @@ import { Security } from '../models/security/security.model';
 
 export class PositionHomeResolvedData {
   constructor(
-    public accounts: Account[],
+    // public accounts: Account[],
     public brokers: Broker[],
     public funds: any,
     public securities: Security[]

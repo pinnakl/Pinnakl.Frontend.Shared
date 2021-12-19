@@ -1,0 +1,42 @@
+@import '../../../../../../libs/shared/src/lib/styles/_components/_colors.scss';
+
+.account-settings {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  form {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .account-settings-control {
+    position: relative;
+    width: 50%;
+    padding: 0 20px;
+    margin-bottom: 20px;
+
+    .error-message {
+      color: $radical-red;
+      font-size: 12px;
+      position: absolute;
+      bottom: 0;
+      animation: 0.3s fadeIn;
+      animation-fill-mode: forwards;
+
+      @keyframes fadeIn {
+        0% {
+          opacity: 0;
+        }
+        100% {
+          visibility: visible;
+          opacity: 1;
+        }
+      }
+    }
+  }
+}

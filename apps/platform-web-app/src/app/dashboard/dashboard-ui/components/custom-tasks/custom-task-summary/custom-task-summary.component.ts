@@ -29,13 +29,13 @@ export class CustomTaskSummaryComponent implements OnChanges {
     }
   }
 
-  getProperties() {
-    let entities = this.entities,
-      properties = this.properties;
+  getProperties(): any {
+    const entities = this.entities,
+      properties = JSON.parse(JSON.stringify(this.properties));
     if (!properties || !(entities && entities.length > 0)) {
       return properties;
     }
-    let entityIdProperty = Object.keys(properties).find(
+    const entityIdProperty = Object.keys(properties).find(
         key => key.toLowerCase() === 'entityid'
       ),
       entityId = properties[entityIdProperty];
@@ -43,7 +43,7 @@ export class CustomTaskSummaryComponent implements OnChanges {
       return properties;
     }
     delete properties[entityIdProperty];
-    let entity = _.find(entities, ['id', parseInt(entityId)]);
+    const entity = _.find(entities, ['id', parseInt(entityId)]);
     if (entity) {
       properties.entity = entity.entity;
     }

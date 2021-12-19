@@ -1,0 +1,27 @@
+<div class="configuration-lists-item">
+  <ul pnklCustomScroll darkMode="true" class="configuration-lists mt-3">
+    <p class="text-uppercase">Available Items</p>
+    <div class="input-field is-ready text-uppercase mb-3 m-t-minus-2">
+      <input
+        type="text"
+        [(ngModel)]="pinnaklColumnsSearchText"
+        class="search-security-input"
+      />
+    </div>
+    <a
+      (click)="addAllColumns()"
+      class="text-uppercase icon-pinnakl-plus cursor-pointer"
+      >Add ALL</a
+    >
+    <li
+      [class.color-blue]="isImportantColumn(column)"
+      *ngFor="let column of filteredSelectableColumns"
+    >
+      {{ column.caption }}
+      <a
+        (click)="addColumn(column)"
+        class="icon-pinnakl-plus cursor-pointer"
+      ></a>
+    </li>
+  </ul>
+</div>

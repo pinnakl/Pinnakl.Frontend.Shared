@@ -1,7 +1,9 @@
-import { DashboardMarketMacroStat } from '../../../dashboard-backend';
+import { Action, createReducer, on } from '@ngrx/store';
+import { DashboardMarketMacroStat } from '../../../dashboard-backend/dashboard-market-macro-stat/dashboard-market-macro-stat.model';
 import {
-  DashboardMarketMacroStatActions,
-  DashboardMarketMacroStatActionTypes
+  AttemptLoadDashboardMarketMacroStats,
+  LoadDashboardMarketMacroStats,
+  LoadDashboardMarketMacroStatsFailed
 } from './dashboard-market-macro-stat.actions';
 
 export interface State {
@@ -16,33 +18,28 @@ export const initialState: State = {
   loading: false
 };
 
-export function reducer(
-  state: State = initialState,
-  action: DashboardMarketMacroStatActions
-): State {
-  switch (action.type) {
-    case DashboardMarketMacroStatActionTypes.AttemptLoadDashboardMarketMacroStats:
-      return {
-        ...state,
-        loaded: false,
-        loading: true
-      };
-    case DashboardMarketMacroStatActionTypes.LoadDashboardMarketMacroStats:
-      return {
-        ...state,
-        entities: action.payload.entities,
-        loaded: true,
-        loading: false
-      };
-    case DashboardMarketMacroStatActionTypes.LoadDashboardMarketMacroStatsFailed:
-      return {
-        ...state,
-        loaded: false,
-        loading: false
-      };
-    default:
-      return state;
-  }
+const featureReducer = createReducer(
+  initialState,
+  on(AttemptLoadDashboardMarketMacroStats, (state) => ({
+    ...state,
+    loaded: false,
+    loading: true
+  })),
+  on(LoadDashboardMarketMacroStats, (state, { entities }) => ({
+    ...state,
+    entities,
+    loaded: true,
+    loading: false
+  })),
+  on(LoadDashboardMarketMacroStatsFailed, (state) => ({
+    ...state,
+    loaded: false,
+    loading: false
+  }))
+);
+
+export function reducer(state: State | undefined, action: Action): State {
+  return featureReducer(state, action);
 }
 
 export const selectAll = (state: State) => state.entities;

@@ -1,0 +1,47 @@
+:host ::ng-deep {
+  td.align-number {
+    text-align: right;
+  }
+
+  td.align-center {
+    text-align: center;
+  }
+
+  .k-checkbox:checked, .k-checkbox.k-checked {
+    border-color: #007bff;
+    color: #ffffff;
+    background-color:#007bff;
+  }
+
+  .k-cell-inner > .k-link {
+    justify-content: center;
+  }
+}
+
+
+.rebalance-orders {
+  display: flex;
+  flex-direction: column;
+
+  .rebalance-orders-header {
+    font-size: 18px;
+    font-weight: 600;
+    padding-bottom: 20px;
+    text-align: center;
+  }
+
+  .rebalance-orders-body {
+    .orders-body-table {
+      .rebalance-orders-table {
+        min-height: 400px;
+        max-height: 65vh;
+      }
+    }
+    .orders-body-actions {
+      margin-top: 15px;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+    }
+  }
+}

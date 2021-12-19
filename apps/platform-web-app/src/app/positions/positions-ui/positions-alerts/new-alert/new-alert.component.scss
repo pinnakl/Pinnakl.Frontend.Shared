@@ -1,0 +1,19 @@
+@import '../../../../../../../../libs/shared/src/lib/styles/_components/colors';
+@import '../../../../../../../../libs/shared/src/lib/styles/_components/variables';
+@import '../../../../../../../../libs/shared/src/lib/styles/_components/mixins';
+
+.new-alert-form {
+  width: 100%;
+  @include toggle-radios();
+  @include ems-buttons();
+  .sub-header {
+    color: $sub-heading-color;
+    margin-bottom: 7px;
+    font-size: 12px;
+    font-weight: normal;
+    text-transform: uppercase;
+  }
+  .panel-command {
+    padding: 2rem 0 1rem;
+  }
+}

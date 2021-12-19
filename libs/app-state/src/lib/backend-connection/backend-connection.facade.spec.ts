@@ -19,8 +19,8 @@ describe('BackendConnectionFacade', () => {
       ],
       providers: [BackendConnectionFacade]
     });
-    facade = TestBed.get(BackendConnectionFacade);
-    store = TestBed.get(Store);
+    facade = TestBed.inject(BackendConnectionFacade);
+    store = TestBed.inject(Store);
   });
 
   describe('reconnectedAt$', () => {
@@ -38,9 +38,7 @@ describe('BackendConnectionFacade', () => {
     it('should dispatch the SetReconnectedAt action', () => {
       spyOn(store, 'dispatch').and.callThrough();
       const currentDate = new Date();
-      const expectedAction = new SetReconnectedAt({
-        reconnectedAt: currentDate
-      });
+      const expectedAction = SetReconnectedAt({ reconnectedAt: currentDate });
       facade.setReconnectedAt(currentDate);
       expect(store.dispatch).toHaveBeenCalledWith(expectedAction);
     });
@@ -48,7 +46,7 @@ describe('BackendConnectionFacade', () => {
 });
 
 function _dispatchSetReconnectedAt(value: Date): void {
-  store.dispatch(new SetReconnectedAt({ reconnectedAt: value }));
+  store.dispatch(SetReconnectedAt({ reconnectedAt: value }));
 }
 
 async function _getReconnectedAtValue(): Promise<Date> {

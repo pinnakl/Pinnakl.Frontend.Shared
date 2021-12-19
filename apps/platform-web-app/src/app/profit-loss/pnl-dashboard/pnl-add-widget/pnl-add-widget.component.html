@@ -1,0 +1,78 @@
+<div class="p-3 h-100 add-widget-container bg-white rounded">
+  <div
+    class="add-widget-icon-container cursor-pointer"
+    (click)="showPnlFieldConfig = true"
+  >
+    <i class="icon-pinnakl-add-col"></i>
+  </div>
+  <div class="add-widget-text mt-3">Add New Widget</div>
+  <div
+    class="add-widget-icon-container cursor-pointer mt-5"
+    (click)="saveWidgets.emit()"
+  >
+    <i class="icon-pinnakl-floppy"></i>
+  </div>
+  <div class="add-widget-text mt-3">Save Widgets</div>
+</div>
+
+<pinnakl-modal
+  [hideDialog]="!showPnlFieldConfig"
+  [minWidth]="350"
+  [showCloseButton]="false"
+>
+  <div class="p-4 ">
+    <div class="row pb-5 no-gutters">
+      <div class="col-sm-10"><h2>P&L Config</h2></div>
+      <div class="col-sm-2">
+        <a
+          (click)="showPnlFieldConfig = false"
+          class="btn-close-icon icon-pinnakl-cancel text-danger cursor-pointer"
+        ></a>
+      </div>
+    </div>
+    <div class="row">
+      <form
+        class="col-md-10 col-md-offset-2"
+        [formGroup]="form"
+        (ngSubmit)="onSubmit()"
+        [class.ng-submitted]="submitted"
+      >
+        <div class="row mt-3 ml-3">
+          <pinnakl-input
+            class="col-md-12"
+            controlName="securityAttributes"
+            [dropdownOptions]="{ viewProperty: 'name' }"
+            [dropdownSource]="securityAttributesData"
+            [form]="form"
+            inputClass="pnkl-select-dark"
+            label="Security Tags"
+            type="multiselect"
+          ></pinnakl-input>
+        </div>
+        <div class="row mt-3 ml-3">
+          <pinnakl-input
+            class="col-md-12"
+            controlName="tradeTags"
+            [dropdownOptions]="{ viewProperty: 'name' }"
+            [dropdownSource]="tradeTagsData"
+            [form]="form"
+            inputClass="pnkl-select-dark"
+            label="Trade Tags"
+            labelClass=""
+            type="multiselect"
+          ></pinnakl-input>
+        </div>
+        <div class="row mt-3 mb-4 no-gutters">
+          <div class="col-md-default-width">
+            <button class="btn btn-danger" (click)="onClose()" type="button">
+              CANCEL
+            </button>
+          </div>
+          <div class="col-md-default-width flex-pull-right">
+            <button class="btn btn-success" type="submit">ADD</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</pinnakl-modal>

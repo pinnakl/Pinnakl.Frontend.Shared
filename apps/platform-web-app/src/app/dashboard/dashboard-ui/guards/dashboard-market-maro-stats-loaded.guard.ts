@@ -5,8 +5,8 @@ import { select, Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { filter, first, tap } from 'rxjs/operators';
 
-import { selectDashboardMarketMacroStatsLoaded } from '../../dashboard-backend-state';
-import { AttemptLoadDashboardMarketMacroStats } from '../../dashboard-backend-state';
+import { selectDashboardMarketMacroStatsLoaded } from '../../dashboard-backend-state/store';
+import { AttemptLoadDashboardMarketMacroStats } from '../../dashboard-backend-state/store/dashboard-market-macro-stat/dashboard-market-macro-stat.actions';
 
 @Injectable()
 export class DashboardMarketMaroStatsLoadedGuard implements CanActivate {
@@ -15,7 +15,7 @@ export class DashboardMarketMaroStatsLoadedGuard implements CanActivate {
       select(selectDashboardMarketMacroStatsLoaded),
       tap(loaded => {
         if (!loaded) {
-          this.store.dispatch(new AttemptLoadDashboardMarketMacroStats());
+          this.store.dispatch(AttemptLoadDashboardMarketMacroStats());
         }
       }),
       filter(loaded => loaded),
@@ -23,5 +23,5 @@ export class DashboardMarketMaroStatsLoadedGuard implements CanActivate {
     );
   }
 
-  constructor(private store: Store<any>) {}
+  constructor(private readonly store: Store<any>) {}
 }

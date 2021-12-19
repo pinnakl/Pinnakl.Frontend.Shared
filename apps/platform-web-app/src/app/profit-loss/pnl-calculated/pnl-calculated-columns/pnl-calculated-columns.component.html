@@ -1,0 +1,18 @@
+<form [formGroup]="formGroup">
+  <h4>Select Columns</h4>
+  <div formArrayName="entities">
+    <div
+      class="column-selection"
+      *ngFor="let selection of pnlCalculatedColumnSelections; let i = index"
+    >
+      <span
+        [formGroup]="formArray.at(i)"
+        class="check-holder check-holder-empty"
+      >
+        <input [id]="i" type="checkbox" formControlName="selected" />
+        <label [for]="i"></label>
+      </span>
+      <span class="column-name">{{ selection.name }}</span>
+    </div>
+  </div>
+</form>

@@ -1,14 +1,12 @@
-import { Action } from '@ngrx/store';
-import { RecommendedAction } from '../../dashboard-backend';
+import { createAction, props } from '@ngrx/store';
+import { RecommendedAction } from '../../dashboard-backend/recommended-actions/recommended-action.model';
 
 export enum RecommendedActionProcessingActionTypes {
   ProcessRecommendedAction = '[ProcessRecommendedAction] Process Recommended Action'
 }
 
-export class ProcessRecommendedAction implements Action {
-  readonly type =
-    RecommendedActionProcessingActionTypes.ProcessRecommendedAction;
-  constructor(public payload: RecommendedAction) {}
-}
 
-export type PnlFiltersUiActions = ProcessRecommendedAction;
+export const ProcessRecommendedAction = createAction(
+  RecommendedActionProcessingActionTypes.ProcessRecommendedAction,
+  props<{ payload: RecommendedAction }>()
+);

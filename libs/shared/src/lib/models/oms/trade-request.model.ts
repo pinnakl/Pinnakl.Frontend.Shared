@@ -14,6 +14,7 @@ export class TradeRequest {
   public commission: number;
   public currencyId: number;
   public _requestedAllocations: TradeRequestAllocation[];
+  public ticker: string;
 
   constructor(
     public id: number,
@@ -22,7 +23,6 @@ export class TradeRequest {
     public tranType: string,
     public securityMarketId: number,
     public security: Security,
-    public trs: boolean,
     public quantity: number,
     public price: number,
     public secFee: number,
@@ -38,6 +38,7 @@ export class TradeRequest {
     public pset: PSET,
     public approverMessage: string,
     public allocationsIndicator: boolean,
+    public allocationStatus: string,
     public comments: string,
     public customAttribId: number,
     public executionStatus: boolean
@@ -60,6 +61,7 @@ export class TradeRequest {
   get RequestedAllocations() {
     return this._requestedAllocations;
   }
+
   set RequestedAllocations(allocations: TradeRequestAllocation[]) {
     this._requestedAllocations = allocations;
   }
@@ -75,17 +77,17 @@ export class TradeRequest {
     return sign;
   }
 
-  public getTranTypeLong(): string {
+  public get tranTypeLong(): string {
     let ret = '';
     if (this.tranType) {
       if (this.tranType.toLowerCase() === 'b') {
         ret = 'Buy';
       } else if (this.tranType.toLowerCase() === 'bc') {
-        ret = 'Buy To Cover';
+        ret = 'Cover';
       } else if (this.tranType.toLowerCase() === 's') {
         ret = 'Sell';
       } else if (this.tranType.toLowerCase() === 'ss') {
-        ret = 'Sell Short';
+        ret = 'Short';
       }
     }
 
@@ -102,7 +104,6 @@ export class TradeRequestFromApi {
     public tradedate: string,
     public settledate: string,
     public assettype: string,
-    public trsindicator: string,
     public ticker: string,
     public cusip: string,
     public identifier: string,
@@ -128,6 +129,7 @@ export class TradeRequestFromApi {
     public allocationid: string,
     public customattribid: string,
     public executionStatus: boolean,
-    public currencyid: string
+    public currencyid: string,
+    public allocationstatus: string
   ) {}
 }

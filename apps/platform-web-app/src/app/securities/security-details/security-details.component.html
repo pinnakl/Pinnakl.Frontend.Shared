@@ -1,0 +1,236 @@
+<div class="pnkl-page crm-investors container-fluid">
+  <pinnakl-page
+    [pageWidthPercent]="75"
+    [sliderWidthPercent]="25"
+    [sliderDisplay]="showSlider"
+    sliderType="slider-as-column"
+  >
+    <div class="page_column">
+      <div class="row pnkl-page-header">
+        <div class="col-md-12 full-width-padding-fix">
+          <div class="row">
+            <div class="col-md-12">
+              <h3 class="text-secondary">Securities</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12" [ngClass]="{ 'col-md-11_80': security }">
+          <div class="row" *ngIf="security">
+            <div class="col-md-12">
+              <div class="manual-security-section search-security">
+                <form [formGroup]="searchSecurityForm" novalidate>
+                  <security-selector
+                    formControlName="security"
+                    [objectModel]="true"
+                    [securities]="securities"
+                  >
+                  </security-selector>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 ">
+              <div class="row">
+                <div class="col-md-12">
+                  <ul class="nav nav-tabs manual-security-section">
+                    <li
+                      [class.active]="
+                        securitiesHelper.currentTab === 'securityInformation'
+                      "
+                    >
+                      <a
+                        class="cursor-pointer"
+                        (click)="switchToTab('securityInformation')"
+                        >{{
+                          assetType !== 'peloan' ? assetType : 'loan'
+                        }}
+                        Information</a
+                      >
+                    </li>
+                    <li
+                      *ngIf="security && additionalInformationTabVisible"
+                      [class.active]="
+                        securitiesHelper.currentTab === 'additionalInformation'
+                      "
+                    >
+                      <a
+                        class="cursor-pointer"
+                        (click)="switchToTab('additionalInformation')"
+                        >Additional Information</a
+                      >
+                    </li>
+                    <li
+                      *ngIf="security"
+                      [class.active]="
+                        securitiesHelper.currentTab === 'publicIdentifiers'
+                      "
+                    >
+                      <a
+                        class="cursor-pointer"
+                        (click)="switchToTab('publicIdentifiers')"
+                        >Public Identifiers</a
+                      >
+                    </li>
+                    <li
+                      *ngIf="security"
+                      [class.active]="
+                        securitiesHelper.currentTab === 'externalIdentifiers'
+                      "
+                    >
+                      <a
+                        class="cursor-pointer"
+                        (click)="switchToTab('externalIdentifiers')"
+                        >External Identifiers</a
+                      >
+                    </li>
+                    <li
+                      *ngIf="security"
+                      [class.active]="
+                        securitiesHelper.currentTab === 'customAttributes'
+                      "
+                    >
+                      <a
+                        class="cursor-pointer"
+                        (click)="switchToTab('customAttributes')"
+                        >Custom Attributes</a
+                      >
+                    </li>
+                    <li
+                      *ngIf="security && security.assetType === 'peloan'"
+                      [class.active]="
+                        securitiesHelper.currentTab === 'amortizationSchedule'
+                      "
+                    >
+                      <a
+                        class="cursor-pointer"
+                        (click)="switchToTab('amortizationSchedule')"
+                        >Amortization Schedule</a
+                      >
+                    </li>
+                    <li
+                      *ngIf="security && security.assetType === 'peloan'"
+                      [class.active]="
+                        securitiesHelper.currentTab === 'paymentHistory'
+                      "
+                    >
+                      <a
+                        class="cursor-pointer"
+                        (click)="switchToTab('paymentHistory')"
+                        >Payment History</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="row padding-horizontal-15">
+                <div
+                  class="col-md-12 background-color-white scrollable-security-tab "
+                >
+                  <div
+                    [ngClass]="{
+                      'security-information-width': isHistoryVisible
+                    }"
+                  >
+                    <router-outlet></router-outlet>
+                  </div>
+
+                  <div
+                    *ngIf="security"
+                    [hidden]="
+                      securitiesHelper.currentTab !== 'publicIdentifiers'
+                    "
+                    class="row"
+                  >
+                    <public-identifiers
+                      class="col-md-12"
+                      [ngClass]="{
+                        'security-information-width-flex': isHistoryVisible
+                      }"
+                      [existingIdentifiers]="publicIdentifiers"
+                      [existingSecurityMarkets]="securityMarkets"
+                      [markets]="markets"
+                      [publicIdentifierTypes]="publicIdentifierTypes"
+                      [security]="security"
+                    >
+                    </public-identifiers>
+                  </div>
+
+                  <external-identifiers
+                    *ngIf="security"
+                    [hidden]="
+                      securitiesHelper.currentTab !== 'externalIdentifiers'
+                    "
+                    [adminAccounts]="adminAccounts"
+                    [clientConnectivities]="clientConnectivities"
+                    [existingAdminIdentifiers]="adminIdentifiers"
+                    [existingPbIdentifiers]="pbIdentifiers"
+                    [security]="security"
+                  >
+                  </external-identifiers>
+
+                  <div
+                    *ngIf="security"
+                    [hidden]="
+                      securitiesHelper.currentTab !== 'customAttributes'
+                    "
+                    class="row"
+                  >
+                    <custom-attributes
+                      class="col-md-12"
+                      [ngClass]="{
+                        'security-information-width-flex': isHistoryVisible
+                      }"
+                      [customAttributes]="customAttributes"
+                      [customAttributeValues]="customAttributeValues"
+                      [security]="security"
+                    >
+                    </custom-attributes>
+                  </div>
+                  <div
+                    *ngIf="security && security.assetType === 'peloan'"
+                    [hidden]="
+                      securitiesHelper.currentTab !== 'amortizationSchedule'
+                    "
+                  >
+                    <amort-schedule></amort-schedule>
+                  </div>
+                  <div
+                    *ngIf="security && security.assetType === 'peloan'"
+                    [hidden]="securitiesHelper.currentTab !== 'paymentHistory'"
+                  >
+                    <payment-history></payment-history>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="security" class="col-md-1 col-md-1_20 security-history-bar">
+          <div class="row">
+            <i
+              class="icon-pinnakl-right-open cursor-pointer "
+              (click)="toggleHistory()"
+            ></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slider_column">
+      <security-history
+        *ngIf="security && isHistoryVisible"
+        class=" history-tab-height background-color-white"
+        [adminIdentifiers]="adminIdentifiers"
+        [assetType]="assetType"
+        [clientConnectivities]="clientConnectivities"
+        [currentTab]="securitiesHelper.currentTab"
+        [customAttributeValues]="customAttributeValues"
+        [pbIdentifiers]="pbIdentifiers"
+        [publicIdentifiers]="publicIdentifiers"
+        [security]="security"
+      ></security-history>
+    </div>
+  </pinnakl-page>
+</div>

@@ -1,0 +1,36 @@
+<div class="filter-presets-modal-container">
+  <div class="presets-modal-header">Save Preset</div>
+  <div class="presets-modal-body" *ngIf="presetsForm">
+    <form [formGroup]="presetsForm">
+      <div class="presets-control">
+        <pinnakl-input
+          controlName="presetName"
+          [form]="presetsForm"
+          label="NAME"
+          [required]="true"
+          type="text">
+        </pinnakl-input>
+      </div>
+      <div class="include-date-range">
+        <div class="presets-control-label">Include date range</div>
+        <pinnakl-input
+          controlName="includeDateRange"
+          [form]="presetsForm"
+          type="boolean"
+          checkBoxStyle="toggle"
+        >
+        </pinnakl-input>
+      </div>
+    </form>
+  </div>
+  <div class="presets-modal-actions">
+    <button
+      class="btn btn-blue"
+      [disabled]="(!presetsForm?.dirty || !presetsForm?.valid)"
+      (click)="presetsForm.valid && submitForm()"
+      type="button"
+    >
+      SAVE
+    </button>
+  </div>
+</div>

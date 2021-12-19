@@ -17,12 +17,12 @@ export class PushNotificationHomeComponent implements OnInit {
   })[];
 
   constructor(
-    private activatedRoute: ActivatedRoute,
-    private pnklSpinner: PinnaklSpinner,
-    private toaster: Toastr,
-    private userPushNotificationSvc: UserPushNotificationTopicsService,
-    private utility: Utility
-  ) {}
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly pnklSpinner: PinnaklSpinner,
+    private readonly toaster: Toastr,
+    private readonly userPushNotificationSvc: UserPushNotificationTopicsService,
+    private readonly utility: Utility
+  ) { }
 
   ngOnInit(): void {
     let { userNotificationTopics } = this.activatedRoute.snapshot.data as {

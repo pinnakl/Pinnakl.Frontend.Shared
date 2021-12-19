@@ -1,0 +1,54 @@
+@import '../../../../../../libs/shared/src/lib/styles/_components/_colors.scss';
+
+.crm-settings {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  .blockedIps-list {
+    height: calc(100% - 30px);
+    .title {
+      font-size: 16px;
+      color: #7e8c9e;
+    }
+    .input-container {
+      display: flex;
+      align-items: center;
+      .input {
+        width: 200px;
+        margin-bottom: 10px;
+      }
+      .btn-close-icon {
+        color: $radical-red;
+        cursor: pointer;
+        &:hover {
+          color: black;
+        }
+      }
+    }
+    
+    .new-blocked-ip {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      .add-new-button {
+        cursor: pointer;
+        color: #0db0e9;
+        border: 1px solid #0db0e9;
+        margin-left: 30px;
+        height: 30px;
+      }
+      .input {
+        width: 200px;
+      }
+    }
+  }
+  .error-message {
+    display: flex;
+    align-items: center;
+    span:first-child {
+      margin-right: 8px;
+    }
+  }
+}

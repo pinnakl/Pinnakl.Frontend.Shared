@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { AutoBaseUnitSteps } from '@progress/kendo-angular-charts';
 
 import { cloneDeep, groupBy, sortBy, uniq } from 'lodash';
 import * as moment from 'moment';
@@ -17,10 +18,14 @@ interface Options {
   // tslint:disable-next-line:component-selector
   selector: 'pnkl-stackbar-chart-date',
   templateUrl: './pnkl-stackbar-chart-date.component.html',
-  styleUrls: ['./pnkl-stackbar-chart-date.component.scss']
+  styleUrls: ['./pnkl-stackbar-chart-date.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PnklStackbarChartDateComponent implements OnInit {
   @Input() hideSelected = false;
+  @Input() hideDailyAndWeeklyOptions = false;
+  @Input() hideAllOptions: boolean;
+  @Input() selectAll = false;
   @Input() set values(values: Value[]) {
     if (!values) {
       return;
@@ -40,8 +45,9 @@ export class PnklStackbarChartDateComponent implements OnInit {
 
     this.options = {
       ...this.options,
-      selectedItems: this.selectionItems.slice(0, 5)
+      selectedItems: this.selectAll ? this.selectionItems : this.selectionItems.slice(0, 5)
     };
+    this.onOptionsChange();
   }
 
   @Input() valuesType: 'currency' | 'number' = 'number';
@@ -50,6 +56,11 @@ export class PnklStackbarChartDateComponent implements OnInit {
     return this.chartDataItems.map(i => i.date);
   }
 
+  public baseUnitSteps: AutoBaseUnitSteps = {
+    // Do not allow zooming into hours
+    days: [],
+    hours: [],
+  };
   chartDataItems: Value[] = [];
   categoriesItems: Value[] = [];
   options: Options = { frequency: 'Daily', selectedItems: [] };
@@ -61,7 +72,7 @@ export class PnklStackbarChartDateComponent implements OnInit {
   private _values: Value[] = [];
 
   ngOnInit(): void {
-    this.valueFormat = this.valuesType === 'currency' ? 'c' : '{0:N2}';
+    this.valueFormat = this.valuesType === 'currency' ? 'c0' : '{0:N2}';
   }
 
   exportToExcel(): void {
@@ -103,17 +114,21 @@ export class PnklStackbarChartDateComponent implements OnInit {
       values => values[values.length - 1]
     );
     const groupedValuesSorted = sortBy(groupedValues, [item => item.date]);
+    let min = 0;
+    let max = 0;
     groupedValuesSorted.forEach(item => {
       const sum = this.options.selectedItems.reduce((acc: any, name: string) => acc + item[name], 0);
-      this.maxVal = Math.max(
-        this.maxVal,
+      max = Math.max(
+        max,
         sum > 0 ? sum : 0
       );
-      this.minVal = Math.min(
-        this.minVal,
+      min = Math.min(
+        min,
         sum > 0 ? 0 : sum
       );
     });
+    this.maxVal = max;
+    this.minVal = min;
     this.chartDataItems = groupedValuesSorted;
   }
 
@@ -158,5 +173,5 @@ Example -
     { date: new Date('01/01/2019'), english: 50, math: 89 },
     { date: new Date('02/01/2019'), english: 95, math: 80 }
   ];
-  <pnkl-line-chart-date [values]="values"></pnkl-line-chart-date>
+  <pnkl-line-stockchart-date [values]="values"></pnkl-line-stockchart-date>
 */

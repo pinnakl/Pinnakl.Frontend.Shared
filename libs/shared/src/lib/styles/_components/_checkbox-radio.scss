@@ -149,3 +149,41 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+.green-checkbox {
+  width: 16px;
+  height: 16px;
+  position: relative;
+  input {
+    display: none;
+  }
+  .custom-input {
+    width: 16px;
+    height: 16px;
+    border: 1px solid #c3c7cd;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 0;
+    // padding-top: 3px;
+    // padding-left: 2px;
+    // margin-top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  input:checked + .custom-input {
+    // border: 1px solid #00c94a;
+    border: none;
+    position: absolute;
+    background-color: #00c94a;
+    margin-top: 0;
+    &:before {
+      font-size: 9px;
+      color: #fff;
+      font-family: 'fontello';
+      height: 10px;
+      @extend .icon-pinnakl-ok;
+      line-height: 100%;
+    }
+  }
+}

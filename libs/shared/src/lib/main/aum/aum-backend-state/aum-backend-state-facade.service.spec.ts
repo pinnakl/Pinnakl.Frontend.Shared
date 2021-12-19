@@ -16,7 +16,7 @@ describe('AumBackendStateFacade', () => {
       ],
       providers: [AumBackendStateFacade]
     });
-    service = TestBed.get(AumBackendStateFacade);
+    service = TestBed.inject(AumBackendStateFacade);
   });
 
   it('should be created', () => {

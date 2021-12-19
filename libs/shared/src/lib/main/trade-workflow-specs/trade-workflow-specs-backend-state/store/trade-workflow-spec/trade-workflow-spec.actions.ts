@@ -1,4 +1,4 @@
-import { Action } from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
 
 import { TradeWorkflowSpec } from '../../../trade-workflow-specs-backend';
 
@@ -8,23 +8,16 @@ export enum TradeWorkflowSpecActionTypes {
   LoadTradeWorkflowSpecsFailed = '[TradeWorkflowSpec] Load TradeWorkflowSpecs Failed'
 }
 
-export class AttemptLoadTradeWorkflowSpecs implements Action {
-  readonly type = TradeWorkflowSpecActionTypes.AttemptLoadTradeWorkflowSpecs;
-}
+export const AttemptLoadTradeWorkflowSpecs = createAction(
+  TradeWorkflowSpecActionTypes.AttemptLoadTradeWorkflowSpecs
+);
 
-export class LoadTradeWorkflowSpecs implements Action {
-  readonly type = TradeWorkflowSpecActionTypes.LoadTradeWorkflowSpecs;
+export const LoadTradeWorkflowSpecs = createAction(
+  TradeWorkflowSpecActionTypes.LoadTradeWorkflowSpecs,
+  props<{ tradeWorkflowSpecs: TradeWorkflowSpec[] }>()
+);
 
-  constructor(public payload: { tradeWorkflowSpecs: TradeWorkflowSpec[] }) {}
-}
-
-export class LoadTradeWorkflowSpecsFailed implements Action {
-  readonly type = TradeWorkflowSpecActionTypes.LoadTradeWorkflowSpecsFailed;
-
-  constructor(public payload: { error: any }) {}
-}
-
-export type TradeWorkflowSpecActions =
-  | AttemptLoadTradeWorkflowSpecs
-  | LoadTradeWorkflowSpecs
-  | LoadTradeWorkflowSpecsFailed;
+export const LoadTradeWorkflowSpecsFailed = createAction(
+  TradeWorkflowSpecActionTypes.LoadTradeWorkflowSpecsFailed,
+  props<{ error: any }>()
+);

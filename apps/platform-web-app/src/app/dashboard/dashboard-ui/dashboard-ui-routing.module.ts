@@ -1,36 +1,35 @@
 import { Injectable, NgModule } from '@angular/core';
 import { Resolve, RouterModule, Routes } from '@angular/router';
-import { DashoardGuard } from './guards/dashoard.guard';
+import { DashboardGuard } from './guards/dashboard-guard.service';
 
 import { PinnaklSpinner } from '@pnkl-frontend/core';
-import { DashboardHomeComponent } from '../dashboard-ui/containers/dashboard-home/dashboard-home.component';
 import { ClientConnectivity } from '@pnkl-frontend/shared';
-import { AccountService } from '@pnkl-frontend/shared';
 import { ClientConnectivityService } from '@pnkl-frontend/shared';
-import { RecommendedActionsLoadedGuard } from '../dashboard-backend-state';
 import { DashboardService } from '../dashboard-backend/dashboard/dashboard.service';
 import { DashboardResolvedData } from '../shared/dashboard-resolved-data.model';
 import { TaskObject } from '../shared/task-object.model';
+import { DashboardHomeComponent } from './containers/dashboard-home/dashboard-home.component';
 import { DashboardMarketMaroStatsLoadedGuard } from './guards';
+
 @Injectable()
-export class DashboardResolve
+export class
+DashboardResolve
   implements Resolve<{ entities: ClientConnectivity[]; tasks: TaskObject[] }> {
   constructor(
-    private accountService: AccountService,
-    private clientConnectivityService: ClientConnectivityService,
-    private dashboardService: DashboardService,
-    private spinner: PinnaklSpinner
+    private readonly clientConnectivityService: ClientConnectivityService,
+    private readonly dashboardService: DashboardService,
+    private readonly spinner: PinnaklSpinner
   ) {}
 
   resolve(): Promise<{ entities: ClientConnectivity[]; tasks: TaskObject[] }> {
     this.spinner.spin();
-    let resolvedData = {} as DashboardResolvedData;
+    const resolvedData = {} as DashboardResolvedData;
     return Promise.all([
       this.clientConnectivityService.getClientConnectivities(),
       this.dashboardService.getTaskObjects()
     ]).then(result => {
       this.spinner.stop();
-      let [clientConnectivities, tasks] = result;
+      const [clientConnectivities, tasks] = result;
       resolvedData.entities = clientConnectivities;
       resolvedData.tasks = tasks;
       return resolvedData;
@@ -42,14 +41,11 @@ const routes: Routes = [
   {
     path: '',
     canActivate: [
-      DashoardGuard,
-      DashboardMarketMaroStatsLoadedGuard,
-      RecommendedActionsLoadedGuard
+      DashboardGuard,
+      DashboardMarketMaroStatsLoadedGuard
+      // RecommendedActionsLoadedGuard
     ],
-    component: DashboardHomeComponent,
-    resolve: {
-      resolvedData: DashboardResolve
-    }
+    component: DashboardHomeComponent
   }
 ];
 
@@ -57,7 +53,7 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
   providers: [
-    DashoardGuard,
+    DashboardGuard,
     DashboardMarketMaroStatsLoadedGuard,
     DashboardResolve
   ]

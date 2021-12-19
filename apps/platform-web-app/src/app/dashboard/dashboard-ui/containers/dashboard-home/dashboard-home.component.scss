@@ -1,5 +1,12 @@
+@import '../../../../../../../../libs/shared/src/lib/styles/_components/colors';
+@import '../../../../../../../../libs/shared/src/lib/styles/_components/variables';
+@import '../../../../../../../../libs/shared/src/lib/styles/_components/mixins';
+
 .slider-z-index {
   z-index: 2;
+}
+.scrollable-section {
+  @include scrollable-section('full');
 }
 
 .accordion-list-item {
@@ -20,4 +27,29 @@
 
 :host ::ng-deep child.rounded {
   border-radius: 0.4rem !important;
+}
+
+.slide-panel {
+  position: fixed;
+  top: $nav-height;
+  right: 0;
+  bottom: 0;
+  left: auto;
+  transform: translateX(100%);
+  transition: transform 500ms ease-in-out;
+  overflow-y: auto;
+  &.show {
+    transition: transform 500ms ease-in-out;
+    transform: translateX(0);
+  }
+}
+.task-details {
+  max-width: 50%;
+  width: 100%;
+  border-left: 3px solid rgb(228, 234, 242);
+}
+.task-history {
+  max-width: 30%;
+  width: 100%;
+  border-left: 3px solid rgb(228, 234, 242);
 }

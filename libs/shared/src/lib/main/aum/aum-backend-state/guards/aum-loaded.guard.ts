@@ -8,7 +8,7 @@ import { AumBackendStateFacade } from '../aum-backend-state-facade.service';
 
 @Injectable()
 export class AumLoadedGuard implements CanActivate {
-  constructor(private _aumBackendStateFacade: AumBackendStateFacade) {}
+  constructor(private readonly _aumBackendStateFacade: AumBackendStateFacade) {}
 
   canActivate(): Observable<boolean> {
     return this._aumLoaded();

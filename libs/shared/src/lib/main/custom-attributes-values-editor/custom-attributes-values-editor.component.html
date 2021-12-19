@@ -1,0 +1,95 @@
+<form [formGroup]="form" (ngSubmit)="saveAttributes()" novalidate>
+  <div [class.row]="!showOnlyForm" [class.attr-inputs-wrapper]="showOnlyForm">
+    <div
+      *ngFor="let attribute of customAttributes"
+      [class.col-md-1]="!showOnlyForm"
+      [class.col-md-2]="!showOnlyForm && attribute.type === 'file'"
+      [class.input-class]="showOnlyForm"
+    >
+      <pinnakl-input
+        [controlName]="attribute.name"
+        [dropdownSource]="attribute.listOptions"
+        [dropdownOptions]="{
+          viewProperty: 'listOption',
+          modelProperty: 'listOption'
+        }"
+        [form]="form"
+        [label]="attribute.name"
+        labelClass="text-uppercase"
+        [type]="getType(attribute.type)"
+      >
+      </pinnakl-input>
+    </div>
+  </div>
+  <div class="row section-border" *ngIf="!showOnlyForm"></div>
+  <div class="row security-information-action-panel" *ngIf="!showOnlyForm">
+    <div class="col-md-1">
+      <button
+        #anchor
+        type="button"
+        class="btn btn-security btn-cancel"
+        [disabled]="!form.dirty"
+        (click)="showConfirmation()"
+      >
+        CANCEL
+      </button>
+      <confirm-action
+        [anchor]="anchor"
+        containerClass="confirm-delete"
+        confirmationMessage="Are you sure you want to reset the form?"
+        (onCancelled)="hideConfirmation()"
+        (onConfirmed)="resetForm()"
+        [showConfirmation]="confirmationVisible"
+      >
+      </confirm-action>
+    </div>
+    <div class="col-md-1">
+      <button
+        type="submit"
+        class="btn btn-security btn-save"
+        [disabled]="!form.dirty"
+      >
+        SAVE
+      </button>
+    </div>
+    <div class="col-md-1">
+      <button
+        type="button"
+        class="btn btn-primary btn-security"
+        (click)="toggleManageAttributesModal()"
+      >
+        MANAGE
+      </button>
+    </div>
+  </div>
+</form>
+<ng-container *ngIf="!showOnlyForm">
+  <pinnakl-modal
+    [hideDialog]="hideManageAttributesModal"
+    [showCloseButton]="false"
+    [minWidth]="900"
+  >
+    <div>
+      <div class="row modal-header">
+        <div class="col-md-8">
+          <h5 class="modal-title" id="exampleModalLabel">
+            Manage Custom Attributes
+          </h5>
+        </div>
+        <div class="text-align-right col-md-4">
+          <button type="button" (click)="toggleManageAttributesModal()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+      <div class="modal-body container-fluid">
+        <app-custom-attribute-creator
+          class="row"
+          [customAttributes]="customAttributes"
+          (customAttributesUpdated)="reloadAttributes()"
+        >
+        </app-custom-attribute-creator>
+      </div>
+    </div>
+  </pinnakl-modal>
+</ng-container>

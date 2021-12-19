@@ -1,6 +1,6 @@
 <div>
   <div
-    *ngIf="this.widget"
+    *ngIf="widget"
     class=" action-button-group oms-grid-action-btn active z-index-10"
   >
     <a class="action-button">
@@ -15,7 +15,8 @@
   </div>
   <a class="action-group-button">
     <span
-      (click)="this.widget = !this.widget"
+      (click)="dotsHandler();"
+      [@rotatedState]="state"
       class="action-icon action-icon-dots"
     ></span>
   </a>

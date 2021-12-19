@@ -1,0 +1,8 @@
+@import '../../../../shared/src/lib/styles/_components/colors';
+@import '../../../../shared/src/lib/styles/_components/variables';
+@import '../../../../shared/src/lib/styles/_components/mixins';
+
+.chart-date-options {
+  min-height: 55px;
+  @include toggle-radios(auto, 4px 13px, 1.3);
+}

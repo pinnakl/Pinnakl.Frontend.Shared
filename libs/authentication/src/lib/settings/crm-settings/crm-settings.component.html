@@ -1,0 +1,48 @@
+<div class="crm-settings">
+
+  <div class="blockedIps-list">
+<div class="title">Blocked IPs</div>
+
+    <div>
+      <div class="new-blocked-ip">
+        <div class="input">
+          <pinnakl-input-floating-label
+            type="text"
+            label="Comments"
+            [(ngModel)]="newBlockedIp"
+          >
+          </pinnakl-input-floating-label>
+          <span class="error-message" *ngIf="!checkValidNewIp() && this.newBlockedIp">
+            <span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12">
+              <g fill="none" fill-rule="evenodd">
+                  <g>
+                      <g>
+                          <g>
+                              <g transform="translate(-727 -300) translate(669 160) translate(30 114) translate(28 26)">
+                                  <circle cx="6" cy="6" r="6" fill="#FF9213"/>
+                                  <path fill="#FFF" d="M5 2H7V7H5zM5 8H7V10H5z"/>
+                              </g>
+                          </g>
+                      </g>
+                  </g>
+              </g>
+          </svg>
+          </span>
+          <span>IP Address is not valid.</span>
+            </span>
+        </div>
+        <button class="add-new-button btn btn-custom-blue-design" (click)="addEntity()">
+          Add
+        </button>
+        </div>
+        <div class="input-container" *ngFor="let item of blockedIps">
+          <div class="input">
+            <span class="value">{{item?.ipaddress}}</span>
+          </div>
+          <i class="icon-pinnakl-cancel btn-close-icon" (click)="removeEntity(item)"></i>
+        </div>
+        
+        </div>
+</div>
+
+</div>

@@ -1,41 +1,53 @@
+import { AgmCoreModule } from '@agm/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-import { AgmCoreModule } from '@agm/core';
+import { MatDialogModule } from '@angular/material/dialog';
+import { RouterModule } from '@angular/router';
+import { PinnaklModalModule } from '@pnkl-frontend/pinnakl-modal';
+import { PnklChartsModule } from '@pnkl-frontend/pnkl-charts';
 import { ButtonsModule } from '@progress/kendo-angular-buttons';
 import { ChartModule } from '@progress/kendo-angular-charts';
 import { DateInputsModule } from '@progress/kendo-angular-dateinputs';
 import { DialogModule } from '@progress/kendo-angular-dialog';
-import { PopupModule } from '@progress/kendo-angular-popup';
 import {
   ComboBoxModule,
   MultiSelectModule
 } from '@progress/kendo-angular-dropdowns';
+import { IndicatorsModule } from '@progress/kendo-angular-indicators';
+import { LayoutModule } from '@progress/kendo-angular-layout';
+import { PopupModule } from '@progress/kendo-angular-popup';
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { CurrencyMaskModule } from 'ng2-currency-mask';
-
-import { PinnaklModalModule } from '@pnkl-frontend/pinnakl-modal';
-import { PnklChartsModule } from '@pnkl-frontend/pnkl-charts';
 import { CropTextPipe } from './crop-text.pipe';
-import { FILE_SERVICE_URL } from './enviroment.tokens';
+import { FILE_SERVICE_URL, HTTP_SERVICE_URL } from './enviroment.tokens';
+import { HighlightSearchPipe } from './highlight-search.pipe';
 import { IterateOverObjectPipe } from './iterate-over-object.pipe';
 import { KeysPipe } from './keys.pipe';
 import { LimitDecimalPipe } from './limit-decimal.pipe';
+import { LoaderComponent } from './loader/loader.component';
+import { CustomAttributeCreatorComponent } from './main/custom-attributes-values-editor/custom-attribute-creator/custom-attribute-creator.component';
+import { CustomAttributesValuesEditorComponent } from './main/custom-attributes-values-editor/custom-attributes-values-editor.component';
 import { NumberWithCommasPipe } from './number-with-commas.pipe';
+import { AccountsTableComponent } from './pinnakl-ui/accounts-table/accounts-table.component';
 import { AddEditComponent } from './pinnakl-ui/add-edit/add-edit.component';
 import { ConfirmAction } from './pinnakl-ui/confirm-action/confirm-action.component';
 import { CustomScrollDirective } from './pinnakl-ui/custom-scroll.directive';
+import { DndDirective } from './pinnakl-ui/dnd.directive';
 import { DropdownButtonComponent } from './pinnakl-ui/dropdown-button/dropdown-button.component';
 import { EditDeleteDropdownComponent } from './pinnakl-ui/edit-delete-dropdown/edit-delete-dropdown.component';
 import { FileInputComponent } from './pinnakl-ui/file-input/file-input.component';
+import { FilterPresetsComponent } from './pinnakl-ui/grid-filter/filter-presets/filter-presets.component';
+import { FilterPresetsService } from './pinnakl-ui/grid-filter/filter-presets/filter-presets.service';
 import { GridFilterComponent } from './pinnakl-ui/grid-filter/grid-filter.component';
+import { LinkedContactSelectionComponent } from './pinnakl-ui/linked-contact-selection/linked-contact-selection.component';
+import { ModalCloseButtonComponent } from './pinnakl-ui/modal-close-button/modal-close-button.component';
 import { NameAvatarComponent } from './pinnakl-ui/name-avatar';
 import { PeekTextComponent } from './pinnakl-ui/peek-text/peek-text.component';
 import { PinnaklChipListComponent } from './pinnakl-ui/pinnakl-chip-list/pinnakl-chip-list.component';
 import { PinnaklDonutChartComponent } from './pinnakl-ui/pinnakl-donut-chart/pinnakl-donut-chart.component';
 import { PinnaklDateInputComponent } from './pinnakl-ui/pinnakl-input/pinnakl-date-input/pinnakl-date-input.component';
+import { PinnaklDateTimeInputComponent } from './pinnakl-ui/pinnakl-input/pinnakl-date-time-input/pinnakl-date-time-input.component';
 import { PinnaklDropdownComponent } from './pinnakl-ui/pinnakl-input/pinnakl-dropdown/pinnakl-dropdown.component';
 import { PinnaklEditorComponent } from './pinnakl-ui/pinnakl-input/pinnakl-editor/pinnakl-editor.component';
 import { PinnaklInputFloatingLabelComponent } from './pinnakl-ui/pinnakl-input/pinnakl-input-floating-label/pinnakl-input-floating-label.component';
@@ -54,7 +66,15 @@ import { PositionAndPriceGraphComponent } from './pinnakl-ui/position-and-price-
 import { PositionPriceGraph } from './pinnakl-ui/position-price-graph/position-price-graph.component';
 import { RichTextAreaComponent } from './pinnakl-ui/rich-text-area.component';
 import { RouteResolverComponent } from './pinnakl-ui/route-resolver/route-resolver.component';
+import { RouterUrlLinkWithHref } from './pinnakl-ui/router-url-link.directive';
+import { UniversalSearchComponent } from './pinnakl-ui/search-organizations/universal-search.component';
+import { SecurityItemComponent } from './pinnakl-ui/security-items/security-item/security-item.component';
+import { SecurityItemsComponent } from './pinnakl-ui/security-items/security-items.component';
 import { SecuritySelectorComponent } from './pinnakl-ui/security-selector/security-selector.component';
+import { StreamsStatusComponent } from './pinnakl-ui/streams-status/streams-status.component';
+import { TabSelectorComponent } from './pinnakl-ui/tab-selector/tab-selector.component';
+import { WideSearchComponent } from './pinnakl-ui/wide-search/wide-search.component';
+import { PositionsLoadAllDataService } from './pinnakl-web-services';
 import { AccountService } from './pinnakl-web-services/account.service';
 import { AccountingService } from './pinnakl-web-services/accounting.service';
 import { AuditLogService } from './pinnakl-web-services/audit.service';
@@ -62,9 +82,9 @@ import { BrokerService } from './pinnakl-web-services/broker.service';
 import { ClientConnectivityService } from './pinnakl-web-services/client-connectivity.service';
 import { CounterpartyRelationshipsService } from './pinnakl-web-services/counterparty-relationships.service';
 import { CustodianService } from './pinnakl-web-services/custodian.service';
+import { EMSTradeService } from './pinnakl-web-services/ems.service';
 import { FileService } from './pinnakl-web-services/file.service';
 import { FolderService } from './pinnakl-web-services/folder.service';
-import { EMSTradeService } from './pinnakl-web-services/ems.service';
 import { OMSService } from './pinnakl-web-services/oms.service';
 import { PinnaklCommentService } from './pinnakl-web-services/pinnakl-comment.service';
 import { PnlService } from './pinnakl-web-services/pnl.service';
@@ -104,10 +124,16 @@ import { SecurityService } from './pinnakl-web-services/security/security.servic
 import { TradeAllocationService } from './pinnakl-web-services/trade-allocation.service';
 import { TradeService } from './pinnakl-web-services/trade.service';
 import { PnklFilterPipe } from './pnkl-filter.pipe';
-import { EntityDurationValidationService, ReportingHelper } from './services';
+import {
+  AccessControlService,
+  EntityDurationValidationService,
+  UniveralSearchService
+} from './services';
 import { MapsHelper } from './services/maps-helper.service';
 import { Utility } from './services/utility.service';
+import { SortByDatePipe } from './sort-by-date.pipe';
 import { SpinnerComponent } from './spinner';
+
 @NgModule({
   imports: [
     AgmCoreModule.forRoot({
@@ -123,18 +149,23 @@ import { SpinnerComponent } from './spinner';
     DialogModule,
     EditorModule,
     FormsModule,
-    //HttpClientModule,   //don't add HTTP Client more than once in your application otherwise interceptor won't be called
+    // HttpClientModule,   //don't add HTTP Client more than once in your application otherwise interceptor won't be called
     MultiSelectModule,
     PinnaklModalModule,
     ReactiveFormsModule,
     PnklChartsModule,
-    PopupModule
+    PopupModule,
+    RouterModule,
+    IndicatorsModule,
+    LayoutModule,
+    MatDialogModule
   ],
   declarations: [
     AddEditComponent,
     ConfirmAction,
     CropTextPipe,
     CustomScrollDirective,
+    DndDirective,
     DropdownButtonComponent,
     EditDeleteDropdownComponent,
     FileInputComponent,
@@ -168,7 +199,24 @@ import { SpinnerComponent } from './spinner';
     RichTextAreaComponent,
     RouteResolverComponent,
     SecuritySelectorComponent,
-    SpinnerComponent
+    WideSearchComponent,
+    ModalCloseButtonComponent,
+    TabSelectorComponent,
+    SecurityItemsComponent,
+    SecurityItemComponent,
+    SpinnerComponent,
+    AccountsTableComponent,
+    SortByDatePipe,
+    FilterPresetsComponent,
+    StreamsStatusComponent,
+    CustomAttributeCreatorComponent,
+    CustomAttributesValuesEditorComponent,
+    UniversalSearchComponent,
+    HighlightSearchPipe,
+    RouterUrlLinkWithHref,
+    LoaderComponent,
+    LinkedContactSelectionComponent,
+    PinnaklDateTimeInputComponent
   ],
   exports: [
     AddEditComponent,
@@ -177,6 +225,7 @@ import { SpinnerComponent } from './spinner';
     ConfirmAction,
     CropTextPipe,
     CustomScrollDirective,
+    DndDirective,
     DropdownButtonComponent,
     EditDeleteDropdownComponent,
     FileInputComponent,
@@ -211,7 +260,25 @@ import { SpinnerComponent } from './spinner';
     RichTextAreaComponent,
     RouteResolverComponent,
     SecuritySelectorComponent,
-    SpinnerComponent
+    WideSearchComponent,
+    ModalCloseButtonComponent,
+    TabSelectorComponent,
+    SecurityItemsComponent,
+    SecurityItemComponent,
+    SpinnerComponent,
+    AccountsTableComponent,
+    SortByDatePipe,
+    FilterPresetsComponent,
+    StreamsStatusComponent,
+    CustomAttributeCreatorComponent,
+    CustomAttributesValuesEditorComponent,
+    UniversalSearchComponent,
+    HighlightSearchPipe,
+    RouterUrlLinkWithHref,
+    EditorModule,
+    LoaderComponent,
+    LinkedContactSelectionComponent,
+    PinnaklDateTimeInputComponent
   ],
   providers: [
     AccountingService,
@@ -254,7 +321,6 @@ import { SpinnerComponent } from './spinner';
     PublicIdentifierService,
     RebalanceService,
     ReportColumnService,
-    ReportingHelper,
     ReportingService,
     SecurityService,
     TradeAllocationService,
@@ -263,14 +329,30 @@ import { SpinnerComponent } from './spinner';
     UserReportCustomAttributeService,
     UserReportIdcColumnService,
     UserReportService,
-    Utility
+    Utility,
+    PositionsLoadAllDataService,
+    FilterPresetsService,
+    AccessControlService,
+    UniveralSearchService
   ]
 })
 export class SharedModule {
-  public static register( fileServiceUrl ): ModuleWithProviders<SharedModule> {
+  public static register(
+    fileServiceUrl: string,
+    httpServiceUrl: string
+  ): ModuleWithProviders<SharedModule> {
     return {
       ngModule: SharedModule,
-      providers: [{ provide: FILE_SERVICE_URL, useValue: fileServiceUrl.fileServiceUrl }]
+      providers: [
+        {
+          provide: FILE_SERVICE_URL,
+          useValue: fileServiceUrl
+        },
+        {
+          provide: HTTP_SERVICE_URL,
+          useValue: httpServiceUrl
+        }
+      ]
     };
   }
 }

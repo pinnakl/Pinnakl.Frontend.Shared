@@ -1,5 +1,25 @@
 # PnklFrontend
 
+#### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+If first time run app after updating deps to the latest version with Angular 12
+
+1. Node version `16.13.0`
+2. NPM version `8.1.0`
+3. Delete `node_modules` and `package-lock.json`
+4. Install with `npm install`
+5. Start the app
+
+If just update node_modules because someone add new modules and change package-lock.json
+
+1. Node version `16.13.0`
+2. NVM version `8.1.0`
+3. Delete `node_modules`
+4. Install with `npm ci`
+5. Start the app
+
+#### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 This project was generated using [Nx](https://nx.dev).
 
 <p align="center"><img src="https://raw.githubusercontent.com/nrwl/nx/master/nx-logo.png" width="450"></p>
@@ -82,3 +102,22 @@ Run `nx dep-graph` to see a diagram of the dependencies of your projects.
 ## Further help
 
 Visit the [Nx Documentation](https://nx.dev/angular) to learn more.
+
+## Major Updates
+
+Develop branch pipeline changed with the latest:
+LTS - Node.Js version `16.13.0` & NPM `8.1.0`. Versions should be compatible. Check here: [Node.Js](https://nodejs.org/en/download/releases/).
+
+List of scripts:
+
+  - Install Node.js.
+
+  - Install npm & cli.
+    - *NOTE: install compatible npm version and the same version of Angular CLI that project uses.*
+
+  - Install dependencies.
+    - *NOTE: use clean install to install (npm ci) dependencies from package-lock.json file. For sure node_modules folder should be deleted.*
+
+  - Linting project files.
+
+  - Build project in prod mode.

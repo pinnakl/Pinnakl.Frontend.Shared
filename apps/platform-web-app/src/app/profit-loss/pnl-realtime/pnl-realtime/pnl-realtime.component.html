@@ -1,0 +1,74 @@
+<app-streams-status
+  class="filter-item" [class.active]="true"
+  [requiredEstablishedStreamsReady$]="requiredEstablishedStreamsReady$"
+  [requiredStreamsErrored$]="requiredStreamsErrored$"
+></app-streams-status>
+<div class="container-fluid">
+  <div class="row flex-no-wrap">
+    <div class="col-md-12">
+      <div class="row my-4">
+        <profit-loss-header class="col-md-6" [realTimePnl]="true"></profit-loss-header>
+        <pnl-top-mover class="col-md-3"></pnl-top-mover>
+        <pnl-top-mover class="col-md-3" [inverse]="true"></pnl-top-mover>
+      </div>
+      <div class="row mx-0 my-4">
+        <div class="col-md-12 bg-white rounded py-4">
+          <div class="row">
+            <h2 class="col-md-6 pl-4">Heat Map</h2>
+            <pnl-realtime-field-selector
+              class="col-md-5"
+              [pnlFields]="
+                positionsPnlDataFieldsBackendStateFacade.positionsPnlDataFields$
+                  | async
+              "
+              [pnlFieldsSelected]="pnlUiStateFacade.pnlFieldsSelected$ | async"
+              (fieldsChanged)="fieldsChanged($event)"
+            ></pnl-realtime-field-selector>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <pnkl-tree-map
+                *ngIf="(treemapData$ | async).pnlData?.length !== 0"
+                [data]="(treemapData$ | async).pnlData"
+                categoryName="fieldValue"
+                categoryValuesField="pnls"
+                dataLabelField="ticker"
+                dataField="totalPnl"
+                maxAxisLabel="Profit"
+                minAxisLabel="Loss"
+                [isNestedTreeMap]="
+                  (treemapData$ | async)['fieldName'] !== 'Security'
+                "
+                [tooltipHeaderFields]="['Ticker', 'Position', 'Price', 'P&L']"
+                [tooltipDataFields]="[
+                  'ticker',
+                  'position',
+                  'price',
+                  'totalPnl'
+                ]"
+                [title]="treemapTitle$ | async"
+              ></pnkl-tree-map>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      *ngIf="pnlUiStateFacade.pnlFilterValue$ | async as pnlFilterValue"
+      class="col-md-3"
+    >
+      <pnl-filter
+        [accounts]="accountsBackendStateFacade.accounts$ | async"
+        [disableDates]="true"
+        [filterVisible]="pnlUiStateFacade.pnlFilterVisible$ | async"
+        [pnlStartDate]="pnlFilterValue.startDate"
+        [pnlEndDate]="pnlFilterValue.endDate"
+        [isStartDateVisible]="true"
+        [selectedAccount]="pnlFilterValue.account"
+        (onApply)="pnlUiStateFacade.setPnlFilter($event)"
+        (onClose)="pnlUiStateFacade.hideFilter()"
+      >
+      </pnl-filter>
+    </div>
+  </div>
+</div>

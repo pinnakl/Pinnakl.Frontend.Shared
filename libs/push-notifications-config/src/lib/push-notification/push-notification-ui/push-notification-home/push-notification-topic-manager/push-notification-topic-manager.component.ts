@@ -24,8 +24,6 @@ export class PushNotificationTopicManagerComponent implements OnChanges {
   }>();
   form: FormGroup;
 
-  constructor() {}
-
   ngOnChanges(): void {
     this.createForm();
   }

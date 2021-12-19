@@ -1,0 +1,10 @@
+@import '../../../../../../../libs/shared/src/lib/styles/_components/variables';
+@import '../../../../../../../libs/shared/src/lib/styles/_components/mixins';
+
+@include toggle-radios(100px);
+
+.toggle-radio-btn {
+  label {
+    width: 135px;
+  }
+}

@@ -11,7 +11,7 @@ import { PositionService } from '../../pinnakl-web-services/position.service';
   styleUrls: ['./position-price-graph.component.scss']
 })
 export class PositionPriceGraph implements OnInit {
-  @Input() securityId: string;
+  @Input() securityId: number;
   @Input() comparisonSecurities: Array<any>;
   positionPriceGraphOptions: any;
   positionPriceGraphData: any;
@@ -32,9 +32,9 @@ export class PositionPriceGraph implements OnInit {
   // };
 
   constructor(
-    private positionService: PositionService,
-    private spinner: PinnaklSpinner
-  ) {}
+    private readonly positionService: PositionService,
+    private readonly spinner: PinnaklSpinner
+  ) { }
 
   ngOnInit() {
     this.spinner.spin();

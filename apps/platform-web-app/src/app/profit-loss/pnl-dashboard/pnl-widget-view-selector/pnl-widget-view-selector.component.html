@@ -1,0 +1,16 @@
+<div class="d-inline-flex mt-2">
+  <div
+    class="icon-container"
+    (click)="selectView('pie')"
+    [ngClass]="{ selected: selectedView === 'pie' }"
+  >
+    <i class="icon-pinnakl-pie"></i>
+  </div>
+  <div
+    class="icon-container"
+    (click)="selectView('grid')"
+    [ngClass]="{ selected: selectedView === 'grid' }"
+  >
+    <i class="icon-pinnakl-side-dashboard-active"></i>
+  </div>
+</div>

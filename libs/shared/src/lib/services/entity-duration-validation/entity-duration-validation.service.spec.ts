@@ -8,7 +8,7 @@ describe('EntityDurationValidationService', () => {
     TestBed.configureTestingModule({
       providers: [EntityDurationValidationService]
     });
-    service = TestBed.get(EntityDurationValidationService);
+    service = TestBed.inject(EntityDurationValidationService);
   });
 
   describe('validate()', () => {

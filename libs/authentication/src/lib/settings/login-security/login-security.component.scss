@@ -1,0 +1,104 @@
+@import '../../../../../../libs/shared/src/lib/styles/_components/_colors.scss';
+@import '../../../../../../libs/shared/src/lib/styles/_components/_mixins.scss';
+@import '../../../../../../libs/shared/src/lib/styles/_components/_variables.scss';
+
+.login-security {
+  @include toggle-radios(100px);
+
+  height: 100%;
+  min-height: 450px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .login-security-control {
+    margin-left: 20px;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+  }
+
+
+  form {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    hr {
+      margin-top: 0;
+    }
+
+    .multi-factor-controls {
+      margin: -15px 0 15px 45px;
+
+      .multi-factor-header {
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: $rolling-stone;
+      }
+
+      .radioGroup {
+        margin-top: 5px;
+      }
+
+      ::ng-deep label {
+        width: 70px;
+      }
+    }
+
+    .twofactor-users-warning {
+      margin: -20px 0 35px 50px;
+      display: flex;
+
+      &-text {
+        margin-left: 5px;
+      }
+    }
+
+    .sso-container {
+      margin-bottom: 35px;
+      position: relative;
+
+      .sso-description {
+        margin-left: 45px;
+        position: absolute;
+        bottom: -15px;
+      }
+    }
+
+    .auth-type-controls {
+      flex-direction: column;
+
+      .radio-input {
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+      }
+
+      .radio-label {
+        margin-left: 10px;
+        margin-bottom: 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: $shark;
+        cursor: pointer;
+      }
+    }
+
+    .re-auth-interval-container {
+      margin-top: 20px;
+
+      .re-auth-interval-header {
+        font-size: 16px;
+        font-weight: 600;
+      }
+
+      .radioGroup {
+        margin-top: 15px;
+      }
+    }
+  }
+}

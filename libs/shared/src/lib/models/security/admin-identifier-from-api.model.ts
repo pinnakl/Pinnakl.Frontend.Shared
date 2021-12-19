@@ -8,7 +8,6 @@ export class AdminIdentifierFromApi {
     public enddate: string,
     public id: string,
     public pnklsecid: string,
-    public startdate: string,
-    public trsindicator: string
+    public startdate: string
   ) {}
 }

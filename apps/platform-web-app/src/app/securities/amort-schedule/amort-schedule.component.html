@@ -1,0 +1,23 @@
+<div class="container-fluid">
+  <div class="mt-5" *ngIf="!amortSchedule || !amortSchedule.length">
+    <button
+      class="btn btn-success"
+      *ngIf="peLoan"
+      (click)="fetchAmortScheduleData()"
+    >
+      GENERATE
+    </button>
+  </div>
+  <div *ngIf="amortSchedule && amortSchedule.length" class="row mt-5">
+    <div class="col">
+      <pinnakl-grid
+        [columnDefs]="columnDefs"
+        [headerHeight]="30"
+        [rowData]="amortSchedule"
+        [gridOptions]="{}"
+        styleClass="investor-returns-grid"
+      >
+      </pinnakl-grid>
+    </div>
+  </div>
+</div>

@@ -1,9 +1,11 @@
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { Action, createReducer, on } from '@ngrx/store';
 
 import { PositionsPnlDataField } from '../../positions-pnl-data-fields-backend';
 import {
-  PositionsPnlDataFieldActions,
-  PositionsPnlDataFieldsActionTypes
+  AttemptLoadPositionsPnlDataFields,
+  LoadPositionsPnlDataFields,
+  LoadPositionsPnlDataFieldsFailed
 } from './positions-pnl-data-fields.actions';
 
 export interface State extends EntityState<PositionsPnlDataField> {
@@ -20,36 +22,27 @@ export const initialState: State = adapter.getInitialState({
   loading: false
 });
 
-export function reducer(
-  state: State = initialState,
-  action: PositionsPnlDataFieldActions
-): State {
-  switch (action.type) {
-    case PositionsPnlDataFieldsActionTypes.AttemptLoadPositionsPnlDataFields: {
-      return {
-        ...state,
-        loaded: false,
-        loading: true
-      };
-    }
-    case PositionsPnlDataFieldsActionTypes.LoadPositionsPnlDataFields: {
-      return adapter.addAll(action.payload.positionsPnlDataFields, {
-        ...state,
-        loaded: true,
-        loading: false
-      });
-    }
-    case PositionsPnlDataFieldsActionTypes.LoadPositionsPnlDataFieldsFailed: {
-      return {
-        ...state,
-        loaded: false,
-        loading: false
-      };
-    }
-    default: {
-      return state;
-    }
-  }
+const featureReducer = createReducer(
+  initialState,
+  on(AttemptLoadPositionsPnlDataFields, (state) => ({
+    ...state,
+    loaded: false,
+    loading: true
+  })),
+  on(LoadPositionsPnlDataFields, (state, { positionsPnlDataFields }) => adapter.setAll(positionsPnlDataFields, {
+    ...state,
+    loaded: true,
+    loading: false
+  })),
+  on(LoadPositionsPnlDataFieldsFailed, (state) => ({
+    ...state,
+    loaded: false,
+    loading: false
+  }))
+);
+
+export function reducer(state: State | undefined, action: Action): State {
+  return featureReducer(state, action);
 }
 
 export const { selectAll } = adapter.getSelectors();

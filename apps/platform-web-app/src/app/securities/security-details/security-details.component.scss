@@ -1,0 +1,42 @@
+.manual-security-section {
+  background: #fff;
+  margin-top: 0.9375rem;
+}
+
+.security-history-bar {
+  font-size: 20px;
+  padding: 40vh 0 0 8px;
+  margin-left: -5px;
+  background-color: #fff;
+  height: calc(100vh - 115px);
+}
+
+.col-md-11_80 {
+  flex-basis: 98.7%;
+}
+
+.col-md-1_20 {
+  flex-basis: 1.2%;
+}
+
+.security-information-width {
+  width: 133%;
+}
+
+.scrollable-security-tab {
+  overflow-x: auto;
+  min-height: 600px;
+}
+
+.padding-horizontal-15 {
+  padding: 0 15px;
+}
+
+.history-tab-height {
+  height: calc(100vh - 70px);
+}
+
+.security-information-width-flex {
+  flex-basis: 133%;
+  max-width: 133%;
+}

@@ -1,18 +1,17 @@
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 
-import { GetWebRequest, PostWebRequest, WebServiceProvider } from '@pnkl-frontend/core';
-import { BondFromApi } from '../../models/security/bond-from-api.model';
-import { Bond } from '../../models/security/bond.model';
+import { WebServiceProvider } from '@pnkl-frontend/core';
+import { Bond, BondFromApi } from '../../models';
 
 @Injectable()
 export class BondService {
-  private readonly RESOURCE_URL = 'bonds';
+  private readonly _entitiesBondsEndpoint = 'entities/bonds';
 
-  constructor(private wsp: WebServiceProvider) {}
+  constructor(private readonly wsp: WebServiceProvider) {}
 
-  getBondFromSecurityId(securityId: number): Promise<Bond> {
-    let fields = [
+  async getBondFromSecurityId(securityId: number): Promise<Bond> {
+    const fields = [
       'Accruing_Indicator',
       'Bond144a_Indicator',
       'Call_Indicator',
@@ -39,9 +38,9 @@ export class BondService {
       'UnderlyingSecurityId'
     ];
 
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: {
+    const entities = await this.wsp.getHttp<BondFromApi[]>({
+      endpoint: this._entitiesBondsEndpoint,
+      params: {
         fields: fields,
         filters: [
           {
@@ -51,22 +50,16 @@ export class BondService {
           }
         ]
       }
-    };
+    });
 
-    return this.wsp
-      .get(getWebRequest)
-      .then((entities: BondFromApi[]) =>
-        entities.length === 0 ? null : this.formatBond(entities[0])
-      );
+    return entities.length === 0 ? null : this.formatBond(entities[0]);
   }
 
-  getBondCouponsFromSecurityIds(securityIds: number[]): Promise<any> {
-    let fields = ['Coupon_Rate', 'Coupon_Type', 'SecurityId'];
-
-    const getWebRequest: GetWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      options: {
-        fields: fields,
+  async getBondCouponsFromSecurityIds(securityIds: number[]): Promise<any> {
+    const entities = await this.wsp.getHttp<any[]>({
+      endpoint: this._entitiesBondsEndpoint,
+      params: {
+        fields: ['Coupon_Rate', 'Coupon_Type', 'SecurityId'],
         filters: [
           {
             key: 'securityid',
@@ -75,34 +68,27 @@ export class BondService {
           }
         ]
       }
-    };
+    });
 
-    return this.wsp
-      .get(getWebRequest)
-      .then((entities: any[]) => (entities.length === 0 ? null : entities));
+    return entities.length === 0 ? null : entities;
   }
 
-  postBond(entityToSave: Bond): Promise<Bond> {
-    let requestBody = this.getBondForServiceRequest(entityToSave);
+  async postBond(entityToSave: Bond): Promise<Bond> {
+    const entity = await this.wsp.postHttp<BondFromApi>({
+      endpoint: this._entitiesBondsEndpoint,
+      body: this.getBondForServiceRequest(entityToSave)
+    });
 
-    let postWebRequest: PostWebRequest = {
-      endPoint: this.RESOURCE_URL,
-      payload: requestBody
-    };
-
-    return this.wsp
-      .post(postWebRequest)
-      .then((entity: BondFromApi) => this.formatBond(entity));
+    return this.formatBond(entity);
   }
 
-  putBond(entityToSave: Bond): Promise<Bond> {
-    let requestBody = this.getBondForServiceRequest(entityToSave);
-    return this.wsp
-      .put({
-        endPoint: this.RESOURCE_URL,
-        payload: requestBody
-      })
-      .then((entity: BondFromApi) => this.formatBond(entity));
+  async putBond(entityToSave: Bond): Promise<Bond> {
+    const entity = await this.wsp.putHttp<BondFromApi>({
+      endpoint: this._entitiesBondsEndpoint,
+      body: this.getBondForServiceRequest(entityToSave)
+    });
+
+    return this.formatBond(entity);
   }
 
   formatBond(entity: BondFromApi): Bond {
