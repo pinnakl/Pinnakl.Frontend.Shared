@@ -15,7 +15,5 @@ steps:
       git config --global user.email "system@pinnakl.com" &&
       git config --global user.name "Tarun Kapoor" &&
       npm version patch -m "%s [skip azurepipelines]" &&
-      git push https://arufokjurdcmpvltzfosnbfc24mcp6nch3g75fpcf56srfygovsq:PAT@pinnakl.visualstudio.com/PinnaklFrontendApps/_git/Pinnakl.Frontend.WebApp develop  &&
-      git push --force https://$(GITHUB_PAT)@github.com/$(REPO_NAME).git develop
 
     displayName: 'Copy to Github'
